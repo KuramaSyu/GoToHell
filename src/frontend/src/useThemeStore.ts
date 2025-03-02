@@ -1,20 +1,14 @@
-import { create } from "zustand";
+// useThemeStore.ts
+import { create } from 'zustand';
 
-const themes = ["dark", "nord", "github"] as const;
-type Theme = typeof themes[number];
+type ThemeName = 'light' | 'dark' | 'nord' | 'github';
 
 interface ThemeState {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  currentTheme: ThemeName;
+  setTheme: (theme: ThemeName) => void;
 }
 
-export const useThemeStore = create<ThemeState>(function (set) {
-    return {
-      theme: "dark",
-      setTheme: function (theme) {
-        document.documentElement.setAttribute("data-theme", theme);
-        set({ theme });
-      },
-    };
-  });
-  
+export const useThemeStore = create<ThemeState>((set) => ({
+  currentTheme: 'dark',
+  setTheme: (theme: ThemeName) => set({ currentTheme: theme }),
+}));

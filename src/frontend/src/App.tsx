@@ -1,34 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Card from './components/Card'
-import ThemeSwitcher from "./ThemeSwitcher";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DiscordLogin from './components/DiscordLogin';
+import './styles/DiscordLogin.css';
+import './App.css';
+import HomePage from './components/HomePage';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Import other components as needed
 
+const App: React.FC = () => {
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <Router>
+      <div className="app">
+        <header>
+          <h1>Go To Hell</h1>
+        </header>
+        
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login-success" element={<LoginSuccess />} />
+          {/* Add other routes as needed */}
+        </Routes>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <div className="flex justify-center items-center min-h-screen">
-        <Card />
-        <h1 className="text-2xl">Zustand Theme Switcher</h1>
-        <ThemeSwitcher />
-      </div>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+const LoginSuccess: React.FC = () => {
+  React.useEffect(() => {
+    // You could add a redirect timer or other logic here
+  }, []);
+  
+  return <div>Login Successful! Redirecting...</div>;
+};
+
+export default App;
