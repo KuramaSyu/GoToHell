@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --bg-color: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-color: #222222;
+  --text-muted: #6c757d;
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --border-color: #dee2e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --error-color: #dc3545;
+}
+
+/* 🌙 Dark Theme */
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --bg-secondary: #1e1e1e;
+  --text-color: #ffffff;
+  --text-muted: #a8a8a8;
+  --primary-color: #bb86fc;
+  --primary-hover: #9e6af5;
+  --border-color: #333;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+  --success-color: #81c995;
+  --warning-color: #f4d03f;
+  --error-color: #e06c75;
+}
+
+/* ❄️ Nord Theme */
+[data-theme="nord"] {
+  --bg-color: #2e3440;
+  --bg-secondary: #3b4252;
+  --text-color: #d8dee9;
+  --text-muted: #88c0d0;
+  --primary-color: #81a1c1;
+  --primary-hover: #5e81ac;
+  --border-color: #4c566a;
+  --shadow-color: rgba(46, 52, 64, 0.4);
+  --success-color: #a3be8c;
+  --warning-color: #ebcb8b;
+  --error-color: #bf616a;
+}
+
+/* 🐙 GitHub Theme */
+[data-theme="github"] {
+  --bg-color: #f6f8fa;
+  --bg-secondary: #e1e4e8;
+  --text-color: #24292e;
+  --text-muted: #586069;
+  --primary-color: #0366d6;
+  --primary-hover: #0356b5;
+  --border-color: #d1d5da;
+  --shadow-color: rgba(27, 31, 35, 0.15);
+  --success-color: #28a745;
+  --warning-color: #ffd33d;
+  --error-color: #d73a49;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
