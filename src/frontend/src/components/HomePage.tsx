@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
       <p>
         login with Discord
       </p>
-      {/* <DiscordLogin></DiscordLogin> */}
+      <DiscordLogin></DiscordLogin>
     </ThemeProvider>
   );
 };
