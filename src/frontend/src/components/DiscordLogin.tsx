@@ -96,7 +96,7 @@ const DiscordLogin: React.FC = () => {
                 />
               </svg>
             }
-          >Login with Discord</Button>
+          >Login</Button>
         )
         }
       </Paper>

@@ -3,6 +3,7 @@ import { ThemeProvider, CssBaseline, Button, Container, Box } from '@mui/materia
 import { lightTheme, darkTheme, nordTheme, githubTheme, themes } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
+import TopBar from './TopBar';
 
 
 
@@ -13,6 +14,7 @@ const HomePage: React.FC = () => {
     <ThemeProvider theme={themes[currentTheme]}>
       {/* CssBaseline applies the theme's background and text colors */}
       <CssBaseline />
+      <TopBar></TopBar>
       <Container>
         <Box sx={{ py: 4, textAlign: 'center' }}>
           <h1>Material UI Theme Switcher with Zustand</h1>
