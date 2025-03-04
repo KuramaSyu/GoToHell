@@ -1,4 +1,4 @@
-module github.com/KuramaSyu/Sports-by-death
+module github.com/KuramaSyu/GoToHell/src/backend
 
 go 1.24.0
 
