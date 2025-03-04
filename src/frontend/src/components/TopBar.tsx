@@ -3,17 +3,22 @@ import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from "./DiscordLogin";
+import Box from "@mui/material/Box";
 
 const TopBar: React.FC = () => {
     return (
-        <AppBar position="fixed">
-          <Toolbar>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }}>
             <Typography variant="h2" component="div">
               Go To Hell
             </Typography>
-            <DiscordLogin></DiscordLogin>
-          </Toolbar>
-        </AppBar>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <DiscordLogin />
+          </Box>
+        </Toolbar>
+      </AppBar>
       );
 }
 

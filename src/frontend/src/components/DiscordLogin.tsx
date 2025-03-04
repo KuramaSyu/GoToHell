@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ThemeProvider, CssBaseline, Button, Container, Box, Paper, Avatar, Typography } from '@mui/material';import ThemeSwitcher from '../ThemeSwitcher';
+import { ThemeProvider, CssBaseline, Button, Container, Box, Paper, Avatar, Typography } from '@mui/material';
+import ThemeSwitcher from '../ThemeSwitcher';
 import { lightTheme, darkTheme, nordTheme, githubTheme, themes } from '../themes';
 import { useThemeStore } from '../useThemeStore';
+import { useUserStore } from '../userStore';
 
 
 // Define TypeScript interface for Discord user data
@@ -40,8 +42,10 @@ class DiscordUserImpl implements DiscordUser {
   }
 }
 
+export { DiscordUserImpl };
+
 const DiscordLogin: React.FC = () => {
-  const [user, setUser] = useState<DiscordUserImpl | null>(null);
+  const {user, setUser} = useUserStore();
   const [loading, setLoading] = useState<boolean>(true);
   const { currentTheme, setTheme } = useThemeStore();
   // Check if user is already logged in
@@ -92,13 +96,16 @@ const DiscordLogin: React.FC = () => {
       <CssBaseline />
       <Paper elevation={3} sx={{p: 3, textAlign: "center", maxWidth: 400, mx: "auto"}}>
         {user? (
-          <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+          <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
             <Avatar
               src={user.getAvatarUrl()}
               alt={user.username}
               sx={{width: 80, height: 80}}
             />
-            <Typography variant='h6'>Welcome, {user.username}!</Typography>
+             <Box display='flex' flexDirection='column'>
+              <Typography variant='h6'>Hello</Typography>
+              <Typography variant='h5'>{user.username}!</Typography>
+             </Box>
             <Button
               variant='contained'
               color='primary'
