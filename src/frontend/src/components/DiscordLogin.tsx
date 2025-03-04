@@ -13,8 +13,35 @@ interface DiscordUser {
   email: string;
 }
 
+// Create a DiscordUser class that implements the interface
+class DiscordUserImpl implements DiscordUser {
+  id: string;
+  username: string;
+  discriminator: string;
+  avatar: string;
+  email: string;
+
+  constructor(data: {
+    id: string;
+    username: string;
+    discriminator: string;
+    avatar: string;
+    email: string;
+  }) {
+    this.id = data.id;
+    this.username = data.username;
+    this.discriminator = data.discriminator;
+    this.avatar = data.avatar;
+    this.email = data.email;
+  }
+
+  getAvatarUrl(): string {
+    return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
+  }
+}
+
 const DiscordLogin: React.FC = () => {
-  const [user, setUser] = useState<DiscordUser | null>(null);
+  const [user, setUser] = useState<DiscordUserImpl | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { currentTheme, setTheme } = useThemeStore();
   // Check if user is already logged in
@@ -28,7 +55,7 @@ const DiscordLogin: React.FC = () => {
         if (response.ok) {
           const userData: DiscordUser = await response.json();
           console.log(JSON.stringify(userData, null, 2));
-          setUser(userData);
+          setUser(new DiscordUserImpl(userData));
         }
       } catch (error) {
         console.error('Error checking login status:', error);
@@ -67,7 +94,7 @@ const DiscordLogin: React.FC = () => {
         {user? (
           <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
             <Avatar
-              src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+              src={user.getAvatarUrl()}
               alt={user.username}
               sx={{width: 80, height: 80}}
             />
