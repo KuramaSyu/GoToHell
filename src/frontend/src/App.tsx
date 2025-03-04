@@ -11,10 +11,6 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="app">
-        <header>
-          <h1>Go To Hell</h1>
-        </header>
-        
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login-success" element={<HomePage />} />
