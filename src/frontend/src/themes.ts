@@ -1,4 +1,5 @@
 import { createTheme as muiCreateTheme, ThemeOptions, Theme, PaletteOptions } from "@mui/material/styles";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 // Extend the PaletteOptions to include `backgroundImage`
 interface CustomPaletteBackground {
@@ -15,16 +16,18 @@ interface CustomPalette extends PaletteOptions {
 // Extend ThemeOptions to accept CustomPalette
 interface CustomThemeOptions extends ThemeOptions {
   palette: CustomPalette;
+  typography?: TypographyOptions;
 }
 
 // Extend Theme to include CustomPalette
 interface CustomTheme extends Theme {
   palette: CustomPalette;
+  typography: TypographyOptions;
 }
 
 // Correctly type the function to return CustomTheme
 export default function createTheme(options?: CustomThemeOptions): CustomTheme {
-  return muiCreateTheme({
+  const baseTheme: CustomTheme = {
     ...options,
     palette: {
       ...options?.palette,
@@ -35,24 +38,13 @@ export default function createTheme(options?: CustomThemeOptions): CustomTheme {
         backgroundImage: options?.palette?.background?.backgroundImage || "", // Ensure a default value
       },
     },
-  }) as CustomTheme; // Type assertion to fix "never" error
-}
-
-
-export const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    primary: { main: "#007bff" },
-    secondary: { main: "#f50057" },
-    background: {
-      default: "#ffffff",
-      paper: "#f8f9fa",
-      backgroundImage: "", // Optional: Set URL here
+    typography: {
+      fontFamily: options?.typography?.fontFamily || "'Arial', sans-serif", // Default font
+      ...options?.typography, // Merge user typography options
     },
-    text: { primary: "#222222", secondary: "#555555" },
-  },
-});
-
+  };
+  return muiCreateTheme(baseTheme) as CustomTheme;
+}
 
 export const darkTheme = createTheme({
   palette: {
@@ -81,23 +73,25 @@ export const nordTheme = createTheme({
   },
 });
 
-export const githubTheme = createTheme({
+export const leagueTheme = createTheme({
   palette: {
-    mode: "light",
-    primary: { main: "#0366d6" },
-    secondary: { main: "#6f42c1" },
+    mode: "dark",
+    primary: { main: "#1A78AE" }, // LoL Blue
+    secondary: { main: "#C89B3C" }, // LoL Gold
     background: {
-      default: "#f6f8fa",
-      paper: "#e1e4e8",
-      backgroundImage: "", // No image by default
+      default: "#0A0A0F", // Dark Rift-like background
+      paper: "#11111A", // Slightly lighter dark mode
+      backgroundImage: "https://i.postimg.cc/pXb4tvd8/zeri-lol-moon-snow-art-hd-wallpaper-uhdpaper-com-522-5-c.jpg", 
     },
-    text: { primary: "#24292e", secondary: "#586069" },
+    text: { primary: "#EAEAEA", secondary: "#A0A0A0" },
+  },
+  typography: {
+    fontFamily: "'Beaufort for LoL', 'Arial', sans-serif",
   },
 });
 
 export const themes = {
-  light: lightTheme,
   dark: darkTheme,
   nord: nordTheme,
-  github: githubTheme
+  league: leagueTheme
 }
