@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from 'react';
 import { ThemeProvider, CssBaseline, Button, Container, Box } from '@mui/material';
-import { lightTheme, darkTheme, nordTheme, githubTheme, themes } from './themes';
+import { darkTheme, nordTheme, themes } from './themes';
 import { useThemeStore } from './useThemeStore';
 
 const ThemeSwitcher = () => {

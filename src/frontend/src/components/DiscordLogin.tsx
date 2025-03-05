@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider, CssBaseline, Button, Container, Box, Paper, Avatar, Typography } from '@mui/material';
 import ThemeSwitcher from '../ThemeSwitcher';
-import { lightTheme, darkTheme, nordTheme, githubTheme, themes } from '../themes';
+import { darkTheme, nordTheme, themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import { useUserStore } from '../userStore';
 
@@ -91,7 +91,7 @@ const DiscordLogin: React.FC = () => {
   }
 
   return (
-    <ThemeProvider theme={themes[currentTheme]}>
+    <ThemeProvider theme={getTheme(currentTheme)}>
       {/* CssBaseline applies the theme's background and text colors */}
       <CssBaseline />
       <Paper elevation={3} sx={{p: 3, textAlign: "center", maxWidth: 400, mx: "auto"}}>

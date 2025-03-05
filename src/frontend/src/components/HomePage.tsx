@@ -5,6 +5,7 @@ import { lightTheme, darkTheme, nordTheme, githubTheme, themes } from '../themes
 import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
+import GameSelector from './GameSelect';
 
 
 
@@ -47,8 +48,7 @@ const HomePage: React.FC = () => {
         <TopBar></TopBar>
         <Container>
           <Box sx={{ py: 4, textAlign: 'center'}}>
-            <h1>Material UI Theme Switcher with Zustand</h1>
-            <ThemeSwitcher></ThemeSwitcher>
+            <GameSelector></GameSelector>
             <p>
               The current theme is <strong>{currentTheme}</strong>.
             </p>

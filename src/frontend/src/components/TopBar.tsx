@@ -8,7 +8,7 @@ import { useThemeStore } from "../useThemeStore";
 
 
 const TopBar: React.FC = () => {
-    const {currentTheme, setTheme} = useThemeStore();
+    //const {currentTheme, setTheme} = useThemeStore();
 
     return (
       <AppBar position="fixed">
