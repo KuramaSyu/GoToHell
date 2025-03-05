@@ -90,8 +90,30 @@ export const leagueTheme = createTheme({
   },
 });
 
+export const overwatchTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: { main: "#FE8222" }, // Overwatch Red tone
+    secondary: { main: "#FACE59" }, // Overwatch Gold tone
+    background: {
+      default: "#212226", // Dark background reminiscent of Overwatch’s futuristic feel
+      paper: "#212226",   // A slightly lighter tone for card surfaces
+      backgroundImage: "https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg",
+    },
+    text: { primary: "#EDEBEB", secondary: "#EDEBEB" },
+  },
+  typography: {
+    fontFamily: "'OverwatchFont', 'Arial', sans-serif", // Use a game-appropriate font if available
+  },
+});
+
 export const themes = {
   dark: darkTheme,
   nord: nordTheme,
-  league: leagueTheme
+  league: leagueTheme,
+  overwatch: overwatchTheme
+}
+
+export function getTheme(themeName: string): CustomTheme {
+  return themes[(themeName as keyof typeof themes)] || themes.dark;
 }
