@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider, CssBaseline, Button, Container, Box } from '@mui/material';
 import ThemeSwitcher from '../ThemeSwitcher';
-import { lightTheme, darkTheme, nordTheme, githubTheme, themes } from '../themes';
+import { darkTheme, nordTheme, themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
 import GameSelector from './GameSelect';
+import { SportSelector } from './SportSelect';
 
 
 
 const HomePage: React.FC = () => {
   const { currentTheme, setTheme } = useThemeStore();
-  const theme = themes[currentTheme];
+  const theme = getTheme(currentTheme);
   const backgroundImage = theme.palette.background.backgroundImage; // Safe access
   const [loaded, setLoaded] = useState(false);
 
@@ -24,12 +25,12 @@ const HomePage: React.FC = () => {
   }, [currentTheme]);
   
   return (
-
+      <Box width={"100vw"}>
       <ThemeProvider theme={theme}>
         {backgroundImage ? <Box
         sx={{
-          width: "100vw",
-          height: "100vh",
+          width: "100%",
+          height: "100%",
           position: "absolute",
           top: 0,
           left: 0,
@@ -41,24 +42,30 @@ const HomePage: React.FC = () => {
           opacity: loaded ? 1 : 0, // Start invisible, then fade in
           transition: "opacity 0.5s ease", // Smooth fade-in effect
           zIndex: 0,
+          display: "flex",
+          flexDirection: "row"
         }}></Box> : null}
         {/* CssBaseline applies the theme's background and text colors */}
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-        <CssBaseline />
-        <TopBar></TopBar>
-        <Container>
-          <Box sx={{ py: 4, textAlign: 'center'}}>
-            <GameSelector></GameSelector>
-            <p>
-              The current theme is <strong>{currentTheme}</strong>.
-            </p>
+        <TopBar />
+        <Box sx={{ 
+
+          position: 'relative', 
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-around",
+          p: 2
+        }}
+        >
+          <Box sx={{ display: "flex"}}>
+            <GameSelector />
           </Box>
-        </Container>
+
+          <Box sx={{ width: 1/3}}>
+            <SportSelector />
+          </Box>
         </Box>
-        <p>
-          login with Discord
-        </p>
-      </ThemeProvider>
+        </ThemeProvider></Box>
 
   );
 };
