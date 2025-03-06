@@ -19,6 +19,8 @@ const GameSelector = () => {
                 fontSize: 42,
                 border: "2px solid",
                 borderColor: "secondary.main",
+                color: "text.primary", // Added text color
+                fontWeight: "bold",  // set text to bold
                 '&:hover': {
                     // Darken secondary color by 20%
                     backgroundColor: (theme) => darken(theme.palette.primary.main, 0.2),
