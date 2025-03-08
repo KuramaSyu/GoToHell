@@ -6,6 +6,7 @@ import (
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/controllers"
+	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/routes"
 
@@ -25,7 +26,7 @@ func main() {
 	appConfig := config.Load()
 
 	// db
-	db := models.InitDB()
+	db := db.InitDB()
 	defer db.Close()
 
 	// Create router
