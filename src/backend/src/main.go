@@ -24,6 +24,10 @@ func main() {
 	// Load configuration
 	appConfig := config.Load()
 
+	// db
+	db := models.InitDB()
+	defer db.Close()
+
 	// Create router
 	r := gin.Default()
 
