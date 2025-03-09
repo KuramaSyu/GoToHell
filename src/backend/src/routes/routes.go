@@ -6,7 +6,11 @@ import (
 )
 
 // SetupRouter configures all application routes
-func SetupRouter(r *gin.Engine, authController *controllers.AuthController) {
+func SetupRouter(
+	r *gin.Engine,
+	authController *controllers.AuthController,
+	sportsController *controllers.SportsController,
+) {
 	// API routes
 	api := r.Group("/api")
 
@@ -14,6 +18,9 @@ func SetupRouter(r *gin.Engine, authController *controllers.AuthController) {
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
+
+	// route for default sports table
+	api.GET("/default", sportsController.Default)
 
 	// Auth routes
 	auth := api.Group("/auth")
