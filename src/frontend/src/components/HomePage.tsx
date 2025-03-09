@@ -5,7 +5,7 @@ import { darkTheme, nordTheme, themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
-import GameSelector from './GameSelect';
+import GameSelector, { AmountDisplay, GameStatsSelector } from './GameSelect';
 import { SportSelector } from './SportSelect';
 
 
@@ -61,9 +61,13 @@ const HomePage: React.FC = () => {
             <GameSelector />
           </Box>
 
-          <Box sx={{ width: 1/3}}>
+          <Box sx={{ width: 1/3, display: "flex", flexDirection: "column"}}>
             <SportSelector />
+            <GameStatsSelector></GameStatsSelector>
           </Box>
+          <Box sx={{ width: 1/3}}>
+            <AmountDisplay></AmountDisplay>
+          </Box>  
         </Box>
         </ThemeProvider></Box>
 
