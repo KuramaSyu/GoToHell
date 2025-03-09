@@ -46,9 +46,13 @@ func main() {
 
 	// Initialize controllers
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig)
-
+	sportsController := controllers.NewSportsController()
 	// Setup routes
-	routes.SetupRouter(r, authController)
+	routes.SetupRouter(
+		r,
+		authController,
+		sportsController,
+	)
 
 	// Start the server
 	if err := r.Run(":8080"); err != nil {
