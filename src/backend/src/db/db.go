@@ -19,10 +19,12 @@ type Sport struct {
 	Game     string `json:"game"`
 }
 
+// Updated Repository interface to include full CRUD operations using the Sport struct.
 type Repository interface {
-	init()
-	InsertSport(kind string, amount int, userID uint64) error
+	InsertSport(sport Sport) error
 	GetSports(userID uint64) ([]Sport, error)
+	UpdateSport(sport Sport) error
+	DeleteSport(id uint) error
 }
 
 func InitDB() *sql.DB {
