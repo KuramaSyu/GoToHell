@@ -6,7 +6,24 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
+
+type Sport struct {
+	ID       uint   `gorm:"primaryKey" json:"id"`
+	Kind     string `json:"kind"`
+	Amount   int    `json:"amount"`
+	Timedate string `json:"timedate"`
+	UserID   uint64 `json:"user_id"`
+	Game     string `json:"game"`
+}
+
+type Repository interface {
+	init()
+	InsertSport(kind string, amount int, userID uint64) error
+	GetSports(userID uint64) ([]Sport, error)
+}
 
 func InitDB() *sql.DB {
 	// Open (or create) SQLite database
@@ -53,13 +70,6 @@ func (d *Database) InsertSport(kind string, amount int, userID uint64) error {
 	return err
 }
 
-type Sport struct {
-	Kind     string `json:"kind"`
-	Amount   int    `json:"amount"`
-	Timedate string `json:"timedate"`
-	UserID   uint64 `json:"user_id"`
-}
-
 func (d *Database) GetSports(userID uint64) ([]Sport, error) {
 	query := `
 	SELECT kind, amount, timedate
@@ -84,4 +94,48 @@ func (d *Database) GetSports(userID uint64) ([]Sport, error) {
 	}
 
 	return sports, nil
+}
+
+// Define ORMRepository using GORM.
+type ORMRepository struct {
+	DB *gorm.DB
+}
+
+// InitORMRepository initializes GORM DB connection and auto-migrates the Sport model.
+func InitORMRepository() *ORMRepository {
+	db, err := gorm.Open(sqlite.Open("go-to-hell.db"), &gorm.Config{})
+	if err != nil {
+		log.Fatal("failed to connect database:", err)
+	}
+	// Auto migrate Sport model.
+	if err := db.AutoMigrate(&Sport{}); err != nil {
+		log.Fatal("failed to migrate:", err)
+	}
+	fmt.Println("ORM Database initialized and migrated.")
+	return &ORMRepository{DB: db}
+}
+
+// InsertSport adds a new Sport entry using ORM.
+func (r *ORMRepository) InsertSport(sport Sport) error {
+	result := r.DB.Create(&sport)
+	return result.Error
+}
+
+// GetSports retrieves Sport entries by userID using ORM.
+func (r *ORMRepository) GetSports(userID uint64) ([]Sport, error) {
+	var sports []Sport
+	result := r.DB.Where("user_id = ?", userID).Find(&sports)
+	return sports, result.Error
+}
+
+// UpdateSport updates a Sport entry using ORM.
+func (r *ORMRepository) UpdateSport(sport Sport) error {
+	result := r.DB.Save(&sport)
+	return result.Error
+}
+
+// DeleteSport removes a Sport entry by ID using ORM.
+func (r *ORMRepository) DeleteSport(id uint) error {
+	result := r.DB.Delete(&Sport{}, id)
+	return result.Error
 }
