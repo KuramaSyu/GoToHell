@@ -7,12 +7,17 @@ import { darken } from '@mui/material/styles';
 import { Sport, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from "./SportSelect";
 
-// Update state type to include the fetched data structure:
+
+const map = new Map();
+map.set("pushup", "Push-Ups")
+map.set("plank", "Seconds Plank")
+
+// Select the sport kind with a button
 export const GameStatsSelector = () => {
     const {currentTheme, setTheme} = useThemeStore();
-    // Remove local state for currentSport and get it from the global store instead:
     const { currentSport, setSport } = useSportStore();
     const [apiData, setApiData] = useState<{ data: Sport[] } | null>(null);
+
     // Fetch data from /api/default on localhost:8080
     useEffect(() => {
         fetch("http://localhost:8080/api/default")
@@ -22,6 +27,15 @@ export const GameStatsSelector = () => {
     }, []);
     if (apiData == null) {
         return (<Typography>Waiting for Gin</Typography>);
+    }
+
+    // change sport, when game is changed
+    if (currentTheme != currentSport?.game) {
+      const matchingSport = apiData.data.find(sport => sport.game === currentTheme && sport.kind == currentSport?.kind);
+      if (matchingSport) {
+        setSport(matchingSport)
+
+      }
     }
     console.log(apiData);
     return (
@@ -108,6 +122,7 @@ export const PopNumber = ({ value, font }: { value: number; font: string }) => {
   export const AmountDisplay = () => {
     const { currentSport } = useSportStore();
     const { amount } = useDeathAmountState();
+    const { currentTheme } = useThemeStore();
   
     if (currentSport == null) {
       return <Box></Box>;
@@ -119,6 +134,7 @@ export const PopNumber = ({ value, font }: { value: number; font: string }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {/* Animate the computed value with PopNumber */}
         <PopNumber value={computedValue} font="Cursive, sans-serif" />
+        <Typography variant="h3">{map.get(currentSport.kind)}</Typography>
       </Box>
     );
   };
