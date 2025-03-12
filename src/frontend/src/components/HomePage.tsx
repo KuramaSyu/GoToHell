@@ -7,6 +7,7 @@ import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
 import GameSelector, { AmountDisplay, GameStatsSelector } from './GameSelect';
 import { SportSelector } from './SportSelect';
+import { UploadScore } from './UploadScore';
 
 
 
@@ -47,29 +48,31 @@ const HomePage: React.FC = () => {
         }}></Box> : null}
         {/* CssBaseline applies the theme's background and text colors */}
         <TopBar />
-        <Box sx={{ 
+        <Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+          <Box sx={{ 
+            position: 'relative', 
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-around",
+            p: 2
+          }}
+          >
+            <Box sx={{ display: "flex"}}>
+              <GameSelector />
+            </Box>
 
-          position: 'relative', 
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          justifyContent: "space-around",
-          p: 2
-        }}
-        >
-          <Box sx={{ display: "flex"}}>
-            <GameSelector />
+            <Box sx={{ width: 1/3, display: "flex", flexDirection: "column"}}>
+              <SportSelector />
+              <GameStatsSelector></GameStatsSelector>
+            </Box>
+            <Box sx={{ display: "flex"}}>
+              <AmountDisplay></AmountDisplay>
+            </Box>
           </Box>
-
-          <Box sx={{ width: 1/3, display: "flex", flexDirection: "column"}}>
-            <SportSelector />
-            <GameStatsSelector></GameStatsSelector>
-          </Box>
-          <Box sx={{ width: 1/3}}>
-            <AmountDisplay></AmountDisplay>
-          </Box>  
+          <Box sx={{display: 'flex', justifyContent: 'center'}}><UploadScore /></Box>
         </Box>
-        </ThemeProvider></Box>
+      </ThemeProvider></Box>
 
   );
 };
