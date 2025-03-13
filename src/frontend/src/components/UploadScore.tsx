@@ -84,7 +84,7 @@ export const UploadScore = () => {
         slotProps={{
             content: {
               sx: {
-                backgroundColor: (theme: any) => alpha(theme.palette.secondary.main, 0.8),
+                backgroundColor: (theme: any) => alpha(theme.palette.secondary.main, 0.6),
                 color: (theme: any) => theme.palette.primary.contrastText,
               },
             },
