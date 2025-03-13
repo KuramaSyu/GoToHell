@@ -8,6 +8,7 @@ import TopBar from './TopBar';
 import GameSelector, { AmountDisplay, GameStatsSelector } from './GameSelect';
 import { SportSelector } from './SportSelect';
 import { UploadScore } from './UploadScore';
+import ErrorDisplay from './ErrorDisplay';
 
 
 
@@ -72,6 +73,7 @@ const HomePage: React.FC = () => {
           </Box>
           <Box sx={{display: 'flex', justifyContent: 'center'}}><UploadScore /></Box>
         </Box>
+        <ErrorDisplay />
       </ThemeProvider></Box>
 
   );
