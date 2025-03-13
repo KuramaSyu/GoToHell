@@ -18,7 +18,8 @@ export const UploadScore = () => {
     const {amount} = useDeathAmountState();
 
     if (!currentSport) {
-        return <Button color="error" size="large">No Sport selected</Button> 
+        // return <Button color="error" size="large">No Sport selected</Button> 
+        return (<Box></Box>)
     }
     const computedValue = currentSport.death_multiplier * amount;
     return (
