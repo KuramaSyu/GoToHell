@@ -47,11 +47,13 @@ const ErrorDisplay: React.FC = () => {
             autoHideDuration={5000}
             onClose={handleClose}
             anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-            slots={{ transition: SlideTransition}}
-            slotProps={{ transition: {onExited: handleExited}}}
+            //slots={{ transition: SlideTransition}}
+            slotProps={{transition: { onExited: handleExited}}}
+            // slotProps={{ transition: {onExited: handleExited}}}
+            key={errorMessage}
         >
             <Typography variant='h4' component="div">
-                <Alert onClose={handleClose} severity='error'>
+                <Alert severity='error'>
                     {errorMessage}
                 </Alert>
             </Typography>
