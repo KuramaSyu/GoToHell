@@ -4,7 +4,7 @@ import { ThemeProvider, CssBaseline, Button, Container, Box, Typography } from '
 import { darkTheme, nordTheme, themes } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import { darken } from '@mui/material/styles';
-import { Sport, useSportStore } from '../useSportStore';
+import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from "./SportSelect";
 
 
@@ -16,13 +16,13 @@ map.set("plank", "Seconds Plank")
 export const GameStatsSelector = () => {
     const {currentTheme, setTheme} = useThemeStore();
     const { currentSport, setSport } = useSportStore();
-    const [apiData, setApiData] = useState<{ data: Sport[] } | null>(null);
+    const [apiData, setApiData] = useState<{ data: SportDefinition[] } | null>(null);
 
     // Fetch data from /api/default on localhost:8080
     useEffect(() => {
         fetch("http://localhost:8080/api/default")
             .then(response => response.json())
-            .then((data: { data: Sport[] }) => setApiData(data))
+            .then((data: { data: SportDefinition[] }) => setApiData(data))
             .catch(console.error);
     }, []);
     if (apiData == null) {

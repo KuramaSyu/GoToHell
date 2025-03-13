@@ -1,10 +1,11 @@
 import {create} from 'zustand';
 
 interface SportStore {
-    currentSport: Sport | null;
-    setSport: (sport: Sport | null) => void;
+    currentSport: SportDefinition | null;
+    setSport: (sport: SportDefinition | null) => void;
 }
-export interface Sport {
+
+export interface SportDefinition {
     kind: string;
     game: string;
     death_multiplier: number;
@@ -12,6 +13,6 @@ export interface Sport {
 
 export const useSportStore = create<SportStore>((set) => ({
     currentSport: null,
-    setSport: (sport: Sport | null) => set({ currentSport: sport }),
+    setSport: (sport: SportDefinition | null) => set({ currentSport: sport }),
 }));
 
