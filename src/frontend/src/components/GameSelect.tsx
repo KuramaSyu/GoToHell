@@ -6,6 +6,7 @@ import { useThemeStore } from '../useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from "./SportSelect";
+import { BACKEND_BASE } from "../statics";
 
 
 const map = new Map();
@@ -20,7 +21,7 @@ export const GameStatsSelector = () => {
 
     // Fetch data from /api/default on localhost:8080
     useEffect(() => {
-        fetch("http://localhost:8080/api/default")
+        fetch(`${BACKEND_BASE}/api/default`)
             .then(response => response.json())
             .then((data: { data: SportDefinition[] }) => setApiData(data))
             .catch(console.error);
