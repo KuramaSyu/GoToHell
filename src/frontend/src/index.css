@@ -29,8 +29,6 @@
   --error-color: #dc3545;
 }
 
-
-
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
