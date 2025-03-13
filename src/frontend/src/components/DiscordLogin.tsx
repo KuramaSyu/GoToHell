@@ -4,6 +4,7 @@ import ThemeSwitcher from '../ThemeSwitcher';
 import { darkTheme, nordTheme, themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import { useUserStore } from '../userStore';
+import { BACKEND_BASE } from '../statics';
 
 
 // Define TypeScript interface for Discord user data
@@ -52,7 +53,7 @@ const DiscordLogin: React.FC = () => {
   useEffect(() => {
     const checkLoginStatus = async (): Promise<void> => {
       try {
-        const response = await fetch('http://localhost:8080/api/auth/user', {
+        const response = await fetch(`${BACKEND_BASE}/api/auth/user`, {
           credentials: 'include',
         });
         
@@ -72,12 +73,12 @@ const DiscordLogin: React.FC = () => {
   }, []);
 
   const handleLogin = (): void => {
-    window.location.href = 'http://localhost:8080/api/auth/discord';
+    window.location.href = `${BACKEND_BASE}/api/auth/discord`;
   };
 
   const handleLogout = async (): Promise<void> => {
     try {
-      await fetch('http://localhost:8080/api/auth/logout', {
+      await fetch(`${BACKEND_BASE}/api/auth/logout`, {
         credentials: 'include',
       });
       setUser(null);
