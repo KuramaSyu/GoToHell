@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -25,6 +26,7 @@ type Repository interface {
 	GetSports(userID uint64) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	DeleteSport(id uint) error
+	GetTotalAmounts(userID uint64) ([]models.SportAmount, error)
 }
 
 func InitDB() *sql.DB {
@@ -128,6 +130,17 @@ func (r *ORMRepository) GetSports(userID uint64) ([]Sport, error) {
 	var sports []Sport
 	result := r.DB.Where("user_id = ?", userID).Find(&sports)
 	return sports, result.Error
+}
+
+// Sum all amounts from a given user and group it by sport kind
+func (r *ORMRepository) GetTotalAmounts(userID uint64) ([]models.SportAmount, error) {
+	var results []models.SportAmount
+	result := r.DB.Model(&Sport{}).Select("kind, sum(amount) as amount").Where("user_id = ?", userID).Group("kind").Scan(&results)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return results, nil
 }
 
 // UpdateSport updates a Sport entry using ORM.
