@@ -8,7 +8,7 @@ import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from "./SportSelect";
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from "../userStore";
-import SportRow from "../models/Sport";
+import SportRow, { SportAmount } from "../models/Sport";
 import useAppState from "../zustand/Error";
 import { alpha } from "@mui/material/styles";
 
@@ -53,6 +53,12 @@ export const UploadScore = () => {
             }
             if (fut.ok) {
                 setSnackbarState("uploaded")
+                const data: { results?: SportAmount[] } = await fut.json();
+
+                if (data.results) {
+                    // data.results is now an array of SportAmount
+                    console.log(data.results);
+                }
             } else {
                 setSnackbarState("failed")
             }
