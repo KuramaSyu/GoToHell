@@ -135,11 +135,15 @@ export const PopNumber = (
     const computedValue = currentSport.death_multiplier * amount;
   
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        {/* Animate the computed value with PopNumber */}
-        <PopNumber value={computedValue} font="Cursive, sans-serif" stiffness={1000} damping={300} mass={1}/>
-        <Typography variant="h3">{map.get(currentSport.kind)}</Typography>
-      </Box>
-    );
+        <Box sx={{display: 'flex', flexDirection: 'row', justifyItems: 'center'}}>
+            <Box sx={{mr: 2}}>
+              <PopNumber value={computedValue} font="Cursive, sans-serif" stiffness={1000} damping={300} mass={1}/>
+            </Box>
+            <Box sx={{display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center'}}>
+              <Typography variant="h6" sx={{justifyContent: 'center'}}>{map.get(currentSport.kind)}</Typography>
+              <Typography variant="subtitle1" sx={{justifyContent: 'center'}}>to do now</Typography>
+            </Box>
+        </Box>
+      );
   };
 
