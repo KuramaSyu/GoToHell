@@ -76,7 +76,7 @@ const GameSelector = () => {
                     backgroundColor: (theme) => darken(theme.palette.primary.main, 0.2),
                     borderColor: (theme) => darken(theme.palette.secondary.main, 0.2),
                 },
-                padding: 5
+                padding: 2
             }}
             >
             {themeKey}
