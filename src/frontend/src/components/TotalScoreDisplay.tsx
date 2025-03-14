@@ -12,6 +12,7 @@ import SportRow, { SportScore } from "../models/Sport";
 import useAppState from "../zustand/Error";
 import { alpha } from "@mui/material/styles";
 import { useTotalScoreStore } from "../zustand/TotalScoreStore";
+import { PopNumber } from "./GameSelect";
 
 const map = new Map();
 map.set("pushup", "Push-Ups")
@@ -29,22 +30,29 @@ const GetScore = (kind: string, amounts: SportScore[]) => {
 
 export const TotalScoreDisplay = () => {
     const {currentSport} = useSportStore();
-    const {amount} = useDeathAmountState();
     const {user} = useUserStore();
-    const {setErrorMessage} = useAppState();
     const {amounts} = useTotalScoreStore();
     
+    if (!currentSport || !user) {
+        return <Typography></Typography>
+    }
     // const for current sport score display
-    const currentScoreDisplay = currentSport ? (
+    const currentSportString = currentSport ? (
         <Typography variant="h6">
-            {map.get(currentSport.kind) || currentSport.kind}: {GetScore(currentSport.kind, amounts)}
+            {map.get(currentSport.kind) || currentSport.kind}
         </Typography>
     ) : null;
 
     return (
-        <Box>
-            <Typography variant="h4">Total Score</Typography>
-            {currentScoreDisplay}
+        <Box sx={{display: 'flex', flexDirection: 'row', justifyItems: 'center'}}>
+            <Box sx={{mr: 2}}>
+                <PopNumber value={GetScore(currentSport!.kind, amounts)} font="Bebas Neue" stiffness={500} damping={200} mass={1}></PopNumber>
+            </Box>
+            <Box sx={{display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center'}}>
+                {currentSportString}
+                <Typography variant="subtitle1" sx={{justifyContent: 'center'}}>in total</Typography>
+
+            </Box>
         </Box>
 
     )
