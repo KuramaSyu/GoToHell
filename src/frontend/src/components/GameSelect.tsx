@@ -88,9 +88,12 @@ const GameSelector = () => {
 
 export default GameSelector;
 
-export const PopNumber = ({ value, font }: { value: number; font: string }) => {
+export const PopNumber = (
+  { value, font, stiffness, damping, mass }: { 
+  value: number; font: string, damping: number, stiffness: number, mass: number }) => {
     // Start with an initial spring value (can be 0 or value)
-    const springValue = useSpring(0, { stiffness: 1000, damping: 300, mass: 1, duration: 500});
+    const springValue = useSpring(0, { stiffness: stiffness, damping: damping, mass: mass});
+
     const [displayed, setDisplayed] = useState(value);
   
     // Update the spring's target when "value" changes.
@@ -134,7 +137,7 @@ export const PopNumber = ({ value, font }: { value: number; font: string }) => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {/* Animate the computed value with PopNumber */}
-        <PopNumber value={computedValue} font="Cursive, sans-serif" />
+        <PopNumber value={computedValue} font="Cursive, sans-serif" stiffness={1000} damping={300} mass={1}/>
         <Typography variant="h3">{map.get(currentSport.kind)}</Typography>
       </Box>
     );
