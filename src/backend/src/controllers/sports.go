@@ -88,17 +88,8 @@ func csvToSports(csv [][]string) gin.H {
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
 	userIDStr := c.Query("user_id")
-	var userID uint64 = 0
-	if userIDStr != "" {
-		parsed, err := strconv.ParseUint(userIDStr, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user_id"})
-			return
-		}
-		userID = parsed
-	}
+	sports, err := sc.repo.GetSports(userIDStr)
 
-	sports, err := sc.repo.GetSports(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

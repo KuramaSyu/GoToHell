@@ -16,17 +16,17 @@ type Sport struct {
 	Kind     string `json:"kind"`
 	Amount   int    `json:"amount"`
 	Timedate string `json:"timedate"`
-	UserID   uint64 `json:"user_id"`
+	UserID   string `json:"user_id"`
 	Game     string `json:"game"`
 }
 
 // Updated Repository interface to include full CRUD operations using the Sport struct.
 type Repository interface {
 	InsertSport(sport Sport) error
-	GetSports(userID uint64) ([]Sport, error)
+	GetSports(userID string) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	DeleteSport(id uint) error
-	GetTotalAmounts(userID uint64) ([]models.SportAmount, error)
+	GetTotalAmounts(userID string) ([]models.SportAmount, error)
 }
 
 func InitDB() *sql.DB {
@@ -64,7 +64,7 @@ type Database struct {
 	db *sql.DB
 }
 
-func (d *Database) InsertSport(kind string, amount int, userID uint64) error {
+func (d *Database) InsertSport(kind string, amount int, userID string) error {
 	query := `
 	INSERT INTO sports (kind, amount, timedate, user_id)
 	VALUES (?, ?, datetime('now'), ?);
@@ -74,7 +74,7 @@ func (d *Database) InsertSport(kind string, amount int, userID uint64) error {
 	return err
 }
 
-func (d *Database) GetSports(userID uint64) ([]Sport, error) {
+func (d *Database) GetSports(userID string) ([]Sport, error) {
 	query := `
 	SELECT kind, amount, timedate
 	FROM sports
@@ -126,14 +126,14 @@ func (r *ORMRepository) InsertSport(sport Sport) error {
 }
 
 // GetSports retrieves Sport entries by userID using ORM.
-func (r *ORMRepository) GetSports(userID uint64) ([]Sport, error) {
+func (r *ORMRepository) GetSports(userID string) ([]Sport, error) {
 	var sports []Sport
 	result := r.DB.Where("user_id = ?", userID).Find(&sports)
 	return sports, result.Error
 }
 
 // Sum all amounts from a given user and group it by sport kind
-func (r *ORMRepository) GetTotalAmounts(userID uint64) ([]models.SportAmount, error) {
+func (r *ORMRepository) GetTotalAmounts(userID string) ([]models.SportAmount, error) {
 	var results []models.SportAmount
 	result := r.DB.Model(&Sport{}).Select("kind, sum(amount) as amount").Where("user_id = ?", userID).Group("kind").Scan(&results)
 	if result.Error != nil {
