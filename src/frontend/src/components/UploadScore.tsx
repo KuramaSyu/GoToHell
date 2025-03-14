@@ -8,13 +8,14 @@ import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from "./SportSelect";
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from "../userStore";
-import SportRow, { SportAmount } from "../models/Sport";
+import SportRow, { SportScore } from "../models/Sport";
 import useAppState from "../zustand/Error";
 import { alpha } from "@mui/material/styles";
+import { useTotalScoreStore } from "../zustand/TotalScoreStore";
 
-const map = new Map();
-map.set("pushup", "Push-Ups")
-map.set("plank", "Seconds Plank")
+export const SportKindMap = new Map();
+SportKindMap.set("pushup", "Push-Ups")
+SportKindMap.set("plank", "Seconds Plank")
 
 
 type SnackbarState = "uploading" | "uploaded" | "failed" | null;
@@ -25,6 +26,7 @@ export const UploadScore = () => {
     const {user} = useUserStore();
     const {setErrorMessage} = useAppState();
     const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
+    const {setAmounts} = useTotalScoreStore();
 
     const OnUploadClick = async () => {
         if (!currentSport) {
@@ -53,11 +55,12 @@ export const UploadScore = () => {
             }
             if (fut.ok) {
                 setSnackbarState("uploaded")
-                const parsed_data: { message?: string, results?: SportAmount[] } = data;
+                const parsed_data: { message?: string, results?: SportScore[] } = data;
 
                 if (parsed_data.results) {
                     // data.results is now an array of SportAmount
                     console.log(data.results);
+                    setAmounts(parsed_data.results);
                 }
             } else {
                 setSnackbarState("failed")
