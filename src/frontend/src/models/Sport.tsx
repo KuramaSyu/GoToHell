@@ -17,6 +17,7 @@ class SportRow {
 
     async upload(): Promise<Response> {
         const response = await fetch(`${BACKEND_BASE}/api/sports`, {
+            credentials: 'include',
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: this.toJson()
@@ -25,4 +26,26 @@ class SportRow {
     }
 }
 
+export interface SportAmount {
+    kind: string;
+    amount: number;
+}
+
+export class SportAmountModel implements SportAmount {
+    kind: string;
+    amount: number;
+
+    constructor(kind: string, amount: number) {
+        this.kind = kind;
+        this.amount = amount;
+    }
+
+    toJson(): string {
+        return JSON.stringify(this);
+    }
+}
+
+export interface SportAmountResponse {
+    result: SportAmount;
+}
 export default SportRow;
