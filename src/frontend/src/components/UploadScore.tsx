@@ -53,9 +53,9 @@ export const UploadScore = () => {
             }
             if (fut.ok) {
                 setSnackbarState("uploaded")
-                const data: { results?: SportAmount[] } = await fut.json();
+                const parsed_data: { message?: string, results?: SportAmount[] } = data;
 
-                if (data.results) {
+                if (parsed_data.results) {
                     // data.results is now an array of SportAmount
                     console.log(data.results);
                 }
