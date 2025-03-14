@@ -9,6 +9,7 @@ import GameSelector, { AmountDisplay, GameStatsSelector } from './GameSelect';
 import { SportSelector } from './SportSelect';
 import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
+import { TotalScoreDisplay } from './TotalScoreDisplay';
 
 
 
@@ -50,6 +51,17 @@ const HomePage: React.FC = () => {
         {/* CssBaseline applies the theme's background and text colors */}
         <TopBar />
         <Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+          <Box sx={{ 
+            position: 'relative', 
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "left",
+            justifyItems: "center",
+            px: 5,
+            mt: 5,
+            mb: 2,
+          }}> <TotalScoreDisplay/> </Box>
           <Box sx={{ 
             position: 'relative', 
             display: "flex",
