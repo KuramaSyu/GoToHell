@@ -51,17 +51,18 @@ const HomePage: React.FC = () => {
         {/* CssBaseline applies the theme's background and text colors */}
         <TopBar />
         <Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-          <Box sx={{ 
-            position: 'relative', 
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            justifyContent: "left",
-            justifyItems: "center",
-            px: 5,
-            mt: 5,
-            mb: 2,
-          }}> <TotalScoreDisplay/> </Box>
+          <Box sx={{              
+              position: 'relative', 
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              justifyItems: "center",
+              px: 5,
+              mt: 5,
+              mu: 2,}}>
+            <Box sx={{display: 'flex'}}> <TotalScoreDisplay/> </Box>
+            <Box sx={{display: 'flex'}}><AmountDisplay/> </Box>
+          </Box>
           <Box sx={{ 
             position: 'relative', 
             display: "flex",
@@ -79,9 +80,7 @@ const HomePage: React.FC = () => {
               <SportSelector />
               <GameStatsSelector></GameStatsSelector>
             </Box>
-            <Box sx={{ display: "flex"}}>
-              <AmountDisplay></AmountDisplay>
-            </Box>
+
           </Box>
           <Box sx={{display: 'flex', justifyContent: 'center'}}><UploadScore /></Box>
         </Box>
