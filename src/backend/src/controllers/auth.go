@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -23,6 +24,23 @@ func NewAuthController(oauthConfig *oauth2.Config) *AuthController {
 	return &AuthController{
 		OAuthConfig: oauthConfig,
 	}
+}
+
+// retrieves the user  by Context and session
+func UserFromSession(c *gin.Context) (*models.User, int, error) {
+	session := sessions.Default(c)
+	userData := session.Get("user")
+	if userData == nil {
+		return nil, http.StatusUnauthorized, fmt.Errorf("not logged in")
+	}
+
+	// Type assert to models.User
+	user, ok := userData.(models.User)
+	if !ok {
+		return nil, http.StatusInternalServerError, fmt.Errorf("invalid user data")
+	}
+
+	return &user, http.StatusOK, nil
 }
 
 // GenerateState creates a random state string for OAuth
