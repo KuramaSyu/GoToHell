@@ -26,12 +26,12 @@ class SportRow {
     }
 }
 
-export interface SportAmount {
+export interface SportScore {
     kind: string;
     amount: number;
 }
 
-export class SportAmountModel implements SportAmount {
+export class SportAmountModel implements SportScore {
     kind: string;
     amount: number;
 
@@ -46,6 +46,6 @@ export class SportAmountModel implements SportAmount {
 }
 
 export interface SportAmountResponse {
-    result: SportAmount;
+    result: SportScore;
 }
 export default SportRow;
