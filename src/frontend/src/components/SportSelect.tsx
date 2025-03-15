@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Box, Typography, ButtonGroup } from '@mui/material';
+import { Button, Box, Typography, ButtonGroup, useTheme } from '@mui/material';
 import { useThemeStore } from '../useThemeStore';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
@@ -18,6 +18,7 @@ const sportIconMap: Record<string, string> = {
 
 // Select the sport kind with a button
 export const SportSelector = () => {
+  const theme = useTheme();
   const { currentTheme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
   const [apiData, setApiData] = useState<{ data: SportDefinition[] } | null>(
@@ -52,6 +53,8 @@ export const SportSelector = () => {
         {apiData.data
           .filter((sport) => sport.game === currentTheme)
           .map((sport) => {
+            const isSelected = sport.kind === currentSport?.kind;
+
             return (
               <Button
                 onClick={() => setSport(sport)}
@@ -59,11 +62,21 @@ export const SportSelector = () => {
                   sport.kind === currentSport?.kind ? 'contained' : 'outlined'
                 }
                 key={sport.kind}
+                sx={{ gap: 3 }}
               >
                 <img
                   src={sportIconMap[sport.kind]}
                   alt={sport.kind}
-                  style={{ width: 50, height: 50 }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    filter: isSelected
+                      ? 'brightness(0) invert(1)'
+                      : theme.palette.mode === 'dark'
+                      ? 'brightness(0) invert(0.8)'
+                      : 'none',
+                    marginRight: 1,
+                  }}
                 />
                 <Typography>{sport.kind}</Typography>
               </Button>
