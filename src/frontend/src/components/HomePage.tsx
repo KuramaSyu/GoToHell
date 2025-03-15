@@ -5,17 +5,19 @@ import {
 	Button,
 	Container,
 	Box,
+	Grid2,
 } from '@mui/material';
 import ThemeSwitcher from '../ThemeSwitcher';
 import { darkTheme, nordTheme, themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
-import { GameSelector, AmountDisplay, SportSelector } from './GameSelect';
+import { GameSelector, AmountDisplay } from './GameSelect';
 import { DeathSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
+import { SportSelector } from './SportSelect';
 
 const HomePage: React.FC = () => {
 	const { currentTheme, setTheme } = useThemeStore();
@@ -111,11 +113,24 @@ const HomePage: React.FC = () => {
 							}}
 						>
 							<DeathSlider />
+							<Box
+								sx={{
+									display: 'flex',
+									flexDirection: 'row',
+									justifyContent: 'center',
+								}}
+							>
+								<UploadScore />
+							</Box>
+						</Box>
+						<Box
+							sx={{
+								alignItems: 'center',
+								display: 'flex',
+							}}
+						>
 							<SportSelector></SportSelector>
 						</Box>
-					</Box>
-					<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-						<UploadScore />
 					</Box>
 				</Box>
 				<ErrorDisplay />
