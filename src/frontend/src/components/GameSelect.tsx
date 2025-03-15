@@ -6,50 +6,34 @@ import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import { BACKEND_BASE } from '../statics';
-
-const map = new Map();
-map.set('pushup', 'Push-Ups');
-map.set('plank', 'Seconds Plank');
+import { GameSelectionMap, GetValidGames } from '../themes';
+import Grid from '@mui/material/Grid2';
+import { DynamicGameGrid } from './DynamicGrid';
 
 export const GameSelector = () => {
   const { currentTheme, setTheme } = useThemeStore();
-  const validGames = ['league', 'overwatch'];
+  const validGames = GetValidGames();
+  const numGames = validGames.length;
+
+  // Dynamically choose number of columns based on the total number of games.
+  // This gives a nearly square grid.
+  const COLS = Math.ceil(Math.sqrt(numGames));
+
+  // Helper: if the game name is long, let it span more columns.
+  // For example, a game like "Overwatch" (longer name) gets more space.
+  const getGridColumnSpan = (gameKey: string) => {
+    // Adjust span: if name length > 5, span 2 columns (but never exceed total COLS)
+    return Math.min(COLS, gameKey.length > 5 ? 2 : 1);
+  };
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        gap: 5,
+    <DynamicGameGrid
+      items={validGames}
+      capacity={{ xs: 6, sm: 8, md: 15 }}
+      onSelect={(item) => {
+        setTheme(item);
       }}
-    >
-      {validGames.map((themeKey) => {
-        return (
-          <Button
-            key={themeKey}
-            variant={currentTheme === themeKey ? 'contained' : 'outlined'}
-            onClick={() => setTheme(themeKey)}
-            sx={{
-              fontSize: 42,
-              border: '2px solid',
-              borderColor: 'secondary.main',
-              color: 'text.primary', // Added text color
-              fontWeight: 'bold', // set text to bold
-              '&:hover': {
-                // Darken secondary color by 20%
-                backgroundColor: (theme) =>
-                  darken(theme.palette.primary.main, 0.2),
-                borderColor: (theme) =>
-                  darken(theme.palette.secondary.main, 0.2),
-              },
-              padding: 2,
-            }}
-          >
-            {themeKey}
-          </Button>
-        );
-      })}
-    </Box>
+    ></DynamicGameGrid>
   );
 };
 
@@ -141,7 +125,7 @@ export const AmountDisplay = () => {
         }}
       >
         <Typography variant="h6" sx={{ justifyContent: 'center' }}>
-          {map.get(currentSport.kind)}
+          {GameSelectionMap.get(currentSport.kind)}
         </Typography>
         <Typography variant="subtitle1" sx={{ justifyContent: 'center' }}>
           to do now
