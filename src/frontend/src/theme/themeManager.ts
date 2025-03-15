@@ -1,4 +1,4 @@
-import { createTheme, Theme } from '@mui/material/styles';
+import { alpha, createTheme, Theme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
 import { CustomThemeConfig, CustomTheme } from './interfaces';
 
@@ -71,6 +71,9 @@ export function buildCustomTheme(
   }) as CustomTheme;
 }
 
+// Helper function that selects the correct color based on mode.
+const autoSelect = (light: string, dark: string, isDark: boolean) =>
+  isDark ? dark : light;
 export class ThemeManager {
   private themes: Map<string, CustomThemeConfig>;
   // For now, we use a constant to choose dark mode; later this can be dynamically set.
