@@ -98,8 +98,10 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
   items,
   capacity,
   onSelect,
+  selectedItem,
 }) => {
   const [currentItem, setItem] = useState<String | null>();
+  const currentmixItem = currentItem || selectedItem;
   const theme = useTheme();
   let game_items: GameItem[] = [];
   for (let i = 0; i < items.length; i++) {
@@ -138,7 +140,7 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
                 <Box key={item.text} sx={{ width: `${widthPercent}%`, px: 1 }}>
                   <AnimatedButton
                     item={item}
-                    isSelected={currentItem === item.text}
+                    isSelected={currentmixItem === item.text}
                     onClick={() => {
                       setItem(item.text);
                       onSelect(item.text);
