@@ -37,7 +37,25 @@ const GetScore = (kind: string, amounts: SportScore[]) => {
 export const TotalScoreDisplay = () => {
   const { currentSport } = useSportStore();
   const { user } = useUserStore();
-  const { amounts } = useTotalScoreStore();
+  const { amounts, setAmounts } = useTotalScoreStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) {
+        return;
+      }
+      const fut = await user.fetchTotalScore();
+      if (fut.ok) {
+        const parsed_data: { results?: SportScore[] } = await fut.json();
+        if (parsed_data.results) {
+          setAmounts(parsed_data.results);
+        }
+      } else {
+        console.error('Failed to fetch total score');
+      }
+    };
+    fetchData();
+  }, [user]);
 
   if (!currentSport || !user) {
     return <Typography></Typography>;
