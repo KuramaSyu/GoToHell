@@ -51,34 +51,6 @@ export default function createTheme(options?: CustomThemeOptions): CustomTheme {
   return muiCreateTheme(baseTheme) as CustomTheme;
 }
 
-export const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#bb86fc' },
-    secondary: { main: '#03dac6' },
-    background: {
-      default: '#121212',
-      paper: '#1e1e1e',
-      backgroundImage:
-        'https://www.bleepstatic.com/content/hl-images/2022/04/08/GitHub__headpic.jpg',
-    },
-    text: { primary: '#ffffff', secondary: '#a8a8a8' },
-  },
-});
-export const nordTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#81a1c1' },
-    secondary: { main: '#5e81ac' },
-    background: {
-      default: '#2e3440',
-      paper: '#3b4252',
-      backgroundImage: '', // Example background image
-    },
-    text: { primary: '#d8dee9', secondary: '#88c0d0' },
-  },
-});
-
 export const leagueTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -114,13 +86,42 @@ export const overwatchTheme = createTheme({
   },
 });
 
+export const tftTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#f4b942' },
+    secondary: { main: '#eb485a' },
+    background: {
+      default: '#481162',
+      paper: '#591435',
+      backgroundImage:
+        'https://i.postimg.cc/cCc5PpJN/wp7407642-little-legends-wallpapers.jpg',
+      //'https://i.postimg.cc/k4kdHDQk/teamfight-tactics-galaxies-penguin-featherknight-uhdpaper-com-4-K-7-1270.jpg',
+    },
+    text: { primary: '#EDEBEB', secondary: '#EDEBEB' },
+  },
+  typography: {
+    fontFamily: "'OverwatchFont', 'Arial', sans-serif", // Use a game-appropriate font if available
+  },
+});
+
+// these will be available
 export const themes = {
-  dark: darkTheme,
-  nord: nordTheme,
   league: leagueTheme,
   overwatch: overwatchTheme,
+  tft: tftTheme,
 };
 
+// convert themes keys to strings
+export const GetValidGames = () => {
+  return Object.keys(themes);
+};
+
+// map for which is shown next to the score
+export const GameSelectionMap = new Map();
+GameSelectionMap.set('pushup', 'Push-Ups');
+GameSelectionMap.set('plank', 'Seconds Plank');
+
 export function getTheme(themeName: string): CustomTheme {
-  return themes[themeName as keyof typeof themes] || themes.dark;
+  return themes[themeName as keyof typeof themes] || themes.league;
 }
