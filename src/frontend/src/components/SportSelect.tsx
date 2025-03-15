@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Box, Typography, ButtonGroup, useTheme } from '@mui/material';
+import { Button, Box, Typography, ButtonGroup, alpha } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
@@ -63,7 +63,12 @@ export const SportSelector = () => {
                   sport.kind === currentSport?.kind ? 'contained' : 'outlined'
                 }
                 key={sport.kind}
-                sx={{ gap: 3 }}
+                sx={{
+                  gap: 3,
+                  backgroundColor: isSelected
+                    ? null
+                    : alpha(theme.palette.muted.dark, 0.2),
+                }}
               >
                 <img
                   src={sportIconMap[sport.kind]}
