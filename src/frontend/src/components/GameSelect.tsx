@@ -1,6 +1,6 @@
 import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import { Button, Box, Typography, ButtonGroup } from '@mui/material';
 import { useThemeStore } from '../useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
@@ -10,6 +10,14 @@ import { BACKEND_BASE } from '../statics';
 const map = new Map();
 map.set('pushup', 'Push-Ups');
 map.set('plank', 'Seconds Plank');
+
+import pushupSVG from '../assets/sports-pushup.svg';
+import plankSVG from '../assets/sports-plank.svg';
+
+const sportIconMap: Record<string, string> = {
+	pushup: pushupSVG,
+	plank: plankSVG,
+};
 
 // Select the sport kind with a button
 export const SportSelector = () => {
@@ -43,27 +51,36 @@ export const SportSelector = () => {
 	console.log(apiData);
 	return (
 		<Box>
-			{/* Print API data as a JSON string */}
-			{apiData.data
-				.filter((sport) => sport.game == currentTheme)
-				.map((sport) => (
-					<Button
-						onClick={() => setSport(sport)}
-						variant={
-							sport.kind == currentSport?.kind
-								? 'contained'
-								: 'outlined'
-						}
-						key={sport.kind}
-					>
-						<Typography>{sport.kind}</Typography>
-					</Button>
-				))}
+			{/* Vertical ButtonGroup for sports selection */}
+			<ButtonGroup orientation="vertical" fullWidth>
+				{apiData.data
+					.filter((sport) => sport.game === currentTheme)
+					.map((sport) => {
+						return (
+							<Button
+								onClick={() => setSport(sport)}
+								variant={
+									sport.kind === currentSport?.kind
+										? 'contained'
+										: 'outlined'
+								}
+								key={sport.kind}
+							>
+								<img
+									src={sportIconMap[sport.kind]}
+									alt={sport.kind}
+									style={{ width: 50, height: 50 }}
+								/>
+								<Typography>{sport.kind}</Typography>
+							</Button>
+						);
+					})}
+			</ButtonGroup>
 		</Box>
 	);
 };
 
-const GameSelector = () => {
+export const GameSelector = () => {
 	const { currentTheme, setTheme } = useThemeStore();
 	const validGames = ['league', 'overwatch'];
 	return (
@@ -75,37 +92,37 @@ const GameSelector = () => {
 				gap: 5,
 			}}
 		>
-			{validGames.map((themeKey) => (
-				<Button
-					key={themeKey}
-					variant={
-						currentTheme === themeKey ? 'contained' : 'outlined'
-					}
-					onClick={() => setTheme(themeKey)}
-					sx={{
-						fontSize: 42,
-						border: '2px solid',
-						borderColor: 'secondary.main',
-						color: 'text.primary', // Added text color
-						fontWeight: 'bold', // set text to bold
-						'&:hover': {
-							// Darken secondary color by 20%
-							backgroundColor: (theme) =>
-								darken(theme.palette.primary.main, 0.2),
-							borderColor: (theme) =>
-								darken(theme.palette.secondary.main, 0.2),
-						},
-						padding: 2,
-					}}
-				>
-					{themeKey}
-				</Button>
-			))}
+			{validGames.map((themeKey) => {
+				return (
+					<Button
+						key={themeKey}
+						variant={
+							currentTheme === themeKey ? 'contained' : 'outlined'
+						}
+						onClick={() => setTheme(themeKey)}
+						sx={{
+							fontSize: 42,
+							border: '2px solid',
+							borderColor: 'secondary.main',
+							color: 'text.primary', // Added text color
+							fontWeight: 'bold', // set text to bold
+							'&:hover': {
+								// Darken secondary color by 20%
+								backgroundColor: (theme) =>
+									darken(theme.palette.primary.main, 0.2),
+								borderColor: (theme) =>
+									darken(theme.palette.secondary.main, 0.2),
+							},
+							padding: 2,
+						}}
+					>
+						{themeKey}
+					</Button>
+				);
+			})}
 		</Box>
 	);
 };
-
-export default GameSelector;
 
 export const PopNumber = ({
 	value,
