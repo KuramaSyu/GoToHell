@@ -34,6 +34,7 @@ export const UploadScore = () => {
   const { setErrorMessage } = useAppState();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts } = useTotalScoreStore();
+  const { theme } = useThemeStore();
 
   const OnUploadClick = async () => {
     if (!currentSport) {
