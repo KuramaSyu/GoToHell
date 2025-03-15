@@ -3,6 +3,7 @@ TODO:
 - set zustand to total amount
 - make animation of number to "upload to a cloud"
 - remove useless imports
+- animated background for upload button, using gradiant
 
 ### Things required to add a game:
 - a theme in `src/frontend/src/themes.ts`
