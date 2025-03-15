@@ -9,8 +9,7 @@ import {
   useSportStore,
 } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
-import { BACKEND_BASE } from '../statics';
-import Grid from '@mui/material/Grid2';
+
 import { DynamicGameGrid } from './DynamicGrid';
 
 export const GameSelector = () => {
