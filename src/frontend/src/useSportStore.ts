@@ -15,3 +15,8 @@ export const useSportStore = create<SportStore>((set) => ({
   currentSport: null,
   setSport: (sport: SportDefinition | null) => set({ currentSport: sport }),
 }));
+
+// map for which is shown next to the score
+export const GameSelectionMap = new Map();
+GameSelectionMap.set('pushup', 'Push-Ups');
+GameSelectionMap.set('plank', 'Seconds Plank');
