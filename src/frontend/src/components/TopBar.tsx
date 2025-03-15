@@ -25,7 +25,7 @@ const TopBar: React.FC = () => {
           <Typography
             variant="h3"
             component="div"
-            sx={{ color: theme.palette.primary.main }}
+            sx={{ color: theme.palette.vibrant.main }}
           >
             Go To Hell
           </Typography>
