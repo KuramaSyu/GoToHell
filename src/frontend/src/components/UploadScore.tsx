@@ -58,7 +58,7 @@ export const UploadScore = () => {
       console.log(data);
       // Calculate elapsed time in milliseconds.
       const elapsedTime = new Date().getTime() - startTime;
-      const minimumDuration = 1000; // 1 second in milliseconds
+      const minimumDuration = 1000;
 
       // Wait for the rest of the minimum duration if necessary.
       if (elapsedTime < minimumDuration) {
