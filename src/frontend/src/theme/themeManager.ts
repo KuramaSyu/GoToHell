@@ -1,6 +1,6 @@
 import { createTheme, Theme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
-import { CustomThemeConfig } from './interfaces';
+import { CustomThemeConfig, CustomTheme } from './interfaces';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -20,6 +20,57 @@ declare module '@mui/material/styles' {
   }
 }
 
+// Assume these variables are defined (extracted via Vibrant, with fallbacks):
+// primaryMain, lightVibrantHex, darkVibrantHex, secondaryMain, lightMutedHex, darkMutedHex,
+// vibrantHex, mutedHex, chosenBackground, config.name, config.longName, and this.isDark
+
+export function buildCustomTheme(
+  primaryMain: string,
+  lightVibrantHex: string,
+  darkVibrantHex: string,
+  secondaryMain: string,
+  lightMutedHex: string,
+  darkMutedHex: string,
+  vibrantHex: string,
+  mutedHex: string,
+  chosenBackground: string,
+  config: { name: string; longName: string },
+  isDark: boolean
+): CustomTheme {
+  return createTheme({
+    palette: {
+      mode: isDark ? 'dark' : 'light',
+      primary: {
+        main: primaryMain,
+        light: lightVibrantHex,
+        dark: darkVibrantHex,
+      },
+      secondary: {
+        main: secondaryMain,
+        light: lightMutedHex,
+        dark: darkMutedHex,
+      },
+      // Extra vibrant palette values
+      vibrant: {
+        main: vibrantHex,
+        light: lightVibrantHex,
+        dark: darkVibrantHex,
+      },
+      // Extra muted palette values
+      muted: {
+        main: mutedHex,
+        light: lightMutedHex,
+        dark: darkMutedHex,
+      },
+    },
+    custom: {
+      backgroundImage: chosenBackground,
+      themeName: config.name,
+      longName: config.longName,
+    },
+  }) as CustomTheme;
+}
+
 export class ThemeManager {
   private themes: Map<string, CustomThemeConfig>;
   // For now, we use a constant to choose dark mode; later this can be dynamically set.
@@ -36,7 +87,7 @@ export class ThemeManager {
    * If config.primary/secondary are provided, they override Vibrant's primary result.
    * The full extracted palette is used to populate primary, secondary, and extra palette keys.
    */
-  public async generateTheme(themeName: string): Promise<Theme | null> {
+  public async generateTheme(themeName: string): Promise<CustomTheme | null> {
     const config = this.themes.get(themeName);
     if (!config) {
       console.warn(`Theme "${themeName}" not found.`);
