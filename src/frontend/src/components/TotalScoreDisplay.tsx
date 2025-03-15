@@ -1,27 +1,12 @@
-import { delay, motion, useMotionValueEvent, useSpring } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
-import {
-  ThemeProvider,
-  CssBaseline,
-  Button,
-  Container,
-  Box,
-  Typography,
-  Snackbar,
-  CircularProgress,
-} from '@mui/material';
-import { darkTheme, nordTheme, themes } from '../themes';
-import { useThemeStore } from '../useThemeStore';
-import { darken } from '@mui/material/styles';
-import { SportDefinition, useSportStore } from '../useSportStore';
-import { useDeathAmountState } from './NumberSlider';
-import SendIcon from '@mui/icons-material/Send';
+import { useEffect } from 'react';
+
 import { useUserStore } from '../userStore';
-import SportRow, { SportScore } from '../models/Sport';
-import useAppState from '../zustand/Error';
-import { alpha } from '@mui/material/styles';
+import { SportScore } from '../models/Sport';
+
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { PopNumber } from './GameSelect';
+import { useSportStore } from '../useSportStore';
+import { Box, Typography } from '@mui/material';
 
 const map = new Map();
 map.set('pushup', 'Push-Ups');
