@@ -48,7 +48,10 @@ const NumberSlider = () => {
         if (amount < min) setAmount(min);
         if (amount > max) setAmount(max);
     };
-
+    var marks = []
+    for (let i = min; i <= max; i++) {
+        marks.push({value: i, label: i.toString()})
+    }
     return (
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%"}}>
@@ -59,11 +62,7 @@ const NumberSlider = () => {
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 type="number"
-
-                sx={{ 
-                    m: 0,
-                    maxWidth: 1/3,
-                }}
+                sx={{ m: 0, maxWidth: 1/3 }}
             ></TextField>
             </Box>
             <Slider
@@ -73,6 +72,7 @@ const NumberSlider = () => {
                 max={max}
                 step={1}
                 aria-labelledby="number-slider"
+                marks={marks}
             ></Slider>
 
         </Box>
