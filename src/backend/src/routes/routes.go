@@ -22,6 +22,7 @@ func SetupRouter(
 	// route for default sports table
 	api.GET("/default", sportsController.Default)
 	api.GET("/sports", sportsController.GetSports)
+	api.GET("/sports/total", sportsController.GetTotalResults)
 	api.POST("/sports", sportsController.PostSport)
 	// Auth routes
 	auth := api.Group("/auth")
