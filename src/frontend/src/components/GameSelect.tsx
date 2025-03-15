@@ -11,14 +11,6 @@ const map = new Map();
 map.set('pushup', 'Push-Ups');
 map.set('plank', 'Seconds Plank');
 
-import pushupSVG from '../assets/sports-pushup.svg';
-import plankSVG from '../assets/sports-plank.svg';
-
-const sportIconMap: Record<string, string> = {
-  pushup: pushupSVG,
-  plank: plankSVG,
-};
-
 export const GameSelector = () => {
   const { currentTheme, setTheme } = useThemeStore();
   const validGames = ['league', 'overwatch'];
