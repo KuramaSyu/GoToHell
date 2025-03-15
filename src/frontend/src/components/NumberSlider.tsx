@@ -1,18 +1,6 @@
-import { motion } from 'framer-motion';
-import React, { useState } from 'react';
-import {
-	ThemeProvider,
-	CssBaseline,
-	Button,
-	Container,
-	Box,
-	Typography,
-	Slider,
-	TextField,
-} from '@mui/material';
-import { darkTheme, nordTheme, themes } from '../themes';
-import { useThemeStore } from '../useThemeStore';
-import { darken } from '@mui/material/styles';
+import React from 'react';
+import { Box, Typography, Slider, TextField } from '@mui/material';
+
 import { create } from 'zustand';
 
 interface DeathAmountState {
