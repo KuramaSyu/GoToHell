@@ -1,6 +1,14 @@
 import React from 'react';
-import { Box, Typography, Slider, TextField } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Slider,
+  TextField,
+  useTheme,
+  Button,
+} from '@mui/material';
 import { create } from 'zustand';
+import { Add, Remove } from '@mui/icons-material';
 
 interface DeathAmountState {
   amount: number;
@@ -22,9 +30,9 @@ export const DeathSlider = () => {
 
 const NumberSlider = () => {
   const { amount, setAmount } = useDeathAmountState();
-
-  const min = 0;
-  const max = 12;
+  const theme = useTheme();
+  const min = Math.min(0, amount);
+  const max = Math.max(12, amount);
 
   // Slider Change
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
@@ -66,15 +74,55 @@ const NumberSlider = () => {
           width: '100%',
         }}
       >
-        <Typography variant="h5">How many deaths?</Typography>
-        <TextField
-          value={amount}
-          slotProps={{ htmlInput: { style: { fontSize: '2rem' } } }}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          type="number"
-          sx={{ m: 0, maxWidth: 1 / 3 }}
-        ></TextField>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 'bold',
+            WebkitTextFillColor: `${theme.palette.text.primary}`,
+            textShadow: `0 0 20px ${theme.palette.secondary.main}, 0 0 20px ${theme.palette.secondary.main}`,
+          }}
+        >
+          How many deaths?
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            gap: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={() => setAmount(amount - 1)}
+            sx={{
+              borderRadius: '50%',
+              width: '80%', // Make the button fill the container
+              height: '80%', // Make the button fill the container
+              minWidth: 0, // Ensure the button does not expand
+              minHeight: 0, // Ensure the button does not expand
+              aspectRatio: '1 / 1',
+              display: 'flex',
+            }}
+          >
+            <Remove />
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => setAmount(amount + 1)}
+            sx={{
+              borderRadius: '50%',
+              width: '80%', // Make the button fill the container
+              height: '80%', // Make the button fill the container
+              minWidth: 0, // Ensure the button does not expand
+              minHeight: 0, // Ensure the button does not expand
+              aspectRatio: '1 / 1',
+              display: 'flex',
+            }}
+          >
+            <Add />
+          </Button>
+        </Box>
       </Box>
       <Slider
         value={amount}
