@@ -9,8 +9,6 @@ import {
   Avatar,
   Typography,
 } from '@mui/material';
-import ThemeSwitcher from '../ThemeSwitcher';
-import { themes, getTheme } from '../themes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { useUserStore } from '../userStore';
 import { BACKEND_BASE } from '../statics';

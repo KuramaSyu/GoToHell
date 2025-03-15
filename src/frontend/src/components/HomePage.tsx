@@ -7,8 +7,7 @@ import {
   Box,
   Grid2,
 } from '@mui/material';
-import ThemeSwitcher from '../ThemeSwitcher';
-import { themes, getTheme } from '../themes';
+
 import { useThemeStore } from '../zustand/useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';

@@ -10,7 +10,6 @@ import {
   Snackbar,
   CircularProgress,
 } from '@mui/material';
-import { themes } from '../themes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';

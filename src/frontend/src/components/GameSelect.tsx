@@ -3,10 +3,13 @@ import { useState, useEffect } from 'react';
 import { Button, Box, Typography, ButtonGroup } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
-import { SportDefinition, useSportStore } from '../useSportStore';
+import {
+  GameSelectionMap,
+  SportDefinition,
+  useSportStore,
+} from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import { BACKEND_BASE } from '../statics';
-import { GameSelectionMap, GetValidGames } from '../themes';
 import Grid from '@mui/material/Grid2';
 import { DynamicGameGrid } from './DynamicGrid';
 
