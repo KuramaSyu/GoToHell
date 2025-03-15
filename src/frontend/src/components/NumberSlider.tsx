@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography, Slider, TextField } from '@mui/material';
-
 import { create } from 'zustand';
 
 interface DeathAmountState {

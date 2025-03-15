@@ -13,9 +13,9 @@ export const useThemeStore = create<ThemeState>((set) => ({
 	setTheme: (theme: string) => {
 		const keys = Object.keys(themes);
 		if (keys.includes(theme)) {
-			set({ currentTheme: theme })
+			set({ currentTheme: theme });
 		} else {
-			set({ currentTheme: 'dark' })
+			set({ currentTheme: 'dark' });
 		}
 	},
 }));

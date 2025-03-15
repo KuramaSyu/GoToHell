@@ -1,13 +1,5 @@
-import { motion } from 'framer-motion';
-import React from 'react';
-import {
-	ThemeProvider,
-	CssBaseline,
-	Button,
-	Container,
-	Box,
-} from '@mui/material';
-import { darkTheme, nordTheme, themes } from './themes';
+import { Button, Box } from '@mui/material';
+import { themes } from './themes';
 import { useThemeStore } from './useThemeStore';
 
 const ThemeSwitcher = () => {
@@ -17,13 +9,9 @@ const ThemeSwitcher = () => {
 			{Object.keys(themes).map((themeKey) => (
 				<Button
 					key={themeKey}
-					variant={
-						currentTheme === themeKey ? 'contained' : 'outlined'
-					}
+					variant={currentTheme === themeKey ? 'contained' : 'outlined'}
 					onClick={() =>
-						setTheme(
-							themeKey as 'light' | 'dark' | 'nord' | 'github'
-						)
+						setTheme(themeKey as 'light' | 'dark' | 'nord' | 'github')
 					}
 				>
 					{themeKey}
