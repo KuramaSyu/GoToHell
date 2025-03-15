@@ -5,12 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { useTheme } from '@mui/material';
 
 const TopBar: React.FC = () => {
-  //const {currentTheme, setTheme} = useThemeStore();
-
+  const { theme } = useThemeStore();
   return (
-    <AppBar position="fixed">
+    <AppBar
+      position="fixed"
+      sx={{ backgroundColor: theme.palette.secondary.dark }}
+    >
       <Toolbar>
         <Box
           sx={{
@@ -22,7 +25,7 @@ const TopBar: React.FC = () => {
           <Typography
             variant="h3"
             component="div"
-            sx={{ color: 'secondary.main' }}
+            sx={{ color: theme.palette.primary.main }}
           >
             Go To Hell
           </Typography>
