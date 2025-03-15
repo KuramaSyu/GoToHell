@@ -111,6 +111,22 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": sports})
 }
 
+func (sc *SportsController) GetTotalResults(c *gin.Context) {
+	// Check if user is logged in via Discord
+	user, status, err := UserFromSession(c)
+	if err != nil {
+		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	amount, err := sc.repo.GetTotalAmounts(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"results": amount})
+}
+
 // PostSport accepts a JSON payload for one or multiple sports and stores them using the repo.
 // since the app will directly after this, ask for the total amount, this will
 // be returned as well in "result" or an error message in "error"
