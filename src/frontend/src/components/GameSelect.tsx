@@ -32,6 +32,7 @@ export const GameSelector = () => {
     <DynamicGameGrid
       items={validGames}
       capacity={{ xs: 6, sm: 8, md: 15 }}
+      selectedItem={theme.custom.themeName}
       onSelect={async (item) => {
         await setTheme(item);
       }}
