@@ -49,6 +49,12 @@ class DiscordUserImpl implements DiscordUser {
   getAvatarUrl(): string {
     return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
   }
+
+  async fetchTotalScore(): Promise<Response> {
+    return await fetch(`${BACKEND_BASE}/api/sports/total`, {
+      credentials: 'include',
+    });
+  }
 }
 
 export { DiscordUserImpl };
