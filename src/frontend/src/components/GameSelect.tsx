@@ -5,7 +5,7 @@ import { darkTheme, nordTheme, themes } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
-import { useDeathAmountState } from "./SportSelect";
+import { useDeathAmountState } from "./NumberSlider";
 import { BACKEND_BASE } from "../statics";
 
 

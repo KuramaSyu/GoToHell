@@ -5,7 +5,7 @@ import { darkTheme, nordTheme, themes } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
-import { useDeathAmountState } from "./SportSelect";
+import { useDeathAmountState } from "./NumberSlider";
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from "../userStore";
 import SportRow, { SportScore } from "../models/Sport";

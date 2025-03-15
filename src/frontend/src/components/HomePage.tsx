@@ -6,7 +6,7 @@ import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
 import GameSelector, { AmountDisplay, GameStatsSelector } from './GameSelect';
-import { SportSelector } from './SportSelect';
+import { SportSelector } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
