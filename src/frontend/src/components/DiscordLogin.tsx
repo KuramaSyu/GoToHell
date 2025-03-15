@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import ThemeSwitcher from '../ThemeSwitcher';
-import { darkTheme, nordTheme, themes, getTheme } from '../themes';
+import { themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import { useUserStore } from '../userStore';
 import { BACKEND_BASE } from '../statics';
