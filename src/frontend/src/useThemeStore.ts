@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { themes } from './themes';
 
-type ThemeName = 'light' | 'dark' | 'nord' | 'github';
-
 interface ThemeState {
   currentTheme: string;
   setTheme: (theme: string) => void;
