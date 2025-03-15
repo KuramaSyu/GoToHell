@@ -5,8 +5,8 @@ import { darkTheme, nordTheme, themes, getTheme } from '../themes';
 import { useThemeStore } from '../useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
-import GameSelector, { AmountDisplay, GameStatsSelector } from './GameSelect';
-import { SportSelector } from './NumberSlider';
+import GameSelector, { AmountDisplay, SportSelector } from './GameSelect';
+import { DeathSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          filter: backgroundImage ? "blur(10px)" : "none",
+          filter: backgroundImage ? "blur(9px)" : "none",
           opacity: loaded ? 1 : 0, // Start invisible, then fade in
           transition: "opacity 0.5s ease", // Smooth fade-in effect
           zIndex: 0,
@@ -77,8 +77,8 @@ const HomePage: React.FC = () => {
             </Box>
 
             <Box sx={{ width: 1/3, display: "flex", flexDirection: "column"}}>
-              <SportSelector />
-              <GameStatsSelector></GameStatsSelector>
+              <DeathSlider />
+              <SportSelector></SportSelector>
             </Box>
 
           </Box>

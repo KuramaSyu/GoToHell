@@ -16,7 +16,7 @@ export const useDeathAmountState = create<DeathAmountState>((set) => ({
     setAmount: (value: number) => set({ amount: value})
 }))
 
-export const SportSelector = () => {
+export const DeathSlider = () => {
     return (
         <Box>
             <NumberSlider></NumberSlider>
