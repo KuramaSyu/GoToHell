@@ -1,14 +1,6 @@
-import { delay, motion, useMotionValueEvent, useSpring } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
-import {
-	ThemeProvider,
-	CssBaseline,
-	Button,
-	Container,
-	Box,
-	Typography,
-} from '@mui/material';
-import { darkTheme, nordTheme, themes } from '../themes';
+import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { Button, Box, Typography } from '@mui/material';
 import { useThemeStore } from '../useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
@@ -170,7 +162,6 @@ export const PopNumber = ({
 export const AmountDisplay = () => {
 	const { currentSport } = useSportStore();
 	const { amount } = useDeathAmountState();
-	const { currentTheme } = useThemeStore();
 
 	if (currentSport == null) {
 		return <Box></Box>;
