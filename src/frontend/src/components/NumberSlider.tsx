@@ -50,8 +50,22 @@ const NumberSlider = () => {
     };
 
     return (
-        <Box sx={{ p: 2}}>
-            <Typography variant="h6">How often did you die this time?</Typography>
+        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "100%"}}>
+                <Typography variant="h5">How many deaths?</Typography>
+                <TextField
+                value={amount}
+                slotProps={{ htmlInput: {style: { fontSize: '2rem' } }}}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                type="number"
+
+                sx={{ 
+                    m: 0,
+                    maxWidth: 1/3,
+                }}
+            ></TextField>
+            </Box>
             <Slider
                 value={amount}
                 onChange={handleSliderChange}
@@ -60,13 +74,7 @@ const NumberSlider = () => {
                 step={1}
                 aria-labelledby="number-slider"
             ></Slider>
-            <TextField
-                value={amount}
-                onChange={handleInputChange}
-                onBlur={handleBlur}
-                type="number"
-                sx={{ mt: 2, width: "100px"}}
-            ></TextField>
+
         </Box>
     );
 };
