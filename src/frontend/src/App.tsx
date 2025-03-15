@@ -9,26 +9,26 @@ import { CssBaseline } from '@mui/material';
 // Import other components as needed
 
 const App: React.FC = () => {
-	return (
-		<Router>
-			<CssBaseline />
-			<div className="app">
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/login-success" element={<HomePage />} />
-					{/* Add other routes as needed */}
-				</Routes>
-			</div>
-		</Router>
-	);
+  return (
+    <Router>
+      <CssBaseline />
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login-success" element={<HomePage />} />
+          {/* Add other routes as needed */}
+        </Routes>
+      </div>
+    </Router>
+  );
 };
 
 const LoginSuccess: React.FC = () => {
-	React.useEffect(() => {
-		// You could add a redirect timer or other logic here
-	}, []);
+  React.useEffect(() => {
+    // You could add a redirect timer or other logic here
+  }, []);
 
-	return <div>Login Successful! Redirecting...</div>;
+  return <div>Login Successful! Redirecting...</div>;
 };
 
 export default App;

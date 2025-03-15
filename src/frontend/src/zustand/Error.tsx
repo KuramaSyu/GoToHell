@@ -1,13 +1,13 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 interface AppState {
-    errorMessage: string;
-    setErrorMessage: (message: string) => void;
+  errorMessage: string;
+  setErrorMessage: (message: string) => void;
 }
 
 const useAppState = create<AppState>((set) => ({
-    errorMessage: '',
-    setErrorMessage: (message) => set({ errorMessage: message}),
+  errorMessage: '',
+  setErrorMessage: (message) => set({ errorMessage: message }),
 }));
 
-export default useAppState
+export default useAppState;
