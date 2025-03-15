@@ -79,8 +79,6 @@ const HomePage: React.FC = () => {
               justifyContent: 'space-between',
               justifyItems: 'center',
               px: 5,
-              mt: 5,
-              mu: 2,
             }}
           >
             <Box sx={{ display: 'flex' }}>
