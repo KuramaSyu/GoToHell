@@ -16,6 +16,7 @@
     "@mui/material": "^6.4.6",
     "@tailwindcss/vite": "^4.0.9",
     "framer-motion": "^12.4.7",
+    "node-vibrant": "^4.0.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^7.2.0",

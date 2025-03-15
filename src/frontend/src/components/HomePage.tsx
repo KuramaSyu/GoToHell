@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import ThemeSwitcher from '../ThemeSwitcher';
 import { themes, getTheme } from '../themes';
-import { useThemeStore } from '../useThemeStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
 import { GameSelector, AmountDisplay } from './GameSelect';
@@ -20,25 +20,24 @@ import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
 
 const HomePage: React.FC = () => {
-  const { currentTheme, setTheme } = useThemeStore();
-  const theme = getTheme(currentTheme);
-  const backgroundImage = theme.palette.background.backgroundImage; // Safe access
+  const { theme, setTheme } = useThemeStore();
+  const backgroundImage = theme.custom.backgroundImage; // Safe access
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (
-      theme.palette.background.backgroundImage == undefined ||
-      theme.palette.background.backgroundImage == ''
+      theme.custom.backgroundImage == undefined ||
+      theme.custom.backgroundImage == ''
     ) {
       setLoaded(false);
     } else {
       setLoaded(true); // Trigger fade-in after component mounts
     }
-  }, [currentTheme]);
+  }, [theme]);
 
   return (
     <Box width={'100vw'}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme!}>
         {backgroundImage ? (
           <Box
             sx={{

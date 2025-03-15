@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Box, Typography, ButtonGroup, useTheme } from '@mui/material';
-import { useThemeStore } from '../useThemeStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
 
@@ -18,8 +18,7 @@ const sportIconMap: Record<string, string> = {
 
 // Select the sport kind with a button
 export const SportSelector = () => {
-  const theme = useTheme();
-  const { currentTheme } = useThemeStore();
+  const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
   const [apiData, setApiData] = useState<{ data: SportDefinition[] } | null>(
     null
@@ -37,9 +36,11 @@ export const SportSelector = () => {
   }
 
   // change sport, when game is changed
-  if (currentTheme != currentSport?.game) {
+  if (theme.custom.themeName != currentSport?.game) {
     const matchingSport = apiData.data.find(
-      (sport) => sport.game === currentTheme && sport.kind == currentSport?.kind
+      (sport) =>
+        sport.game === theme.custom.themeName &&
+        sport.kind == currentSport?.kind
     );
     if (matchingSport) {
       setSport(matchingSport);
@@ -51,7 +52,7 @@ export const SportSelector = () => {
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
         {apiData.data
-          .filter((sport) => sport.game === currentTheme)
+          .filter((sport) => sport.game === theme.custom.themeName)
           .map((sport) => {
             const isSelected = sport.kind === currentSport?.kind;
 

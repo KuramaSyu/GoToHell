@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
-import { useThemeStore } from '../useThemeStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 const TopBar: React.FC = () => {
   //const {currentTheme, setTheme} = useThemeStore();

@@ -10,8 +10,8 @@ import {
   Snackbar,
   CircularProgress,
 } from '@mui/material';
-import { darkTheme, nordTheme, themes } from '../themes';
-import { useThemeStore } from '../useThemeStore';
+import { themes } from '../themes';
+import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';

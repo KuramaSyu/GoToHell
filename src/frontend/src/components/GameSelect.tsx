@@ -1,7 +1,7 @@
 import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Button, Box, Typography, ButtonGroup } from '@mui/material';
-import { useThemeStore } from '../useThemeStore';
+import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
@@ -11,8 +11,8 @@ import Grid from '@mui/material/Grid2';
 import { DynamicGameGrid } from './DynamicGrid';
 
 export const GameSelector = () => {
-  const { currentTheme, setTheme } = useThemeStore();
-  const validGames = GetValidGames();
+  const { theme, setTheme } = useThemeStore();
+  const validGames = getThemeNames();
   const numGames = validGames.length;
 
   // Dynamically choose number of columns based on the total number of games.
@@ -30,8 +30,8 @@ export const GameSelector = () => {
     <DynamicGameGrid
       items={validGames}
       capacity={{ xs: 6, sm: 8, md: 15 }}
-      onSelect={(item) => {
-        setTheme(item);
+      onSelect={async (item) => {
+        await setTheme(item);
       }}
     ></DynamicGameGrid>
   );

@@ -1,64 +1,70 @@
 @import "tailwindcss";
+/* Add these styles at the beginning of your CSS file */
+html, body {
+  background-color: #242424; /* Ensure the background is dark */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
 
+body {
+  color: var(--text-color);
+  transition: background-color 0.5s ease, color 0.5s ease;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
+  color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-:root {
-  --bg-color: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-color: #222222;
-  --text-muted: #6c757d;
+  
+  /* Dark theme variables */
+  --bg-color: #242424;
+  --bg-secondary: #1a1a1a;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --text-muted: #adb5bd;
   --primary-color: #007bff;
   --primary-hover: #0056b3;
-  --border-color: #dee2e6;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --border-color: #495057;
+  --shadow-color: rgba(0, 0, 0, 0.5);
   --success-color: #28a745;
   --warning-color: #ffc107;
   --error-color: #dc3545;
 }
 
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.5s ease, color 0.5s ease;
+html, body {
+  background-color: #242424;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
 }
 
-
 body {
-  background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.5s ease, color 0.5s ease;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
 }
-
-
 
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -74,26 +80,18 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
+  color: var(--text-color);
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+/* Remove light mode media query to stay in dark mode always */

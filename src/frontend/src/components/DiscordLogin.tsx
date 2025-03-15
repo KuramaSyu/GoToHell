@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import ThemeSwitcher from '../ThemeSwitcher';
 import { themes, getTheme } from '../themes';
-import { useThemeStore } from '../useThemeStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 import { useUserStore } from '../userStore';
 import { BACKEND_BASE } from '../statics';
 
@@ -62,7 +62,7 @@ export { DiscordUserImpl };
 const DiscordLogin: React.FC = () => {
   const { user, setUser } = useUserStore();
   const [loading, setLoading] = useState<boolean>(true);
-  const { currentTheme, setTheme } = useThemeStore();
+  const { theme } = useThemeStore();
   // Check if user is already logged in
   useEffect(() => {
     const checkLoginStatus = async (): Promise<void> => {
@@ -106,7 +106,7 @@ const DiscordLogin: React.FC = () => {
   }
 
   return (
-    <ThemeProvider theme={getTheme(currentTheme)}>
+    <ThemeProvider theme={theme!}>
       {/* CssBaseline applies the theme's background and text colors */}
       <CssBaseline />
       <Paper
