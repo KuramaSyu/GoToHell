@@ -5,6 +5,8 @@ services:
     build: ./src/backend
     # ports:
     #   - "8080:8080"
+    env_file:
+      - .env
     environment:
       - SESSION_SECRET=yourSessionSecret
       - FRONTEND_URL=http://localhost:5173
@@ -19,8 +21,8 @@ services:
 
   frontend:
     build: ./src/frontend
-    # ports:
-    #   - "5173:5173"
+    ports:
+      - "5173:80"
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:8080
 
