@@ -92,19 +92,9 @@ export const UploadScore = () => {
   const computedValue = currentSport.death_multiplier * amount;
   return (
     <Box>
-      {/* <Button
-        sx={{ px: 8, py: 3 }}
-        variant="outlined"
-        endIcon={<SendIcon fontWeight="large" />}
-        onClick={OnUploadClick}
-      >
-        <Typography variant="h4" fontWeight="bold">
-          Upload
-        </Typography>
-      </Button> */}
       <AnimatedButton
         onClick={OnUploadClick}
-        duration={amount !== 0 ? Math.max(40 - amount, 8) : 0}
+        duration={amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0}
       >
         <Box
           sx={{
