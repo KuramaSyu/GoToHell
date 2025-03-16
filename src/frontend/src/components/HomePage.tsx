@@ -17,6 +17,7 @@ import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
+import AnimatedButton from './AnimatedButton';
 
 const HomePage: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
@@ -60,7 +61,6 @@ const HomePage: React.FC = () => {
             }}
           ></Box>
         ) : null}
-        {/* CssBaseline applies the theme's background and text colors */}
         <TopBar />
         <Box
           sx={{
@@ -117,6 +117,7 @@ const HomePage: React.FC = () => {
                 }}
               >
                 <UploadScore />
+                {/* <AnimatedButton></AnimatedButton> */}
               </Box>
             </Box>
             <Box
