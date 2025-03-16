@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"encoding/csv"
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 
+	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/gin-gonic/gin"
 )
@@ -36,22 +35,22 @@ func NewSportsController() *SportsController {
 
 // Default returns a list of Sports structs based on the default CSV.
 func (sc *SportsController) Default(c *gin.Context) {
-	file, err := os.Open("config/default_sports.csv")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	defer file.Close()
+	// file, err := os.Open("config/default_sports.csv")
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	return
+	// }
+	// defer file.Close()
 
-	reader := csv.NewReader(file)
-	reader.Comma = ';'
-	records, err := reader.ReadAll()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	// reader := csv.NewReader(file)
+	// reader.Comma = ';'
+	// records, err := reader.ReadAll()
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	return
+	// }
 	// Updated conversion from CSV to list of Sports structs.
-	c.JSON(http.StatusOK, csvToSports(records))
+	c.JSON(http.StatusOK, csvToSports(config.DefaultSportsCsv))
 }
 
 // csvToSports converts CSV data to a JSON structure of Sports.
