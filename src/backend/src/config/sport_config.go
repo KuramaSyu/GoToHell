@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-//go:emebd default_sports.csv
+//go:embed default_sports.csv
 var defaultSportsBytes []byte
 
 var DefaultSportsCsv [][]string
@@ -19,5 +19,6 @@ func init() {
 	if err != nil {
 		log.Fatalf("feiled to parse default_sports.csv: %v", err)
 	}
+	log.Printf("records: %v, len byptes: %v", records, len(defaultSportsBytes))
 	DefaultSportsCsv = records
 }
