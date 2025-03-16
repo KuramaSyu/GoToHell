@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ThemeProvider,
-  CssBaseline,
-  Button,
-  Container,
-  Box,
-  Paper,
-  Avatar,
-  Typography,
-} from '@mui/material';
+import { ThemeProvider, CssBaseline, Button, Box, Avatar } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { useUserStore } from '../userStore';
 import { BACKEND_BASE } from '../statics';

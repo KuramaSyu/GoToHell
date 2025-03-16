@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { useTheme } from '@mui/material';
 
 const TopBar: React.FC = () => {
   const { theme } = useThemeStore();

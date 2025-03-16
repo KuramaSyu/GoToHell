@@ -1,12 +1,4 @@
-import React from 'react';
-import {
-  Box,
-  Typography,
-  Slider,
-  TextField,
-  useTheme,
-  Button,
-} from '@mui/material';
+import { Box, Typography, Slider, useTheme, Button } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
 
@@ -40,18 +32,18 @@ const NumberSlider = () => {
   };
 
   // manual input
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newValue = Number(event.target.value);
-    if (!isNaN(newValue)) {
-      if (amount < min) newValue = min;
-      setAmount(newValue);
-    }
-  };
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   let newValue = Number(event.target.value);
+  //   if (!isNaN(newValue)) {
+  //     if (amount < min) newValue = min;
+  //     setAmount(newValue);
+  //   }
+  // };
 
-  const handleBlur = () => {
-    if (amount < min) setAmount(min);
-    if (amount > max) setAmount(max);
-  };
+  // const handleBlur = () => {
+  //   if (amount < min) setAmount(min);
+  //   if (amount > max) setAmount(max);
+  // };
   var marks = [];
   for (let i = min; i <= max; i++) {
     marks.push({ value: i, label: i.toString() });

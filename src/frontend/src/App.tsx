@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import DiscordLogin from './components/DiscordLogin';
 import './styles/DiscordLogin.css';
 import './App.css';
 import HomePage from './components/HomePage';
@@ -23,12 +22,12 @@ const App: React.FC = () => {
   );
 };
 
-const LoginSuccess: React.FC = () => {
-  React.useEffect(() => {
-    // You could add a redirect timer or other logic here
-  }, []);
+// const LoginSuccess: React.FC = () => {
+//   React.useEffect(() => {
+//     // You could add a redirect timer or other logic here
+//   }, []);
 
-  return <div>Login Successful! Redirecting...</div>;
-};
+//   return <div>Login Successful! Redirecting...</div>;
+// };
 
 export default App;

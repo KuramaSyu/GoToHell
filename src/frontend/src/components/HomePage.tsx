@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ThemeProvider,
-  CssBaseline,
-  Button,
-  Container,
-  Box,
-  Grid2,
-} from '@mui/material';
+import { ThemeProvider, Box } from '@mui/material';
 
 import { useThemeStore } from '../zustand/useThemeStore';
-import DiscordLogin from './DiscordLogin';
 import TopBar from './TopBar';
 import { GameSelector, AmountDisplay } from './GameSelect';
 import { DeathSlider } from './NumberSlider';
@@ -17,10 +9,9 @@ import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
-import AnimatedButton from './AnimatedButton';
 
 const HomePage: React.FC = () => {
-  const { theme, setTheme } = useThemeStore();
+  const { theme } = useThemeStore();
   const backgroundImage = theme.custom.backgroundImage; // Safe access
   const [loaded, setLoaded] = useState(false);
 

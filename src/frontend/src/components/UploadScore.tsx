@@ -1,18 +1,6 @@
-import { delay, motion, useMotionValueEvent, useSpring } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
-import {
-  ThemeProvider,
-  CssBaseline,
-  Button,
-  Container,
-  Box,
-  Typography,
-  Snackbar,
-  CircularProgress,
-} from '@mui/material';
-import { useThemeStore } from '../zustand/useThemeStore';
-import { darken } from '@mui/material/styles';
-import { SportDefinition, useSportStore } from '../useSportStore';
+import { useState } from 'react';
+import { Box, Typography, Snackbar, CircularProgress } from '@mui/material';
+import { useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from '../userStore';
@@ -21,7 +9,6 @@ import useAppState from '../zustand/Error';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
-import { Send } from '@mui/icons-material';
 
 export const SportKindMap = new Map();
 SportKindMap.set('pushup', 'Push-Ups');
@@ -36,7 +23,6 @@ export const UploadScore = () => {
   const { setErrorMessage } = useAppState();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts } = useTotalScoreStore();
-  const { theme } = useThemeStore();
 
   const OnUploadClick = async () => {
     if (!currentSport) {

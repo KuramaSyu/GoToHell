@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Snackbar, Alert, Typography, SlideProps, Slide } from '@mui/material';
+import { Snackbar, Alert, Typography } from '@mui/material';
 import useAppState from '../zustand/Error';
 
 const ErrorDisplay: React.FC = () => {
@@ -25,12 +25,12 @@ const ErrorDisplay: React.FC = () => {
     }
   }, [open]);
   // Slide animation
-  const SlideTransition = (props: SlideProps) => {
-    return <Slide {...props} direction="down" />;
-  };
+  // const SlideTransition = (props: SlideProps) => {
+  //   return <Slide {...props} direction="down" />;
+  // };
 
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
     if (reason === 'clickaway') return;

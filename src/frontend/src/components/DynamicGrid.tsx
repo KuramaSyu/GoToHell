@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import { darken } from '@mui/material/styles';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, AnimatedProps, useSpring } from '@react-spring/web';
 
 export interface GameItem {
   text: string;
@@ -49,6 +49,9 @@ const computeRows = (items: GameItem[], capacity: number): GameItem[][] => {
   return rows;
 };
 
+const AnimatedDiv: React.FC<
+  AnimatedProps<{ style: React.CSSProperties }> & { children: React.ReactNode }
+> = animated.div;
 /**
  * A button with react-spring animation.
  */
@@ -65,7 +68,7 @@ const AnimatedButton: React.FC<{
   });
 
   return (
-    <animated.div style={spring}>
+    <AnimatedDiv style={spring}>
       <Button
         fullWidth
         variant={isSelected ? 'contained' : 'outlined'}
@@ -86,7 +89,7 @@ const AnimatedButton: React.FC<{
       >
         {item.text}
       </Button>
-    </animated.div>
+    </AnimatedDiv>
   );
 };
 

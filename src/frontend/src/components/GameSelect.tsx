@@ -1,13 +1,8 @@
 import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Button, Box, Typography, ButtonGroup } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
-import { darken } from '@mui/material/styles';
-import {
-  GameSelectionMap,
-  SportDefinition,
-  useSportStore,
-} from '../useSportStore';
+import { GameSelectionMap, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 
 import { DynamicGameGrid } from './DynamicGrid';
@@ -15,18 +10,6 @@ import { DynamicGameGrid } from './DynamicGrid';
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
   const validGames = getThemeNames();
-  const numGames = validGames.length;
-
-  // Dynamically choose number of columns based on the total number of games.
-  // This gives a nearly square grid.
-  const COLS = Math.ceil(Math.sqrt(numGames));
-
-  // Helper: if the game name is long, let it span more columns.
-  // For example, a game like "Overwatch" (longer name) gets more space.
-  const getGridColumnSpan = (gameKey: string) => {
-    // Adjust span: if name length > 5, span 2 columns (but never exceed total COLS)
-    return Math.min(COLS, gameKey.length > 5 ? 2 : 1);
-  };
 
   return (
     <DynamicGameGrid
