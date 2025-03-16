@@ -15,6 +15,8 @@ type Config struct {
 	FrontendURL        string
 }
 
+var AppConfig *Config
+
 // Load initializes configuration from environment variables
 func Load() *Config {
 	// Load .env file if it exists
@@ -55,9 +57,10 @@ func Load() *Config {
 		},
 	}
 
-	return &Config{
+	AppConfig = &Config{
 		DiscordOAuthConfig: discordOAuthConfig,
 		SessionSecret:      sessionSecret,
 		FrontendURL:        frontendURL,
 	}
+	return AppConfig
 }
