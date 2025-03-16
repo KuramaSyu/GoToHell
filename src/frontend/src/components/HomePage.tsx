@@ -54,76 +54,93 @@ const HomePage: React.FC = () => {
         ) : null}
         <TopBar />
         <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'space-evenly',
+        minHeight: 0, // allow children to fill height
+      }}
+        >
+       {/* top row */}
+       <Box
+        sx={{
+          flex: 1,
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          px: 10,
+        }}
+      >
+
+        <Box sx={{ display: 'flex' }}>
+          <TotalScoreDisplay />
+        </Box>
+
+        <Box sx={{ display: 'flex' }}>
+          <AmountDisplay />
+        </Box>
+
+      </Box>
+
+      {/* box for middle row */}
+      <Box
+        sx={{
+          flex: 1,
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-around',
+          p: 2,
+          height: '100%',
+          minHeight: 0,
+        }}
+      >
+        <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
+            flex: 1,
+            maxWidth: 1 / 3,
             height: '100%',
+            minHeight: 0,
           }}
         >
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              justifyItems: 'center',
-              px: 5,
-            }}
-          >
-            <Box sx={{ display: 'flex' }}>
-              {' '}
-              <TotalScoreDisplay />{' '}
-            </Box>
-            <Box sx={{ display: 'flex' }}>
-              <AmountDisplay />{' '}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-around',
-              p: 2,
-            }}
-          >
-            <Box sx={{ display: 'flex' }}>
-              <GameSelector />
-            </Box>
+          <GameSelector />
+        </Box>
 
-            <Box
-              sx={{
-                width: 1 / 3,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <DeathSlider />
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <UploadScore />
-                {/* <AnimatedButton></AnimatedButton> */}
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-              }}
-            >
-              <SportSelector></SportSelector>
-            </Box>
+        <Box
+          sx={{
+            width: 1 / 3,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <DeathSlider />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+            }}
+          >
+            <UploadScore />
           </Box>
         </Box>
-        <ErrorDisplay />
-      </ThemeProvider>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+          }}
+        >
+          <SportSelector />
+        </Box>
+      </Box>
     </Box>
+    <ErrorDisplay />
+  </ThemeProvider>
+</Box>
   );
 };
 
