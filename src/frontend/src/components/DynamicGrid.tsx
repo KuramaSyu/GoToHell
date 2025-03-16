@@ -78,6 +78,7 @@ const AnimatedButton: React.FC<{
           padding: 2,
           border: '2px solid',
           borderColor: 'secondary.main',
+          backgroundColor: isSelected ? undefined : 'transparent',
           color: 'text.primary',
           fontWeight: 'bold',
           height: '100%',
