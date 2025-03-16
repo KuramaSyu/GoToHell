@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
-import { CustomTheme, CustomThemeConfig } from '../theme/interfaces';
+import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
+
 
 // Define a default theme as a fallback.
 const defaultTheme = createTheme({
@@ -17,7 +18,7 @@ const defaultTheme = createTheme({
     themeName: 'default',
     longName: 'Default Theme',
   },
-});
+}) as CustomTheme;
 
 // Define our available custom themes.
 export const customThemes: CustomThemeConfig[] = [

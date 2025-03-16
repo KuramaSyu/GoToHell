@@ -5,9 +5,12 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "strict": false
+    "strict": true, 
+    "noImplicitAny": false,
+    //"typeRoots": ["./node_modules/@types", "./src/theme"]
   },
+  "include": [
+    "src", 
+    //"src/theme/interfaces.ts"
+  ]
 }
