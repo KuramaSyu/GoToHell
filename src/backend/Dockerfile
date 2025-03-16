@@ -1,31 +1,39 @@
-FROM golang:1.24-alpine AS builder
+# Stage 1: Build the Go binary
+FROM golang:1.24 AS builder
+
+# Set working directory
 WORKDIR /app
 
-# Cache dependencies
+# Copy go.mod and go.sum, and download dependencies
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Install build dependencies for cgo and sqlite3
-RUN apk add --no-cache gcc musl-dev sqlite-dev
+# Copy the rest of the source code
+COPY . .
 
-# Enable CGO for sqlite3 to work
-ENV CGO_ENABLED=1
+# Build the binary.
+# Since your main file is in src/main.go, we build from the ./src directory.
+# The binary is explicitly named "server" via the -o flag.
+RUN CGO_ENABLED=1 go build -o server ./src
 
-# Copy the source code and build
-COPY . /app/
-WORKDIR /app/src
-RUN go build -o main .
+# Stage 2: Create the production image using Debian Bookworm
+FROM debian:bookworm-slim
 
-FROM alpine:latest
-WORKDIR /app
+# Install CA certificates and SQLite libraries (required by your app)
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    sqlite3 \
+    libsqlite3-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the compiled binary from the builder stage
-COPY --from=builder /app/src/main .
+# Set working directory in the production container
+WORKDIR /root/
 
-# Copy the entrypoint script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+# Copy the binary from the builder stage
+COPY --from=builder /app/server .
 
+# Expose the port your server listens on (assumed 8080)
 EXPOSE 8080
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["./main"]
+
+# Run the Go server
+CMD ["./server"]
