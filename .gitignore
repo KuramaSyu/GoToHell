@@ -22,3 +22,4 @@ go.work
 src/backend/src/.env
 src/backend/src/go-to-hell.db
 .env
+data/go-to-hell.db
