@@ -12,7 +12,7 @@ RED = "\033[91m"
 RESET = "\033[0m"
 
 REPO_URL = "https://github.com/KuramaSyu/GoToHell.git"
-REPO_DIR = "gotohell"
+REPO_DIR = "GoToHell"
 
 def print_stage(stage):
     print(f"{CYAN}[+] {stage}{RESET}")
