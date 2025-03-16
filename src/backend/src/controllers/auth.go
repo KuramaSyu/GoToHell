@@ -8,7 +8,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
@@ -118,8 +120,8 @@ func (ac *AuthController) Callback(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
 	}
-
-	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:5173/login-success")
+	redirect_url := fmt.Sprintf("%v/login-success", config.AppConfig.DiscordOAuthConfig.RedirectURL)
+	c.Redirect(http.StatusTemporaryRedirect, redirect_url)
 }
 
 // GetUser returns the current authenticated user
