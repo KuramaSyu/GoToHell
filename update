@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+# filepath: install.py
+import os
+import sys
+import shutil
+import subprocess
+
+# ANSI escape codes for colors
+CYAN = "\033[96m"
+GREEN = "\033[92m"
+RED = "\033[91m"
+RESET = "\033[0m"
+
+REPO_URL = "https://github.com/KuramaSyu/GoToHell.git"
+REPO_DIR = "gotohell"
+
+def print_stage(stage):
+    print(f"{CYAN}[+] {stage}{RESET}")
+
+def print_info(info):
+    print(f"{GREEN}[*] {info}{RESET}")
+
+def print_error(error):
+    print(f"{RED}[!] {error}{RESET}")
+
+def main():
+    # Stage 1: Remove existing repository folder if it exists
+    print_stage("Stage 1: Checking and removing existing repository folder")
+    if os.path.isdir(REPO_DIR):
+        print_info(f"Directory '{REPO_DIR}' exists; removing it.")
+        try:
+            shutil.rmtree(REPO_DIR)
+        except Exception as e:
+            print_error(f"Failed to remove directory '{REPO_DIR}': {e}")
+            sys.exit(1)
+    else:
+        print_info(f"Directory '{REPO_DIR}' not found, proceeding with clone.")
+
+    # Stage 2: Clone the repository
+    print_stage("Stage 2: Cloning repository")
+    try:
+        subprocess.run(["git", "clone", REPO_URL], check=True)
+        print_info("Repository cloned successfully.")
+    except subprocess.CalledProcessError:
+        print_error("Failed to clone repository.")
+        sys.exit(1)
+
+    # Stage 3: Copy .env file from the parent directory into the cloned repository
+    print_stage("Stage 3: Copying .env file")
+    parent_env = os.path.join("..", ".env")
+    target_env = os.path.join(REPO_DIR, ".env")
+    if os.path.isfile(parent_env):
+        try:
+            shutil.copy(parent_env, target_env)
+            print_info(f".env file copied to '{target_env}'.")
+        except Exception as e:
+            print_error(f"Failed to copy .env file: {e}")
+            sys.exit(1)
+    else:
+        print_info(".env file not found in parent directory; skipping.")
+
+    # Stage 4: Copy docker-compose.yaml from parent directory into the cloned repository (override if exists)
+    print_stage("Stage 4: Copying docker-compose.yaml file")
+    parent_compose = os.path.join("..", "docker-compose.yaml")
+    target_compose = os.path.join(REPO_DIR, "docker-compose.yaml")
+    if os.path.isfile(parent_compose):
+        try:
+            shutil.copy(parent_compose, target_compose)
+            print_info("docker-compose.yaml copied into the repository.")
+        except Exception as e:
+            print_error(f"Failed to copy docker-compose.yaml: {e}")
+            sys.exit(1)
+    else:
+        print_info("docker-compose.yaml not found in parent directory; skipping.")
+
+    # Stage 5: Change directory into the repo and run Docker Compose commands
+    print_stage("Stage 5: Starting Docker Compose")
+    original_dir = os.getcwd()
+    try:
+        original_dir = os.getcwd()
+        os.chdir(REPO_DIR)
+        print_info("Running 'docker compose up --build -d'")
+        subprocess.run(["docker", "compose", "up", "--build", "-d"], check=True)
+        print_info("Docker Compose services started.")
+        print_info("Attaching to Docker Compose logs (press Ctrl+C to exit)...")
+        subprocess.run(["docker", "compose", "logs", "-f"], check=True)
+    except subprocess.CalledProcessError as e:
+        print_error(f"Docker Compose command failed: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print_error(f"Unexpected error: {e}")
+        sys.exit(1)
+    finally:
+        os.chdir(original_dir)
+
+if __name__ == "__main__":
+    main()
