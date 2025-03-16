@@ -11,16 +11,21 @@ services:
 
     volumes:
       # Map the host database file (persisted) to the container.
-      - ./src/backend/src/go-to-hell.db:/app/go-to-hell.db
+      - ./data:/app
     depends_on:
       - frontend
 
   frontend:
-    build: ./src/frontend
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_URL: ${BACKEND_URL}
     ports:
       - "5173:80"
     env_file:
       - .env
+
 
 volumes:
   db_data:
