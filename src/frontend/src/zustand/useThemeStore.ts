@@ -41,6 +41,13 @@ export const customThemes: CustomThemeConfig[] = [
       'https://i.postimg.cc/k4kdHDQk/teamfight-tactics-galaxies-penguin-featherknight-uhdpaper-com-4-K-7-1270.jpg',
     ],
   },
+  {
+    name: 'repo',
+    longName: 'R.E.P.O',
+    backgrounds: [
+      'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3241660/ss_a66715d57329c456d91aeb11fbd406e7d8c5dbc7.1920x1080.jpg?t=1740578354',
+    ],
+  },
 ];
 
 export const getThemeNames = () => {
