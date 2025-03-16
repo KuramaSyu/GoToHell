@@ -3,16 +3,12 @@ version: "3.8"
 services:
   backend:
     build: ./src/backend
-    # ports:
-    #   - "8080:8080"
+    ports:
+      # host port : container port
+      - "8080:8080"  # port of the GIN API Endpoint
     env_file:
       - .env
-    environment:
-      - SESSION_SECRET=yourSessionSecret
-      - FRONTEND_URL=http://localhost:5173
-      - DISCORD_CLIENT_ID=yourDiscordClientId
-      - DISCORD_CLIENT_SECRET=yourDiscordClientSecret
-      - DISCORD_REDIRECT_URI=http://localhost:8080/api/auth/discord/callback
+
     volumes:
       # Map the host database file (persisted) to the container.
       - ./src/backend/src/go-to-hell.db:/app/go-to-hell.db
@@ -23,8 +19,8 @@ services:
     build: ./src/frontend
     ports:
       - "5173:80"
-    environment:
-      - REACT_APP_BACKEND_URL=http://localhost:8080
+    env_file:
+      - .env
 
 volumes:
   db_data:
