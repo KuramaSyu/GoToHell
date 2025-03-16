@@ -94,8 +94,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     // Pick a random theme from customThemes.
     const randomTheme =
       customThemes[Math.floor(Math.random() * customThemes.length)];
-    // Use "get" provided as the second parameter.
-    await get().setTheme(randomTheme.name);
+    // If a theme is found, apply it using "get" provided as the second parameter.
+    if (randomTheme) {
+      await get().setTheme(randomTheme.name);
+    } else {
+      console.error('No theme available to initialize.');
+    }
   },
 }));
 

@@ -1,16 +1,22 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
-    "strict": true, 
+    "target": "ES6",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-jsx",
+    "strict": true,
     "noImplicitAny": false,
-    //"typeRoots": ["./node_modules/@types", "./src/theme"]
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./node_modules/@types", "./src/theme"]
   },
-  "include": [
-    "src", 
-    //"src/theme/interfaces.ts"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

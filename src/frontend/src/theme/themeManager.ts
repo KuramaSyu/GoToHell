@@ -1,10 +1,11 @@
 import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
-import { CustomThemeConfig, CustomTheme } from './interfaces';
+import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
   interface Theme {
+    palette: Palette;
     custom: {
       backgroundImage: string;
       themeName: string;
@@ -113,7 +114,7 @@ export class ThemeManager {
       const imageLoaded = new Promise((resolve, reject) => {
         img.onload = () => resolve(img);
         img.onerror = (e) => reject(e);
-        img.src = chosenBackground;
+        img.src = chosenBackground!;
       });
 
       // Wait for the image to load, then process with Vibrant
@@ -181,6 +182,6 @@ export class ThemeManager {
         themeName: config.name,
         longName: config.longName,
       },
-    });
+    }) as CustomTheme;
   }
 }
