@@ -31,7 +31,7 @@ type Repository interface {
 
 func InitDB() *sql.DB {
 	// Open (or create) SQLite database
-	db, err := sql.Open("sqlite3", "go-to-hell.db")
+	db, err := sql.Open("sqlite3", "db/go-to-hell.db")
 	if err != nil {
 		log.Fatal(err)
 	}

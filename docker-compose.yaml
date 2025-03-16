@@ -11,7 +11,7 @@ services:
 
     volumes:
       # Map the host database file (persisted) to the container.
-      - ./data:/app
+      - ./data:/root/db
     depends_on:
       - frontend
 
