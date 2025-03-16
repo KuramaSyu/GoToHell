@@ -47,7 +47,7 @@ def main():
 
     # Stage 3: Copy .env file from the parent directory into the cloned repository
     print_stage("Stage 3: Copying .env file")
-    parent_env = os.path.join("..", ".env")
+    parent_env = os.path.join(".", ".env")
     target_env = os.path.join(REPO_DIR, ".env")
     if os.path.isfile(parent_env):
         try:
@@ -61,7 +61,7 @@ def main():
 
     # Stage 4: Copy docker-compose.yaml from parent directory into the cloned repository (override if exists)
     print_stage("Stage 4: Copying docker-compose.yaml file")
-    parent_compose = os.path.join("..", "docker-compose.yaml")
+    parent_compose = os.path.join(".", "docker-compose.yaml")
     target_compose = os.path.join(REPO_DIR, "docker-compose.yaml")
     if os.path.isfile(parent_compose):
         try:
