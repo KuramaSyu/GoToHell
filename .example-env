@@ -1,10 +1,18 @@
 # go backend
+# randomly generated with 
+# ssl rand -base64 32
 SESSION_SECRET=yourSessionSecret
-FRONTEND_URL=http://localhost:5173
+
+# discord data
 DISCORD_CLIENT_ID=yourDiscordClientId
 DISCORD_CLIENT_SECRET=yourDiscordClientSecret
+
+# After logging in with discord, it redirects you. Repace localhost with your website domain
 DISCORD_REDIRECT_URI=http://localhost:8080/api/auth/discord/callback
 
+# where is your frontend hosted on the web? which domain should be accepted by Gin?
+FRONTEND_URL=http://localhost:5173
 
-# website
-REACT_APP_BACKEND_URL=http://localhost:8080
+
+# how the backend is reachable from view of user
+BACKEND_URL=http://localhost:8080
