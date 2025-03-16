@@ -120,7 +120,7 @@ func (ac *AuthController) Callback(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
 	}
-	redirect_url := fmt.Sprintf("%v/login-success", config.AppConfig.FrontendURL)
+	redirect_url := fmt.Sprintf("%v", config.AppConfig.FrontendURL)
 	c.Redirect(http.StatusTemporaryRedirect, redirect_url)
 }
 
