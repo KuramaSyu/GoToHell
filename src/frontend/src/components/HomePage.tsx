@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ThemeProvider, Box } from '@mui/material';
+import { ThemeProvider, Box, Toolbar } from '@mui/material';
 
 import { useThemeStore } from '../zustand/useThemeStore';
 import TopBar from './TopBar';
@@ -52,78 +52,105 @@ const HomePage: React.FC = () => {
             }}
           ></Box>
         ) : null}
-        <TopBar />
+        <TopBar /> <Toolbar />
+        <Box
+      sx={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '80vh',
+        // minHeight: '100hv',
+        justifyContent: 'space-evenly',
+        // minHeight: 0, // allow children to fill height
+      }}
+        >
+       {/* top row */}
+       <Box
+        sx={{
+          // flex: 1,
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          justifyItems: 'center',
+          px: 10,
+          maxHeight: 1/3
+        }}
+      >
+
+        <Box sx={{ display: 'flex', alignItems: 'center'}}>
+          <TotalScoreDisplay />
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <AmountDisplay />
+        </Box>
+
+      </Box>
+
+      {/* box for middle row */}
+      <Box
+        sx={{
+          // flex: 1,
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-around',
+          p: 2,
+          // height: '100%',
+          minHeight: 0,
+        }}
+      >
+        {/* Game Selection */}
+        <Box
+          sx={{
+            // display: 'flex',
+            flex: 1,
+            maxWidth: 1 / 3,
+            // height: '100%',
+            // minHeight: 0,
+            // flexDirection: 'column',
+            // justifyContent: 'center'
+          }}
+        >
+          <GameSelector />
+        </Box>
+        
+        {/* Death Slider and Upload */}
+        <Box
+          sx={{
+            width: 1 / 3,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}
+        >
+          <DeathSlider />
+          <Box
+            sx={{
+              display: 'flex',
+              // flexDirection: 'row',
+              justifyContent: 'center',
+            }}
+          >
+            <UploadScore />
+          </Box>
+        </Box>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            height: '100%',
+            justifyContent: 'center'
           }}
         >
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              justifyItems: 'center',
-              px: 5,
-            }}
-          >
-            <Box sx={{ display: 'flex' }}>
-              {' '}
-              <TotalScoreDisplay />{' '}
-            </Box>
-            <Box sx={{ display: 'flex' }}>
-              <AmountDisplay />{' '}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-around',
-              p: 2,
-            }}
-          >
-            <Box sx={{ display: 'flex' }}>
-              <GameSelector />
-            </Box>
-
-            <Box
-              sx={{
-                width: 1 / 3,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <DeathSlider />
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <UploadScore />
-                {/* <AnimatedButton></AnimatedButton> */}
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-              }}
-            >
-              <SportSelector></SportSelector>
-            </Box>
-          </Box>
+          <SportSelector />
         </Box>
-        <ErrorDisplay />
-      </ThemeProvider>
+      </Box>
     </Box>
+    <ErrorDisplay />
+  </ThemeProvider>
+</Box>
   );
 };
 

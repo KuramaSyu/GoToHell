@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
-import { darken } from '@mui/material/styles';
+import { darken, Theme } from '@mui/material/styles';
 import { animated, AnimatedProps, useSpring } from '@react-spring/web';
 
 export interface GameItem {
@@ -49,9 +49,9 @@ const computeRows = (items: GameItem[], capacity: number): GameItem[][] => {
   return rows;
 };
 
-const AnimatedDiv: React.FC<
+const AnimatedDiv = animated.div as React.FC<
   AnimatedProps<{ style: React.CSSProperties }> & { children: React.ReactNode }
-> = animated.div;
+>;
 /**
  * A button with react-spring animation.
  */
@@ -78,6 +78,7 @@ const AnimatedButton: React.FC<{
           padding: 2,
           border: '2px solid',
           borderColor: 'secondary.main',
+          backgroundColor: isSelected ? undefined : 'transparent',
           color: 'text.primary',
           fontWeight: 'bold',
           height: '100%',
@@ -109,8 +110,8 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
   let game_items: GameItem[] = [];
   for (let i = 0; i < items.length; i++) {
     const gameitem: GameItem = {
-      text: items[i],
-      size: items[i].length,
+      text: items[i]!,
+      size: items[i]!.length,
     };
     game_items.push(gameitem);
   }

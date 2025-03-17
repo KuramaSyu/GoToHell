@@ -62,5 +62,16 @@ func Load() *Config {
 		SessionSecret:      sessionSecret,
 		FrontendURL:        frontendURL,
 	}
+	PrintConfig(AppConfig)
 	return AppConfig
+}
+
+// PrintConfig logs some key configuration values.
+func PrintConfig(cfg *Config) {
+	log.Println("Discord OAuth Config:")
+	log.Println("  ClientID:      ", cfg.DiscordOAuthConfig.ClientID) // Consider masking in production
+	log.Println("  RedirectURL:   ", cfg.DiscordOAuthConfig.RedirectURL)
+	log.Println("  Scopes:        ", cfg.DiscordOAuthConfig.Scopes)
+	// Avoid printing sensitive values: clientSecret and sessionSecret.
+	log.Println("Frontend URL:     ", cfg.FrontendURL)
 }

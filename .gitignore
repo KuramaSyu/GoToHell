@@ -23,3 +23,4 @@ src/backend/src/.env
 src/backend/src/go-to-hell.db
 .env
 data/go-to-hell.db
+src/backend/src/db/go-to-hell.db

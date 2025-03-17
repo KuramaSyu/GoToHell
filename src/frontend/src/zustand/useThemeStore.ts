@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
-import { CustomTheme, CustomThemeConfig } from '../theme/interfaces';
+import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
+
 
 // Define a default theme as a fallback.
 const defaultTheme = createTheme({
@@ -17,7 +18,7 @@ const defaultTheme = createTheme({
     themeName: 'default',
     longName: 'Default Theme',
   },
-});
+}) as CustomTheme;
 
 // Define our available custom themes.
 export const customThemes: CustomThemeConfig[] = [
@@ -93,8 +94,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     // Pick a random theme from customThemes.
     const randomTheme =
       customThemes[Math.floor(Math.random() * customThemes.length)];
-    // Use "get" provided as the second parameter.
-    await get().setTheme(randomTheme.name);
+    // If a theme is found, apply it using "get" provided as the second parameter.
+    if (randomTheme) {
+      await get().setTheme(randomTheme.name);
+    } else {
+      console.error('No theme available to initialize.');
+    }
   },
 }));
 

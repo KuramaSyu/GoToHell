@@ -44,7 +44,7 @@ const NumberSlider = () => {
   //   if (amount < min) setAmount(min);
   //   if (amount > max) setAmount(max);
   // };
-  var marks = [];
+  var marks: { value: number; label: string }[] = [];
   for (let i = min; i <= max; i++) {
     marks.push({ value: i, label: i.toString() });
   }
