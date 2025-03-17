@@ -13,6 +13,7 @@ import AnimatedButton from './AnimatedButton';
 export const SportKindMap = new Map();
 SportKindMap.set('pushup', 'Push-Ups');
 SportKindMap.set('plank', 'Seconds Plank');
+SportKindMap.set('pilates', 'Exercises')
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
