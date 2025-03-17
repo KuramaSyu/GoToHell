@@ -4,16 +4,16 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
 
-const map = new Map();
-map.set('pushup', 'Push-Ups');
-map.set('plank', 'Seconds Plank');
+
 
 import pushupSVG from '../assets/sports-pushup.svg';
 import plankSVG from '../assets/sports-plank.svg';
+import pilatesSVG from '../assets/sports-pilates.svg';
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
   plank: plankSVG,
+  pilates: pilatesSVG,
 };
 
 // Select the sport kind with a button
