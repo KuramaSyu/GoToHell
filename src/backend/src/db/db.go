@@ -31,7 +31,7 @@ type Repository interface {
 
 func InitDB() *sql.DB {
 	// Open (or create) SQLite database
-	db, err := sql.Open("sqlite3", "db/go-to-hell.db")
+	db, err := sql.Open("sqlite3", "/root/db/go-to-hell.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,7 +107,7 @@ type ORMRepository struct {
 
 // InitORMRepository initializes GORM DB connection and auto-migrates the Sport model.
 func InitORMRepository() *ORMRepository {
-	db, err := gorm.Open(sqlite.Open("go-to-hell.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("/root/db/go-to-hell.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
 	}
