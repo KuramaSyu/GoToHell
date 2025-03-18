@@ -10,11 +10,11 @@ import HomePage from './components/HomePage';
 const App: React.FC = () => {
   return (
     <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login-success" element={<HomePage />} />
-          {/* Add other routes as needed */}
-        </Routes>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login-success" element={<HomePage />} />
+        {/* Add other routes as needed */}
+      </Routes>
     </Router>
   );
 };
