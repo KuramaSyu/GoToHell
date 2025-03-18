@@ -59,7 +59,7 @@ const HomePage: React.FC = () => {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            height: '80vh',
+            height: '90vh',
             // minHeight: '100hv',
             justifyContent: 'space-evenly',
             // minHeight: 0, // allow children to fill height
