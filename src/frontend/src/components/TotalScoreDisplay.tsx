@@ -53,7 +53,14 @@ export const TotalScoreDisplay = () => {
   ) : null;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', justifyItems: 'center' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyItems: 'center',
+        alignItems: 'center',
+      }}
+    >
       <Box sx={{ mr: 2 }}>
         <PopNumber
           value={GetScore(currentSport!.kind, amounts)}
@@ -72,9 +79,7 @@ export const TotalScoreDisplay = () => {
         }}
       >
         {currentSportString}
-        <Typography variant="subtitle1" sx={{ justifyContent: 'center' }}>
-          in total
-        </Typography>
+        <Typography variant="subtitle1">in total</Typography>
       </Box>
     </Box>
   );
