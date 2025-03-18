@@ -8,6 +8,8 @@ import { useUserStore } from '../userStore';
 import { formatDistanceToNow } from 'date-fns';
 import { useThemeStore } from '../zustand/useThemeStore';
 import useAppState from '../zustand/Error';
+import { useTotalScoreStore } from '../zustand/TotalScoreStore';
+import { useRecentSportsStore } from '../zustand/RecentSportsState';
 
 interface Sport {
   id: number;
@@ -33,6 +35,7 @@ export const RecentSports = () => {
   const { user } = useUserStore();
   const { theme } = useThemeStore();
   const { setErrorMessage } = useAppState();
+  const { refreshTrigger } = useRecentSportsStore();
 
   // Fetch data on mount and when the user changes.
   useEffect(() => {
@@ -59,7 +62,7 @@ export const RecentSports = () => {
       setLoading(false);
     };
     fetchResponse();
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   // Delete record
   const deleteRecord = async (id: number) => {
@@ -76,6 +79,8 @@ export const RecentSports = () => {
       const newRecords = data.data.filter((item) => item.id !== id);
       setData({ data: newRecords });
       setPageOffset(Math.max(0, newRecords.length - 5));
+      // trigger total score refresh
+      useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
       setErrorMessage(`Failed to delete record: ${error}`);
       console.error(error);
