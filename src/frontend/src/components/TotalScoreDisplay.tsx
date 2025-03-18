@@ -22,7 +22,7 @@ const GetScore = (kind: string, amounts: SportScore[]) => {
 export const TotalScoreDisplay = () => {
   const { currentSport } = useSportStore();
   const { user } = useUserStore();
-  const { amounts, setAmounts } = useTotalScoreStore();
+  const { amounts, setAmounts, refreshTrigger } = useTotalScoreStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +40,7 @@ export const TotalScoreDisplay = () => {
       }
     };
     fetchData();
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   if (!currentSport || !user) {
     return <Typography></Typography>;
