@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
@@ -12,12 +13,12 @@ import (
 )
 
 type Sport struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
-	Kind     string `json:"kind"`
-	Amount   int    `json:"amount"`
-	Timedate string `json:"timedate"`
-	UserID   string `json:"user_id"`
-	Game     string `json:"game"`
+	ID       uint      `gorm:"primaryKey" json:"id"`
+	Kind     string    `json:"kind"`
+	Amount   int       `json:"amount"`
+	Timedate time.Time `json:"timedate"`
+	UserID   string    `json:"user_id"`
+	Game     string    `json:"game"`
 }
 
 // Updated Repository interface to include full CRUD operations using the Sport struct.
