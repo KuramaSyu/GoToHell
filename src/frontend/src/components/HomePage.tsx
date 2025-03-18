@@ -9,6 +9,7 @@ import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
+import { RecentSports } from './RecentSports';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -54,103 +55,105 @@ const HomePage: React.FC = () => {
         ) : null}
         <TopBar /> <Toolbar />
         <Box
-      sx={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        height: '80vh',
-        // minHeight: '100hv',
-        justifyContent: 'space-evenly',
-        // minHeight: 0, // allow children to fill height
-      }}
-        >
-       {/* top row */}
-       <Box
-        sx={{
-          // flex: 1,
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          justifyItems: 'center',
-          px: 10,
-          maxHeight: 1/3
-        }}
-      >
-
-        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-          <TotalScoreDisplay />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <AmountDisplay />
-        </Box>
-
-      </Box>
-
-      {/* box for middle row */}
-      <Box
-        sx={{
-          // flex: 1,
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'space-around',
-          p: 2,
-          // height: '100%',
-          minHeight: 0,
-        }}
-      >
-        {/* Game Selection */}
-        <Box
           sx={{
-            // display: 'flex',
             flex: 1,
-            maxWidth: 1 / 3,
-            // height: '100%',
-            // minHeight: 0,
-            // flexDirection: 'column',
-            // justifyContent: 'center'
-          }}
-        >
-          <GameSelector />
-        </Box>
-        
-        {/* Death Slider and Upload */}
-        <Box
-          sx={{
-            width: 1 / 3,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center'
+            height: '80vh',
+            // minHeight: '100hv',
+            justifyContent: 'space-evenly',
+            // minHeight: 0, // allow children to fill height
           }}
         >
-          <DeathSlider />
+          {/* top row */}
           <Box
             sx={{
+              // flex: 1,
+              position: 'relative',
               display: 'flex',
-              // flexDirection: 'row',
-              justifyContent: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              justifyItems: 'center',
+              px: 10,
+              maxHeight: 1 / 3,
             }}
           >
-            <UploadScore />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <TotalScoreDisplay />
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <AmountDisplay />
+            </Box>
+          </Box>
+
+          {/* box for middle row */}
+          <Box
+            sx={{
+              // flex: 1,
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-around',
+              p: 2,
+              // height: '100%',
+              minHeight: 0,
+            }}
+          >
+            {/* Game Selection */}
+            <Box
+              sx={{
+                // display: 'flex',
+                flex: 1,
+                maxWidth: 1 / 3,
+                // height: '100%',
+                // minHeight: 0,
+                // flexDirection: 'column',
+                // justifyContent: 'center'
+              }}
+            >
+              <GameSelector />
+            </Box>
+
+            {/* Death Slider and Upload */}
+            <Box
+              sx={{
+                width: 1 / 3,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <DeathSlider />
+              <Box
+                sx={{
+                  display: 'flex',
+                  // flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <UploadScore />
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <SportSelector />
+            </Box>
+          </Box>
+          {/* Box for History row */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', zIndex: 1 }}>
+            <RecentSports></RecentSports>
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
-          }}
-        >
-          <SportSelector />
-        </Box>
-      </Box>
+        <ErrorDisplay />
+      </ThemeProvider>
     </Box>
-    <ErrorDisplay />
-  </ThemeProvider>
-</Box>
   );
 };
 
