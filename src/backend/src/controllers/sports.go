@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
@@ -169,8 +170,8 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 			Kind:     input.Kind,
 			Game:     input.Game,
 			Amount:   input.Amount,
-			UserID:   user.ID, // use the id from the session
-			Timedate: "",      // Optionally, set a current timestamp if needed
+			UserID:   user.ID,          // use the id from the session
+			Timedate: time.Now().UTC(), // set to the current UTC time
 		}
 
 		if err := sc.repo.InsertSport(sport); err != nil {
