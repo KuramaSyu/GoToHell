@@ -6,6 +6,8 @@ interface TotalAmountState {
   setAmounts: (amounts: SportScore[]) => void;
   addAmount: (amount: SportScore) => void;
   resetAmounts: () => void;
+  refreshTrigger: number;
+  triggerRefresh: () => void;
 }
 
 export const useTotalScoreStore = create<TotalAmountState>((set) => ({
@@ -14,4 +16,7 @@ export const useTotalScoreStore = create<TotalAmountState>((set) => ({
   addAmount: (amount: SportScore) =>
     set((state) => ({ amounts: [...state.amounts, amount] })),
   resetAmounts: () => set({ amounts: [] }),
+  refreshTrigger: 0,
+  triggerRefresh: () =>
+    set((state) => ({ refreshTrigger: state.refreshTrigger + 1 })),
 }));
