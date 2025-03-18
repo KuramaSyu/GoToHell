@@ -9,17 +9,19 @@ import useAppState from '../zustand/Error';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
+import { RecentSports } from './RecentSports';
+import { useRecentSportsStore } from '../zustand/RecentSportsState';
 
 export const SportKindMap = new Map();
 SportKindMap.set('pushup', 'Push-Ups');
 SportKindMap.set('plank', 'Seconds Plank');
-SportKindMap.set('pilates', 'Exercises')
+SportKindMap.set('pilates', 'Exercises');
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
 export const UploadScore = () => {
   const { currentSport } = useSportStore();
-  const { amount } = useDeathAmountState();
+  const { amount, setAmount: setDeathAmount } = useDeathAmountState();
   const { user } = useUserStore();
   const { setErrorMessage } = useAppState();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
@@ -62,6 +64,8 @@ export const UploadScore = () => {
           // data.results is now an array of SportAmount
           console.log(data.results);
           setAmounts(parsed_data.results);
+          useRecentSportsStore.getState().triggerRefresh();
+          setDeathAmount(0);
         }
       } else {
         setSnackbarState('failed');
