@@ -4,8 +4,6 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { SportDefinition, useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
 
-
-
 import pushupSVG from '../assets/sports-pushup.svg';
 import plankSVG from '../assets/sports-plank.svg';
 import pilatesSVG from '../assets/sports-pilates.svg';
@@ -48,7 +46,7 @@ export const SportSelector = () => {
   }
   console.log(apiData);
   return (
-    <Box>
+    <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
         {apiData.data

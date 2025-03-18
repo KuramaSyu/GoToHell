@@ -138,9 +138,12 @@ const HomePage: React.FC = () => {
             </Box>
             <Box
               sx={{
+                flex: 1,
+                maxWidth: 1 / 5,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               <SportSelector />
