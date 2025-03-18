@@ -5,12 +5,8 @@ import { SportScore } from '../models/Sport';
 
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { PopNumber } from './GameSelect';
-import { useSportStore } from '../useSportStore';
+import { GameSelectionMap, useSportStore } from '../useSportStore';
 import { Box, Typography } from '@mui/material';
-
-const map = new Map();
-map.set('pushup', 'Push-Ups');
-map.set('plank', 'Seconds Plank');
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -47,7 +43,7 @@ export const TotalScoreDisplay = () => {
   }
   // const for current sport score display
   const currentSportString = currentSport
-    ? map.get(currentSport.kind) || currentSport.kind
+    ? GameSelectionMap.get(currentSport.kind)
     : null;
 
   return (
