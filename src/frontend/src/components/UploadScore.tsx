@@ -9,13 +9,7 @@ import useAppState from '../zustand/Error';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
-import { RecentSports } from './RecentSports';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
-
-export const SportKindMap = new Map();
-SportKindMap.set('pushup', 'Push-Ups');
-SportKindMap.set('plank', 'Seconds Plank');
-SportKindMap.set('pilates', 'Exercises');
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
