@@ -60,7 +60,9 @@ export const PopNumber = ({
     str.length > 0 ? Math.floor(Math.random() * str.length) : 0;
 
   return (
-    <Typography style={{ fontFamily: font, display: 'inline-block' }}>
+    <Typography
+      style={{ fontFamily: `'${font}', cursive`, display: 'inline-block' }}
+    >
       {str.split('').map((char, index) => (
         <motion.span
           key={index}
