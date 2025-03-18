@@ -188,3 +188,46 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Sport(s) added successfully", "results": amount})
 }
+
+// DeleteSport removes a sport from the database.
+func (sc *SportsController) DeleteSport(c *gin.Context) {
+	// Check if user is logged in via Discord
+	user, status, err := UserFromSession(c)
+	if err != nil {
+		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Read sport ID from URL
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid sport ID"})
+		return
+	}
+
+	// Check if sport exists and belongs to the user
+	sports, err := sc.repo.GetSports(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	var sportExists bool
+	for _, sport := range sports {
+		if sport.ID == uint(id) {
+			sportExists = true
+			break
+		}
+	}
+	if !sportExists {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
+		return
+	}
+
+	// Delete sport
+	if err := sc.repo.DeleteSport(uint(id)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Sport deleted successfully"})
+}
