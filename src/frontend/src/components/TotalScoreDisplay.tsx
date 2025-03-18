@@ -46,11 +46,9 @@ export const TotalScoreDisplay = () => {
     return <Typography></Typography>;
   }
   // const for current sport score display
-  const currentSportString = currentSport ? (
-    <Typography variant="h6">
-      {map.get(currentSport.kind) || currentSport.kind}
-    </Typography>
-  ) : null;
+  const currentSportString = currentSport
+    ? map.get(currentSport.kind) || currentSport.kind
+    : null;
 
   return (
     <Box
@@ -59,12 +57,13 @@ export const TotalScoreDisplay = () => {
         flexDirection: 'row',
         justifyItems: 'center',
         alignItems: 'center',
+        fontFamily: 'Architects Daughter',
       }}
     >
       <Box sx={{ mr: 2 }}>
         <PopNumber
           value={GetScore(currentSport!.kind, amounts)}
-          font="Bebas Neue"
+          font="Architects Daughter"
           stiffness={500}
           damping={200}
           mass={1}
@@ -78,8 +77,12 @@ export const TotalScoreDisplay = () => {
           justifyContent: 'center',
         }}
       >
-        {currentSportString}
-        <Typography variant="subtitle1">in total</Typography>
+        <Typography variant="h5" fontFamily={'inherit'}>
+          {currentSportString}
+        </Typography>
+        <Typography variant="subtitle1" fontFamily={'inherit'}>
+          in total
+        </Typography>
       </Box>
     </Box>
   );

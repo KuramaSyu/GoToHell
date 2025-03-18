@@ -93,12 +93,14 @@ export const AmountDisplay = () => {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+        fontFamily: 'Architects Daughter',
+        font: 'Architects Daughter',
       }}
     >
       <Box sx={{ mr: 2 }}>
         <PopNumber
           value={computedValue}
-          font="Cursive, sans-serif"
+          font="Architects Daughter"
           stiffness={1000}
           damping={300}
           mass={1}
@@ -112,10 +114,16 @@ export const AmountDisplay = () => {
           justifyContent: 'center',
         }}
       >
-        <Typography variant="h6" sx={{ justifyContent: 'center' }}>
+        <Typography
+          variant="h5"
+          sx={{ justifyContent: 'center', fontFamily: 'inherit' }}
+        >
           {GameSelectionMap.get(currentSport.kind)}
         </Typography>
-        <Typography variant="subtitle1" sx={{ justifyContent: 'center' }}>
+        <Typography
+          variant="subtitle1"
+          sx={{ justifyContent: 'center', fontFamily: 'inherit' }}
+        >
           to do now
         </Typography>
       </Box>
