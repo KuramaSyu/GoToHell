@@ -22,9 +22,13 @@ const TopBar: React.FC = () => {
           }}
         >
           <Typography
-            variant="h3"
+            variant="h2"
             component="div"
-            sx={{ color: theme.palette.vibrant.main }}
+            sx={{
+              color: theme.palette.vibrant.main,
+              fontFamily: '"Architects Daughter", cursive', // custom font
+              textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`, // improve legibility
+            }}
           >
             Go To Hell
           </Typography>
