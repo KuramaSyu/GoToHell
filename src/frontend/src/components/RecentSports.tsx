@@ -64,7 +64,7 @@ export const RecentSports = () => {
   // Delete record
   const deleteRecord = async (id: number) => {
     try {
-      const response = await fetch(`${BACKEND_BASE}/api/sports?id=${id}`, {
+      const response = await fetch(`${BACKEND_BASE}/api/sports/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
