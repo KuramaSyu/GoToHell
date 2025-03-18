@@ -24,6 +24,7 @@ func SetupRouter(
 	api.GET("/sports", sportsController.GetSports)
 	api.GET("/sports/total", sportsController.GetTotalResults)
 	api.POST("/sports", sportsController.PostSport)
+	api.DELETE("/sports/:id", sportsController.DeleteSport)
 	// Auth routes
 	auth := api.Group("/auth")
 	{
