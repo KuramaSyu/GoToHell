@@ -90,7 +90,7 @@ export const AmountDisplay = () => {
       sx={{
         display: 'flex',
         flexDirection: 'row',
-        justifyItems: 'center',
+        alignItems: 'center',
       }}
     >
       <Box sx={{ mr: 2 }}>
