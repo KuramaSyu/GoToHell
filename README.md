@@ -1,4 +1,12 @@
-TODO:
+### What is this Project and what is it for?
+A project, which aims to help me, to make sport while playing games, with the main idea, of
+making a specific amount of sport, whenever you die in a game.
+The main goal was, to replace a Google Sheet, where we wrote in what sport we did
+in what amount. Hence this projects goal is to not only show you your progress, but also the
+progress of your friends
+
+
+### TODO:
 - add get /api/sports to upload button, after clicking
 - set zustand to total amount
 - make animation of number to "upload to a cloud"
