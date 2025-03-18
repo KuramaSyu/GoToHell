@@ -20,3 +20,4 @@ export const useSportStore = create<SportStore>((set) => ({
 export const GameSelectionMap = new Map();
 GameSelectionMap.set('pushup', 'Push-Ups');
 GameSelectionMap.set('plank', 'Seconds Plank');
+GameSelectionMap.set('pilates', 'Exercises');
