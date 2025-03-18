@@ -104,6 +104,9 @@ export const RecentSports = () => {
     config: { tension: 220, friction: 26 },
   });
 
+  if (!user) {
+    return <Box></Box>;
+  }
   if (loading) {
     return <Typography>Loading History</Typography>;
   }
