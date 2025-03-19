@@ -29,6 +29,7 @@ type Sport struct {
 }
 
 // NewSportsController creates a new auth controller
+// and initializes the gorm repository.
 func NewSportsController() *SportsController {
 	repo := db.InitORMRepository()
 	return &SportsController{repo: repo}
@@ -36,21 +37,6 @@ func NewSportsController() *SportsController {
 
 // Default returns a list of Sports structs based on the default CSV.
 func (sc *SportsController) Default(c *gin.Context) {
-	// file, err := os.Open("config/default_sports.csv")
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
-	// }
-	// defer file.Close()
-
-	// reader := csv.NewReader(file)
-	// reader.Comma = ';'
-	// records, err := reader.ReadAll()
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
-	// }
-	// Updated conversion from CSV to list of Sports structs.
 	c.JSON(http.StatusOK, csvToSports(config.DefaultSportsCsv))
 }
 
