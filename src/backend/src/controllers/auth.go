@@ -36,18 +36,12 @@ func UserFromSession(c *gin.Context) (*models.User, int, error) {
 		return nil, http.StatusUnauthorized, fmt.Errorf("not logged in")
 	}
 
-	userJSON, ok := userData.(string)
+	user_go, ok := userData.(models.User)
 	if !ok {
-		return nil, http.StatusInternalServerError, fmt.Errorf("Wrong user format")
+		return nil, http.StatusInternalServerError, fmt.Errorf("wrong user format: %v %v", userData, ok)
 	}
 
-	// Type assert to models.User
-	var user models.User
-	if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
-		return nil, http.StatusInternalServerError, fmt.Errorf("Failed to unmarshal user json")
-	}
-
-	return &user, http.StatusOK, nil
+	return &user_go, http.StatusOK, nil
 }
 
 // GenerateState creates a random state string for OAuth
@@ -113,13 +107,18 @@ func (ac *AuthController) Callback(c *gin.Context) {
 	}
 	defer resp.Body.Close()
 
-	var user models.User
-	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+	var d_user models.JsUser
+	if err := json.NewDecoder(resp.Body).Decode(&d_user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse user info"})
 		return
 	}
+	user, err := d_user.Parse()
+	log.Printf("User: %v", user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID was not parsable to int"})
+	}
 
-	session.Set("user", user)
+	session.Set("user", *user)
 	if err := session.Save(); err != nil {
 		log.Printf("user: %v; Error: %v", user, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
@@ -137,7 +136,8 @@ func (ac *AuthController) GetUser(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Not logged in"})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	user_go := user.(models.User)
+	c.JSON(http.StatusOK, user_go.ParseJS())
 }
 
 // Logout clears the user session
