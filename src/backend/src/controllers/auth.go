@@ -36,10 +36,15 @@ func UserFromSession(c *gin.Context) (*models.User, int, error) {
 		return nil, http.StatusUnauthorized, fmt.Errorf("not logged in")
 	}
 
-	// Type assert to models.User
-	user, ok := userData.(models.User)
+	userJSON, ok := userData.(string)
 	if !ok {
-		return nil, http.StatusInternalServerError, fmt.Errorf("invalid user data")
+		return nil, http.StatusInternalServerError, fmt.Errorf("Wrong user format")
+	}
+
+	// Type assert to models.User
+	var user models.User
+	if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
+		return nil, http.StatusInternalServerError, fmt.Errorf("Failed to unmarshal user json")
 	}
 
 	return &user, http.StatusOK, nil
