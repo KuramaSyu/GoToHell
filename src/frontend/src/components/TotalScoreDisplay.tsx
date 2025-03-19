@@ -7,6 +7,7 @@ import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { PopNumber } from './GameSelect';
 import { GameSelectionMap, useSportStore } from '../useSportStore';
 import { Box, Typography } from '@mui/material';
+import { NUMBER_FONT } from '../statics';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -53,13 +54,13 @@ export const TotalScoreDisplay = () => {
         flexDirection: 'row',
         justifyItems: 'center',
         alignItems: 'center',
-        fontFamily: 'Architects Daughter',
+        fontFamily: NUMBER_FONT,
       }}
     >
       <Box sx={{ mr: 2 }}>
         <PopNumber
           value={GetScore(currentSport!.kind, amounts)}
-          font="Architects Daughter"
+          font={NUMBER_FONT}
           stiffness={500}
           damping={200}
           mass={1}

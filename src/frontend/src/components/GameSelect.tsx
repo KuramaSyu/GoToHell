@@ -6,6 +6,7 @@ import { GameSelectionMap, useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 
 import { DynamicGameGrid } from './DynamicGrid';
+import { NUMBER_FONT } from '../statics';
 
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
@@ -93,14 +94,13 @@ export const AmountDisplay = () => {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        fontFamily: 'Architects Daughter',
-        font: 'Architects Daughter',
+        fontFamily: NUMBER_FONT,
       }}
     >
       <Box sx={{ mr: 2 }}>
         <PopNumber
           value={computedValue}
-          font="Architects Daughter"
+          font={NUMBER_FONT}
           stiffness={1000}
           damping={300}
           mass={1}
