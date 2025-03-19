@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -80,7 +81,7 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 		return
 	}
 
-	if string(user.ID) != userIDStr {
+	if fmt.Sprint(user.ID) != userIDStr {
 		c.JSON(http.StatusForbidden, gin.H{"error": "You can only fetch your data"})
 		return
 	}
