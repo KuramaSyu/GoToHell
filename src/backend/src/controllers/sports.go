@@ -74,13 +74,21 @@ func csvToSports(csv [][]string) gin.H {
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
 	userIDStr := c.Query("user_id")
-	sports, err := sc.repo.GetSports(userIDStr)
-
+	user, status, err := UserFromSession(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(status, gin.H{"error": err})
 		return
 	}
 
+	if string(user.ID) != userIDStr {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You can only fetch your data"})
+		return
+	}
+
+	sports, err := sc.repo.GetSports(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+	}
 	// Limit result if "amount" query parameter is provided.
 	amountStr := c.Query("amount")
 	if amountStr != "" {
