@@ -16,17 +16,17 @@ type Sport struct {
 	Kind     string    `json:"kind"`
 	Amount   int       `json:"amount"`
 	Timedate time.Time `json:"timedate"`
-	UserID   string    `json:"user_id"`
+	UserID   uint      `json:"user_id"`
 	Game     string    `json:"game"`
 }
 
 // Updated Repository interface to include full CRUD operations using the Sport struct.
 type Repository interface {
 	InsertSport(sport Sport) error
-	GetSports(userID string) ([]Sport, error)
+	GetSports(userID uint) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	DeleteSport(id uint) error
-	GetTotalAmounts(userID string) ([]models.SportAmount, error)
+	GetTotalAmounts(userID uint) ([]models.SportAmount, error)
 }
 
 // Define ORMRepository using GORM.
@@ -55,14 +55,14 @@ func (r *ORMRepository) InsertSport(sport Sport) error {
 }
 
 // GetSports retrieves Sport entries by userID using ORM.
-func (r *ORMRepository) GetSports(userID string) ([]Sport, error) {
+func (r *ORMRepository) GetSports(userID uint) ([]Sport, error) {
 	var sports []Sport
 	result := r.DB.Where("user_id = ?", userID).Find(&sports)
 	return sports, result.Error
 }
 
 // Sum all amounts from a given user and group it by sport kind
-func (r *ORMRepository) GetTotalAmounts(userID string) ([]models.SportAmount, error) {
+func (r *ORMRepository) GetTotalAmounts(userID uint) ([]models.SportAmount, error) {
 	var results []models.SportAmount
 	result := r.DB.Model(&Sport{}).Select("kind, sum(amount) as amount").Where("user_id = ?", userID).Group("kind").Scan(&results)
 	if result.Error != nil {
