@@ -1,7 +1,6 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"time"
@@ -28,77 +27,6 @@ type Repository interface {
 	UpdateSport(sport Sport) error
 	DeleteSport(id uint) error
 	GetTotalAmounts(userID string) ([]models.SportAmount, error)
-}
-
-func InitDB() *sql.DB {
-	// Open (or create) SQLite database
-	db, err := sql.Open("sqlite3", "./db/go-to-hell.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Create table on startup
-	createSportsTable(db)
-
-	fmt.Println("Database initialized and 'sports' table created successfully.")
-	return db
-}
-
-func createSportsTable(db *sql.DB) {
-	query := `
-	CREATE TABLE IF NOT EXISTS sports (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		kind TEXT NOT NULL,
-		amount INTEGER NOT NULL,
-		timedate TEXT NOT NULL,
-		user_id BIGINT NOT NULL
-	);
-	`
-
-	_, err := db.Exec(query)
-	if err != nil {
-		log.Fatal("Failed to create 'sports' table:", err)
-	}
-}
-
-type Database struct {
-	db *sql.DB
-}
-
-func (d *Database) InsertSport(kind string, amount int, userID string) error {
-	query := `
-	INSERT INTO sports (kind, amount, timedate, user_id)
-	VALUES (?, ?, datetime('now'), ?);
-	`
-
-	_, err := d.db.Exec(query, kind, amount, userID)
-	return err
-}
-
-func (d *Database) GetSports(userID string) ([]Sport, error) {
-	query := `
-	SELECT kind, amount, timedate
-	FROM sports
-	WHERE user_id = ?;
-	`
-
-	rows, err := d.db.Query(query, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var sports []Sport
-	for rows.Next() {
-		var s Sport
-		if err := rows.Scan(&s.Kind, &s.Amount, &s.Timedate); err != nil {
-			return nil, err
-		}
-		s.UserID = userID
-		sports = append(sports, s)
-	}
-
-	return sports, nil
 }
 
 // Define ORMRepository using GORM.
