@@ -3,8 +3,9 @@
       "name": "league",
       "longName": "League of Legends",
       "backgrounds": [
-        "https://i.postimg.cc/pXb4tvd8/zeri-lol-moon-snow-art-hd-wallpaper-uhdpaper-com-522-5-c.jpg"
-      ]
+        "https://i.postimg.cc/pXb4tvd8/zeri-lol-moon-snow-art-hd-wallpaper-uhdpaper-com-522-5-c.jpg",
+        "https://i.postimg.cc/cCmggpfT/syndra.jpg"
+    ]
     },
     {
       "name": "overwatch",
@@ -25,5 +26,12 @@
       "backgrounds": [
         "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3241660/ss_a66715d57329c456d91aeb11fbd406e7d8c5dbc7.1920x1080.jpg?t=1740578354"
       ]
+    },
+    {
+        "name": "custom",
+        "longName": "Any Activity",
+        "backgrounds": [
+            "https://i.postimg.cc/pXb4tvd8/zeri-lol-moon-snow-art-hd-wallpaper-uhdpaper-com-522-5-c.jpg"
+        ]
     }
 ]
