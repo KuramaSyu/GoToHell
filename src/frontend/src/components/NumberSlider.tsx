@@ -5,6 +5,7 @@ import {
   useTheme,
   Button,
   Input,
+  OutlinedInput,
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
@@ -19,30 +20,27 @@ export const useDeathAmountState = create<DeathAmountState>((set) => ({
   setAmount: (value: number) => set({ amount: value }),
 }));
 
-export const DeathSlider = () => {
-  return (
-    <Box>
-      <NumberSlider></NumberSlider>
-    </Box>
-  );
-};
+export interface NumberSliderProps {
+  withInput: boolean;
+}
 
-const NumberSlider = (withCustomInput: boolean) => {
+export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const { amount, setAmount } = useDeathAmountState();
   const theme = useTheme();
   const min = Math.min(0, amount);
   const max = Math.max(12, amount);
+  const selectableMax = 2 ** 11;
 
   // Slider Change
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
-    setAmount(newValue as number);
+    setAmount(Math.min(newValue as number, selectableMax));
   };
 
   // manual input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = Number(event.target.value);
     if (!isNaN(newValue)) {
-      if (amount < min) newValue = min;
+      if (newValue > selectableMax) newValue = selectableMax;
       setAmount(newValue);
     }
   };
@@ -81,7 +79,7 @@ const NumberSlider = (withCustomInput: boolean) => {
   const RemoveButton = (
     <Button
       variant="contained"
-      onClick={() => setAmount(amount + 1)}
+      onClick={() => setAmount(amount - 1)}
       sx={{
         borderRadius: '50%',
         width: '80%', // Make the button fill the container
@@ -92,11 +90,29 @@ const NumberSlider = (withCustomInput: boolean) => {
         display: 'flex',
       }}
     >
-      <Add />
+      <Remove />
     </Button>
   );
 
-  const customInput = <Input></Input>;
+  const customInput = (
+    <OutlinedInput
+      value={amount}
+      placeholder="Amount"
+      onChange={handleInputChange}
+      inputProps={{
+        inputMode: 'numeric',
+        style: { textAlign: 'center' }, // center the number
+      }}
+      sx={{
+        color: theme.palette.primary.main,
+        fontSize: '24px',
+        textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.primary.main,
+        },
+      }}
+    />
+  );
 
   const AddRemoveButtons = (
     <Box
@@ -105,10 +121,12 @@ const NumberSlider = (withCustomInput: boolean) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         gap: 2,
+        maxWidth: 2 / 3,
       }}
     >
-      {AddButton}
+      {withInput ? customInput : <Box />}
       {RemoveButton}
+      {AddButton}
     </Box>
   );
 
@@ -117,8 +135,12 @@ const NumberSlider = (withCustomInput: boolean) => {
   //   if (amount > max) setAmount(max);
   // };
   var marks: { value: number; label: string }[] = [];
-  for (let i = min; i <= max; i++) {
+  const stepValue = amount < 15 ? 1 : Math.ceil(amount / 10);
+  for (let i = min; i <= max; i += stepValue) {
     marks.push({ value: i, label: i.toString() });
+  }
+  if (Number(marks[-1]) !== max) {
+    marks.push({ value: max, label: max.toString() });
   }
   return (
     <Box
@@ -146,7 +168,7 @@ const NumberSlider = (withCustomInput: boolean) => {
         onChange={handleSliderChange}
         min={min}
         max={max}
-        step={1}
+        step={stepValue}
         aria-labelledby="number-slider"
         marks={marks}
       ></Slider>
