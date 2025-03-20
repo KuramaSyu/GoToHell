@@ -94,7 +94,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     </Button>
   );
 
-  const customInput = (
+  const customInput = withInput ? (
     <OutlinedInput
       value={amount}
       placeholder="Amount"
@@ -104,15 +104,19 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         style: { textAlign: 'center' }, // center the number
       }}
       sx={{
+        width: 'clamp(40px, 25%, 200px)',
+        px: 2,
+        mx: 1,
+        display: 'flex',
         color: theme.palette.primary.main,
-        fontSize: '24px',
+        fontSize: 'clamp(16px, 2vw, 24px)',
         textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.palette.primary.main,
         },
       }}
     />
-  );
+  ) : null;
 
   const AddRemoveButtons = (
     <Box
@@ -124,7 +128,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         maxWidth: 2 / 3,
       }}
     >
-      {withInput ? customInput : <Box />}
       {RemoveButton}
       {AddButton}
     </Box>
@@ -161,6 +164,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         }}
       >
         {title}
+        {customInput}
         {AddRemoveButtons}
       </Box>
       <Slider
