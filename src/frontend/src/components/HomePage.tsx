@@ -4,7 +4,7 @@ import { ThemeProvider, Box, Toolbar } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
 import TopBar from './TopBar';
 import { GameSelector, AmountDisplay } from './GameSelect';
-import { DeathSlider } from './NumberSlider';
+import { NumberSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
@@ -125,7 +125,7 @@ const HomePage: React.FC = () => {
                 justifyContent: 'center',
               }}
             >
-              <DeathSlider />
+              <NumberSlider withInput={theme.custom.themeName === 'custom'} />
               <Box
                 sx={{
                   display: 'flex',
