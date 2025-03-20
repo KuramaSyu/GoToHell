@@ -14,17 +14,17 @@ progress of your friends
 - animated background for upload button, using gradiant
 
 ### Things required to add a game:
-- a theme in `src/frontend/src/themes.ts`
 - an entry in the default sports in `src/backend/config/default_sports.csv`
 - the definition for the frontend in `src/frontend/src/zustand/useThemeStore.ts` in this format:
   ```json
   export const customThemes: CustomThemeConfig[] = [
-    // example for League of Legends
+    // example for Teamfight Tactics
     {
-      name: 'league',
-      longName: 'League of Legends',
+      name: 'tft',
+      longName: 'Teamfight Tactics',
       backgrounds: [
-        'https://i.postimg.cc/pXb4tvd8/zeri-lol-moon-snow-art-hd-wallpaper-uhdpaper-com-522-5-c.jpg',
+        'https://i.postimg.cc/cCc5PpJN/wp7407642-little-legends-wallpapers.jpg',
+        'https://i.postimg.cc/k4kdHDQk/teamfight-tactics-galaxies-penguin-featherknight-uhdpaper-com-4-K-7-1270.jpg',
       ],
     },
 
@@ -33,7 +33,7 @@ progress of your friends
       name: 'your new game',
       longName: 'the actuall full name',
       backgrounds: [
-        'url_to_background_1.png', 'url_to_background_2.png'
+        'https://url.to_background_1.png', 'https://url.to_background_2.png'
       ]
     }
   ];
