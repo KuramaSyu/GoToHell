@@ -21,10 +21,6 @@ declare module '@mui/material/styles' {
   }
 }
 
-// Assume these variables are defined (extracted via Vibrant, with fallbacks):
-// primaryMain, lightVibrantHex, darkVibrantHex, secondaryMain, lightMutedHex, darkMutedHex,
-// vibrantHex, mutedHex, chosenBackground, config.name, config.longName, and this.isDark
-
 export function buildCustomTheme(
   primaryMain: string,
   lightVibrantHex: string,
