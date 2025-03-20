@@ -1,4 +1,11 @@
-import { Box, Typography, Slider, useTheme, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Slider,
+  useTheme,
+  Button,
+  Input,
+} from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
 
@@ -20,7 +27,7 @@ export const DeathSlider = () => {
   );
 };
 
-const NumberSlider = () => {
+const NumberSlider = (withCustomInput: boolean) => {
   const { amount, setAmount } = useDeathAmountState();
   const theme = useTheme();
   const min = Math.min(0, amount);
@@ -32,13 +39,78 @@ const NumberSlider = () => {
   };
 
   // manual input
-  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   let newValue = Number(event.target.value);
-  //   if (!isNaN(newValue)) {
-  //     if (amount < min) newValue = min;
-  //     setAmount(newValue);
-  //   }
-  // };
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = Number(event.target.value);
+    if (!isNaN(newValue)) {
+      if (amount < min) newValue = min;
+      setAmount(newValue);
+    }
+  };
+
+  const title = (
+    <Typography
+      variant="h5"
+      sx={{
+        fontWeight: 'bold',
+        WebkitTextFillColor: `${theme.palette.text.primary}`,
+        textShadow: `0 0 20px ${theme.palette.secondary.main}, 0 0 20px ${theme.palette.secondary.main}`,
+      }}
+    >
+      How many deaths?
+    </Typography>
+  );
+
+  const AddButton = (
+    <Button
+      variant="contained"
+      onClick={() => setAmount(amount + 1)}
+      sx={{
+        borderRadius: '50%',
+        width: '80%', // Make the button fill the container
+        height: '80%', // Make the button fill the container
+        minWidth: 0, // Ensure the button does not expand
+        minHeight: 0, // Ensure the button does not expand
+        aspectRatio: '1 / 1',
+        display: 'flex',
+      }}
+    >
+      <Add />
+    </Button>
+  );
+
+  const RemoveButton = (
+    <Button
+      variant="contained"
+      onClick={() => setAmount(amount + 1)}
+      sx={{
+        borderRadius: '50%',
+        width: '80%', // Make the button fill the container
+        height: '80%', // Make the button fill the container
+        minWidth: 0, // Ensure the button does not expand
+        minHeight: 0, // Ensure the button does not expand
+        aspectRatio: '1 / 1',
+        display: 'flex',
+      }}
+    >
+      <Add />
+    </Button>
+  );
+
+  const customInput = <Input></Input>;
+
+  const AddRemoveButtons = (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 2,
+      }}
+    >
+      {AddButton}
+      {RemoveButton}
+    </Box>
+  );
 
   // const handleBlur = () => {
   //   if (amount < min) setAmount(min);
@@ -66,55 +138,8 @@ const NumberSlider = () => {
           width: '100%',
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 'bold',
-            WebkitTextFillColor: `${theme.palette.text.primary}`,
-            textShadow: `0 0 20px ${theme.palette.secondary.main}, 0 0 20px ${theme.palette.secondary.main}`,
-          }}
-        >
-          How many deaths?
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            gap: 2,
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={() => setAmount(amount - 1)}
-            sx={{
-              borderRadius: '50%',
-              width: '80%', // Make the button fill the container
-              height: '80%', // Make the button fill the container
-              minWidth: 0, // Ensure the button does not expand
-              minHeight: 0, // Ensure the button does not expand
-              aspectRatio: '1 / 1',
-              display: 'flex',
-            }}
-          >
-            <Remove />
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => setAmount(amount + 1)}
-            sx={{
-              borderRadius: '50%',
-              width: '80%', // Make the button fill the container
-              height: '80%', // Make the button fill the container
-              minWidth: 0, // Ensure the button does not expand
-              minHeight: 0, // Ensure the button does not expand
-              aspectRatio: '1 / 1',
-              display: 'flex',
-            }}
-          >
-            <Add />
-          </Button>
-        </Box>
+        {title}
+        {AddRemoveButtons}
       </Box>
       <Slider
         value={amount}
