@@ -66,6 +66,9 @@ export const SportSelector = () => {
                   backgroundColor: isSelected
                     ? null
                     : alpha(theme.palette.muted.dark, 0.2),
+                  textShadow: isSelected
+                    ? null
+                    : `2px 2px 2px ${theme.palette.muted.dark}`,
                 }}
               >
                 <img
