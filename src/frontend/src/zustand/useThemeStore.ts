@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
 import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
-
+import customThemeData from '../theme/themes.json';
 
 // Define a default theme as a fallback.
 const defaultTheme = createTheme({
@@ -21,35 +21,7 @@ const defaultTheme = createTheme({
 }) as CustomTheme;
 
 // Define our available custom themes.
-export const customThemes: CustomThemeConfig[] = [
-  {
-    name: 'league',
-    longName: 'League of Legends',
-    backgrounds: [
-      'https://i.postimg.cc/pXb4tvd8/zeri-lol-moon-snow-art-hd-wallpaper-uhdpaper-com-522-5-c.jpg',
-    ],
-  },
-  {
-    name: 'overwatch',
-    longName: 'Overwatch',
-    backgrounds: ['https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg'],
-  },
-  {
-    name: 'tft',
-    longName: 'Teamfight Tactics',
-    backgrounds: [
-      'https://i.postimg.cc/cCc5PpJN/wp7407642-little-legends-wallpapers.jpg',
-      'https://i.postimg.cc/k4kdHDQk/teamfight-tactics-galaxies-penguin-featherknight-uhdpaper-com-4-K-7-1270.jpg',
-    ],
-  },
-  {
-    name: 'repo',
-    longName: 'R.E.P.O',
-    backgrounds: [
-      'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3241660/ss_a66715d57329c456d91aeb11fbd406e7d8c5dbc7.1920x1080.jpg?t=1740578354',
-    ],
-  },
-];
+export const customThemes: CustomThemeConfig[] = customThemeData;
 
 export const getThemeNames = () => {
   return customThemes.map((theme) => theme.name);
