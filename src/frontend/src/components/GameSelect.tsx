@@ -82,11 +82,11 @@ export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
 
-  if (currentSport == null) {
+  if (currentSport.game_multiplier == null || currentSport.sport_multiplier == null) {
     return <Box></Box>;
   }
 
-  const computedValue = currentSport.death_multiplier * amount;
+  const computedValue = currentSport.game_multiplier! * amount * currentSport.sport_multiplier!;
 
   return (
     <Box
@@ -118,7 +118,7 @@ export const AmountDisplay = () => {
           variant="h5"
           sx={{ justifyContent: 'center', fontFamily: 'inherit' }}
         >
-          {GameSelectionMap.get(currentSport.kind)}
+          {GameSelectionMap.get(currentSport.sport)}
         </Typography>
         <Typography
           variant="subtitle1"
