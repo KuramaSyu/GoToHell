@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -17,10 +18,14 @@ type SportsController struct {
 	repo db.Repository
 }
 
-type SportTable struct {
-	Kind            string  `json:"kind"`
-	Game            string  `json:"game"`
-	DeathMultiplier float64 `json:"death_multiplier"`
+type SportCsvContent struct {
+	Sport          string  `json:"sport"`
+	BaseMultiplier float64 `json:"base_multiplier"`
+}
+
+type GameCsvContent struct {
+	Game           string  `json:"game"`
+	BaseMultiplier float64 `json:"base_multiplier"`
 }
 
 type Sport struct {
@@ -38,34 +43,33 @@ func NewSportsController() *SportsController {
 
 // Default returns a list of Sports structs based on the default CSV.
 func (sc *SportsController) Default(c *gin.Context) {
-	c.JSON(http.StatusOK, csvToSports(config.DefaultSportsCsv))
+	sport_map := csvToMap(config.DefaultSportsCsv)
+	game_map := csvToMap(config.DefaultGamesCsv)
+
+	response := gin.H{
+		"sports": sport_map,
+		"games":  game_map,
+	}
+	log.Printf("responding with %v", response)
+	c.JSON(http.StatusOK, response)
 }
 
-// csvToSports converts CSV data to a JSON structure of Sports.
-// Assumes the first row contains headers and that the CSV columns are:
-// [kind, game, death_multiplier]
-func csvToSports(csv [][]string) gin.H {
+func csvToMap(csv [][]string) map[string]float64 {
+	m := make(map[string]float64)
 	if len(csv) == 0 {
-		return gin.H{"data": []SportTable{}}
+		return m
 	}
 
-	sports := make([]SportTable, 0, len(csv)-1)
 	for i := 1; i < len(csv); i++ {
 		row := csv[i]
-		if len(row) < 3 {
-			continue
-		}
-		deathMultiplier, err := strconv.ParseFloat(row[2], 64)
+		log.Printf("%v", row)
+		baseMultiplier, err := strconv.ParseFloat(row[1], 64)
 		if err != nil {
-			deathMultiplier = 1
+			baseMultiplier = 1
 		}
-		sports = append(sports, SportTable{
-			Kind:            row[0],
-			Game:            row[1],
-			DeathMultiplier: deathMultiplier,
-		})
+		m[row[0]] = baseMultiplier
 	}
-	return gin.H{"data": sports}
+	return m
 }
 
 // GetSports retrieves sports from the database.
