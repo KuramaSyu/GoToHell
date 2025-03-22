@@ -5,8 +5,11 @@ import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const TopBar: React.FC = () => {
+  const navigate = useNavigate();
   const { theme } = useThemeStore();
   return (
     <AppBar
@@ -24,6 +27,7 @@ const TopBar: React.FC = () => {
           <Typography
             variant="h2"
             component="div"
+            onClick={() => navigate("/")}
             sx={{
               color: theme.palette.vibrant.main,
               fontFamily: '"Architects Daughter", cursive', // custom font
@@ -33,8 +37,18 @@ const TopBar: React.FC = () => {
             Go To Hell
           </Typography>
         </Box>
+        <Box sx={{gap: 4, display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Box >
+            <Button
+              variant='contained'
+              onClick={() => navigate('/friends')}
+              >
+              Friends
+            </Button>
+          </Box>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <DiscordLogin />
+        </Box>
         </Box>
       </Toolbar>
     </AppBar>
