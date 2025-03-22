@@ -53,7 +53,6 @@ const HomePage: React.FC = () => {
             }}
           ></Box>
         ) : null}
-        <TopBar /> <Toolbar />
         <Box
           sx={{
             flex: 1,
