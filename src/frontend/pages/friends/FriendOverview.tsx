@@ -11,8 +11,9 @@ import {
   Typography,
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { useThemeStore } from '../zustand/useThemeStore';
-import TopBar from './TopBar';
+import { useThemeStore } from '../../src/zustand/useThemeStore';
+import TopBar from '../../src/components/TopBar';
+import { BACKEND_BASE } from '../../src/statics';
 
 interface Friend {
   id: number;
@@ -49,7 +50,7 @@ export const FriendOverview: React.FC = () => {
   const fetchFriends = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/friends');
+      const response = await fetch(`${BACKEND_BASE}/api/friends`, {credentials: 'include'});
       const result = await response.json();
       if (response.ok) {
         setFriends(result.data);
@@ -71,7 +72,8 @@ export const FriendOverview: React.FC = () => {
   // Delete friendship by id
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`/api/friends/${id}`, {
+      const response = await fetch(`${BACKEND_BASE}/api/friends/${id}`, {
+        credentials: 'include',
         method: 'DELETE',
       });
       const result = await response.json();
@@ -88,8 +90,9 @@ export const FriendOverview: React.FC = () => {
   // Update friendship status (for accepting or blocking)
   const handleUpdateStatus = async (id: number, newStatus: string) => {
     try {
-      const response = await fetch(`/api/friends/${id}`, {
+      const response = await fetch(`${BACKEND_BASE}/api/friends/${id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
