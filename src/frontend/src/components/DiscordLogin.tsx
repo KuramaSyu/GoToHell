@@ -105,7 +105,6 @@ const DiscordLogin: React.FC = () => {
           flexDirection="row"
           alignItems="center"
           gap={4}
-          my={1}
         >
           <Avatar
             src={user.getAvatarUrl()}
