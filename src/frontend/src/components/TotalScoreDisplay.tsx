@@ -5,9 +5,10 @@ import { SportScore } from '../models/Sport';
 
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { PopNumber } from './GameSelect';
-import { GameSelectionMap, useSportStore } from '../useSportStore';
+import { useSportStore } from '../useSportStore';
 import { Box, Typography } from '@mui/material';
 import { NUMBER_FONT } from '../statics';
+import { GameSelectionMap } from './SportSelect';
 
 // returns the score of the kind
 // game does not matter, since it's summed up

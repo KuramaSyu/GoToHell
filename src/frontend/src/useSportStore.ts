@@ -18,8 +18,3 @@ export const useSportStore = create<SportStore>((set) => ({
   setSport: (sport: DefaultSportsDefinition) => set({ currentSport: sport }),
 }));
 
-// map for which is shown next to the score
-export const GameSelectionMap = new Map();
-GameSelectionMap.set('pushup', 'Push-Ups');
-GameSelectionMap.set('plank', 'Seconds Plank');
-GameSelectionMap.set('pilates', 'Exercises');

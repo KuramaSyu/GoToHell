@@ -19,6 +19,11 @@ const sportIconMap: Record<string, string> = {
   situps: situpsSVG
 };
 
+// map for which is shown next to the score
+export const GameSelectionMap = new Map();
+GameSelectionMap.set('pushup', 'Push-Ups');
+GameSelectionMap.set('plank', 'Seconds Plank');
+GameSelectionMap.set('pilates', 'Exercises');
 
 
 // Select the sport kind with a button
