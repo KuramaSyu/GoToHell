@@ -28,7 +28,8 @@ type FriendRequest struct {
 
 // UpdateFriendshipRequest is the payload for updating a friendship.
 type UpdateFriendshipRequest struct {
-	Status db.FriendshipStatus `json:"status" binding:"required"`
+	FriendshipID uint                `json:"friendship_id" binding:"required"`
+	Status       db.FriendshipStatus `json:"status" binding:"required"`
 }
 
 // GetFriends returns all friendships for the logged-in user.
@@ -76,16 +77,9 @@ func (fc *FriendsController) PostFriendship(c *gin.Context) {
 
 // UpdateFriendship updates an existing friendship's status.
 func (fc *FriendsController) UpdateFriendship(c *gin.Context) {
-	_, status, err := UserFromSession(c)
+	user, status, err := UserFromSession(c)
 	if err != nil {
 		c.JSON(status, gin.H{"error": err.Error()})
-		return
-	}
-
-	idStr := c.Param("id")
-	friendshipID, err := strconv.ParseUint(idStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid friendship ID"})
 		return
 	}
 
@@ -95,7 +89,7 @@ func (fc *FriendsController) UpdateFriendship(c *gin.Context) {
 		return
 	}
 
-	if err := fc.repo.UpdateFriendship(uint(friendshipID), req.Status); err != nil {
+	if err := fc.repo.UpdateFriendship(req.FriendshipID, user.ID, req.Status); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
