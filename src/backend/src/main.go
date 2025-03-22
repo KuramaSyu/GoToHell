@@ -41,12 +41,14 @@ func main() {
 
 	// Initialize controllers
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig)
-	sportsController := controllers.NewSportsController()
+	sportsController, db := controllers.NewSportsController()
+	friendsController := controllers.NewFriendsController(db)
 	// Setup routes
 	routes.SetupRouter(
 		r,
 		authController,
 		sportsController,
+		friendsController,
 	)
 
 	// Start the server
