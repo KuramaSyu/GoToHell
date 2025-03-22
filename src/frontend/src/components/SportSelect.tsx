@@ -1,66 +1,71 @@
 import { useState, useEffect } from 'react';
 import { Button, Box, Typography, ButtonGroup, alpha } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { SportDefinition, useSportStore } from '../useSportStore';
+import { useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
+import { GetSportsResponse } from '../models/Sport'
 
 import pushupSVG from '../assets/sports-pushup.svg';
 import plankSVG from '../assets/sports-plank.svg';
 import pilatesSVG from '../assets/sports-pilates.svg';
+import squatsSVG from '../assets/sports-squats.svg'
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
   plank: plankSVG,
   pilates: pilatesSVG,
+  squats: squatsSVG,
 };
+
+
 
 // Select the sport kind with a button
 export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
-  const [apiData, setApiData] = useState<{ data: SportDefinition[] } | null>(
-    null
-  );
+  const [apiData, setApiData] = useState<GetSportsResponse | null>(null);
 
   // Fetch data from /api/default on localhost:8080
   useEffect(() => {
     fetch(`${BACKEND_BASE}/api/default`)
       .then((response) => response.json())
-      .then((data: { data: SportDefinition[] }) => setApiData(data))
+      .then((data: GetSportsResponse ) => {console.log(`response /api/sports/default: `, data);setApiData(data)})
       .catch(console.error);
   }, []);
-  if (apiData == null) {
+  if (apiData === null) {
     return <Typography>Waiting for Gin</Typography>;
   }
 
-  // change sport, when game is changed
-  if (theme.custom.themeName != currentSport?.game) {
-    const matchingSport = apiData.data.find(
-      (sport) =>
-        sport.game === theme.custom.themeName &&
-        sport.kind == currentSport?.kind
-    );
-    if (matchingSport) {
-      setSport(matchingSport);
+  // when game changes: change game multiplier and maybe change currentSport
+  if (apiData.games && theme.custom.themeName != currentSport?.game) {
+    const matchingGame = apiData.games[theme.custom.themeName];
+
+    if (matchingGame != null) {
+      currentSport.game = theme.custom.themeName
+      currentSport.game_multiplier = apiData.games?.[theme.custom.themeName] ?? null
+      setSport(currentSport);
     }
   }
   console.log(apiData);
+
   return (
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
-        {apiData.data
-          .filter((sport) => sport.game === theme.custom.themeName)
-          .map((sport) => {
-            const isSelected = sport.kind === currentSport?.kind;
+        {Object.entries(apiData.sports).map(([sport, multiplier]) => {
+            const isSelected = sport === currentSport?.sport;
 
             return (
               <Button
-                onClick={() => setSport(sport)}
+                onClick={() => {
+                  currentSport.sport = sport;
+                  currentSport.sport_multiplier = multiplier;
+                  setSport(currentSport)
+                }}
                 variant={
-                  sport.kind === currentSport?.kind ? 'contained' : 'outlined'
+                  sport === currentSport?.sport ? 'contained' : 'outlined'
                 }
-                key={sport.kind}
+                key={sport}
                 sx={{
                   gap: 3,
                   backgroundColor: isSelected
@@ -72,8 +77,8 @@ export const SportSelector = () => {
                 }}
               >
                 <img
-                  src={sportIconMap[sport.kind]}
-                  alt={sport.kind}
+                  src={sportIconMap[sport]}
+                  alt={sport}
                   style={{
                     width: 50,
                     height: 50,
@@ -85,7 +90,7 @@ export const SportSelector = () => {
                     marginRight: 1,
                   }}
                 />
-                <Typography>{sport.kind}</Typography>
+                <Typography>{sport}</Typography>
               </Button>
             );
           })}
