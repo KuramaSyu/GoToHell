@@ -10,21 +10,33 @@ func SetupRouter(
 	r *gin.Engine,
 	authController *controllers.AuthController,
 	sportsController *controllers.SportsController,
+	friendController *controllers.FriendsController,
 ) {
+
 	// API routes
 	api := r.Group("/api")
+	{
+		// Test route
+		api.GET("/ping", func(c *gin.Context) {
+			c.JSON(200, gin.H{"message": "pong"})
+		})
 
-	// Test route
-	api.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "pong"})
-	})
+		api.GET("/default", sportsController.Default)
 
-	// route for default sports table
-	api.GET("/default", sportsController.Default)
-	api.GET("/sports", sportsController.GetSports)
-	api.GET("/sports/total", sportsController.GetTotalResults)
-	api.POST("/sports", sportsController.PostSport)
-	api.DELETE("/sports/:id", sportsController.DeleteSport)
+		// route for sport
+		sports := api.Group("/sports")
+		sports.GET("", sportsController.GetSports)
+		sports.GET("/total", sportsController.GetTotalResults)
+		sports.POST("", sportsController.PostSport)
+		sports.DELETE("/:id", sportsController.DeleteSport)
+
+		// route for friendships
+		friends := api.Group("/friends")
+		friends.GET("", friendController.GetFriends)
+		friends.POST("", friendController.PostFriendship)
+		friends.DELETE("/:id", friendController.DeleteFriendship)
+	}
+
 	// Auth routes
 	auth := api.Group("/auth")
 	{
