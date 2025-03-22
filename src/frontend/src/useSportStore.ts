@@ -1,19 +1,21 @@
 import { create } from 'zustand';
 
 interface SportStore {
-  currentSport: SportDefinition | null;
-  setSport: (sport: SportDefinition | null) => void;
+  currentSport: DefaultSportsDefinition;
+  setSport: (sport: DefaultSportsDefinition) => void;
 }
 
-export interface SportDefinition {
-  kind: string;
-  game: string;
-  death_multiplier: number;
+
+export interface DefaultSportsDefinition {
+  sport: string | null;
+  sport_multiplier: number | null;
+  game: string | null;
+  game_multiplier: number | null;
 }
 
 export const useSportStore = create<SportStore>((set) => ({
-  currentSport: null,
-  setSport: (sport: SportDefinition | null) => set({ currentSport: sport }),
+  currentSport: { sport: null, sport_multiplier: null, game: null, game_multiplier: null },
+  setSport: (sport: DefaultSportsDefinition) => set({ currentSport: sport }),
 }));
 
 // map for which is shown next to the score
