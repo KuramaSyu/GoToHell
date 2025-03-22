@@ -35,7 +35,7 @@ type ORMRepository struct {
 }
 
 // InitORMRepository initializes GORM DB connection and auto-migrates the Sport model.
-func InitORMRepository() *ORMRepository {
+func InitORMRepository() (*ORMRepository, *gorm.DB) {
 	db, err := gorm.Open(sqlite.Open("./db/go-to-hell.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
@@ -45,7 +45,7 @@ func InitORMRepository() *ORMRepository {
 		log.Fatal("failed to migrate:", err)
 	}
 	fmt.Println("ORM Database initialized and migrated.")
-	return &ORMRepository{DB: db}
+	return &ORMRepository{DB: db}, db
 }
 
 // InsertSport adds a new Sport entry using ORM.
