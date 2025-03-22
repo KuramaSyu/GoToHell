@@ -12,7 +12,11 @@ class SportRow {
   }
 
   toJson(): string {
-    return JSON.stringify([this]);
+    const rounded = {
+      ...this,
+      amount: Math.round(this.amount)
+    }
+    return JSON.stringify([rounded]);
   }
 
   async upload(): Promise<Response> {
