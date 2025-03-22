@@ -49,3 +49,19 @@ export interface SportAmountResponse {
   result: SportScore;
 }
 export default SportRow;
+
+// API Models
+export interface GameDefinition {
+  game: string;
+  base_multiplier: number;
+}
+
+export interface SportDefinition {
+  sport: string;
+  base_multiplier: string;
+}
+
+export interface GetSportsResponse {
+  sports: Record<string, number>;
+  games: Record<string, number>;
+}
