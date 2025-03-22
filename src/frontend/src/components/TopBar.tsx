@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { Button } from '@mui/material';
+import { Button, CssBaseline } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const TopBar: React.FC = () => {
@@ -16,6 +16,7 @@ const TopBar: React.FC = () => {
       position="fixed"
       sx={{ backgroundColor: theme.palette.secondary.dark }}
     >
+      <CssBaseline></CssBaseline>
       <Toolbar>
         <Box
           sx={{
@@ -38,14 +39,14 @@ const TopBar: React.FC = () => {
           </Typography>
         </Box>
         <Box sx={{gap: 4, display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Box >
-            <Button
-              variant='contained'
-              onClick={() => navigate('/friends')}
-              >
-              Friends
-            </Button>
-          </Box>
+
+          <Button
+            variant='contained'
+            onClick={() => navigate('/friends')}
+            >
+            Friends
+          </Button>
+
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <DiscordLogin />
         </Box>
