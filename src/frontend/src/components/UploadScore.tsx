@@ -33,7 +33,7 @@ export const UploadScore = () => {
     setSnackbarState('uploading');
     try {
       const sport = new SportRow(
-        currentSport.kind!,
+        currentSport.sport!,
         currentSport.game!,
         computedValue
       );
@@ -70,11 +70,11 @@ export const UploadScore = () => {
     }
     setTimeout(() => setSnackbarState(null), 2000);
   };
-  if (!(currentSport && user)) {
+  if (!(currentSport && user && currentSport.sport_multiplier && currentSport.game_multiplier)) {
     //setErrorMessage("Please Login")
     return <Box></Box>;
   }
-  const computedValue = currentSport.death_multiplier * amount;
+  const computedValue = currentSport.sport_multiplier! * currentSport.game_multiplier! * amount;
   return (
     <Box>
       <AnimatedButton
