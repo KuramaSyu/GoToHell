@@ -12,6 +12,7 @@ import (
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type SportsController struct {
@@ -36,9 +37,9 @@ type Sport struct {
 
 // NewSportsController creates a new auth controller
 // and initializes the gorm repository.
-func NewSportsController() *SportsController {
-	repo := db.InitORMRepository()
-	return &SportsController{repo: repo}
+func NewSportsController() (*SportsController, *gorm.DB) {
+	repo, db := db.InitORMRepository()
+	return &SportsController{repo: repo}, db
 }
 
 // Default returns a list of Sports structs based on the default CSV.
