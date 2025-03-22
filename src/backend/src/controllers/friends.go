@@ -22,8 +22,8 @@ func NewFriendsController(database *gorm.DB) *FriendsController {
 
 // FriendRequest is the expected payload when creating a friendship.
 type FriendRequest struct {
-	FriendshipID uint                `json:"friendship_id" binding:"required"`
-	Status       db.FriendshipStatus `json:"status"` // Optional: will default to "pending" if empty.
+	FriendID uint                `json:"friend_id" binding:"required"`
+	Status   db.FriendshipStatus `json:"status"` // Optional: will default to "pending" if empty.
 }
 
 // UpdateFriendshipRequest is the payload for updating a friendship.
@@ -74,7 +74,8 @@ func (fc *FriendsController) PostFriendship(c *gin.Context) {
 	}
 
 	// The logged-in user's id is used as UserId1.
-	if err := fc.repo.CreateFriendship(user.ID, req.FriendshipID, req.Status); err != nil {
+	// the recipient is always the second param
+	if err := fc.repo.CreateFriendship(user.ID, req.FriendID, req.Status); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
