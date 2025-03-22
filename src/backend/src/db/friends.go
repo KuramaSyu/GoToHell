@@ -15,18 +15,18 @@ const (
 )
 
 type Friendships struct {
-	ID        uint             `gorm:"primaryKey" json:"id"`
-	UserId1   uint             `json:"user_id_1"`
-	UserId2   uint             `json:"user_id_2"`
-	Status    FriendshipStatus `json:"status"`
-	CreatedAt time.Time        `json:"created_at"`
+	ID          uint             `gorm:"primaryKey" json:"id"`
+	RequesterID uint             `json:"user_id1"`
+	RecipientID uint             `json:"user_id2"`
+	Status      FriendshipStatus `json:"status"`
+	CreatedAt   time.Time        `json:"created_at"`
 }
 
 type FriendshipRepository interface {
 	InitRepo() error
 	GetFriendships(userID uint) ([]Friendships, error)
-	CreateFriendship(userID_1 uint, userID_2 uint, status FriendshipStatus) error
-	UpdateFriendship(friendshipID uint, status FriendshipStatus) error
+	CreateFriendship(requesterID uint, recipientID uint, status FriendshipStatus) error
+	UpdateFriendship(friendshipID uint, userID uint, status FriendshipStatus) error
 	DeleteFriendship(friendshipID uint) error
 }
 
@@ -35,7 +35,9 @@ type GormFriendshipRepository struct {
 }
 
 func NewGormFriendshipRepository(db *gorm.DB) FriendshipRepository {
-	return &GormFriendshipRepository{DB: db}
+	repo := &GormFriendshipRepository{DB: db}
+	repo.InitRepo()
+	return repo
 }
 
 // InitRepo performs auto migration for the Friendships model.
@@ -47,7 +49,7 @@ func (r *GormFriendshipRepository) InitRepo() error {
 func (r *GormFriendshipRepository) GetFriendships(userID uint) ([]Friendships, error) {
 	var friendships []Friendships
 	if err := r.DB.
-		Where("user_id_1 = ? OR user_id_2 = ?", userID, userID).
+		Where("requester_id = ? OR recipient_id = ?", userID, userID).
 		Find(&friendships).Error; err != nil {
 		return nil, err
 	}
@@ -55,21 +57,28 @@ func (r *GormFriendshipRepository) GetFriendships(userID uint) ([]Friendships, e
 }
 
 // CreateFriendship creates a new friendship entry.
-func (r *GormFriendshipRepository) CreateFriendship(userID_1 uint, userID_2 uint, status FriendshipStatus) error {
+func (r *GormFriendshipRepository) CreateFriendship(requesterID uint, recipientID uint, status FriendshipStatus) error {
 	friendship := Friendships{
-		UserId1:   uint(userID_1),
-		UserId2:   uint(userID_2),
-		Status:    status,
-		CreatedAt: time.Now(),
+		RequesterID: uint(requesterID),
+		RecipientID: uint(recipientID),
+		Status:      status,
+		CreatedAt:   time.Now(),
 	}
 	return r.DB.Create(&friendship).Error
 }
 
 // UpdateFriendship updates the status of an existing friendship.
-func (r *GormFriendshipRepository) UpdateFriendship(friendshipID uint, status FriendshipStatus) error {
-	return r.DB.Model(&Friendships{}).
-		Where("id = ?", friendshipID).
-		Update("status", status).Error
+func (r *GormFriendshipRepository) UpdateFriendship(friendshipID uint, userID uint, status FriendshipStatus) error {
+	if status == Accepted {
+		// only the recipient can accept requests
+		return r.DB.Model(&Friendships{}).
+			Where("id = ? AND recipient_id = ?", friendshipID, userID).
+			Update("status", status).Error
+	} else {
+		return r.DB.Model(&Friendships{}).
+			Where("id = ?", friendshipID).
+			Update("status", status).Error
+	}
 }
 
 // DeleteFriendship deletes a friendship record.
