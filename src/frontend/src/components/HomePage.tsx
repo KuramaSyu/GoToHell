@@ -60,15 +60,12 @@ const HomePage: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             height: '90vh',
-            // minHeight: '100hv',
             justifyContent: 'space-evenly',
-            // minHeight: 0, // allow children to fill height
           }}
         >
           {/* top row */}
           <Box
             sx={{
-              // flex: 1,
               position: 'relative',
               display: 'flex',
               flexDirection: 'row',
@@ -90,27 +87,20 @@ const HomePage: React.FC = () => {
           {/* box for middle row */}
           <Box
             sx={{
-              // flex: 1,
               position: 'relative',
               display: 'flex',
               flexDirection: 'row',
               width: '100%',
               justifyContent: 'space-around',
               p: 2,
-              // height: '100%',
               minHeight: 0,
             }}
           >
             {/* Game Selection */}
             <Box
               sx={{
-                // display: 'flex',
                 flex: 1,
                 maxWidth: 1 / 3,
-                // height: '100%',
-                // minHeight: 0,
-                // flexDirection: 'column',
-                // justifyContent: 'center'
               }}
             >
               <GameSelector />
