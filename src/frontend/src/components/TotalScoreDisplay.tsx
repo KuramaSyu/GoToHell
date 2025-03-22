@@ -44,7 +44,7 @@ export const TotalScoreDisplay = () => {
   }
   // const for current sport score display
   const currentSportString = currentSport
-    ? GameSelectionMap.get(currentSport.kind)
+    ? GameSelectionMap.get(currentSport.sport)
     : null;
 
   return (
@@ -59,7 +59,7 @@ export const TotalScoreDisplay = () => {
     >
       <Box sx={{ mr: 2 }}>
         <PopNumber
-          value={GetScore(currentSport!.kind, amounts)}
+          value={GetScore(currentSport!.sport!, amounts)}
           font={NUMBER_FONT}
           stiffness={500}
           damping={200}
