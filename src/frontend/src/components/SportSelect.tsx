@@ -9,12 +9,14 @@ import pushupSVG from '../assets/sports-pushup.svg';
 import plankSVG from '../assets/sports-plank.svg';
 import pilatesSVG from '../assets/sports-pilates.svg';
 import squatsSVG from '../assets/sports-squats.svg'
+import situpsSVG from '../assets/sports-situps.svg'
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
   plank: plankSVG,
   pilates: pilatesSVG,
   squats: squatsSVG,
+  situps: situpsSVG
 };
 
 
