@@ -24,6 +24,8 @@ export const GameSelectionMap = new Map();
 GameSelectionMap.set('pushup', 'Push-Ups');
 GameSelectionMap.set('plank', 'Seconds Plank');
 GameSelectionMap.set('pilates', 'Exercises');
+GameSelectionMap.set('situps', 'Sit-Ups')
+GameSelectionMap.set('squats', 'Squats')
 
 
 // Select the sport kind with a button
