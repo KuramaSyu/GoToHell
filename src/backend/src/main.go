@@ -40,8 +40,8 @@ func main() {
 	r.Use(sessions.Sessions("discord_auth", store))
 
 	// Initialize controllers
-	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig)
 	sportsController, db := controllers.NewSportsController()
+	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, db)
 	friendsController := controllers.NewFriendsController(db)
 	// Setup routes
 	routes.SetupRouter(
