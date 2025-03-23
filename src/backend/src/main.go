@@ -30,7 +30,7 @@ func main() {
 	// Configure CORS
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{appConfig.FrontendURL},
-		AllowMethods:     []string{"GET", "POST", "DELETE"},
+		AllowMethods:     []string{"GET", "POST", "DELETE", "PUT"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		AllowCredentials: true,
 	}))
