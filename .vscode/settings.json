@@ -1,9 +1,11 @@
 {
-    
+  "editor.formatOnSave": false, // disable global format on save
+  "[typescript]": {
     "editor.formatOnSave": true,
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "prettier.useTabs": false
-      
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
