@@ -143,7 +143,6 @@ const HomePage: React.FC = () => {
             <RecentSports></RecentSports>
           </Box>
         </Box>
-        <ErrorDisplay />
       </ThemeProvider>
     </Box>
   );
