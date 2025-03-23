@@ -9,7 +9,9 @@ import (
 	"net/http"
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
+	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
+	"gorm.io/gorm"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -19,12 +21,14 @@ import (
 // AuthController handles authentication logic
 type AuthController struct {
 	OAuthConfig *oauth2.Config
+	userRepo    db.UserRepository
 }
 
 // NewAuthController creates a new auth controller
-func NewAuthController(oauthConfig *oauth2.Config) *AuthController {
+func NewAuthController(oauthConfig *oauth2.Config, database *gorm.DB) *AuthController {
 	return &AuthController{
 		OAuthConfig: oauthConfig,
+		userRepo:    db.NewGormUserRepository(database),
 	}
 }
 
@@ -119,6 +123,7 @@ func (ac *AuthController) Callback(c *gin.Context) {
 	}
 
 	session.Set("user", *user)
+	ac.userRepo.CreateUser(user)
 	if err := session.Save(); err != nil {
 		log.Printf("user: %v; Error: %v", user, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
