@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
+	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -22,13 +22,13 @@ func NewFriendsController(database *gorm.DB) *FriendsController {
 
 // FriendRequest is the expected payload when creating a friendship.
 type FriendRequest struct {
-	FriendID uint                `json:"friend_id" binding:"required"`
-	Status   db.FriendshipStatus `json:"status"` // Optional: will default to "pending" if empty.
+	FriendID Snowflake           `json:"friend_id" binding:"required"`
+	Status   db.FriendshipStatus `json:"status"`
 }
 
 // UpdateFriendshipRequest is the payload for updating a friendship.
 type UpdateFriendshipRequest struct {
-	FriendshipID uint                `json:"friendship_id" binding:"required"`
+	FriendshipID Snowflake           `json:"friendship_id" binding:"required"`
 	Status       db.FriendshipStatus `json:"status" binding:"required"`
 }
 
@@ -112,13 +112,13 @@ func (fc *FriendsController) DeleteFriendship(c *gin.Context) {
 	}
 
 	idStr := c.Param("id")
-	friendshipID, err := strconv.ParseUint(idStr, 10, 64)
+	friendshipID, err := NewSnowflakeFromString(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid friendship ID"})
 		return
 	}
 
-	if err := fc.repo.DeleteFriendship(uint(friendshipID)); err != nil {
+	if err := fc.repo.DeleteFriendship(Snowflake(friendshipID)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

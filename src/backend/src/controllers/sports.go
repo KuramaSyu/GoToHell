@@ -11,6 +11,7 @@ import (
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
+	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -200,7 +201,7 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 
 	// Read sport ID from URL
 	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
+	id, err := models.NewSnowflakeFromString(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid sport ID"})
 		return
@@ -214,7 +215,7 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 	}
 	var sportExists bool
 	for _, sport := range sports {
-		if sport.ID == uint(id) {
+		if sport.ID == id {
 			sportExists = true
 			break
 		}
@@ -225,7 +226,7 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 	}
 
 	// Delete sport
-	if err := sc.repo.DeleteSport(uint(id)); err != nil {
+	if err := sc.repo.DeleteSport(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

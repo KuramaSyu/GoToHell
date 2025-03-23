@@ -7,11 +7,11 @@ import (
 
 // Discord User Representation
 type User struct {
-	ID            uint   `json:"id"`
-	Username      string `json:"username"`
-	Discriminator string `json:"discriminator"`
-	Avatar        string `json:"avatar"`
-	Email         string `json:"email"`
+	ID            Snowflake `json:"id"`
+	Username      string    `json:"username"`
+	Discriminator string    `json:"discriminator"`
+	Avatar        string    `json:"avatar"`
+	Email         string    `json:"email"`
 }
 
 // GetAvatarURL returns the user's Discord avatar URL
@@ -43,7 +43,7 @@ func (s *JsUser) Parse() (*User, error) {
 		return nil, err
 	}
 	return &User{
-		ID:            uint(id),
+		ID:            Snowflake(id),
 		Username:      s.Username,
 		Discriminator: s.Discriminator,
 		Avatar:        s.Avatar,
