@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { ThemeProvider, CssBaseline, Button, Box, Avatar } from '@mui/material';
-import { useThemeStore } from '../zustand/useThemeStore';
-import { useUserStore } from '../userStore';
-import { BACKEND_BASE } from '../statics';
+import React, { useEffect, useState } from "react";
+import {
+  ThemeProvider,
+  CssBaseline,
+  Button,
+  Box,
+  Avatar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { useThemeStore } from "../zustand/useThemeStore";
+import { useUserStore } from "../userStore";
+import { BACKEND_BASE } from "../statics";
 
 // Define TypeScript interface for Discord user data
 interface DiscordUser {
@@ -41,12 +49,13 @@ class DiscordUserImpl implements DiscordUser {
 
   async fetchTotalScore(): Promise<Response> {
     return await fetch(`${BACKEND_BASE}/api/sports/total`, {
-      credentials: 'include',
+      credentials: "include",
     });
   }
 }
 
 export { DiscordUserImpl };
+export type { DiscordUser };
 
 const DiscordLogin: React.FC = () => {
   const { user, setUser } = useUserStore();
@@ -57,7 +66,7 @@ const DiscordLogin: React.FC = () => {
     const checkLoginStatus = async (): Promise<void> => {
       try {
         const response = await fetch(`${BACKEND_BASE}/api/auth/user`, {
-          credentials: 'include',
+          credentials: "include",
         });
 
         if (response.ok) {
@@ -66,7 +75,7 @@ const DiscordLogin: React.FC = () => {
           setUser(new DiscordUserImpl(userData));
         }
       } catch (error) {
-        console.error('Error checking login status:', error);
+        console.error("Error checking login status:", error);
       } finally {
         setLoading(false);
       }
@@ -82,11 +91,11 @@ const DiscordLogin: React.FC = () => {
   const handleLogout = async (): Promise<void> => {
     try {
       await fetch(`${BACKEND_BASE}/api/auth/logout`, {
-        credentials: 'include',
+        credentials: "include",
       });
       setUser(null);
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -100,12 +109,7 @@ const DiscordLogin: React.FC = () => {
       <CssBaseline />
 
       {user ? (
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          gap={4}
-        >
+        <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
           <Avatar
             src={user.getAvatarUrl()}
             alt={user.username}
@@ -142,3 +146,27 @@ const DiscordLogin: React.FC = () => {
 };
 
 export default DiscordLogin;
+
+interface DiscordViewModelProps {
+  user: DiscordUserImpl | undefined;
+}
+
+export const DiscordViewModel: React.FC<DiscordViewModelProps> = ({ user }) => {
+  console.log(`passed to DiscordViewModel: ${JSON.stringify(user)}`);
+  if (!user) {
+    return <Box />;
+  }
+  return (
+    <Tooltip title={`ID: ${user.id}`}>
+      <Box
+        display="flex"
+        alignItems="center"
+        gap={1}
+        sx={{ cursor: "pointer" }}
+      >
+        <Avatar src={user.getAvatarUrl()} alt={user.username} />
+        <Typography variant="body1">{user.username}</Typography>
+      </Box>
+    </Tooltip>
+  );
+};
