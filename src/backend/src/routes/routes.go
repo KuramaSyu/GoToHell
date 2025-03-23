@@ -35,6 +35,7 @@ func SetupRouter(
 		friends.GET("", friendController.GetFriends)
 		friends.POST("", friendController.PostFriendship)
 		friends.DELETE("/:id", friendController.DeleteFriendship)
+		friends.PUT("", friendController.UpdateFriendship)
 	}
 
 	// Auth routes
