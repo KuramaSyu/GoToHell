@@ -11,13 +11,15 @@ import (
 
 // FriendsController manages friendship endpoints.
 type FriendsController struct {
-	repo db.FriendshipRepository
+	repo     db.FriendshipRepository
+	userRepo db.UserRepository
 }
 
 // NewFriendsController initializes a new FriendsController.
 func NewFriendsController(database *gorm.DB) *FriendsController {
 	repo := db.NewGormFriendshipRepository(database)
-	return &FriendsController{repo: repo}
+	userRepo := db.NewGormUserRepository(database)
+	return &FriendsController{repo: repo, userRepo: userRepo}
 }
 
 // FriendRequest is the expected payload when creating a friendship.
@@ -32,7 +34,12 @@ type UpdateFriendshipRequest struct {
 	Status       db.FriendshipStatus `json:"status" binding:"required"`
 }
 
-// GetFriends returns all friendships for the logged-in user.
+type FriendshipReply struct {
+	Friendships []db.Friendships `json:"friendships"`
+	Users       []User           `json:"users"`
+}
+
+// GetFriends returns all friendships for the logged-in user along with friend details.
 func (fc *FriendsController) GetFriends(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
@@ -45,7 +52,28 @@ func (fc *FriendsController) GetFriends(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": friendships})
+
+	var reply FriendshipReply
+	reply.Friendships = friendships
+	for _, friendship := range friendships {
+		var friendID Snowflake
+		// If the logged-in user is the requester, then the other user is the friend.
+		if friendship.RequesterID == user.ID {
+			friendID = friendship.RecipientID
+		} else {
+			friendID = friendship.RequesterID
+		}
+
+		friendData, err := fc.userRepo.GetUserByID(friendID)
+		if err != nil {
+			// Skip friendship if unable to fetch friend details.
+			continue
+		}
+
+		reply.Users = append(reply.Users, *friendData)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": reply})
 }
 
 // PostFriendship creates a new friendship.
