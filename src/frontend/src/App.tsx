@@ -4,14 +4,15 @@ import './styles/DiscordLogin.css';
 import '@mui/material/styles';
 //import './App.css';
 import HomePage from './components/HomePage';
-import FriendOverview from '../pages/friends/FriendOverview';
+import FriendOverview from './friends/FriendOverview';
 import TopBar from './components/TopBar';
-import {CssBaseline, ThemeProvider} from "@mui/material"
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { useThemeStore } from './zustand/useThemeStore';
+import ErrorDisplay from './components/ErrorDisplay';
 // Import other components as needed
 
 const App: React.FC = () => {
-  const {theme} = useThemeStore();
+  const { theme } = useThemeStore();
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -19,10 +20,10 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login-success" element={<HomePage />} />
-          <Route path="/friends" element={<FriendOverview />}/>
+          <Route path="/friends" element={<FriendOverview />} />
           {/* Add other routes as needed */}
         </Routes>
-
+        <ErrorDisplay />
       </ThemeProvider>
     </Router>
   );
