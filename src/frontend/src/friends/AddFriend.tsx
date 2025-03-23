@@ -20,13 +20,14 @@ const AddFriend: React.FC = () => {
         return;
       }
 
-      const id = Number(friendId);
-      if (isNaN(id) || id <= 0) {
+      const id = BigInt(friendId);
+      console.log(`ID as string: ${friendId}, as num: ${id}`);
+      if (id === null || id <= 0) {
         setErrorMessage('Please enter a valid numeric Friend ID');
         return;
       }
 
-      if (String(friendId).length !== 18) {
+      if (friendId.length !== 18) {
         setErrorMessage("Discord ID's usually contain 18 numbers");
         return;
       }
@@ -39,7 +40,7 @@ const AddFriend: React.FC = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            friend_id: id,
+            friend_id: friendId,
             status: 'pending',
           }),
         });
@@ -51,7 +52,7 @@ const AddFriend: React.FC = () => {
           setError(result.error || 'Error sending friend request');
         }
       } catch (err) {
-        setError('Error sending friend request');
+        setError(`Error sending friend request: ${err}`);
       }
     },
     [friendId]
