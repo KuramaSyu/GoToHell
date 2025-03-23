@@ -17,6 +17,6 @@
     "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./node_modules/@types", "./src/theme"]
   },
-  "include": ["src", "pages/friends/FriendOverview.tsx"],
+  "include": ["src", "src/friends/FriendOverview.tsx"],
   "exclude": ["node_modules", "dist"]
 }
