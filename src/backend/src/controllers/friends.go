@@ -55,6 +55,7 @@ func (fc *FriendsController) GetFriends(c *gin.Context) {
 
 	var reply FriendshipReply
 	reply.Friendships = friendships
+	reply.Users = make([]User, 0)
 	for _, friendship := range friendships {
 		var friendID Snowflake
 		// If the logged-in user is the requester, then the other user is the friend.
