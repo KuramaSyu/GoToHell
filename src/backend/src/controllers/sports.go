@@ -81,6 +81,8 @@ func csvToMap(csv [][]string) map[string]float64 {
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
 	userIDStr := c.Query("user_id")
+
+	// auth + user
 	user, status, err := UserFromSession(c)
 	if err != nil {
 		c.JSON(status, gin.H{"error": err})
@@ -92,7 +94,9 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 		return
 	}
 
-	sports, err := sc.repo.GetSports(user.ID)
+	user_ids := make([]models.Snowflake, 0, 5)
+	user_ids = append(user_ids, user.ID)
+	sports, err := sc.repo.GetSports(user_ids)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
@@ -208,7 +212,8 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 	}
 
 	// Check if sport exists and belongs to the user
-	sports, err := sc.repo.GetSports(user.ID)
+	user_ids := append(make([]models.Snowflake, 0, 5), user.ID)
+	sports, err := sc.repo.GetSports(user_ids)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
