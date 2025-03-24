@@ -1,5 +1,5 @@
 {
-  "editor.formatOnSave": false, // disable global format on save
+  "editor.formatOnSave": true, // disable global format on save
   "[typescript]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
