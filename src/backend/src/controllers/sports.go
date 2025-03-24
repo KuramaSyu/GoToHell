@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -80,22 +79,42 @@ func csvToMap(csv [][]string) map[string]float64 {
 //   - amount: (optional) limits the number of returned sports (default all)
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
+<<<<<<< Updated upstream
 	userIDStr := c.Query("user_id")
 
 	// auth + user
+=======
+	userIdList := c.Query("user_ids")
+>>>>>>> Stashed changes
 	user, status, err := UserFromSession(c)
 	if err != nil {
 		c.JSON(status, gin.H{"error": err})
 		return
 	}
-
-	if fmt.Sprint(user.ID) != userIDStr {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You can only fetch your data"})
+	user_ids := make([]models.Snowflake, 0)
+	if userIdList != "" {
+		userIdStrs := strings.Split(userIdList, ",")
+		for _, userIdStr := range userIdStrs {
+			userId, err := models.NewSnowflakeFromString(userIdStr)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+				return
+			}
+			user_ids = append(user_ids, userId)
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No user ID provided"})
 		return
 	}
 
+<<<<<<< Updated upstream
 	user_ids := make([]models.Snowflake, 0, 5)
 	user_ids = append(user_ids, user.ID)
+=======
+	// TODO: check, that provided user_ids are valid and
+	// are the user itself or friends of the user
+
+>>>>>>> Stashed changes
 	sports, err := sc.repo.GetSports(user_ids)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
