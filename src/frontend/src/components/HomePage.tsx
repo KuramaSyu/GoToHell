@@ -9,7 +9,7 @@ import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
-import { RecentSports } from './RecentSports';
+import { RecentSports } from './RecentSports/TabView';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
