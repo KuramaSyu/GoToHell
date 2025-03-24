@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import { formatDistanceToNow } from 'date-fns';
 import { useUserStore, useUsersStore } from '../../userStore';
 import { BACKEND_BASE } from '../../statics';
-import { formatDistanceToNow } from 'date-fns';
+import { sportIconMap } from '../SportSelect'; // using sport icons from SportSelect
 
 interface Sport {
   id: number;
@@ -17,20 +25,20 @@ interface SportsApiResponse {
   data: Sport[];
 }
 
-export const RecentSportsTimeline = () => {
+export const HorizontalSportsTimeline = () => {
   const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
   const { users } = useUsersStore();
 
   useEffect(() => {
     if (!user) return;
-    const fetchResponse = async () => {
+    const fetchSports = async () => {
       const url = new URL(`${BACKEND_BASE}/api/sports`);
-      const userIds: string[] = [];
-      // Convert the users record to an array.
-      userIds.push(...Object.values(users).map((u) => u.id));
-      // Always add the current user's id.
-      userIds.push(user.id);
+      // Include both the current user and others from the store.
+      const userIds: string[] = [
+        ...Object.values(users).map((u) => u.id),
+        user.id,
+      ];
       url.searchParams.append('user_ids', userIds.join(','));
       const response = await fetch(url.toString(), {
         method: 'GET',
@@ -40,81 +48,82 @@ export const RecentSportsTimeline = () => {
         throw new Error('Failed to fetch /api/sports');
       }
       const fetchedData: SportsApiResponse = await response.json();
-      // Sort records ascending by time.
+      // Sort sports by time (ascending)
       fetchedData.data.sort(
         (a, b) =>
           new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
       );
       setData(fetchedData);
     };
-    fetchResponse();
+
+    fetchSports();
   }, [user, users]);
 
-  if (!user) return <Box></Box>;
+  if (!user) return <Box />;
   if (!data) return <Typography>Loading Timeline</Typography>;
-
-  // For demonstration, alternate entries into two rows.
-  const topRow = data.data.filter((_, i) => i % 2 === 0);
-  const bottomRow = data.data.filter((_, i) => i % 2 !== 0);
 
   return (
     <Box>
       <Typography variant="h6" align="center" gutterBottom>
         Timeline View
       </Typography>
-      <Box
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      <Timeline
+        position="alternate"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          p: 0,
+          '& .MuiTimelineItem-root': { flex: 1 },
+        }}
       >
-        {/* Top Row */}
-        <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
-          {topRow.map((sport) => (
-            <Box
-              key={sport.id}
-              sx={{
-                p: 1,
-                m: 1,
-                border: '1px solid',
-                borderRadius: '8px',
-                textAlign: 'center',
-              }}
-            >
-              <Typography variant="body2">{sport.kind}</Typography>
-              <Typography variant="caption">
-                {formatDistanceToNow(new Date(sport.timedate))}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-        {/* Horizontal timeline indicator */}
-        <Box
-          sx={{
-            width: '100%',
-            height: '2px',
-            backgroundColor: 'grey.500',
-            mb: 2,
-          }}
-        />
-        {/* Bottom Row */}
-        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-          {bottomRow.map((sport) => (
-            <Box
-              key={sport.id}
-              sx={{
-                p: 1,
-                m: 1,
-                border: '1px solid',
-                borderRadius: '8px',
-                textAlign: 'center',
-              }}
-            >
-              <Typography variant="body2">{sport.kind}</Typography>
-              <Typography variant="caption">
-                {formatDistanceToNow(new Date(sport.timedate))}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+        {data.data.map((sport, index) => {
+          const sportUser =
+            sport.user_id === user.id ? user : users[sport.user_id];
+          return (
+            <TimelineItem key={sport.id}>
+              <TimelineOppositeContent
+                sx={{
+                  p: 1,
+                  textAlign: 'center',
+                  alignSelf: index % 2 === 0 ? 'flex-start' : 'flex-end',
+                }}
+                variant="body2"
+                color="text.secondary"
+              >
+                {formatDistanceToNow(new Date(sport.timedate))} ago
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot>
+                  <img
+                    src={sportIconMap[sport.kind]}
+                    alt={sport.kind}
+                    style={{ width: 24, height: 24 }}
+                  />
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: 1, px: 2, textAlign: 'center' }}>
+                <Typography variant="h6" component="span">
+                  {sport.amount}
+                </Typography>
+                {sportUser?.getAvatarUrl && (
+                  <img
+                    src={sportUser.getAvatarUrl()}
+                    alt="User Avatar"
+                    style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: '50%',
+                      marginLeft: 8,
+                    }}
+                  />
+                )}
+              </TimelineContent>
+            </TimelineItem>
+          );
+        })}
+      </Timeline>
     </Box>
   );
 };
