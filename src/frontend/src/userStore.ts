@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { DiscordUserImpl } from "./components/DiscordLogin";
+import { create } from 'zustand';
+import { DiscordUserImpl } from './components/DiscordLogin';
 
 interface UserState {
   user: DiscordUserImpl | null;
