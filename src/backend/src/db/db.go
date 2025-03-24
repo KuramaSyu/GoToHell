@@ -24,7 +24,7 @@ type Sport struct {
 // Updated Repository interface to include full CRUD operations using the Sport struct.
 type Repository interface {
 	InsertSport(sport Sport) error
-	GetSports(userID Snowflake) ([]Sport, error)
+	GetSports(userIDs []Snowflake) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	DeleteSport(id Snowflake) error
 	GetTotalAmounts(userID Snowflake) ([]models.SportAmount, error)
@@ -55,10 +55,11 @@ func (r *ORMRepository) InsertSport(sport Sport) error {
 	return result.Error
 }
 
-// GetSports retrieves Sport entries by userID using ORM.
-func (r *ORMRepository) GetSports(userID Snowflake) ([]Sport, error) {
+// GetSports retrieves Sport entries for any of the provided userIDs.
+// Now checks that user_id is any of the slice values and limits the result to 50.
+func (r *ORMRepository) GetSports(userIDs []Snowflake) ([]Sport, error) {
 	var sports []Sport
-	result := r.DB.Where("user_id = ?", userID).Find(&sports)
+	result := r.DB.Where("user_id IN (?)", userIDs).Limit(50).Find(&sports)
 	return sports, result.Error
 }
 
