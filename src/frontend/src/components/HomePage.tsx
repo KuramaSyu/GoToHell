@@ -139,7 +139,15 @@ const HomePage: React.FC = () => {
             </Box>
           </Box>
           {/* Box for History row */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', zIndex: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              //alignContent: "center",
+              zIndex: 1,
+              height: 1 / 3,
+            }}
+          >
             <RecentSports></RecentSports>
           </Box>
         </Box>
