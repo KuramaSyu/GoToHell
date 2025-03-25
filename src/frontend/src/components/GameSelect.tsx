@@ -16,7 +16,7 @@ export const GameSelector = () => {
   return (
     <DynamicGameGrid
       items={validGames}
-      capacity={{ xs: 6, sm: 8, md: 15 }}
+      capacity={{ xs: 5, sm: 8, md: 11, lg: 14, xl: 17 }}
       selectedItem={theme.custom.themeName}
       onSelect={async (item) => {
         await setTheme(item);
@@ -83,11 +83,15 @@ export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
 
-  if (currentSport.game_multiplier == null || currentSport.sport_multiplier == null) {
+  if (
+    currentSport.game_multiplier == null ||
+    currentSport.sport_multiplier == null
+  ) {
     return <Box></Box>;
   }
 
-  const computedValue = currentSport.game_multiplier! * amount * currentSport.sport_multiplier!;
+  const computedValue =
+    currentSport.game_multiplier! * amount * currentSport.sport_multiplier!;
 
   return (
     <Box
