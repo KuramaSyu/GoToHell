@@ -17,11 +17,11 @@ const MainContent: React.FC = () => {
   return (
     <Box
       sx={{
-        flex: 1,
+        flex: '1 1 auto',
         display: 'flex',
         flexDirection: 'column',
         height: '90vh',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
       }}
     >
       {/* top row */}
@@ -32,7 +32,7 @@ const MainContent: React.FC = () => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           justifyItems: 'center',
-          px: 10,
+          px: 5,
           maxHeight: 1 / 3,
         }}
       >
@@ -53,7 +53,7 @@ const MainContent: React.FC = () => {
           flexDirection: 'row',
           width: '100%',
           justifyContent: 'space-around',
-          p: 2,
+          // p: 2,
           minHeight: 0,
         }}
       >
