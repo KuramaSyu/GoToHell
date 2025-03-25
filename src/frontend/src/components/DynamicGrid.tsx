@@ -74,7 +74,7 @@ const AnimatedButton: React.FC<{
         variant={isSelected ? 'contained' : 'outlined'}
         onClick={onClick}
         sx={{
-          fontSize: 'clamp(14px, 2vw, 24px)',
+          fontSize: 'clamp(12px, 1.5vw, 32px)',
           padding: 2,
           border: '2px solid',
           borderColor: 'secondary.main',
@@ -116,22 +116,40 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
     game_items.push(gameitem);
   }
   // Always call useMediaQuery hooks unconditionally
+  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   // Determine the current row capacity based on screen size.
-  // (You can extend this logic to handle lg/xl if needed.)
-  const currentCapacity = isMdUp
-    ? capacity.md
-    : isSmUp
-    ? capacity.sm
-    : capacity.xs;
+  let currentCapacity;
+  if (isXlUp) {
+    if (capacity.xl !== undefined) {
+      currentCapacity = capacity.xl;
+    } else if (capacity.lg !== undefined) {
+      currentCapacity = capacity.lg;
+    } else {
+      currentCapacity = capacity.md;
+    }
+  } else if (isLgUp) {
+    if (capacity.lg !== undefined) {
+      currentCapacity = capacity.lg;
+    } else {
+      currentCapacity = capacity.md;
+    }
+  } else if (isMdUp) {
+    currentCapacity = capacity.md;
+  } else if (isSmUp) {
+    currentCapacity = capacity.sm;
+  } else {
+    currentCapacity = capacity.xs;
+  }
 
   // Compute the rows based on the items' sizes and current capacity.
   const rows = computeRows(game_items, currentCapacity);
 
   return (
-    <Box width="100%" height="100%" sx={{ p: 2 }}>
+    <Box width="100%" height="100%" sx={{ p: 0 }}>
       {rows.map((row, rowIndex) => {
         // Calculate the sum of sizes for the current row.
         const totalSize = row.reduce((sum, item) => sum + item.size, 0);
