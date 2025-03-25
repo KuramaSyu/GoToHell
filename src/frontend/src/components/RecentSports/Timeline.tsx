@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState, useEffect, ReactElement } from 'react';
+import { Box, makeStyles, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { useUserStore, useUsersStore } from '../../userStore';
 import { BACKEND_BASE } from '../../statics';
 import { sportIconMap } from '../SportSelect'; // using sport icons from SportSelect
+import { useThemeStore } from '../../zustand/useThemeStore';
 
 interface Sport {
   id: number;
@@ -29,6 +30,7 @@ export const HorizontalSportsTimeline = () => {
   const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
   const { users } = useUsersStore();
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     if (!user) return;
@@ -62,68 +64,59 @@ export const HorizontalSportsTimeline = () => {
   if (!user) return <Box />;
   if (!data) return <Typography>Loading Timeline</Typography>;
 
+  var timelineItems: ReactElement[] = [];
+  for (const sport of data.data) {
+    const sportUser = users[sport.user_id];
+    timelineItems.push(
+      <TimelineItem key={sport.id} sx={{ width: '100%' }}>
+        <TimelineOppositeContent
+          sx={{ m: 'auto 0' }}
+          align="right"
+          variant="body2"
+          color="text.secondary"
+        >
+          {formatDistanceToNow(new Date(sport.timedate), {
+            addSuffix: true,
+          })}
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot
+            color="primary"
+            sx={{
+              width: 60,
+              height: 60,
+              borderRadius: '50%',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
+            <img
+              src={sportUser?.getAvatarUrl()}
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }}
+            />
+          </TimelineDot>
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent>
+          <Typography variant="h6" component="span">
+            {sport.kind}
+          </Typography>
+          <Typography>{sportUser?.username || 'Unknown User'}</Typography>
+          <Typography>{sport.amount}</Typography>
+        </TimelineContent>
+      </TimelineItem>
+    );
+  }
   return (
-    <Box>
-      <Typography variant="h6" align="center" gutterBottom>
-        Timeline View
-      </Typography>
-      <Timeline
-        position="alternate"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          p: 0,
-          '& .MuiTimelineItem-root': { flex: 1 },
-        }}
-      >
-        {data.data.map((sport, index) => {
-          const sportUser =
-            sport.user_id === user.id ? user : users[sport.user_id];
-          return (
-            <TimelineItem key={sport.id}>
-              <TimelineOppositeContent
-                sx={{
-                  p: 1,
-                  textAlign: 'center',
-                  alignSelf: index % 2 === 0 ? 'flex-start' : 'flex-end',
-                }}
-                variant="body2"
-                color="text.secondary"
-              >
-                {formatDistanceToNow(new Date(sport.timedate))} ago
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot>
-                  <img
-                    src={sportIconMap[sport.kind]}
-                    alt={sport.kind}
-                    style={{ width: 24, height: 24 }}
-                  />
-                </TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent sx={{ py: 1, px: 2, textAlign: 'center' }}>
-                <Typography variant="h6" component="span">
-                  {sport.amount}
-                </Typography>
-                {sportUser?.getAvatarUrl && (
-                  <img
-                    src={sportUser.getAvatarUrl()}
-                    alt="User Avatar"
-                    style={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: '50%',
-                      marginLeft: 8,
-                    }}
-                  />
-                )}
-              </TimelineContent>
-            </TimelineItem>
-          );
-        })}
-      </Timeline>
+    <Box sx={{ height: '100%', overflowY: 'auto' }}>
+      <Timeline position="alternate">{timelineItems}</Timeline>
     </Box>
   );
 };
