@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
           alignItems="center"
           height="100%"
         >
-          <Box sx={{ width: '25%', height: '90vh', flex: '0 1 auto' }}>
+          <Box sx={{ maxWidth: '25%', height: '90vh', flex: '0 1 auto' }}>
             <HorizontalSportsTimeline></HorizontalSportsTimeline>
           </Box>
           <Box sx={{ flex: '1 1 auto' }}>
