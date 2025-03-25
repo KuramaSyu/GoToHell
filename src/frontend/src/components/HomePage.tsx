@@ -10,6 +10,9 @@ import ErrorDisplay from './ErrorDisplay';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
 import { RecentSports } from './RecentSports/TabView';
+import AppBackground from './AppBackground';
+import MainContent from './MainContent';
+import { HorizontalSportsTimeline } from './RecentSports/Timeline';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -29,126 +32,22 @@ const HomePage: React.FC = () => {
 
   return (
     <Box width={'100vw'}>
-      <ThemeProvider theme={theme!}>
-        {backgroundImage ? (
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              backgroundColor: theme.palette.background.default,
-              backgroundImage: backgroundImage
-                ? `url(${backgroundImage})`
-                : 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: backgroundImage ? 'blur(9px)' : 'none',
-              opacity: loaded ? 1 : 0, // Start invisible, then fade in
-              transition: 'opacity 0.5s ease', // Smooth fade-in effect
-              zIndex: 0,
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          ></Box>
-        ) : null}
+      <ThemeProvider theme={theme}>
+        <Box sx={{ height: '30px' }}></Box> {/* Spacer */}
+        <AppBackground></AppBackground>
+        {/* Timeline wrapper */}
         <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            height: '90vh',
-            justifyContent: 'space-evenly',
-          }}
+          display="flex"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
         >
-          {/* top row */}
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              justifyItems: 'center',
-              px: 10,
-              maxHeight: 1 / 3,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <TotalScoreDisplay />
-            </Box>
-
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <AmountDisplay />
-            </Box>
+          <Box sx={{ width: '25%', height: '90vh', flex: '0 1 auto' }}>
+            <HorizontalSportsTimeline></HorizontalSportsTimeline>
           </Box>
-
-          {/* box for middle row */}
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-around',
-              p: 2,
-              minHeight: 0,
-            }}
-          >
-            {/* Game Selection */}
-            <Box
-              sx={{
-                flex: 1,
-                maxWidth: 1 / 3,
-              }}
-            >
-              <GameSelector />
-            </Box>
-
-            {/* Death Slider and Upload */}
-            <Box
-              sx={{
-                width: 1 / 3,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <NumberSlider withInput={theme.custom.themeName === 'custom'} />
-              <Box
-                sx={{
-                  display: 'flex',
-                  // flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <UploadScore />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                flex: 1,
-                maxWidth: 1 / 5,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <SportSelector />
-            </Box>
-          </Box>
-          {/* Box for History row */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              //alignContent: "center",
-              zIndex: 1,
-              height: 1 / 3,
-            }}
-          >
-            <RecentSports></RecentSports>
+          <Box sx={{ flex: '1 1 auto' }}>
+            <MainContent></MainContent>
           </Box>
         </Box>
       </ThemeProvider>
