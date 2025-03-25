@@ -68,7 +68,7 @@ export const HorizontalSportsTimeline = () => {
   for (const sport of data.data) {
     const sportUser = users[sport.user_id];
     timelineItems.push(
-      <TimelineItem key={sport.id} sx={{ width: '100%' }}>
+      <TimelineItem key={sport.id}>
         <TimelineOppositeContent
           sx={{ m: 'auto 0' }}
           align="right"
@@ -105,7 +105,11 @@ export const HorizontalSportsTimeline = () => {
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
-          <Typography variant="h6" component="span">
+          <Typography
+            variant="h6"
+            component="span"
+            sx={{ fontWeight: 'light', textTransform: 'uppercase' }}
+          >
             {sport.kind}
           </Typography>
           <Typography>{sportUser?.username || 'Unknown User'}</Typography>
