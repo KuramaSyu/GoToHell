@@ -95,27 +95,34 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   );
 
   const customInput = withInput ? (
-    <OutlinedInput
-      value={amount}
-      placeholder="Amount"
-      onChange={handleInputChange}
-      inputProps={{
-        inputMode: 'numeric',
-        style: { textAlign: 'center' }, // center the number
-      }}
-      sx={{
-        width: 'clamp(40px, 25%, 200px)',
-        px: 2,
-        mx: 1,
-        display: 'flex',
-        color: theme.palette.primary.main,
-        fontSize: 'clamp(16px, 2vw, 24px)',
-        textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-          borderColor: theme.palette.primary.main,
-        },
-      }}
-    />
+    <Box
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Typography variant="h6">Too often?</Typography>
+      <OutlinedInput
+        value={amount}
+        placeholder="Amount"
+        onChange={handleInputChange}
+        inputProps={{
+          inputMode: 'numeric',
+          style: { textAlign: 'center' }, // center the number
+        }}
+        sx={{
+          width: 'clamp(40px, 35%, 200px)',
+          height: '80%',
+          display: 'flex',
+          color: theme.palette.primary.main,
+          fontSize: 'clamp(16px, 2vw, 24px)',
+          textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.primary.main,
+          },
+        }}
+      />
+    </Box>
   ) : null;
 
   const AddRemoveButtons = (
@@ -133,10 +140,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     </Box>
   );
 
-  // const handleBlur = () => {
-  //   if (amount < min) setAmount(min);
-  //   if (amount > max) setAmount(max);
-  // };
+  // calculate the marks below the slider
   var marks: { value: number; label: string }[] = [];
   const stepValue = amount < 15 ? 1 : Math.ceil(amount / 10);
   for (let i = min; i <= max; i += stepValue) {
@@ -152,6 +156,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        gap: 1,
       }}
     >
       <Box
@@ -164,9 +169,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         }}
       >
         {title}
-        {customInput}
         {AddRemoveButtons}
       </Box>
+      {customInput}
       <Slider
         value={amount}
         onChange={handleSliderChange}
