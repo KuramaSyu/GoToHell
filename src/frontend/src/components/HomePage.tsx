@@ -13,12 +13,21 @@ import { RecentSports } from './RecentSports/TabView';
 import AppBackground from './AppBackground';
 import MainContent from './MainContent';
 import { HorizontalSportsTimeline } from './RecentSports/Timeline';
+import { LoadUsers } from '../friends/FriendOverview';
+import { useUsersStore, useUserStore } from '../userStore';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
   const backgroundImage = theme.custom.backgroundImage; // Safe access
   const [loaded, setLoaded] = useState(false);
+  const { addUser } = useUsersStore();
+  const { user } = useUserStore();
 
+  useEffect(() => {
+    if (user != null) {
+      addUser(user);
+    }
+  }, [user]);
   useEffect(() => {
     if (
       theme.custom.backgroundImage == undefined ||
@@ -30,10 +39,17 @@ const HomePage: React.FC = () => {
     }
   }, [theme]);
 
+  useEffect(() => {
+    const fetch = async () => {
+      await LoadUsers(addUser);
+    };
+    fetch();
+  }, [addUser]);
+
   return (
     <Box width={'100vw'}>
       <ThemeProvider theme={theme}>
-        <Box sx={{ height: '30px' }}></Box> {/* Spacer */}
+        <Box sx={{ height: '35px' }}></Box> {/* Spacer */}
         <AppBackground></AppBackground>
         {/* Timeline wrapper */}
         <Box
