@@ -25,12 +25,12 @@ export const RecentSports = () => {
           indicatorColor="primary"
         >
           <Tab label="Standard View" sx={{ minWidth: 150, width: 'auto' }} />
-          <Tab label="Timeline View" sx={{ minWidth: 150, width: 'auto' }} />
+          {/* <Tab label="Timeline View" sx={{ minWidth: 150, width: 'auto' }} /> */}
         </Tabs>
       </Box>
       <Box mt={2} display="flex" justifyContent="left">
         {activeTab === 0 && <RecentSportsStandard />}
-        {activeTab === 1 && <HorizontalSportsTimeline />}
+        {/* {activeTab === 1 && <HorizontalSportsTimeline />} */}
       </Box>
     </Box>
   );
