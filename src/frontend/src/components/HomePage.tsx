@@ -28,6 +28,7 @@ const HomePage: React.FC = () => {
       addUser(user);
     }
   }, [user]);
+
   useEffect(() => {
     if (
       theme.custom.backgroundImage == undefined ||

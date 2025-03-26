@@ -107,9 +107,9 @@ export const HorizontalSportsTimeline = () => {
         </TimelineSeparator>
         <TimelineContent>
           <Typography
-            variant="h6"
+            variant="body1"
             component="span"
-            sx={{ fontWeight: 'light', textTransform: 'uppercase' }}
+            sx={{ fontWeight: '300', textTransform: 'uppercase' }}
           >
             {sport.kind}
           </Typography>
@@ -121,7 +121,7 @@ export const HorizontalSportsTimeline = () => {
   }
   return (
     <Box sx={{ height: '100%', overflowY: 'auto' }}>
-      <Timeline position="left">{timelineItems}</Timeline>
+      <Timeline position="left">{timelineItems.reverse()}</Timeline>
     </Box>
   );
 };
