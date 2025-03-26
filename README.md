@@ -7,11 +7,7 @@ progress of your friends
 
 
 ### TODO:
-- add get /api/sports to upload button, after clicking
-- set zustand to total amount
-- make animation of number to "upload to a cloud"
-- remove useless imports
-- animated background for upload button, using gradiant
+
 
 ### Things required to add a game:
 - an entry in the default sports in `src/backend/config/default_sports.csv`
