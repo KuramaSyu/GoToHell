@@ -20,7 +20,7 @@ const MainContent: React.FC = () => {
         flex: '1 1 auto',
         display: 'flex',
         flexDirection: 'column',
-        height: '90vh',
+        height: '95vh',
         justifyContent: 'space-between',
       }}
     >
@@ -74,6 +74,7 @@ const MainContent: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            gap: 1,
           }}
         >
           <NumberSlider withInput={theme.custom.themeName === 'custom'} />
@@ -105,7 +106,7 @@ const MainContent: React.FC = () => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          //alignContent: "center",
+          alignContent: 'center',
           zIndex: 1,
           height: 1 / 3,
         }}
