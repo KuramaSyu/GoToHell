@@ -29,11 +29,12 @@ interface SportsApiResponse {
 export const HorizontalSportsTimeline = () => {
   const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
-  const { users } = useUsersStore();
+  const { users, addUser } = useUsersStore();
   const { theme } = useThemeStore();
 
   useEffect(() => {
     if (!user) return;
+
     const fetchSports = async () => {
       const url = new URL(`${BACKEND_BASE}/api/sports`);
       // Include both the current user and others from the store.
@@ -120,7 +121,7 @@ export const HorizontalSportsTimeline = () => {
   }
   return (
     <Box sx={{ height: '100%', overflowY: 'auto' }}>
-      <Timeline position="alternate">{timelineItems}</Timeline>
+      <Timeline position="left">{timelineItems}</Timeline>
     </Box>
   );
 };
