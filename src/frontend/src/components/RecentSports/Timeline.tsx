@@ -1,5 +1,5 @@
-import React, { useState, useEffect, ReactElement } from 'react';
-import { Box, makeStyles, Typography } from '@mui/material';
+import { useState, useEffect, ReactElement } from 'react';
+import { alpha, Box, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -10,8 +10,11 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import { formatDistanceToNow } from 'date-fns';
 import { useUserStore, useUsersStore } from '../../userStore';
 import { BACKEND_BASE } from '../../statics';
-import { sportIconMap } from '../SportSelect'; // using sport icons from SportSelect
 import { useThemeStore } from '../../zustand/useThemeStore';
+import { useRecentSportsStore } from '../../zustand/RecentSportsState';
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { TransitionGroup } from 'react-transition-group';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Sport {
   id: number;
@@ -31,7 +34,10 @@ export const HorizontalSportsTimeline = () => {
   const { user } = useUserStore();
   const { users, addUser } = useUsersStore();
   const { theme } = useThemeStore();
+  const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
+  const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
 
+  // hook for fetching sports
   useEffect(() => {
     if (!user) return;
 
@@ -59,69 +65,94 @@ export const HorizontalSportsTimeline = () => {
       setData(fetchedData);
     };
 
+    // call once directly
     fetchSports();
-  }, [user, users]);
+    // TODO: totally unefficient; should use websockets
+    // call every 30 seconds
+    const interval = setInterval(fetchSports, 30000);
+
+    // cleanup
+    return () => clearInterval(interval);
+  }, [user, users, ScoreRefreshTrigger, RecentSportsRefreshTrigger]);
 
   if (!user) return <Box />;
   if (!data) return <Typography>Loading Timeline</Typography>;
 
-  var timelineItems: ReactElement[] = [];
-  for (const sport of data.data) {
+  const timelineItems: ReactElement[] = data.data.map((sport) => {
     const sportUser = users[sport.user_id];
-    timelineItems.push(
-      <TimelineItem key={sport.id}>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          align="right"
-          variant="body2"
-          color="text.secondary"
-        >
-          {formatDistanceToNow(new Date(sport.timedate), {
-            addSuffix: true,
-          })}
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot
-            color="primary"
-            sx={{
-              width: 60,
-              height: 60,
-              borderRadius: '50%',
-              overflow: 'hidden',
-              position: 'relative',
-            }}
+    return (
+      <motion.div
+        key={sport.id}
+        initial={{ opacity: 0, y: 20, scale: 0.8 }}
+        animate={{ opacity: 1, y: 0, scale: [0.7, 1.2, 1] }}
+        exit={{ opacity: 0, y: 20, scale: 0.8 }}
+        transition={{ duration: 0.5 }}
+      >
+        <TimelineItem key={sport.id}>
+          <TimelineOppositeContent
+            sx={{ m: 'auto 0' }}
+            align="right"
+            variant="body2"
+            color="text.secondary"
           >
-            <img
-              src={sportUser?.getAvatarUrl()}
-              style={{
-                width: '100%',
-                height: '100%',
+            {formatDistanceToNow(new Date(sport.timedate), {
+              addSuffix: true,
+            })}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <TimelineDot
+              color="primary"
+              sx={{
+                width: 60,
+                height: 60,
                 borderRadius: '50%',
-                position: 'absolute',
-                top: 0,
-                left: 0,
+                overflow: 'hidden',
+                position: 'relative',
+                margin: 'auto',
               }}
-            />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>
-          <Typography
-            variant="body1"
-            component="span"
-            sx={{ fontWeight: '300', textTransform: 'uppercase' }}
-          >
-            {sport.kind}
-          </Typography>
-          <Typography>{sportUser?.username || 'Unknown User'}</Typography>
-          <Typography>{sport.amount}</Typography>
-        </TimelineContent>
-      </TimelineItem>
+            >
+              <img
+                src={sportUser?.getAvatarUrl()}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
+              />
+            </TimelineDot>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <Typography
+              variant="body1"
+              component="span"
+              sx={{ fontWeight: '300', textTransform: 'uppercase' }}
+            >
+              {sport.kind}
+            </Typography>
+            <Typography>{sportUser?.username || 'Unknown User'}</Typography>
+            <Typography>{sport.amount}</Typography>
+          </TimelineContent>
+        </TimelineItem>
+      </motion.div>
     );
-  }
+  });
+
   return (
-    <Box sx={{ height: '100%', overflowY: 'auto' }}>
-      <Timeline position="left">{timelineItems.reverse()}</Timeline>
+    <Box
+      sx={{
+        height: '100%',
+        overflowY: 'auto',
+      }}
+    >
+      <TransitionGroup component={Timeline}>
+        <Timeline position="left">
+          <AnimatePresence>{timelineItems.reverse()}</AnimatePresence>
+        </Timeline>
+      </TransitionGroup>
     </Box>
   );
 };
