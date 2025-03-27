@@ -12,7 +12,7 @@ import { SportSelector } from './SportSelect';
 import { RecentSports } from './RecentSports/TabView';
 import AppBackground from './AppBackground';
 import MainContent from './MainContent';
-import { HorizontalSportsTimeline } from './RecentSports/Timeline';
+import { SportsTimeline } from './RecentSports/Timeline';
 import { LoadUsers } from '../friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../userStore';
 
@@ -61,7 +61,7 @@ const HomePage: React.FC = () => {
           height="100%"
         >
           <Box sx={{ maxWidth: '25%', height: '90vh', flex: '0 1 auto' }}>
-            <HorizontalSportsTimeline></HorizontalSportsTimeline>
+            <SportsTimeline></SportsTimeline>
           </Box>
           <Box sx={{ flex: '1 1 auto' }}>
             <MainContent></MainContent>

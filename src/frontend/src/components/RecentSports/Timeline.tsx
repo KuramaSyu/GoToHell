@@ -29,7 +29,7 @@ interface SportsApiResponse {
   data: Sport[];
 }
 
-export const HorizontalSportsTimeline = () => {
+export const SportsTimeline = () => {
   const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
   const { users, addUser } = useUsersStore();
