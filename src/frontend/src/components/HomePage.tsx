@@ -54,6 +54,7 @@ const HomePage: React.FC = () => {
         flexDirection: 'row',
         height: '100%', // Instead of 100vh, it now respects its parent’s height
         overflow: 'hidden', // Prevents overflow
+        paddingTop: '6px',
       }}
     >
       <AppBackground></AppBackground>
@@ -63,6 +64,13 @@ const HomePage: React.FC = () => {
           height: '100%',
           flex: '0 1 auto',
           overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
+          backgroundColor: 'rgba(0, 0, 0, 0.15)',
+          borderRadius: '32px',
+          backdropFilter: 'blur(15px)',
+          scrollbarWidth: 'none', // Hides scrollbar for Firefox // does not work
+          '&::-webkit-scrollbar': {
+            display: 'none', // Hides scrollbar for Chrome, Safari, Edge
+          },
         }}
       >
         <SportsTimeline />
