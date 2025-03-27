@@ -28,28 +28,31 @@ const TopBar: React.FC = () => {
           <Typography
             variant="h2"
             component="div"
-            onClick={() => navigate("/")}
+            onClick={() => navigate('/')}
             sx={{
               color: theme.palette.vibrant.main,
               fontFamily: '"Architects Daughter", cursive', // custom font
-              textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`, // improve legibility
+              textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
             }}
           >
             Go To Hell
           </Typography>
         </Box>
-        <Box sx={{gap: 4, display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-
-          <Button
-            variant='contained'
-            onClick={() => navigate('/friends')}
-            >
+        <Box
+          sx={{
+            gap: 4,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Button variant="contained" onClick={() => navigate('/friends')}>
             Friends
           </Button>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <DiscordLogin />
-        </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <DiscordLogin />
+          </Box>
         </Box>
       </Toolbar>
     </AppBar>
