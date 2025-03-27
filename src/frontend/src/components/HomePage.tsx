@@ -48,26 +48,28 @@ const HomePage: React.FC = () => {
   }, [addUser]);
 
   return (
-    <Box width={'100vw'}>
-      <ThemeProvider theme={theme}>
-        <Box sx={{ height: '35px' }}></Box> {/* Spacer */}
-        <AppBackground></AppBackground>
-        {/* Timeline wrapper */}
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="center"
-          alignItems="center"
-          height="100%"
-        >
-          <Box sx={{ maxWidth: '25%', height: '90vh', flex: '0 1 auto' }}>
-            <SportsTimeline></SportsTimeline>
-          </Box>
-          <Box sx={{ flex: '1 1 auto' }}>
-            <MainContent></MainContent>
-          </Box>
-        </Box>
-      </ThemeProvider>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        height: '100%', // Instead of 100vh, it now respects its parent’s height
+        overflow: 'hidden', // Prevents overflow
+      }}
+    >
+      <AppBackground></AppBackground>
+      <Box
+        sx={{
+          maxWidth: '25%',
+          height: '100%',
+          flex: '0 1 auto',
+          overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
+        }}
+      >
+        <SportsTimeline />
+      </Box>
+      <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
+        <MainContent />
+      </Box>
     </Box>
   );
 };
