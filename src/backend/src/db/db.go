@@ -59,7 +59,11 @@ func (r *ORMRepository) InsertSport(sport Sport) error {
 // Now checks that user_id is any of the slice values and limits the result to 50.
 func (r *ORMRepository) GetSports(userIDs []Snowflake) ([]Sport, error) {
 	var sports []Sport
-	result := r.DB.Where("user_id IN (?)", userIDs).Limit(50).Find(&sports)
+	result := r.DB.
+		Where("user_id IN (?)", userIDs).
+		Order("timedate desc").
+		Limit(50).
+		Find(&sports)
 	return sports, result.Error
 }
 
