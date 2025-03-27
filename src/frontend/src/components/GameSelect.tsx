@@ -69,7 +69,7 @@ export const PopNumber = ({
         <motion.span
           key={index}
           style={{
-            fontSize: index === randomIndex ? '8rem' : '8rem',
+            fontSize: index === randomIndex ? '12vh' : '12vh',
           }}
         >
           {char}
