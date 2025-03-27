@@ -90,7 +90,12 @@ export const SportsTimeline = () => {
       >
         <TimelineItem key={sport.id}>
           <TimelineOppositeContent
-            sx={{ m: 'auto 0' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              minWidth: '100px',
+              textAlign: 'right',
+            }}
             align="right"
             variant="body2"
             color="text.secondary"
