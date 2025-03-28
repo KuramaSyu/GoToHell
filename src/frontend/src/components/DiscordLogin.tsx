@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   ThemeProvider,
   CssBaseline,
@@ -7,10 +7,11 @@ import {
   Avatar,
   Tooltip,
   Typography,
-} from "@mui/material";
-import { useThemeStore } from "../zustand/useThemeStore";
-import { useUserStore } from "../userStore";
-import { BACKEND_BASE } from "../statics";
+} from '@mui/material';
+import { useThemeStore } from '../zustand/useThemeStore';
+import { useUserStore } from '../userStore';
+import { BACKEND_BASE } from '../statics';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 // Define TypeScript interface for Discord user data
 interface DiscordUser {
@@ -49,7 +50,7 @@ class DiscordUserImpl implements DiscordUser {
 
   async fetchTotalScore(): Promise<Response> {
     return await fetch(`${BACKEND_BASE}/api/sports/total`, {
-      credentials: "include",
+      credentials: 'include',
     });
   }
 }
@@ -66,7 +67,7 @@ const DiscordLogin: React.FC = () => {
     const checkLoginStatus = async (): Promise<void> => {
       try {
         const response = await fetch(`${BACKEND_BASE}/api/auth/user`, {
-          credentials: "include",
+          credentials: 'include',
         });
 
         if (response.ok) {
@@ -75,7 +76,7 @@ const DiscordLogin: React.FC = () => {
           setUser(new DiscordUserImpl(userData));
         }
       } catch (error) {
-        console.error("Error checking login status:", error);
+        console.error('Error checking login status:', error);
       } finally {
         setLoading(false);
       }
@@ -91,11 +92,11 @@ const DiscordLogin: React.FC = () => {
   const handleLogout = async (): Promise<void> => {
     try {
       await fetch(`${BACKEND_BASE}/api/auth/logout`, {
-        credentials: "include",
+        credentials: 'include',
       });
       setUser(null);
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error('Error logging out:', error);
     }
   };
 
@@ -110,14 +111,15 @@ const DiscordLogin: React.FC = () => {
 
       {user ? (
         <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
+          <Button variant="outlined" color="primary" onClick={handleLogout}>
+            <LogoutIcon />
+          </Button>
+
           <Avatar
             src={user.getAvatarUrl()}
             alt={user.username}
             sx={{ width: 60, height: 60 }}
           />
-          <Button variant="contained" color="primary" onClick={handleLogout}>
-            Logout
-          </Button>
         </Box>
       ) : (
         <Button
@@ -162,7 +164,7 @@ export const DiscordViewModel: React.FC<DiscordViewModelProps> = ({ user }) => {
         display="flex"
         alignItems="center"
         gap={1}
-        sx={{ cursor: "pointer" }}
+        sx={{ cursor: 'pointer' }}
       >
         <Avatar src={user.getAvatarUrl()} alt={user.username} />
         <Typography variant="body1">{user.username}</Typography>

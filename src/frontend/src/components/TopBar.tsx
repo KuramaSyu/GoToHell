@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { Button, CssBaseline } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PeopleIcon from '@mui/icons-material/People';
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
@@ -46,12 +48,11 @@ const TopBar: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <Button
-            variant="contained"
-            onClick={() => navigate('/settings')}
-          ></Button>
-          <Button variant="contained" onClick={() => navigate('/friends')}>
-            Friends
+          <Button variant="outlined" onClick={() => navigate('/settings')}>
+            <SettingsIcon />
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/friends')}>
+            <PeopleIcon />
           </Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
