@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { useUserStore } from '../userStore';
-
-
+import { useUserStore } from '../../userStore';
 
 const IdDisplay: React.FC = () => {
   const { user } = useUserStore();

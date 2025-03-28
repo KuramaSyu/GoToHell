@@ -13,7 +13,7 @@ import { RecentSports } from './RecentSports/TabView';
 import AppBackground from './AppBackground';
 import MainContent from './MainContent';
 import { SportsTimeline } from './RecentSports/Timeline';
-import { LoadUsers } from '../friends/FriendOverview';
+import { LoadUsers } from '../pages/friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../userStore';
 
 const HomePage: React.FC = () => {

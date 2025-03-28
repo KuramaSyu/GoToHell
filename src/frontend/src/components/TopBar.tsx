@@ -46,6 +46,10 @@ const TopBar: React.FC = () => {
             alignItems: 'center',
           }}
         >
+          <Button
+            variant="contained"
+            onClick={() => navigate('/settings')}
+          ></Button>
           <Button variant="contained" onClick={() => navigate('/friends')}>
             Friends
           </Button>

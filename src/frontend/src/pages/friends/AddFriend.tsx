@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Box, TextField, Button, Typography } from '@mui/material';
-import { BACKEND_BASE } from '../statics';
-import useAppState from '../zustand/Error';
+import { BACKEND_BASE } from '../../statics';
+import useAppState from '../../zustand/Error';
 
 const AddFriend: React.FC = () => {
   const [friendId, setFriendId] = useState('');

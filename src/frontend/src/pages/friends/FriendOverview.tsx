@@ -12,18 +12,18 @@ import {
   CssBaseline,
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { useThemeStore } from '../zustand/useThemeStore';
-import TopBar from '../components/TopBar';
-import { BACKEND_BASE } from '../statics';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import TopBar from '../../components/TopBar';
+import { BACKEND_BASE } from '../../statics';
 import AddFriend from './AddFriend';
 import IdDisplay from './IdDisplay';
-import useAppState from '../zustand/Error';
-import { useUserStore, useUsersStore } from '../userStore';
+import useAppState from '../../zustand/Error';
+import { useUserStore, useUsersStore } from '../../userStore';
 import {
   DiscordUser,
   DiscordUserImpl,
   DiscordViewModel,
-} from '../components/DiscordLogin';
+} from '../../components/DiscordLogin';
 
 interface FriendShip {
   id: number;
