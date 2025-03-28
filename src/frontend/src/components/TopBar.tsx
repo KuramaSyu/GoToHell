@@ -42,7 +42,7 @@ const TopBar: React.FC = () => {
         </Box>
         <Box
           sx={{
-            gap: 4,
+            gap: 1,
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
