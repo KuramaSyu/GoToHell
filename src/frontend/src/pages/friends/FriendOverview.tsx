@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { useThemeStore } from '../../zustand/useThemeStore';
-import TopBar from '../../components/TopBar';
 import { BACKEND_BASE } from '../../statics';
 import AddFriend from './AddFriend';
 import IdDisplay from './IdDisplay';

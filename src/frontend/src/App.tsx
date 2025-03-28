@@ -4,7 +4,7 @@ import './styles/DiscordLogin.css';
 import '@mui/material/styles';
 //import './App.css';
 import HomePage from './components/HomePage';
-import FriendOverview from './pages/friends/IdDisplay';
+import FriendOverview from './pages/friends/FriendOverview';
 import TopBar from './components/TopBar';
 import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
 import { useThemeStore } from './zustand/useThemeStore';
