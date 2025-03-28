@@ -49,10 +49,14 @@ const TopBar: React.FC = () => {
           }}
         >
           <Button variant="outlined" onClick={() => navigate('/settings')}>
-            <SettingsIcon />
+            <SettingsIcon
+              sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
+            />
           </Button>
           <Button variant="outlined" onClick={() => navigate('/friends')}>
-            <PeopleIcon />
+            <PeopleIcon
+              sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
+            />
           </Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
