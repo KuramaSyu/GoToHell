@@ -60,17 +60,13 @@ const HomePage: React.FC = () => {
       <AppBackground></AppBackground>
       <Box
         sx={{
-          maxWidth: '25%',
+          maxWidth: '35%',
           height: '100%',
           flex: '0 1 auto',
           overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
           backgroundColor: 'rgba(0, 0, 0, 0.15)',
           borderRadius: '32px',
           backdropFilter: 'blur(15px)',
-          scrollbarWidth: 'none', // Hides scrollbar for Firefox // does not work
-          '&::-webkit-scrollbar': {
-            display: 'none', // Hides scrollbar for Chrome, Safari, Edge
-          },
         }}
       >
         <SportsTimeline />
