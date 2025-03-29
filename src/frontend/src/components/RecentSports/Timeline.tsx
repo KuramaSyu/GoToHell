@@ -1,11 +1,13 @@
-import { useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, ReactElement, useRef } from 'react';
 import { alpha, Box, Typography } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+import TimelineOppositeContent, {
+  timelineOppositeContentClasses,
+} from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { formatDistanceToNow } from 'date-fns';
 import { useUserStore, useUsersStore } from '../../userStore';
@@ -15,7 +17,7 @@ import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { TransitionGroup } from 'react-transition-group';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SportCard } from './SportCard';
+import { SportCard, SportCardNumber } from './SportCard';
 
 export interface Sport {
   id: number;
@@ -89,14 +91,10 @@ export const SportsTimeline = () => {
         exit={{ opacity: 0, y: 20, scale: 0.8 }}
         transition={{ duration: 0.5 }}
       >
-        <TimelineItem
-          key={sport.id}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignContent: 'space-between',
-          }}
-        >
+        <TimelineItem key={sport.id}>
+          <TimelineOppositeContent>
+            <SportCardNumber data={sport}></SportCardNumber>
+          </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineDot
               color="primary"
@@ -121,7 +119,7 @@ export const SportsTimeline = () => {
                 }}
               />
             </TimelineDot>
-            <TimelineConnector />{' '}
+            <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent>
             <SportCard data={sport} />
@@ -136,10 +134,25 @@ export const SportsTimeline = () => {
       sx={{
         height: '100%',
         overflowY: 'auto',
+        display: 'flex',
+        width: 'auto',
+        flexShrink: 0,
+        alignSelf: 'flex-start',
       }}
     >
       <TransitionGroup component={Timeline}>
-        <Timeline sx={{ width: '300px' }}>
+        <Timeline
+          sx={{
+            // weird CSS hack, to align the timeline dots left
+            [`& .${timelineOppositeContentClasses.root}`]: {
+              flex: 0.6,
+              //flex: 0,
+              padding: 0,
+              height: '100%',
+              overflowY: 'auto',
+            },
+          }}
+        >
           <AnimatePresence>{timelineItems.reverse()}</AnimatePresence>
         </Timeline>
       </TransitionGroup>
