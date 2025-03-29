@@ -9,7 +9,7 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { formatDistanceToNow } from 'date-fns';
 import { useUserStore, useUsersStore } from '../../userStore';
-import { BACKEND_BASE } from '../../statics';
+import { BACKEND_BASE, NUMBER_FONT } from '../../statics';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
@@ -25,41 +25,64 @@ export const SportCard: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
   const sportUser = users[data.user_id];
   return (
-    <Card
+    <Box
       sx={{
-        backgroundColor: 'rgba(0,0,0,0.2)',
-        m: 1,
-        width: '100%',
-        borderRadius: '8px',
+        display: 'flex', // Enables Flexbox
+        flexShrink: 0, // Prevents shrinking
+        alignSelf: 'flex-start', // Ensures it doesn't stretch in the parent flex container
+        pl: 2,
+        width: 'auto', // Ensures the width is determined by the content
+        flexDirection: 'column',
       }}
     >
-      <Box sx={{ px: 2 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Typography>{data.amount}</Typography>
-          <Typography
-            variant="body1"
-            component="span"
-            sx={{ fontWeight: '300', textTransform: 'uppercase' }}
-          >
-            {data.kind}
-          </Typography>
-        </Box>
-        {/* <Typography>{sportUser?.username || 'Unknown User'}</Typography> */}
-      </Box>
-      <Box sx={{ width: '100%', px: 2 }}>
-        <Typography variant="subtitle2" fontWeight={300}>
-          {' '}
-          {formatDistanceToNow(new Date(data.timedate), {
-            addSuffix: true,
-          })}
-        </Typography>
-      </Box>
-    </Card>
+      <Typography
+        variant="body1"
+        component="span"
+        sx={{
+          fontWeight: '300',
+          textTransform: 'uppercase',
+        }}
+      >
+        {data.kind}
+      </Typography>
+
+      <Typography variant="subtitle2" fontWeight={300}>
+        {formatDistanceToNow(new Date(data.timedate), {
+          addSuffix: true,
+        })}
+      </Typography>
+    </Box>
+  );
+};
+
+export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
+  const { users } = useUsersStore();
+  const sportUser = users[data.user_id];
+  return (
+    <Box
+      sx={{
+        display: 'flex', // Enables Flexbox
+        flexShrink: 0, // Prevents shrinking
+        alignSelf: 'flex-start', // Ensures it doesn't stretch in the parent flex container
+        borderRadius: '50%', // Makes the box a circle
+        width: 60, // Set a fixed width
+        height: 60, // Set the same height as the width
+        backgroundColor: 'rgba(0,0,0,0.3)', // Background color for visibility
+        justifyContent: 'center', // Centers content horizontally
+        alignItems: 'center', // Centers content vertically
+        overflow: 'hidden',
+      }}
+    >
+      <Typography
+        sx={{
+          fontFamily: NUMBER_FONT,
+          fontSize: '1.5rem', // Adjust font size as needed
+          color: 'white', // Optional: text color for better visibility
+        }}
+        variant="h6"
+      >
+        {data.amount}
+      </Typography>
+    </Box>
   );
 };
