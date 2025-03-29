@@ -15,8 +15,9 @@ import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { TransitionGroup } from 'react-transition-group';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SportCard } from './SportCard';
 
-interface Sport {
+export interface Sport {
   id: number;
   kind: string;
   amount: number;
@@ -88,22 +89,14 @@ export const SportsTimeline = () => {
         exit={{ opacity: 0, y: 20, scale: 0.8 }}
         transition={{ duration: 0.5 }}
       >
-        <TimelineItem key={sport.id}>
-          <TimelineOppositeContent
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              minWidth: '100px',
-              textAlign: 'right',
-            }}
-            align="right"
-            variant="body2"
-            color="text.secondary"
-          >
-            {formatDistanceToNow(new Date(sport.timedate), {
-              addSuffix: true,
-            })}
-          </TimelineOppositeContent>
+        <TimelineItem
+          key={sport.id}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignContent: 'space-between',
+          }}
+        >
           <TimelineSeparator>
             <TimelineDot
               color="primary"
@@ -128,18 +121,10 @@ export const SportsTimeline = () => {
                 }}
               />
             </TimelineDot>
-            <TimelineConnector />
+            <TimelineConnector />{' '}
           </TimelineSeparator>
           <TimelineContent>
-            <Typography
-              variant="body1"
-              component="span"
-              sx={{ fontWeight: '300', textTransform: 'uppercase' }}
-            >
-              {sport.kind}
-            </Typography>
-            <Typography>{sportUser?.username || 'Unknown User'}</Typography>
-            <Typography>{sport.amount}</Typography>
+            <SportCard data={sport} />
           </TimelineContent>
         </TimelineItem>
       </motion.div>
@@ -151,12 +136,10 @@ export const SportsTimeline = () => {
       sx={{
         height: '100%',
         overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
       }}
     >
       <TransitionGroup component={Timeline}>
-        <Timeline position="left">
+        <Timeline sx={{ width: '300px' }}>
           <AnimatePresence>{timelineItems.reverse()}</AnimatePresence>
         </Timeline>
       </TransitionGroup>
