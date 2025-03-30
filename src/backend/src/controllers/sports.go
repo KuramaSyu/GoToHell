@@ -242,3 +242,28 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Sport deleted successfully"})
 }
+
+// GetDayStreak retrieves the number of days a user has been active back to back.
+func (sc *SportsController) GetDayStreak(c *gin.Context) {
+	// Check if user is logged in via Discord
+	_, status, err := UserFromSession(c)
+	if err != nil {
+		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Read user ID from URL
+	idStr := c.Param("id")
+	id, err := models.NewSnowflakeFromString(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	streak, err := sc.repo.GetDayStreak(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": streak})
+}
