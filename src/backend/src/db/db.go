@@ -126,9 +126,9 @@ func (r *ORMRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 			// check if date is today
 			if date.Year() == time.Now().Year() && date.YearDay() == time.Now().YearDay() {
 				streak++
-				dayOffset++
 				continue
 			}
+			dayOffset++
 		}
 		day := getDateByOffset(dayOffset)
 
