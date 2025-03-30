@@ -3,7 +3,7 @@ import { ThemeProvider, Box, Toolbar } from '@mui/material';
 
 import { useThemeStore } from '../zustand/useThemeStore';
 import TopBar from './TopBar';
-import { GameSelector, AmountDisplay } from './GameSelect';
+import { GameSelector } from './GameSelect';
 import { NumberSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import ErrorDisplay from './ErrorDisplay';

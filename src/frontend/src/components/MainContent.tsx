@@ -1,12 +1,13 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { GameSelector, AmountDisplay } from './GameSelect';
+import { GameSelector } from './GameSelect';
 import { NumberSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
 import { RecentSports } from './RecentSports/TabView';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { AmountDisplay } from './AmountDisplay';
 
 interface MainContentProps {
   theme: any;
