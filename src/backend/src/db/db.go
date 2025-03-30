@@ -104,7 +104,7 @@ func (r *ORMRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 	// Query to get all distinct activity dates for the user, ordered by date descending
 	result := r.DB.Model(&Sport{}).
 		Select("DISTINCT DATE(timedate) as date").
-		Where("user_id = ? AND timedate IS NOT NULL", userID).
+		Where("user_id = ? AND timedate IS NOT NULL AND timedate > ?", userID, "2000-01-01").
 		Order("DATE(timedate) DESC").
 		Pluck("date", &activityDates)
 
