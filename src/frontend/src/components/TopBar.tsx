@@ -9,6 +9,7 @@ import { Button, CssBaseline } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
+import { Streak } from './Streak';
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ const TopBar: React.FC = () => {
               sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
             />
           </Button>
+          <Streak />
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <DiscordLogin />
