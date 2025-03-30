@@ -25,9 +25,10 @@ const TopBar: React.FC = () => {
           sx={{
             flexGrow: 1,
             display: 'flex',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
           }}
         >
+          {/* Title */}
           <Typography
             variant="h2"
             component="div"
@@ -40,29 +41,35 @@ const TopBar: React.FC = () => {
           >
             Go To Hell
           </Typography>
-        </Box>
-        <Box
-          sx={{
-            gap: 1,
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Button variant="outlined" onClick={() => navigate('/settings')}>
-            <SettingsIcon
-              sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-            />
-          </Button>
-          <Button variant="outlined" onClick={() => navigate('/friends')}>
-            <PeopleIcon
-              sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-            />
-          </Button>
-          <Streak />
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <DiscordLogin />
+          {/* Streak */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Streak />
+          </Box>
+
+          {/* Discord Login and Settings */}
+          <Box
+            sx={{
+              gap: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Button variant="outlined" onClick={() => navigate('/settings')}>
+              <SettingsIcon
+                sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
+              />
+            </Button>
+            <Button variant="outlined" onClick={() => navigate('/friends')}>
+              <PeopleIcon
+                sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
+              />
+            </Button>
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <DiscordLogin />
+            </Box>
           </Box>
         </Box>
       </Toolbar>
