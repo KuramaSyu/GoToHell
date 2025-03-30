@@ -45,6 +45,8 @@ export const Streak = () => {
   return (
     <Box
       sx={{
+        filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
+
         fontFamily: NUMBER_FONT,
         color: theme.palette.primary.main,
         width: '100%',
@@ -56,7 +58,12 @@ export const Streak = () => {
       }}
     >
       <LocalFireDepartmentIcon sx={{ mr: 1 }} />
-      <Typography fontSize={'1.2rem'}>{streak}</Typography>
+      <Typography
+        fontSize={'1.2rem'}
+        sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))' }}
+      >
+        {streak}
+      </Typography>
     </Box>
   );
 };

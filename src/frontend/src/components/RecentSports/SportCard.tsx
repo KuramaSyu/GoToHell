@@ -65,9 +65,10 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         flexShrink: 0, // Prevents shrinking
         alignSelf: 'flex-start', // Ensures it doesn't stretch in the parent flex container
         borderRadius: '50%', // Makes the box a circle
-        width: 60, // Set a fixed width
-        height: 60, // Set the same height as the width
-        backgroundColor: 'rgba(0,0,0,0.3)', // Background color for visibility
+        width: 65, // Set a fixed width
+        height: 65, // Set the same height as the width
+        background:
+          'radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.05) 85%, rgba(0,0,0,0) 100%)',
         justifyContent: 'center', // Centers content horizontally
         alignItems: 'center', // Centers content vertically
         overflow: 'hidden',
