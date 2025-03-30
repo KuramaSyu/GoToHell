@@ -21,6 +21,11 @@ type Sport struct {
 	Game     string    `json:"game"`
 }
 
+type DayStreak struct {
+	UserID Snowflake `json:"user_id"`
+	Days   int       `json:"days"`
+}
+
 // Updated Repository interface to include full CRUD operations using the Sport struct.
 type Repository interface {
 	InsertSport(sport Sport) error
@@ -28,6 +33,7 @@ type Repository interface {
 	UpdateSport(sport Sport) error
 	DeleteSport(id Snowflake) error
 	GetTotalAmounts(userID Snowflake) ([]models.SportAmount, error)
+	GetDayStreak(userID Snowflake) (DayStreak, error)
 }
 
 // Define ORMRepository using GORM.
@@ -88,4 +94,60 @@ func (r *ORMRepository) UpdateSport(sport Sport) error {
 func (r *ORMRepository) DeleteSport(id Snowflake) error {
 	result := r.DB.Delete(&Sport{}, id)
 	return result.Error
+}
+
+// GetDayStreak retrieves the amount of days a user has been active back to back.
+func (r *ORMRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
+	var dayStreak DayStreak
+	var activityDates []string
+
+	// Query to get all distinct activity dates for the user, ordered by date descending
+	result := r.DB.Model(&Sport{}).
+		Select("DISTINCT DATE(timedate) as date").
+		Where("user_id = ?", userID).
+		Order("DATE(timedate) DESC").
+		Pluck("date", &activityDates)
+
+	if result.Error != nil {
+		return dayStreak, result.Error
+	}
+
+	// count the days from now
+	streak := 0
+	dayOffset := 0
+	for i, date_str := range activityDates {
+		// parse date to time.Time
+		date, err := time.Parse("2006-01-02", date_str)
+		if err != nil {
+			return dayStreak, err
+		}
+
+		if i == 0 {
+			// check if date is today
+			if date.Year() == time.Now().Year() && date.YearDay() == time.Now().YearDay() {
+				streak++
+				dayOffset++
+				continue
+			}
+		}
+		day := getDateByOffset(dayOffset)
+
+		// check all other days and break when the streak is broken
+		if date.Year() == day.Year() && date.YearDay() == day.YearDay() {
+			streak++
+			dayOffset++
+			continue
+		} else {
+			break
+		}
+
+	}
+	dayStreak.UserID = userID
+	dayStreak.Days = streak
+	return dayStreak, nil
+}
+
+func getDateByOffset(offset int) time.Time {
+	// Get the date by offset from today
+	return time.Now().AddDate(0, 0, -offset)
 }
