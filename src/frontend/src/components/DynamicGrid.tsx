@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
-import { darken, Theme } from '@mui/material/styles';
+import { darken } from '@mui/material/styles';
 import { animated, AnimatedProps, useSpring } from '@react-spring/web';
 
 export interface GameItem {

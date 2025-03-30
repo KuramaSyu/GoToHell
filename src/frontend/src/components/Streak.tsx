@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useUserStore } from '../userStore';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { BACKEND_BASE, NUMBER_FONT } from '../statics';
 
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';

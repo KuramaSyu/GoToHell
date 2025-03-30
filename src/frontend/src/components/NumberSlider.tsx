@@ -4,7 +4,6 @@ import {
   Slider,
   useTheme,
   Button,
-  Input,
   OutlinedInput,
 } from '@mui/material';
 import { create } from 'zustand';

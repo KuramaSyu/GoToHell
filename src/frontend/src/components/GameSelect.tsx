@@ -1,13 +1,9 @@
 import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
-import { useSportStore } from '../useSportStore';
-import { useDeathAmountState } from './NumberSlider';
 
 import { DynamicGameGrid } from './DynamicGrid';
-import { NUMBER_FONT } from '../statics';
-import { GameSelectionMap } from './SportSelect';
 
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
