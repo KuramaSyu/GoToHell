@@ -69,7 +69,7 @@ export const TotalScoreDisplay = () => {
       <Box
         sx={{
           mr: 2,
-          width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
+          //width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
         }}
       >
         <PopNumber
