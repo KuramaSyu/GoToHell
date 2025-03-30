@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { useUserStore } from '../userStore';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { BACKEND_BASE, NUMBER_FONT } from '../statics';
 
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 interface StreakData {
   days: number;
@@ -13,6 +14,7 @@ interface StreakData {
 export const Streak = () => {
   const { user } = useUserStore();
   const [streak, setStreak] = useState<number | null>(null);
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,9 +43,20 @@ export const Streak = () => {
   }
 
   return (
-    <Button variant="outlined" color="primary" sx={{ fontFamily: NUMBER_FONT }}>
+    <Box
+      sx={{
+        fontFamily: NUMBER_FONT,
+        color: theme.palette.primary.main,
+        width: '100%',
+        height: '100%',
+        transform: 'scale(2)',
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+      }}
+    >
       <LocalFireDepartmentIcon sx={{ mr: 1 }} />
-      {streak}
-    </Button>
+      <Typography fontSize={'1.2rem'}>{streak}</Typography>
+    </Box>
   );
 };
