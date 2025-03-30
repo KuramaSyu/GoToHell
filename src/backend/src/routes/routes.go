@@ -29,6 +29,7 @@ func SetupRouter(
 		sports.GET("/total", sportsController.GetTotalResults)
 		sports.POST("", sportsController.PostSport)
 		sports.DELETE("/:id", sportsController.DeleteSport)
+		sports.GET("/streak/:id", sportsController.GetDayStreak)
 
 		// route for friendships
 		friends := api.Group("/friends")
