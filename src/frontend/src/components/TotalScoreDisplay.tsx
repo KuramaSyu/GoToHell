@@ -47,20 +47,33 @@ export const TotalScoreDisplay = () => {
   const currentSportString = currentSport
     ? GameSelectionMap.get(currentSport.sport)
     : null;
-
+  const bigNumber = GetScore(currentSport!.sport!, amounts);
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: {
+          xs: 'column',
+          md: 'column',
+          lg: 'row',
+        },
         justifyItems: 'center',
-        alignItems: 'center',
+        alignItems: {
+          xs: 'left',
+          md: 'left',
+          lg: 'center',
+        },
         fontFamily: NUMBER_FONT,
       }}
     >
-      <Box sx={{ mr: 2 }}>
+      <Box
+        sx={{
+          mr: 2,
+          width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
+        }}
+      >
         <PopNumber
-          value={GetScore(currentSport!.sport!, amounts)}
+          value={bigNumber}
           font={NUMBER_FONT}
           stiffness={500}
           damping={200}
@@ -72,7 +85,8 @@ export const TotalScoreDisplay = () => {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          justifyContent: 'center',
+          alignItems: 'left',
+          mt: { xs: -4, md: -4 }, // Remove weird padding from font
         }}
       >
         <Typography variant="h5" fontFamily={'inherit'}>
