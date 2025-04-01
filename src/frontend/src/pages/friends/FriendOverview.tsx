@@ -43,7 +43,7 @@ export interface FriendshipReply {
   users: DiscordUser[];
 }
 
-export async function LoadUsers(
+export async function LoadFriends(
   addUser: (user: DiscordUserImpl) => void
 ): Promise<FriendshipReply | null> {
   const response = await fetch(`${BACKEND_BASE}/api/friends`, {
@@ -97,7 +97,7 @@ export const FriendOverview: React.FC = () => {
   const fetchFriends = async () => {
     setLoading(true);
     try {
-      const reply = await LoadUsers(addUser);
+      const reply = await LoadFriends(addUser);
       if (reply != null) {
         setFriends(reply.friendships);
         setError('');

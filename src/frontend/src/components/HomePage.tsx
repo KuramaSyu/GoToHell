@@ -5,7 +5,7 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import AppBackground from './AppBackground';
 import MainContent from './MainContent';
 import { SportsTimeline } from './RecentSports/Timeline';
-import { LoadUsers } from '../pages/friends/FriendOverview';
+import { LoadFriends } from '../pages/friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../userStore';
 
 const HomePage: React.FC = () => {
@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      await LoadUsers(addUser);
+      await LoadFriends(addUser);
     };
     fetch();
   }, [addUser]);
