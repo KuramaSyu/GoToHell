@@ -2,6 +2,13 @@ import { Box, Grid2 as Grid } from '@mui/material';
 import React, { useState } from 'react';
 import { UserPreferences } from './PreferencesInterface';
 
+export const MultiplierSettings: React.FC = () => {
+  return <Box sx={{ display: 'flex', flexDirection: 'row' }}></Box>;
+};
+
+export const GameOverrideSettings: React.FC = () => {
+  return null;
+};
 export const Settings: React.FC = () => {
   const [preferences, setPreferences] = useState<UserPreferences>({
     game_overrides: [],
@@ -18,10 +25,12 @@ export const Settings: React.FC = () => {
     });
   };
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       test
       {/* Grid with multipliers */}
+      <MultiplierSettings />
       {/* Grid with game overrides */}
+      <GameOverrideSettings />
     </Box>
   );
 };
