@@ -40,12 +40,9 @@ export const RecentSportsStandard = () => {
     if (!user) return;
     const fetchResponse = async () => {
       const url = new URL(`${BACKEND_BASE}/api/sports`);
-      // Initialize an array of user IDs.
-      const userIds: string[] = [];
-      // Convert the users record to an array.
-      userIds.push(...Object.values(users).map((u) => u.id));
-      // Always add the current user's id.
-      userIds.push(user.id);
+      // creat an array with the users id
+      const userIds: string[] = [user.id];
+
       url.searchParams.append('user_ids', userIds.join(','));
       const response = await fetch(url.toString(), {
         method: 'GET',
