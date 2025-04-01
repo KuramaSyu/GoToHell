@@ -76,7 +76,7 @@ export const SportsTimeline = () => {
 
     // cleanup
     return () => clearInterval(interval);
-  }, [users, ScoreRefreshTrigger, RecentSportsRefreshTrigger]);
+  }, [users, user, ScoreRefreshTrigger, RecentSportsRefreshTrigger]);
 
   if (!user) return <Box />;
   if (!data) return <Typography>Loading Timeline</Typography>;

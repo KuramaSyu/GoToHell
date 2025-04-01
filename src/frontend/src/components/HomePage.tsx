@@ -32,11 +32,14 @@ const HomePage: React.FC = () => {
   }, [theme]);
 
   useEffect(() => {
+    if (user === null) {
+      return;
+    }
     const fetch = async () => {
       await LoadFriends(addUser);
     };
     fetch();
-  }, [addUser]);
+  }, [addUser, user]);
 
   return (
     <Box
