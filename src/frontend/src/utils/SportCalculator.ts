@@ -32,3 +32,14 @@ class DefaultSportsCalculator implements SportsCalculator {
     return Math.round(game_base * sport_base * deaths);
   }
 }
+
+class BaseSportsCalculatorDecorator implements SportsCalculator {
+  decorated: SportsCalculator;
+  constructor(decorated: SportsCalculator) {
+    this.decorated = decorated;
+  }
+
+  get(sport: string, game: string, deaths: number): number {
+    return this.decorated.get(sport, game, deaths);
+  }
+}
