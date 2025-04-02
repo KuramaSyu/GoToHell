@@ -43,3 +43,16 @@ class BaseSportsCalculatorDecorator implements SportsCalculator {
     return this.decorated.get(sport, game, deaths);
   }
 }
+
+class MultiplierDecorator extends BaseSportsCalculatorDecorator {
+  multiplier: number;
+  constructor(decorated: SportsCalculator, multiplier: number) {
+    super(decorated);
+    this.multiplier = multiplier;
+  }
+  get(sport: string, game: string, deaths: number): number {
+    return Math.round(
+      this.decorated.get(sport, game, deaths) * this.multiplier
+    );
+  }
+}
