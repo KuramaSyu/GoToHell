@@ -1,19 +1,22 @@
 import { Box, Grid2 as Grid } from '@mui/material';
 import React, { useState } from 'react';
-import { UserPreferences } from './PreferencesInterface';
+import { UserPreferences } from '../../models/Preferences';
+import usePreferenceStore from '../../zustand/PreferenceStore';
 
 export const MultiplierSettings: React.FC = () => {
+  const { preferences, setPreferences } = usePreferenceStore();
+  var multipliers = [];
+  // iterate andcreate flex colums
   return <Box sx={{ display: 'flex', flexDirection: 'row' }}></Box>;
 };
 
 export const GameOverrideSettings: React.FC = () => {
+  const { preferences, setPreferences } = usePreferenceStore();
+
   return null;
 };
 export const Settings: React.FC = () => {
-  const [preferences, setPreferences] = useState<UserPreferences>({
-    game_overrides: [],
-    multipliers: [],
-  });
+  const { preferences, setPreferences } = usePreferenceStore();
 
   const handleChange = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
