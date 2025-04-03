@@ -5,19 +5,6 @@ interface SportStore {
   setSport: (sport: DefaultSportsDefinition) => void;
 }
 
-// used for custom overrides, if default definitions are not good enough
-export interface OverrideSportDefinition {
-  sport: string;
-  game: string;
-  amount: number;
-}
-export interface DefaultSportsDefinition {
-  sport: string | null;
-  sport_multiplier: number | null;
-  game: string | null;
-  game_multiplier: number | null;
-}
-
 export const useSportStore = create<SportStore>((set) => ({
   currentSport: {
     sport: null,
