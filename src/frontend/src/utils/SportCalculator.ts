@@ -1,58 +1,90 @@
+import { OverrideSportDefinition } from '../models/Preferences';
 import { GetSportsResponse } from '../models/Sport';
-interface SportsCalculator {
-  get(sport: string, game: string, deaths: number): number;
-}
 
 /**
- * Implements the SportsCalculator interface to compute a score for a given sport and game.
+ * A calculator for the amount of exercises of a given sport a user
+ * has to do. This is effected by game and amount of deaths.
  *
- * @remarks
- * This calculator uses default multipliers provided via a GetSportsResponse object.
- * It retrieves the base values for a specific game and sport (defaulting to 0 if not available),
- * then calculates the final score by multiplying these base values with the number of deaths,
- * and finally applies rounding using Math.round.
- *
- * @example
- * ```typescript
- * const calculator = new DefaultSportsCalculator(getSportsResponse);
- * const score = calculator.get("soccer", "league", 5);
- * ```
- *
- * @param getSportsResponse - An object containing the default multiplier values for games and sports.
+ * There are several Decorators, to extend the Behaviour of the
+ * Calculator, depening on the needs
  */
-class DefaultSportsCalculator implements SportsCalculator {
+export interface SportsCalculator {
+  get(sport: string, game: string): number;
+  calculate_amount(sport: string, game: string, deaths: number): number;
+}
+
+export class DefaultSportsCalculator implements SportsCalculator {
   default: GetSportsResponse;
   constructor(getSportsResposne: GetSportsResponse) {
     this.default = getSportsResposne;
   }
 
-  get(sport: string, game: string, deaths: number): number {
+  get(sport: string, game: string): number {
     const game_base = this.default.games[game] ?? 0;
     const sport_base = this.default.sports[sport] ?? 0;
-    return Math.round(game_base * sport_base * deaths);
+    return game_base * sport_base;
+  }
+
+  calculate_amount(sport: string, game: string, deaths: number): number {
+    return Math.round(this.get(sport, game) * deaths);
   }
 }
 
-class BaseSportsCalculatorDecorator implements SportsCalculator {
+export class BaseSportsCalculatorDecorator implements SportsCalculator {
   decorated: SportsCalculator;
   constructor(decorated: SportsCalculator) {
     this.decorated = decorated;
   }
 
-  get(sport: string, game: string, deaths: number): number {
-    return this.decorated.get(sport, game, deaths);
+  // Returns the base, which should be multiplied with the death amount
+  get(sport: string, game: string): number {
+    return this.decorated.get(sport, game);
+  }
+
+  // Returns the actuall amount of exercises to do
+  calculate_amount(sport: string, game: string, deaths: number): number {
+    return Math.round(this.get(sport, game) * deaths);
   }
 }
 
-class MultiplierDecorator extends BaseSportsCalculatorDecorator {
+export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
+  // TODO: map number to specific game
   multiplier: number;
   constructor(decorated: SportsCalculator, multiplier: number) {
     super(decorated);
     this.multiplier = multiplier;
   }
-  get(sport: string, game: string, deaths: number): number {
-    return Math.round(
-      this.decorated.get(sport, game, deaths) * this.multiplier
-    );
+  get(sport: string, game: string): number {
+    return this.decorated.get(sport, game) * this.multiplier;
+  }
+}
+
+export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
+  overrides: OverrideSportDefinition[];
+  constructor(
+    decorated: SportsCalculator,
+    overrides: OverrideSportDefinition[]
+  ) {
+    super(decorated);
+    this.overrides = overrides;
+  }
+
+  get(sport: string, game: string): number {
+    const override =
+      this.overrides.filter(
+        (entry) => entry.game == game && entry.sport == sport
+      )[0] ?? null;
+
+    if (override !== null) {
+      return Number(override.game) * Number(override.sport);
+    }
+
+    return this.decorated.get(sport, game);
+  }
+}
+
+export class ExactlyOneDecorator extends BaseSportsCalculatorDecorator {
+  get(sport: string, game: string): number {
+    return 1;
   }
 }
