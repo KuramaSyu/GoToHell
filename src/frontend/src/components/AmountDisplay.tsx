@@ -4,10 +4,20 @@ import { useDeathAmountState } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
 import { PopNumber } from './GameSelect';
 import { GameSelectionMap } from './SportSelect';
+import { useState } from 'react';
+import {
+  DefaultSportsCalculator,
+  ExactlyOneDecorator,
+  MultiplierDecorator,
+  OverrideSportDecorator,
+  SportsCalculator,
+} from '../utils/SportCalculator';
 
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
+  // TODO: implement setCalculator and build up the decorator stack
+  const [calculator, setCalculator] = useState();
 
   if (
     currentSport.game_multiplier == null ||
