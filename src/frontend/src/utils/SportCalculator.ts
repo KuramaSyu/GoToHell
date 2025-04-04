@@ -76,7 +76,7 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
       )[0] ?? null;
 
     if (override !== null) {
-      return Number(override.game) * Number(override.sport);
+      return Number(override.amount);
     }
 
     return this.decorated.get(sport, game);
