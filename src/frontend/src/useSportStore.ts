@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { DefaultSportsDefinition } from './models/Preferences';
 
 interface SportStore {
   currentSport: DefaultSportsDefinition;
