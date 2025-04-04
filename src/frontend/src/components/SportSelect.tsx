@@ -52,7 +52,7 @@ export const SportSelector = () => {
     // custom per game per sport overrides
     base = new OverrideSportDecorator(base, [
       { sport: 'plank', game: 'repo', amount: 60 },
-      { sport: 'pushup', game: 'league', amount: 20 },
+      { sport: 'plank', game: 'league', amount: 20 },
     ]);
 
     // if game: custom is selected
