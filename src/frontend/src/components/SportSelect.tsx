@@ -5,11 +5,20 @@ import { useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
 import { GetSportsResponse } from '../models/Sport';
 
+import {
+  DefaultSportsCalculator,
+  ExactlyOneDecorator,
+  MultiplierDecorator,
+  OverrideSportDecorator,
+  SportsCalculator,
+} from '../utils/SportCalculator';
+
 import pushupSVG from '../assets/sports-pushup.svg';
 import plankSVG from '../assets/sports-plank.svg';
 import pilatesSVG from '../assets/sports-pilates.svg';
 import squatsSVG from '../assets/sports-squats.svg';
 import situpsSVG from '../assets/sports-situps.svg';
+import useCalculatorStore from '../zustand/CalculatorStore';
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -32,6 +41,31 @@ export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
   const [apiData, setApiData] = useState<GetSportsResponse | null>(null);
+  const { calculator, setCalculator } = useCalculatorStore();
+
+  const buildDecoratorStack = () => {
+    // base for calculating default values
+    var base: SportsCalculator = new DefaultSportsCalculator(
+      apiData ?? { sports: {}, games: {} }
+    );
+
+    // custom per game per sport overrides
+    base = new OverrideSportDecorator(base, [
+      { sport: 'plank', game: 'repo', amount: 60 },
+      { sport: 'pushup', game: 'league', amount: 20 },
+    ]);
+
+    // if game: custom is selected
+    if (theme.custom.themeName == 'custom') {
+      base = new ExactlyOneDecorator(base);
+    }
+
+    setCalculator(base);
+  };
+
+  useEffect(() => {
+    buildDecoratorStack();
+  }, [theme, currentSport, apiData]);
 
   // Fetch data from /api/default on localhost:8080
   useEffect(() => {
@@ -42,6 +76,7 @@ export const SportSelector = () => {
         setApiData(data);
       })
       .catch(console.error);
+    buildDecoratorStack();
   }, []);
   if (apiData === null) {
     return <Typography>Waiting for Gin</Typography>;
