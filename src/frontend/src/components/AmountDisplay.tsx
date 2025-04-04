@@ -12,12 +12,13 @@ import {
   OverrideSportDecorator,
   SportsCalculator,
 } from '../utils/SportCalculator';
+import useCalculatorStore from '../zustand/CalculatorStore';
 
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
   // TODO: implement setCalculator and build up the decorator stack
-  const [calculator, setCalculator] = useState();
+  const { calculator } = useCalculatorStore();
 
   if (
     currentSport.game_multiplier == null ||
@@ -26,8 +27,12 @@ export const AmountDisplay = () => {
     return <Box></Box>;
   }
 
-  const computedValue =
-    currentSport.game_multiplier! * amount * currentSport.sport_multiplier!;
+  const computedValue = calculator.calculate_amount(
+    currentSport.sport,
+    currentSport.game,
+    amount
+  );
+  // currentSport.game_multiplier! * amount * currentSport.sport_multiplier!;
 
   return (
     <Box

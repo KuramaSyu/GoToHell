@@ -88,7 +88,6 @@ export const UploadScore = () => {
     currentSport.game,
     amount
   );
-  //const computedValue = currentSport.sport_multiplier! * currentSport.game_multiplier! * amount;
   return (
     <Box>
       <AnimatedButton
