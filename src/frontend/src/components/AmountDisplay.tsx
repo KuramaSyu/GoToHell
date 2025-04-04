@@ -20,16 +20,13 @@ export const AmountDisplay = () => {
   // TODO: implement setCalculator and build up the decorator stack
   const { calculator } = useCalculatorStore();
 
-  if (
-    currentSport.game_multiplier == null ||
-    currentSport.sport_multiplier == null
-  ) {
+  if (currentSport.game == null || currentSport.sport == null) {
     return <Box></Box>;
   }
 
   const computedValue = calculator.calculate_amount(
-    currentSport.sport,
-    currentSport.game,
+    currentSport.sport!,
+    currentSport.game!,
     amount
   );
   // currentSport.game_multiplier! * amount * currentSport.sport_multiplier!;

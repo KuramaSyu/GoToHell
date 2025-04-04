@@ -84,8 +84,8 @@ export const UploadScore = () => {
     return <Box></Box>;
   }
   const computedValue = calculator.calculate_amount(
-    currentSport.sport,
-    currentSport.game,
+    currentSport.sport!,
+    currentSport.game!,
     amount
   );
   return (
