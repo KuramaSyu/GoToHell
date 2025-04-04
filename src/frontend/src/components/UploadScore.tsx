@@ -10,6 +10,7 @@ import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
+import useCalculatorStore from '../zustand/CalculatorStore';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -20,6 +21,7 @@ export const UploadScore = () => {
   const { setErrorMessage } = useAppState();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts } = useTotalScoreStore();
+  const { calculator } = useCalculatorStore();
 
   const OnUploadClick = async () => {
     if (!currentSport) {
@@ -70,11 +72,23 @@ export const UploadScore = () => {
     }
     setTimeout(() => setSnackbarState(null), 2000);
   };
-  if (!(currentSport && user && currentSport.sport_multiplier && currentSport.game_multiplier)) {
+  if (
+    !(
+      currentSport &&
+      user &&
+      currentSport.sport_multiplier &&
+      currentSport.game_multiplier
+    )
+  ) {
     //setErrorMessage("Please Login")
     return <Box></Box>;
   }
-  const computedValue = currentSport.sport_multiplier! * currentSport.game_multiplier! * amount;
+  const computedValue = calculator.calculate_amount(
+    currentSport.sport,
+    currentSport.game,
+    amount
+  );
+  //const computedValue = currentSport.sport_multiplier! * currentSport.game_multiplier! * amount;
   return (
     <Box>
       <AnimatedButton
