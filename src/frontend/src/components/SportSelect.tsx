@@ -19,6 +19,7 @@ import pilatesSVG from '../assets/sports-pilates.svg';
 import squatsSVG from '../assets/sports-squats.svg';
 import situpsSVG from '../assets/sports-situps.svg';
 import useCalculatorStore from '../zustand/CalculatorStore';
+import { useSportResponseStore } from '../zustand/sportResponseStore';
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -40,13 +41,13 @@ GameSelectionMap.set('squats', 'Squats');
 export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
-  const [apiData, setApiData] = useState<GetSportsResponse | null>(null);
+  const { sportResponse, setSportResponse } = useSportResponseStore();
   const { calculator, setCalculator } = useCalculatorStore();
 
   const buildDecoratorStack = () => {
     // base for calculating default values
     var base: SportsCalculator = new DefaultSportsCalculator(
-      apiData ?? { sports: {}, games: {} }
+      sportResponse ?? { sports: {}, games: {} }
     );
 
     // custom per game per sport overrides
@@ -65,7 +66,7 @@ export const SportSelector = () => {
 
   useEffect(() => {
     buildDecoratorStack();
-  }, [theme, currentSport, apiData]);
+  }, [theme, currentSport, sportResponse]);
 
   // Fetch data from /api/default on localhost:8080
   useEffect(() => {
@@ -73,33 +74,33 @@ export const SportSelector = () => {
       .then((response) => response.json())
       .then((data: GetSportsResponse) => {
         console.log(`response /api/sports/default: `, data);
-        setApiData(data);
+        setSportResponse(data);
       })
       .catch(console.error);
     buildDecoratorStack();
   }, []);
-  if (apiData === null) {
+  if (sportResponse === null) {
     return <Typography>Waiting for Gin</Typography>;
   }
 
   // when game changes: change game multiplier and maybe change currentSport
-  if (apiData.games && theme.custom.themeName != currentSport?.game) {
-    const matchingGame = apiData.games[theme.custom.themeName];
+  if (sportResponse.games && theme.custom.themeName != currentSport?.game) {
+    const matchingGame = sportResponse.games[theme.custom.themeName];
 
     if (matchingGame != null) {
       currentSport.game = theme.custom.themeName;
       currentSport.game_multiplier =
-        apiData.games?.[theme.custom.themeName] ?? null;
+        sportResponse.games?.[theme.custom.themeName] ?? null;
       setSport(currentSport);
     }
   }
-  console.log(apiData);
+  console.log(sportResponse);
 
   return (
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
-        {Object.entries(apiData.sports).map(([sport, multiplier]) => {
+        {Object.entries(sportResponse.sports).map(([sport, multiplier]) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
