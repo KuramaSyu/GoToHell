@@ -4,13 +4,10 @@ WORKDIR /app
 
 
 # Install dependencies
-COPY . .
-# RUN chmod +x pre-build.sh
-# RUN ./pre-build.sh
-
 COPY package.json package-lock.json ./
 RUN npm install
 
+COPY . .
 # Accept build-time argument for BACKEND_URL
 ARG BACKEND_URL
 # Create a .env file with the environment variable for Vite
