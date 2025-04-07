@@ -159,8 +159,6 @@ export const GameOverrideList: React.FC = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        backdropFilter: 'blur(25px)',
-        p: 2,
         borderRadius: 5,
         gap: 1,
       }}
@@ -222,7 +220,6 @@ export const GameOverrideSettings: React.FC = () => {
         p: 5,
         borderRadius: 5,
         backgroundColor: 'rgba(0,0,0,0.2)',
-        backdropFilter: 'blur(25px)',
       }}
     >
       <CustomSelect
