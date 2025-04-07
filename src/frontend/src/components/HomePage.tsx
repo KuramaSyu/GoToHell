@@ -7,6 +7,7 @@ import MainContent from './MainContent';
 import { SportsTimeline } from './RecentSports/Timeline';
 import { LoadFriends } from '../pages/friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../userStore';
+import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -14,12 +15,19 @@ const HomePage: React.FC = () => {
   const { addUser } = useUsersStore();
   const { user } = useUserStore();
 
+  // initially, load preferences from cookie
+  useEffect(() => {
+    loadPreferencesFromCookie();
+  }, []);
+
+  // add current user to user array
   useEffect(() => {
     if (user != null) {
       addUser(user);
     }
   }, [user]);
 
+  // Check if background image is set, and trigger fade-in effect
   useEffect(() => {
     if (
       theme.custom.backgroundImage == undefined ||
