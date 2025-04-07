@@ -28,14 +28,6 @@ export const TotalScoreDisplay = () => {
         return;
       }
       const fut = await user.fetchTotalScore();
-      if (fut.ok) {
-        const parsed_data: { results?: SportScore[] } = await fut.json();
-        if (parsed_data.results) {
-          setAmounts(parsed_data.results);
-        }
-      } else {
-        console.error('Failed to fetch total score');
-      }
     };
     fetchData();
   }, [user, refreshTrigger]);
