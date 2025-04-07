@@ -17,7 +17,6 @@ import useCalculatorStore from '../zustand/CalculatorStore';
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
-  // TODO: implement setCalculator and build up the decorator stack
   const { calculator } = useCalculatorStore();
 
   if (currentSport.game == null || currentSport.sport == null) {
