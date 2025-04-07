@@ -67,15 +67,7 @@ const DiscordLogin: React.FC = () => {
   useEffect(() => {
     const checkLoginStatus = async (): Promise<void> => {
       try {
-        const response = await fetch(`${BACKEND_BASE}/api/auth/user`, {
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          const userData: DiscordUser = await response.json();
-          console.log(JSON.stringify(userData, null, 2));
-          setUser(new DiscordUserImpl(userData));
-        }
+        const _ = await new UserApi().fetchUser();
       } catch (error) {
         console.error('Error checking login status:', error);
       } finally {
