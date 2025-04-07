@@ -12,6 +12,9 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { useUserStore } from '../userStore';
 import { BACKEND_BASE } from '../statics';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { SportScore } from '../models/Sport';
+import { useTotalScoreStore } from '../zustand/TotalScoreStore';
+import { UserApi } from '../utils/api/Api';
 
 // Define TypeScript interface for Discord user data
 interface DiscordUser {
@@ -49,9 +52,7 @@ class DiscordUserImpl implements DiscordUser {
   }
 
   async fetchTotalScore(): Promise<Response> {
-    return await fetch(`${BACKEND_BASE}/api/sports/total`, {
-      credentials: 'include',
-    });
+    return await new UserApi().fetchTotalScore();
   }
 }
 
