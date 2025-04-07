@@ -11,8 +11,9 @@ export interface DefaultSportsDefinition {
   game_multiplier: number | null;
 }
 
-interface Multiplier {
+export interface Multiplier {
   game: string | null; // null means it's used global
+  sport: string | null; // null means it's used for all sports
   multiplier: number;
 }
 export interface UserPreferences {
