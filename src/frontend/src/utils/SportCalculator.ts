@@ -48,12 +48,13 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 }
 
 export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
-  // TODO: map number to specific game
   multipliers: Multiplier[];
+
   constructor(decorated: SportsCalculator, multipliers: Multiplier[]) {
     super(decorated);
     this.multipliers = multipliers;
   }
+
   get(sport: string, game: string): number {
     // find multiplier for the specific game and sport
     var multipliers = this.multipliers.filter(
@@ -62,7 +63,7 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
 
     // TODO: check for global game or sport multipliers
     // if multiplier is not found, check for the global multiplier
-    multipliers = this.multipliers.filter((entry) => entry.game == 'global');
+    multipliers = this.multipliers.filter((entry) => entry.game == null);
 
     if (multipliers.length > 0) {
       // a multiplier was found => apply it
@@ -85,15 +86,18 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
   }
 
   get(sport: string, game: string): number {
+    // search for a specific override for the game and sport
     const override =
       this.overrides.filter(
         (entry) => entry.game == game && entry.sport == sport
       )[0] ?? null;
 
     if (override !== null) {
+      // apply the override
       return Number(override.amount);
     }
 
+    // return default
     return this.decorated.get(sport, game);
   }
 }
