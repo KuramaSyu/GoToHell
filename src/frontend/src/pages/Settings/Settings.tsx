@@ -2,7 +2,6 @@ import { Box, CssBaseline, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import AppBackground from '../../components/AppBackground';
-import { getCookie } from '../../utils/cookies';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { MultiplierSettings } from './Multiplier';
 import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
