@@ -29,29 +29,37 @@ export const Settings: React.FC = () => {
           gap: 5,
         }}
       >
-        {/* Grid with multipliers */}
+        {/* Grid with overrides */}
+        <Typography variant="h2" sx={{ zIndex: 1 }}>
+          Overrides
+        </Typography>
         <Box
           sx={{
             width: 4 / 5,
             flex: '0 1 auto',
             justifyItems: 'center',
             zIndex: 1,
+            backdropFilter: 'blur(25px)',
+            borderRadius: 5,
+            gap: 5,
+            py: 5,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          <Typography variant="h2">Overrides</Typography>
           <GameOverrideSettings />
-        </Box>
-        <Box
-          sx={{
-            width: 4 / 5,
-            flex: '0 1 auto',
-            justifyItems: 'center',
-            zIndex: 1,
-          }}
-        >
           <GameOverrideList />
         </Box>
-        {/* Grid with game overrides */}
+        <Box
+          sx={{
+            width: 4 / 5,
+            flex: '0 1 auto',
+            justifyItems: 'center',
+            zIndex: 1,
+          }}
+        ></Box>
+
+        {/* Grid with game multipliers */}
         <Box
           sx={{
             width: 4 / 5,
