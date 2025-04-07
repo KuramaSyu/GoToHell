@@ -20,6 +20,7 @@ import squatsSVG from '../assets/sports-squats.svg';
 import situpsSVG from '../assets/sports-situps.svg';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
+import usePreferenceStore from '../zustand/PreferenceStore';
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -43,21 +44,23 @@ export const SportSelector = () => {
   const { currentSport, setSport } = useSportStore();
   const { sportResponse, setSportResponse } = useSportResponseStore();
   const { calculator, setCalculator } = useCalculatorStore();
+  const { preferences } = usePreferenceStore();
 
   const buildDecoratorStack = () => {
+    const BASE_SETTINGS = sportResponse ?? { sports: {}, games: {} };
+
     // base for calculating default values
-    var base: SportsCalculator = new DefaultSportsCalculator(
-      sportResponse ?? { sports: {}, games: {} }
-    );
+    var base: SportsCalculator = new DefaultSportsCalculator(BASE_SETTINGS);
 
     // custom per game per sport overrides
-    base = new OverrideSportDecorator(base, [
-      { sport: 'plank', game: 'repo', amount: 60 },
-      { sport: 'plank', game: 'league', amount: 20 },
-    ]);
+    base = new OverrideSportDecorator(base, preferences.game_overrides);
 
-    // if game: custom is selected
+    // custom multipliers, either global or per game and sport
+    base = new MultiplierDecorator(base, preferences.multipliers);
+
+    // check if game: custom is selected
     if (theme.custom.themeName == 'custom') {
+      // add ExactlyOneDecorator, to always return 1
       base = new ExactlyOneDecorator(base);
     }
 
@@ -66,7 +69,7 @@ export const SportSelector = () => {
 
   useEffect(() => {
     buildDecoratorStack();
-  }, [theme, currentSport, sportResponse]);
+  }, [theme, currentSport, sportResponse, preferences]);
 
   // Fetch data from /api/default on localhost:8080
   useEffect(() => {
