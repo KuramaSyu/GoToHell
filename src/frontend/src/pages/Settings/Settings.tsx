@@ -1,26 +1,18 @@
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import AppBackground from '../../components/AppBackground';
 import { getCookie } from '../../utils/cookies';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
-
-export const MultiplierSettings: React.FC = () => {
-  const { preferences, setPreferences } = usePreferenceStore();
-  var multipliers = [];
-  // iterate andcreate flex colums
-  return <Box sx={{ display: 'flex', flexDirection: 'row' }}></Box>;
-};
+import { MultiplierSettings } from './Multiplier';
+import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
 
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
 
   useEffect(() => {
     // read preferences on page load
-    const value = getCookie('preferences');
-    if (value != null) {
-      setPreferences(JSON.parse(value));
-    }
+    loadPreferencesFromCookie();
   }, []);
 
   return (
@@ -47,6 +39,7 @@ export const Settings: React.FC = () => {
             zIndex: 1,
           }}
         >
+          <Typography variant="h2">Overrides</Typography>
           <GameOverrideSettings />
         </Box>
         <Box
@@ -60,7 +53,17 @@ export const Settings: React.FC = () => {
           <GameOverrideList />
         </Box>
         {/* Grid with game overrides */}
-        <MultiplierSettings />
+        <Box
+          sx={{
+            width: 4 / 5,
+            flex: '0 1 auto',
+            justifyItems: 'center',
+            zIndex: 1,
+          }}
+        >
+          <Typography variant="h2">Multipliers</Typography>
+          <MultiplierSettings />
+        </Box>
       </Box>
     </>
   );
