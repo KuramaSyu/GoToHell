@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, capitalize, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { getThemeNames } from '../../zustand/useThemeStore';
@@ -7,11 +7,26 @@ import useAppState from '../../zustand/Error';
 import { Add, Remove } from '@mui/icons-material';
 import { setCookie } from '../../utils/cookies';
 import { CustomSelect } from './CustomSelect';
+import { transform } from 'framer-motion';
 
 type GameOverrideProps = {
   game: string;
   sport: string;
   amount: number;
+};
+
+const SX_TABLE_ENTRY = {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  display: 'flex',
+};
+
+const SX_TABLE_HEADER_ENTRY = {
+  fontSize: '20px',
+  textTransform: 'uppercase',
+  fontWeight: '300',
+  ...SX_TABLE_ENTRY,
 };
 
 export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
@@ -49,33 +64,9 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
         backgroundColor: 'rgba(0,0,0,0.2)',
       }}
     >
-      <Box
-        sx={{
-          flex: 1,
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
-        {game}
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
-        {sport}
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
-        {amount}
-      </Box>
+      <Box sx={SX_TABLE_ENTRY}>{game}</Box>
+      <Box sx={SX_TABLE_ENTRY}>{sport}</Box>
+      <Box sx={SX_TABLE_ENTRY}>{amount}</Box>
       <Button
         variant="contained"
         sx={{ flex: '0 1 auto', maxWidth: 1 / 10, borderRadius: 10 }}
@@ -113,34 +104,9 @@ export const GameOverrideList: React.FC = () => {
         backgroundColor: 'rgba(0,0,0,0.5)',
       }}
     >
-      {' '}
-      <Box
-        sx={{
-          flex: 1,
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
-        Game
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
-        Sport
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
-        Exercises per death
-      </Box>
+      <Box sx={SX_TABLE_HEADER_ENTRY}>Game</Box>
+      <Box sx={SX_TABLE_HEADER_ENTRY}>Sport</Box>
+      <Box sx={SX_TABLE_HEADER_ENTRY}>Exercises per death</Box>
       <Button
         variant="contained"
         sx={{
