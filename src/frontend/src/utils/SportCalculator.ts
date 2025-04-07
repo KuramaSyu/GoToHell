@@ -1,4 +1,4 @@
-import { OverrideSportDefinition } from '../models/Preferences';
+import { Multiplier, OverrideSportDefinition } from '../models/Preferences';
 import { GetSportsResponse } from '../models/Sport';
 
 /**
@@ -49,13 +49,28 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 
 export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
   // TODO: map number to specific game
-  multiplier: number;
-  constructor(decorated: SportsCalculator, multiplier: number) {
+  multipliers: Multiplier[];
+  constructor(decorated: SportsCalculator, multipliers: Multiplier[]) {
     super(decorated);
-    this.multiplier = multiplier;
+    this.multipliers = multipliers;
   }
   get(sport: string, game: string): number {
-    return this.decorated.get(sport, game) * this.multiplier;
+    // find multiplier for the specific game and sport
+    var multipliers = this.multipliers.filter(
+      (entry) => entry.game == game && entry.sport == sport
+    );
+
+    // TODO: check for global game or sport multipliers
+    // if multiplier is not found, check for the global multiplier
+    multipliers = this.multipliers.filter((entry) => entry.game == 'global');
+
+    if (multipliers.length > 0) {
+      // a multiplier was found => apply it
+      return this.decorated.get(sport, game) * multipliers[0]!.multiplier;
+    }
+
+    // no multiplier was found => return the base amount
+    return this.decorated.get(sport, game);
   }
 }
 
