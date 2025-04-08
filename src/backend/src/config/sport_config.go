@@ -33,5 +33,4 @@ func init() {
 		log.Fatalf("feiled to parse default_games.csv: %v", err)
 	}
 	DefaultGamesCsv = records
-	log.Printf("sports: %v\ngames: %v", DefaultSportsCsv, DefaultGamesCsv)
 }

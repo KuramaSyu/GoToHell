@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -51,7 +50,6 @@ func (sc *SportsController) Default(c *gin.Context) {
 		"sports": sport_map,
 		"games":  game_map,
 	}
-	log.Printf("responding with %v", response)
 	c.JSON(http.StatusOK, response)
 }
 
@@ -63,7 +61,6 @@ func csvToMap(csv [][]string) map[string]float64 {
 
 	for i := 1; i < len(csv); i++ {
 		row := csv[i]
-		log.Printf("%v", row)
 		baseMultiplier, err := strconv.ParseFloat(row[1], 64)
 		if err != nil {
 			baseMultiplier = 1

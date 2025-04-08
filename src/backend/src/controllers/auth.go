@@ -117,7 +117,6 @@ func (ac *AuthController) Callback(c *gin.Context) {
 		return
 	}
 	user, err := d_user.Parse()
-	log.Printf("User: %v", user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User ID was not parsable to int"})
 	}
