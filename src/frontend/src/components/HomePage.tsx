@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
       <AppBackground></AppBackground>
       <Box
         sx={{
-          maxWidth: '35%',
+          width: 'clamp(300px, 25%, 420px)',
           height: '100%',
           flex: '0 1 auto',
           overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
