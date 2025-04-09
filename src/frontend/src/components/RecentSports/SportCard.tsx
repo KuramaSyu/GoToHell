@@ -72,6 +72,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         justifyContent: 'center', // Centers content horizontally
         alignItems: 'center', // Centers content vertically
         overflow: 'hidden',
+        mr: 2,
       }}
     >
       <Typography
