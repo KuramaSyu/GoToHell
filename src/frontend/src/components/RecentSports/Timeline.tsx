@@ -18,6 +18,7 @@ import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { TransitionGroup } from 'react-transition-group';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SportCard, SportCardNumber } from './SportCard';
+import { before } from 'node:test';
 
 export interface Sport {
   id: number;
@@ -92,7 +93,7 @@ export const SportsTimeline = () => {
         transition={{ duration: 0.5 }}
       >
         <TimelineItem key={sport.id}>
-          <TimelineOppositeContent>
+          <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
             <SportCardNumber data={sport}></SportCardNumber>
           </TimelineOppositeContent>
           <TimelineSeparator>
@@ -145,11 +146,15 @@ export const SportsTimeline = () => {
           sx={{
             // weird CSS hack, to align the timeline dots left
             [`& .${timelineOppositeContentClasses.root}`]: {
-              flex: 0.6,
+              flex: '0 1 auto',
               //flex: 0,
               padding: 0,
               height: '100%',
               overflowY: 'auto',
+            },
+            [`& .${timelineItemClasses.root}:before`]: {
+              padding: 0,
+              margin: 0,
             },
           }}
         >
