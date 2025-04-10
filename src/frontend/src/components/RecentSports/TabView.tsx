@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { RecentSportsStandard } from './Standard';
+import { MultiplierSettings } from '../../pages/Settings/Multiplier';
 
 export const RecentSports = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -15,6 +16,7 @@ export const RecentSports = () => {
       flexDirection="column"
       justifyContent="left"
       alignContent="left"
+      sx={{ width: 4 / 5 }}
     >
       <Box display="flex" justifyContent="center">
         <Tabs
@@ -23,13 +25,20 @@ export const RecentSports = () => {
           textColor="primary"
           indicatorColor="primary"
         >
-          <Tab label="Standard View" sx={{ minWidth: 150, width: 'auto' }} />
-          {/* <Tab label="Timeline View" sx={{ minWidth: 150, width: 'auto' }} /> */}
+          <Tab
+            label="Recent Activities"
+            sx={{ minWidth: 150, width: 'auto' }}
+          />
+          <Tab label="Multiplier" sx={{ minWidth: 150, width: 'auto' }} />
         </Tabs>
       </Box>
-      <Box mt={2} display="flex" justifyContent="left">
+      <Box mt={2} display={'flex'} justifyContent="center" width={'100%'}>
         {activeTab === 0 && <RecentSportsStandard />}
-        {/* {activeTab === 1 && <HorizontalSportsTimeline />} */}
+        {activeTab === 1 && (
+          <Box sx={{ width: '100%' }}>
+            <MultiplierSettings />
+          </Box>
+        )}
       </Box>
     </Box>
   );
