@@ -34,6 +34,7 @@ const MainContent: React.FC = () => {
           justifyContent: 'space-between',
           justifyItems: 'center',
           px: 5,
+          pt: 2,
           maxHeight: 1 / 3,
         }}
       >
