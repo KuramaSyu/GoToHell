@@ -79,6 +79,7 @@ export class DefaultSportsCalculator implements SportsCalculator {
             visibility: 'hidden',
             transition: 'opacity 0.2s ease, visibility 0.2s ease',
             zIndex: 1,
+            fontFamily: NUMBER_FONT,
           }}
         >
           Game Base ({this.get_game_base(game)}) x Sport Base (
@@ -191,12 +192,12 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
             <Hexagon color={theme.palette.muted.dark}>
               <Box
                 sx={{
-                  fontSize: 30,
+                  fontSize: 42,
                   color: lighten(theme.palette.muted.dark, 0.5),
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  //fontFamily: NUMBER_FONT,
+                  fontFamily: NUMBER_FONT,
                 }}
               >
                 x{multiplier.multiplier}
@@ -279,6 +280,7 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
               visibility: 'hidden',
               transition: 'opacity 0.2s ease, visibility 0.2s ease',
               zIndex: 1,
+              fontFamily: NUMBER_FONT,
             }}
           >
             Override for Game {game} and Sport {sport}: {override.amount}
