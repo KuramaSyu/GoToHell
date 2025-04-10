@@ -6,6 +6,7 @@ import { BACKEND_BASE } from '../statics';
 import { GetSportsResponse } from '../models/Sport';
 
 import {
+  DeathDecorator,
   DefaultSportsCalculator,
   ExactlyOneDecorator,
   MultiplierDecorator,
@@ -54,6 +55,9 @@ export const SportSelector = () => {
 
     // custom per game per sport overrides
     base = new OverrideSportDecorator(base, preferences.game_overrides);
+
+    // add DeathDecorator, to wrap the output with the death amount
+    base = new DeathDecorator(base);
 
     // custom multipliers, either global or per game and sport
     base = new MultiplierDecorator(base, preferences.multipliers);
