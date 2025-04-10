@@ -48,7 +48,8 @@ export class DefaultSportsCalculator implements SportsCalculator {
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
     const text_color = lighten(theme.palette.muted.main, 0.5);
-
+    const sport_base = this.get_sport_base(sport);
+    const game_base = this.get_game_base(game);
     return (
       <Box
         sx={{
@@ -106,9 +107,9 @@ export class DefaultSportsCalculator implements SportsCalculator {
           }}
         >
           <Latex>
-            {`$\\frac{${this.default.games[game] ?? 0}\\ \\times \\ ${
-              this.default.sports[sport] ?? 0
-            }}{death}$`}
+            {`$\\frac{\\overbrace{${game_base}\\ \\times \\ ${sport_base}}^{${
+              game_base * sport_base
+            }}}{death}$`}
           </Latex>
         </Box>
       </Box>
