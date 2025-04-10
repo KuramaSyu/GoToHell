@@ -1,4 +1,4 @@
-import { Box, lighten, Typography } from '@mui/material';
+import { Box, lighten, Typography, useMediaQuery } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
@@ -24,6 +24,8 @@ export const AmountDisplay = () => {
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
   const { preferences } = usePreferenceStore();
+
+  const isXL = useMediaQuery(theme.breakpoints.up('xl'));
 
   if (currentSport.game == null || currentSport.sport == null) {
     return <Box></Box>;
@@ -66,7 +68,10 @@ export const AmountDisplay = () => {
           fontFamily: NUMBER_FONT,
         }}
       >
-        {calculator.make_box(currentSport.sport!, currentSport.game!, amount)}
+        {isXL
+          ? calculator.make_box(currentSport.sport!, currentSport.game!, amount)
+          : null}
+
         <Box sx={{ mr: 2 }}>
           <PopNumber
             value={computedValue}
@@ -92,14 +97,6 @@ export const AmountDisplay = () => {
           <Typography variant="subtitle1" fontFamily={'inherit'}>
             to do now
           </Typography>
-          {/* <Box
-            sx={{
-              width: '100%',
-              height: '1px',
-              backgroundColor: theme.palette.divider,
-              my: 2, // Adds vertical margin
-            }}
-          ></Box> */}
         </Box>
       </Box>
     </Box>
