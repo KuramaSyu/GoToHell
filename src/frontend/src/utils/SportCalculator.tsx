@@ -90,11 +90,11 @@ export class DefaultSportsCalculator implements SportsCalculator {
           sx={{
             backgroundColor: darken(theme.palette.muted.dark, 0),
             px: 5,
-            py: 1.5,
+            py: 1,
             borderRadius: 8,
             borderColor: lighten(theme.palette.muted.dark, 1 / 5),
             borderWidth: 1,
-            fontSize: 20,
+            fontSize: 24,
             fontFamily: NUMBER_FONT,
             color: text_color,
             justifyContent: 'center',
