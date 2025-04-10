@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, lighten, Typography } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
@@ -13,11 +13,17 @@ import {
   SportsCalculator,
 } from '../utils/SportCalculator';
 import useCalculatorStore from '../zustand/CalculatorStore';
+import Star from './Shapes';
+import { useThemeStore } from '../zustand/useThemeStore';
+import { darken } from '@mui/material/styles';
+import usePreferenceStore from '../zustand/PreferenceStore';
 
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
   const { calculator } = useCalculatorStore();
+  const { theme } = useThemeStore();
+  const { preferences } = usePreferenceStore();
 
   if (currentSport.game == null || currentSport.sport == null) {
     return <Box></Box>;
@@ -34,45 +40,67 @@ export const AmountDisplay = () => {
     <Box
       sx={{
         display: 'flex',
-        flexDirection: {
-          xs: 'column',
-          md: 'column',
-          lg: 'row',
-        },
+        flexDirection: 'column',
         justifyItems: 'center',
         alignItems: {
           xs: 'right',
           md: 'right',
           lg: 'center',
         },
-        fontFamily: NUMBER_FONT,
       }}
     >
-      <Box sx={{ mr: 2 }}>
-        <PopNumber
-          value={computedValue}
-          font={NUMBER_FONT}
-          stiffness={1000}
-          damping={300}
-          mass={1}
-        />
-      </Box>
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'right',
-
-          mt: { xs: -4, md: -4 }, // Remove weird padding from font
+          flexDirection: {
+            xs: 'column',
+            md: 'column',
+            lg: 'row',
+          },
+          justifyItems: 'center',
+          alignItems: {
+            xs: 'right',
+            md: 'right',
+            lg: 'center',
+          },
+          fontFamily: NUMBER_FONT,
         }}
       >
-        <Typography variant="h5" fontFamily={'inherit'}>
-          {GameSelectionMap.get(currentSport.sport)}
-        </Typography>
-        <Typography variant="subtitle1" fontFamily={'inherit'}>
-          to do now
-        </Typography>
+        {calculator.make_box(currentSport.sport!, currentSport.game!, amount)}
+        <Box sx={{ mr: 2 }}>
+          <PopNumber
+            value={computedValue}
+            font={NUMBER_FONT}
+            stiffness={1000}
+            damping={300}
+            mass={1}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            justifyContent: 'right',
+            alignItems: 'right',
+            mt: { xs: -4, md: -4 }, // Remove weird padding from font
+          }}
+        >
+          <Typography variant="h5" fontFamily={'inherit'}>
+            {GameSelectionMap.get(currentSport.sport)}
+          </Typography>
+          <Typography variant="subtitle1" fontFamily={'inherit'}>
+            to do now
+          </Typography>
+          {/* <Box
+            sx={{
+              width: '100%',
+              height: '1px',
+              backgroundColor: theme.palette.divider,
+              my: 2, // Adds vertical margin
+            }}
+          ></Box> */}
+        </Box>
       </Box>
     </Box>
   );
