@@ -245,11 +245,66 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
 
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const override = this.get_override(sport, game);
+    const theme = useThemeStore.getState().theme;
+    const text_color = lighten(theme.palette.muted.main, 0.5);
 
     if (override !== null) {
       return (
-        <Box sx={{ fontSize: 22 }}>
-          <Latex>{`$\\frac{${override.amount}}{\\texttt{death}}$`}</Latex>
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'inline-block',
+            '&:hover .hoverBox': {
+              opacity: 1,
+              visibility: 'visible',
+            },
+          }}
+        >
+          {/* Tooltip Box */}
+          <Box
+            className="hoverBox"
+            sx={{
+              position: 'absolute',
+              top: '-40px', // adjust as needed
+              left: '50%',
+              transform: 'translateX(-50%)',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              color: 'white',
+              px: 2,
+              py: 1,
+              borderRadius: 2,
+              fontSize: 14,
+              whiteSpace: 'nowrap',
+              opacity: 0,
+              visibility: 'hidden',
+              transition: 'opacity 0.2s ease, visibility 0.2s ease',
+              zIndex: 1,
+            }}
+          >
+            Override for Game {game} and Sport {sport}: {override.amount}
+          </Box>
+
+          {/* Main Box */}
+          <Box
+            sx={{
+              backgroundColor: darken(theme.palette.muted.dark, 0),
+              px: 5,
+              py: 1,
+              borderRadius: 8,
+              borderColor: lighten(theme.palette.muted.dark, 1 / 5),
+              borderWidth: 1,
+              fontSize: 22,
+              fontFamily: NUMBER_FONT,
+              color: text_color,
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'inline-flex',
+              flex: '0 1 auto',
+              flexShrink: 0,
+            }}
+          >
+            <Latex>{`$\\frac{${override.amount}}{death}$`}</Latex>
+          </Box>
         </Box>
       );
     }
