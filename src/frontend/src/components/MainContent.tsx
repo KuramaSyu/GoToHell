@@ -21,7 +21,7 @@ const MainContent: React.FC = () => {
         flex: '1 1 auto',
         display: 'flex',
         flexDirection: 'column',
-        height: '95vh',
+        height: '92vh',
         justifyContent: 'space-between',
       }}
     >
@@ -109,7 +109,8 @@ const MainContent: React.FC = () => {
           justifyContent: 'center',
           alignContent: 'center',
           zIndex: 1,
-          height: 1 / 3,
+          pb: 2,
+          // height: 1 / 4,
         }}
       >
         <RecentSports></RecentSports>
