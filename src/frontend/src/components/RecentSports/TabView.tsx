@@ -35,7 +35,7 @@ export const RecentSports = () => {
         flexDirection="column"
         justifyContent="left"
         alignContent="left"
-        sx={{ width: 4 / 5 }}
+        sx={{ width: 7 / 10 }}
       >
         <Box display="flex" justifyContent="center">
           <Tabs
