@@ -48,7 +48,9 @@ export class DefaultSportsCalculator implements SportsCalculator {
   }
 
   calculate_amount(sport: string, game: string, deaths: number): number {
-    return Math.round(this.get(sport, game) * deaths);
+    const safeDeaths =
+      typeof deaths === 'number' && !isNaN(deaths) ? deaths : 1;
+    return Math.round(this.get(sport, game) * safeDeaths);
   }
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
@@ -387,16 +389,18 @@ export const wrapWithColor = (content: string, color: string): string => {
 
 export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
   calculate_amount(sport: string, game: string, deaths: number): number {
+    const safeDeaths =
+      typeof deaths === 'number' && !isNaN(deaths) ? deaths : 0;
     if (sport == 'plank') {
       return (
         (42 *
           Math.log(
-            1 + deaths * (this.get_multiplier(sport, game)?.multiplier ?? 1)
+            1 + safeDeaths * (this.get_multiplier(sport, game)?.multiplier ?? 1)
           )) /
         Math.log(1.75)
       );
     }
-    return this.decorated.calculate_amount(sport, game, deaths);
+    return this.decorated.calculate_amount(sport, game, safeDeaths);
   }
 
   make_box(sport: string, game: string, deaths: number): ReactNode | null {
