@@ -387,11 +387,8 @@ export const wrapWithColor = (content: string, color: string): string => {
 
 export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
   calculate_amount(sport: string, game: string, deaths: number): number {
-    if (sport === 'plank') {
+    if (sport == 'plank') {
       return (
-        // TODO: make Formula variable
-        // TODO: deaths are needed now
-        // fully override forumla with log 1+deaths
         (42 *
           Math.log(
             1 + deaths * (this.get_multiplier(sport, game)?.multiplier ?? 1)
@@ -399,11 +396,11 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
         Math.log(1.75)
       );
     }
-    return this.decorated.get(sport, game);
+    return this.decorated.calculate_amount(sport, game, deaths);
   }
 
   make_box(sport: string, game: string, deaths: number): ReactNode | null {
-    if (sport !== 'plank') {
+    if (sport != 'plank') {
       return this.decorated.make_box(sport, game, deaths);
     }
     const theme = useThemeStore.getState().theme;
