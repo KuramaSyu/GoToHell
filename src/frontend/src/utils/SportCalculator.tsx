@@ -20,12 +20,17 @@ export interface SportsCalculator {
   make_box(sport: string, game: string, deaths: number): ReactNode;
   get_game_base(game: string): number;
   get_sport_base(sport: string): number;
+  get_multiplier(sport: string, game: string): Multiplier | null;
 }
 
 export class DefaultSportsCalculator implements SportsCalculator {
   default: GetSportsResponse;
   constructor(getSportsResposne: GetSportsResponse) {
     this.default = getSportsResposne;
+  }
+
+  get_multiplier(sport: string, game: string): Multiplier | null {
+    return null;
   }
 
   get_game_base(game: string): number {
@@ -123,6 +128,10 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
     this.decorated = decorated;
   }
 
+  get_multiplier(sport: string, game: string): Multiplier | null {
+    return this.decorated.get_multiplier(sport, game);
+  }
+
   get_game_base(game: string): number {
     return this.decorated.get_game_base(game);
   }
@@ -164,7 +173,10 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
     // if multiplier is not found, check for the global multiplier
     multipliers = this.multipliers.filter((entry) => entry.game == null);
 
-    return multipliers[0] ?? null;
+    if (multipliers[0] !== null && multipliers[0]?.multiplier !== 1) {
+      return multipliers[0]!;
+    }
+    return null;
   }
 
   get(sport: string, game: string): number {
@@ -340,7 +352,7 @@ export class DeathDecorator extends BaseSportsCalculatorDecorator {
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
-          // alignItems: 'center',
+          justifyContent: 'center', // center whole box vertically
         }}
       >
         {this.decorated.make_box(sport, game, deaths)}{' '}
@@ -372,3 +384,100 @@ export class DeathDecorator extends BaseSportsCalculatorDecorator {
 export const wrapWithColor = (content: string, color: string): string => {
   return `\\textcolor{${color}}{${content}}`;
 };
+
+export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
+  calculate_amount(sport: string, game: string, deaths: number): number {
+    if (sport === 'plank') {
+      return (
+        // TODO: make Formula variable
+        // TODO: deaths are needed now
+        // fully override forumla with log 1+deaths
+        (42 *
+          Math.log(
+            1 + deaths * (this.get_multiplier(sport, game)?.multiplier ?? 1)
+          )) /
+        Math.log(1.75)
+      );
+    }
+    return this.decorated.get(sport, game);
+  }
+
+  make_box(sport: string, game: string, deaths: number): ReactNode | null {
+    if (sport !== 'plank') {
+      return this.decorated.make_box(sport, game, deaths);
+    }
+    const theme = useThemeStore.getState().theme;
+    const text_color = lighten(theme.palette.muted.main, 0.5);
+    const multiplier = this.get_multiplier(sport, game)?.multiplier;
+    const multiplier_latex = multiplier
+      ? `\\underbrace{\\times\\ ${multiplier}}_{multiplier}`
+      : ``;
+    return (
+      <Box
+        sx={{
+          position: 'relative',
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex',
+          '&:hover .hoverBox': {
+            opacity: 1,
+            visibility: 'visible',
+          },
+        }}
+      >
+        {/* Tooltip Box */}
+        <Box
+          className="hoverBox"
+          sx={{
+            position: 'absolute',
+            top: '-40px', // adjust as needed
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            color: 'white',
+            px: 2,
+            py: 1,
+            borderRadius: 2,
+            fontSize: 14,
+            whiteSpace: 'nowrap',
+            opacity: 0,
+            visibility: 'hidden',
+            transition: 'opacity 0.2s ease, visibility 0.2s ease',
+            zIndex: 1,
+            fontFamily: NUMBER_FONT,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Box>This weird formula is used, </Box>
+          <Box>to flat out the amount of </Box>
+          <Box>planks at around 180s</Box>
+        </Box>
+
+        {/* Main Box */}
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              backgroundColor: darken(theme.palette.muted.dark, 0),
+              px: 1,
+              py: 1,
+              borderRadius: 8,
+              borderColor: lighten(theme.palette.muted.dark, 1 / 5),
+              borderWidth: 1,
+              fontSize: 20,
+              fontFamily: NUMBER_FONT,
+              color: text_color,
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'inline-flex',
+              flex: '0 1 auto',
+              flexShrink: 0,
+            }}
+          >
+            <Latex>{`$\\underbrace{42\\ \\cdot}_{strength} log_{1.75}{1 + \\overbrace{${deaths}}^{deaths} ${multiplier_latex}}$`}</Latex>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
+}

@@ -9,6 +9,7 @@ import {
   DeathDecorator,
   DefaultSportsCalculator,
   ExactlyOneDecorator,
+  HumanLockDecorator,
   MultiplierDecorator,
   OverrideSportDecorator,
   SportsCalculator,
@@ -61,6 +62,9 @@ export const SportSelector = () => {
 
     // custom multipliers, either global or per game and sport
     base = new MultiplierDecorator(base, preferences.multipliers);
+
+    // custom decorator for planks
+    base = new HumanLockDecorator(base);
 
     // check if game: custom is selected
     if (theme.custom.themeName == 'custom') {
