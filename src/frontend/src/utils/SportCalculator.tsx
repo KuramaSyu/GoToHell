@@ -48,9 +48,7 @@ export class DefaultSportsCalculator implements SportsCalculator {
   }
 
   calculate_amount(sport: string, game: string, deaths: number): number {
-    const safeDeaths =
-      typeof deaths === 'number' && !isNaN(deaths) ? deaths : 1;
-    return Math.round(this.get(sport, game) * safeDeaths);
+    return Math.round(this.get(sport, game) * deaths);
   }
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
@@ -184,7 +182,7 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
   get(sport: string, game: string): number {
     const multiplier = this.get_multiplier(sport, game);
 
-    if (multiplier !== null) {
+    if (multiplier != null) {
       // a multiplier was found => apply it
       return this.decorated.get(sport, game) * multiplier.multiplier;
     }
@@ -250,7 +248,7 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
   get(sport: string, game: string): number {
     const override = this.get_override(sport, game);
 
-    if (override !== null) {
+    if (override != null) {
       // apply the override
       return Number(override.amount);
     }

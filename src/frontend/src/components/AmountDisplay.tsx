@@ -3,7 +3,6 @@ import { useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
 import { PopNumber } from './GameSelect';
-import { GameSelectionMap } from './SportSelect';
 import { useState } from 'react';
 import {
   DefaultSportsCalculator,
@@ -17,6 +16,7 @@ import Star from './Shapes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
+import { GameSelectionMap } from './SportSelect';
 
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
