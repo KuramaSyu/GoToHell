@@ -195,7 +195,7 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
     const theme = useThemeStore.getState().theme;
     const multiplier = this.get_multiplier(sport, game);
 
-    if (multiplier !== null && multiplier.multiplier !== 1) {
+    if (multiplier !== null && multiplier?.multiplier !== 1) {
       return (
         <Box
           sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
