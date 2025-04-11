@@ -62,9 +62,18 @@ export const RecentSports = () => {
           )}
         </Box>
       </Box>
-      {BelowXL
-        ? calculator.make_box(currentSport.sport!, currentSport.game!, amount)
-        : null}
+
+      {BelowXL ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'right',
+            flexGrow: '1',
+          }}
+        >
+          {calculator.make_box(currentSport.sport!, currentSport.game!, amount)}
+        </Box>
+      ) : null}
     </Box>
   );
 };
