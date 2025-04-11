@@ -28,6 +28,8 @@ export const RecentSports = () => {
         width: '100%',
         justifyContent: 'center',
         alignContent: 'center',
+        gap: 1,
+        px: 2,
       }}
     >
       <Box
