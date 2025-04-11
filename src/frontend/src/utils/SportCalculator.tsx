@@ -473,7 +473,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
               flexShrink: 0,
             }}
           >
-            <Latex>{`$\\underbrace{42\\ \\cdot}_{strength} log_{1.75}{1 + \\overbrace{${deaths}}^{deaths} ${multiplier_latex}}$`}</Latex>
+            <Latex>{`$\\underbrace{42\\ \\cdot}_{strength} log_{1.75}{1 \\overbrace{+\\ ${deaths}}^{deaths} ${multiplier_latex}}$`}</Latex>
           </Box>
         </Box>
       </Box>
