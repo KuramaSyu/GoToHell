@@ -8,7 +8,7 @@ progress of your friends
 
 ### TODO:
 
-- an `generateLabel() -> HTML Comp.` method, for `SportCalculator` where labels like `x2` for multipliers or `18` (just the overridden number) if a. override happened or just `base: 18` if the base was used, to show labels more transparent
+- Make Settings Scrollable
 
 ### Things required to add a game:
 
