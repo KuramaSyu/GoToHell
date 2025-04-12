@@ -23,6 +23,9 @@ export interface SportsCalculator {
   get_multiplier(sport: string, game: string): Multiplier | null;
 }
 
+/**
+ * Default implementation, which implements the most basic calculation method
+ */
 export class DefaultSportsCalculator implements SportsCalculator {
   default: GetSportsResponse;
   constructor(getSportsResposne: GetSportsResponse) {
@@ -122,6 +125,9 @@ export class DefaultSportsCalculator implements SportsCalculator {
   }
 }
 
+/**
+ * Base Decorator, which does more or less the same as the DefaultSportsCalculator
+ */
 export class BaseSportsCalculatorDecorator implements SportsCalculator {
   decorated: SportsCalculator;
   constructor(decorated: SportsCalculator) {
@@ -155,6 +161,9 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
   }
 }
 
+/**
+ * Adds a custom set multiplier to Latex and calculation
+ */
 export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
   multipliers: Multiplier[];
 
@@ -225,6 +234,10 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
   }
 }
 
+/**
+ * If a overridden game + sport was add, then this Decorator will override the calculation,
+ * replaceing base game * base sport with the overridden amount
+ */
 export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
   overrides: OverrideSportDefinition[];
   constructor(
@@ -339,7 +352,9 @@ export class ExactlyOneDecorator extends BaseSportsCalculatorDecorator {
   }
 }
 
-// for the make_box, to wrap it with the death amount
+/**
+ * for the make_box, to wrap it with the death amount
+ * */
 export class DeathDecorator extends BaseSportsCalculatorDecorator {
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
@@ -385,6 +400,9 @@ export const wrapWithColor = (content: string, color: string): string => {
   return `\\textcolor{${color}}{${content}}`;
 };
 
+/**
+ * Decorator for the plank, which uses a custom formula to calculate the amount of planks
+ */
 export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
   calculate_amount(sport: string, game: string, deaths: number): number {
     const safeDeaths =
