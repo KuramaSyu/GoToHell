@@ -15,7 +15,7 @@
 export function GenerateMarks(steps: number, min: number, max: number) {
   var marks: { value: number; label: string }[] = [];
   const stepValue =
-    max - min < steps ? max - min / steps : Math.ceil(max - min / steps);
+    max - min < steps ? (max - min) / steps : Math.ceil((max - min) / steps);
   for (let i = min; i <= max; i += stepValue) {
     marks.push({ value: i, label: i.toString() });
   }
