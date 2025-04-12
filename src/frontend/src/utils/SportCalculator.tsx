@@ -393,7 +393,10 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
       return (
         (42 *
           Math.log(
-            1 + safeDeaths * (this.get_multiplier(sport, game)?.multiplier ?? 1)
+            1 +
+              safeDeaths *
+                (this.get_multiplier(sport, game)?.multiplier ?? 1) *
+                this.get_game_base(game)
           )) /
         Math.log(1.75)
       );
@@ -409,8 +412,11 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     const text_color = lighten(theme.palette.muted.main, 0.5);
     const multiplier = this.get_multiplier(sport, game)?.multiplier;
     const multiplier_latex = multiplier
-      ? `\\underbrace{\\times\\ ${multiplier}}_{multiplier}`
+      ? `\\overbrace{\\times\\ ${multiplier}}^{multiplier}`
       : ``;
+    const game_base_latex = `\\underbrace{\\times \\ ${this.get_game_base(
+      game
+    )}}_{game base}`;
     return (
       <Box
         sx={{
@@ -473,7 +479,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
               flexShrink: 0,
             }}
           >
-            <Latex>{`$\\underbrace{42\\ \\cdot}_{strength} log_{\\frac{7}{4}}{1 \\overbrace{+${deaths}}^{deaths} ${multiplier_latex}}$`}</Latex>
+            <Latex>{`$\\underbrace{42\\ \\cdot}_{strength} log_{\\frac{7}{4}}{1 \\overbrace{+${deaths}}^{deaths} ${game_base_latex} ${multiplier_latex}}$`}</Latex>
           </Box>
         </Box>
       </Box>
