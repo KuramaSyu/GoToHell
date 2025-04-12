@@ -34,12 +34,13 @@ export const MultiplierSettings: React.FC = () => {
     labels.push(i);
   }
   const saveMultiplier = (game: string | null, value: number) => {
+    setSliderValue(Number(value));
     const newPreferences: UserPreferences = {
       multipliers: [
         {
           game: game, // null means global
           sport: null, // null means all sports
-          multiplier: sliderValue,
+          multiplier: value,
         },
         ...preferences.multipliers.filter(
           (multiplier) => multiplier.game !== game
@@ -49,7 +50,6 @@ export const MultiplierSettings: React.FC = () => {
     };
     setPreferences(newPreferences);
     setCookie('preferences', JSON.stringify(newPreferences), 999);
-    setSliderValue(Number(value));
   };
 
   const { marks, stepValue } = GenerateMarks(4, min, max);
@@ -72,6 +72,7 @@ export const MultiplierSettings: React.FC = () => {
         type="number"
         onChange={(e) => {
           const value = parseFloat(e.target.value) || 0;
+          setSliderValue(value);
           saveMultiplier(GAME, value);
         }}
         inputProps={{
