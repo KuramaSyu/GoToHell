@@ -5,6 +5,7 @@ import AppBackground from '../../components/AppBackground';
 import { getCookie, setCookie } from '../../utils/cookies';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { Multiplier, UserPreferences } from '../../models/Preferences';
+import { GenerateMarks } from '../../utils/Marks';
 
 export const MultiplierSettings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
@@ -28,6 +29,10 @@ export const MultiplierSettings: React.FC = () => {
     }
   }, []);
 
+  var labels: number[] = [];
+  for (var i = min; i >= max; i += 0.5) {
+    labels.push(i);
+  }
   const saveMultiplier = (game: string | null, value: number) => {
     const newPreferences: UserPreferences = {
       multipliers: [
@@ -47,7 +52,8 @@ export const MultiplierSettings: React.FC = () => {
     setSliderValue(Number(value));
   };
 
-  // iterate andcreate flex colums
+  const { marks, stepValue } = GenerateMarks(4, min, max);
+
   return (
     <Box
       sx={{
@@ -86,6 +92,7 @@ export const MultiplierSettings: React.FC = () => {
       <Slider
         size="medium"
         value={sliderValue}
+        marks={marks}
         onChange={(e, value) =>
           // store just in state
           setSliderValue(Array.isArray(value) ? value[0] ?? 1 : value)
