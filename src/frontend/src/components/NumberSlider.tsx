@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
+import { GenerateMarks } from '../utils/Marks';
 
 interface DeathAmountState {
   amount: number;
@@ -140,14 +141,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   );
 
   // calculate the marks below the slider
-  var marks: { value: number; label: string }[] = [];
-  const stepValue = amount < 15 ? 1 : Math.ceil(amount / 10);
-  for (let i = min; i <= max; i += stepValue) {
-    marks.push({ value: i, label: i.toString() });
-  }
-  if (Number(marks[-1]) !== max) {
-    marks.push({ value: max, label: max.toString() });
-  }
+  const { marks, stepValue } = GenerateMarks(10, min, max);
   return (
     <Box
       sx={{
