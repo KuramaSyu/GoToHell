@@ -141,7 +141,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   );
 
   // calculate the marks below the slider
-  const { marks, stepValue } = GenerateMarks(10, min, max);
+  const { marks } = GenerateMarks(12, min, max);
+  const stepValue = 1;
+
   return (
     <Box
       sx={{
