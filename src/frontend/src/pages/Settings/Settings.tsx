@@ -24,9 +24,11 @@ export const Settings: React.FC = () => {
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          justifyContent: 'center',
+          justifyContent: 'top',
           alignItems: 'center',
           gap: 10,
+          overflow: 'scroll',
+          pt: 5,
         }}
       >
         {/* Grid with overrides */}
