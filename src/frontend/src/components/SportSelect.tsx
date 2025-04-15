@@ -21,6 +21,7 @@ import pilatesSVG from '../assets/sports-pilates.svg';
 import squatsSVG from '../assets/sports-squats.svg';
 import situpsSVG from '../assets/sports-situps.svg';
 import russian_twistSVG from '../assets/sports-russian_twist.svg';
+import dipSVG from '../assets/sports-dip.svg';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
@@ -32,6 +33,7 @@ const sportIconMap: Record<string, string> = {
   squats: squatsSVG,
   situps: situpsSVG,
   russian_twist: russian_twistSVG,
+  dip: dipSVG,
 };
 
 // map for which is shown next to the score
@@ -42,6 +44,7 @@ GameSelectionMap.set('pilates', 'Exercises');
 GameSelectionMap.set('situps', 'Sit-Ups');
 GameSelectionMap.set('squats', 'Squats');
 GameSelectionMap.set('russian_twist', 'Russian Twists');
+GameSelectionMap.set('dip', 'Dips');
 
 // Select the sport kind with a button
 export const SportSelector = () => {
