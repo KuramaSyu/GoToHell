@@ -36,8 +36,8 @@ export const TotalScoreDisplay = () => {
     return <Typography></Typography>;
   }
   // const for current sport score display
-  const currentSportString = currentSport
-    ? GameSelectionMap.get(currentSport.sport)
+  const currentSportString = currentSport.sport
+    ? GameSelectionMap.get(currentSport.sport)?.replace('_', ' ')
     : null;
   const bigNumber = GetScore(currentSport!.sport!, amounts);
   return (

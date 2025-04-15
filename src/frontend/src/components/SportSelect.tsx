@@ -20,6 +20,7 @@ import plankSVG from '../assets/sports-plank.svg';
 import pilatesSVG from '../assets/sports-pilates.svg';
 import squatsSVG from '../assets/sports-squats.svg';
 import situpsSVG from '../assets/sports-situps.svg';
+import russian_twistSVG from '../assets/sports-russian_twist.svg';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
@@ -30,15 +31,17 @@ const sportIconMap: Record<string, string> = {
   pilates: pilatesSVG,
   squats: squatsSVG,
   situps: situpsSVG,
+  russian_twist: russian_twistSVG,
 };
 
 // map for which is shown next to the score
-const GameSelectionMap = new Map();
+const GameSelectionMap: Map<String, String> = new Map();
 GameSelectionMap.set('pushup', 'Push-Ups');
 GameSelectionMap.set('plank', 'Seconds Plank');
 GameSelectionMap.set('pilates', 'Exercises');
 GameSelectionMap.set('situps', 'Sit-Ups');
 GameSelectionMap.set('squats', 'Squats');
+GameSelectionMap.set('russian_twist', 'Russian Twists');
 
 // Select the sport kind with a button
 export const SportSelector = () => {
@@ -147,7 +150,7 @@ export const SportSelector = () => {
                   marginRight: 1,
                 }}
               />
-              <Typography>{sport}</Typography>
+              <Typography>{sport.replace('_', ' ')}</Typography>
             </Button>
           );
         })}
