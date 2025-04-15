@@ -43,7 +43,7 @@ export const SportCard: React.FC<SportCardProps> = ({ data }) => {
           textTransform: 'uppercase',
         }}
       >
-        {data.kind}
+        {data.kind.replace('_', ' ')}
       </Typography>
 
       <Typography variant="subtitle2" fontWeight={300}>
