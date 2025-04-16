@@ -9,5 +9,13 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "ltex.language": "en-US"
+  "ltex.language": "en-US",
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "python": true,
+    "typescriptreact": true
+  }
 }
