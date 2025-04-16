@@ -5,9 +5,9 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import AppBackground from './AppBackground';
 import MainContent from './MainContent';
 import { SportsTimeline } from './RecentSports/Timeline';
-import { LoadFriends } from '../pages/friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../userStore';
 import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
+import { UserApi } from '../utils/api/Api';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
       return;
     }
     const fetch = async () => {
-      await LoadFriends(addUser);
+      await new UserApi().fetchFriends();
     };
     fetch();
   }, [addUser, user]);
