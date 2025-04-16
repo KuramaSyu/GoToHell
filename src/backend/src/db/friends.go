@@ -66,6 +66,18 @@ func (r *GormFriendshipRepository) CreateFriendship(requesterID Snowflake, recip
 		Status:      status,
 		CreatedAt:   time.Now(),
 	}
+
+	// check if there is a similiar friendship already
+	// if yes, then directly accept it
+	var maybe_existing_friendship *Friendships
+	r.DB.Where("requester_id = ? AND recipient_id = ?", recipientID, requesterID).First(&maybe_existing_friendship)
+	if maybe_existing_friendship != nil && maybe_existing_friendship.Status == Pending {
+		// directly override existing friendship to be overridden
+		maybe_existing_friendship.Status = Accepted
+		return r.DB.Save(maybe_existing_friendship).Error
+	}
+
+	// create Friendship
 	return r.DB.Create(&friendship).Error
 }
 
