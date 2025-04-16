@@ -8,6 +8,7 @@ import { useUserStore } from '../../userStore';
 export interface BackendApiInterface {}
 export interface UserApiInterface {
   fetchTotalScore(): Promise<Response>;
+  fetchUser(): Promise<Response>;
 }
 
 // Class, to fetch resources from the backend. Responses will be
@@ -20,7 +21,9 @@ export class UserApi implements UserApiInterface {
     console.error(`Error fetching ${url}:`, JSON.stringify(error));
   }
 
-  // fetches the total scores (the scores, which sum up all sport activities) for a user
+  /**
+   * fetches the total scores (the scores, which sum up all sport activities) for a user
+   * */
   async fetchTotalScore(): Promise<Response> {
     // short bind for zustand
     const setAmounts = useTotalScoreStore.getState().setAmounts;
@@ -40,6 +43,10 @@ export class UserApi implements UserApiInterface {
     return fut;
   }
 
+  /**
+   * tries to authenticate a user by coockie.
+   * It sets `useUserStore` to the authenticated user
+   * */
   async fetchUser(): Promise<Response> {
     const setUser = useUserStore.getState().setUser;
     const response = await fetch(`${BACKEND_BASE}/api/auth/user`, {
