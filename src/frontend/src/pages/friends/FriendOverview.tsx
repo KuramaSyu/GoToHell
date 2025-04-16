@@ -23,6 +23,7 @@ import {
   DiscordUserImpl,
   DiscordViewModel,
 } from '../../components/DiscordLogin';
+import { UserApi } from '../../utils/api/Api';
 
 interface FriendShip {
   id: number;
@@ -43,27 +44,6 @@ export interface FriendshipReply {
   users: DiscordUser[];
 }
 
-export async function LoadFriends(
-  addUser: (user: DiscordUserImpl) => void
-): Promise<FriendshipReply | null> {
-  const response = await fetch(`${BACKEND_BASE}/api/friends`, {
-    credentials: 'include',
-  });
-  const result = await response.json();
-  if (response.ok) {
-    console.log(`received friend data: ${JSON.stringify(result)}`);
-    // Add every friend user to the store.
-    const reply = result['data'] as FriendshipReply;
-    reply.users.forEach((fr) => {
-      addUser(new DiscordUserImpl(fr));
-    });
-    return reply;
-  } else {
-    console.log(`failed to GET /api/friends: ${JSON.stringify(result)}`);
-  }
-  return null;
-}
-
 export const FriendOverview: React.FC = () => {
   const { theme } = useThemeStore();
   const backgroundImage = theme.custom.backgroundImage;
@@ -76,7 +56,7 @@ export const FriendOverview: React.FC = () => {
 
   const { setErrorMessage } = useAppState();
   const { user } = useUserStore();
-  const { users, addUser } = useUsersStore();
+  const { users } = useUsersStore();
 
   function GetFriendId(f: FriendShip) {
     if (String(f.requester_id) == user?.id) {
@@ -97,7 +77,7 @@ export const FriendOverview: React.FC = () => {
   const fetchFriends = async () => {
     setLoading(true);
     try {
-      const reply = await LoadFriends(addUser);
+      const reply = await new UserApi().fetchFriends();
       if (reply != null) {
         setFriends(reply.friendships);
         setError('');
