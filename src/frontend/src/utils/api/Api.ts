@@ -1,5 +1,5 @@
 import { J } from 'framer-motion/dist/types.d-6pKw1mTI';
-import { SportScore } from '../../models/Sport';
+import { GetSportsResponse, SportScore } from '../../models/Sport';
 import { BACKEND_BASE } from '../../statics';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { DiscordUser, DiscordUserImpl } from '../../components/DiscordLogin';
@@ -12,7 +12,9 @@ export interface UserApiInterface {
   fetchUser(): Promise<Response>;
   fetchFriends(): Promise<FriendshipReply | null>;
 }
-
+export interface SportApiInterface {
+  fetchDefault(): Promise<GetSportsResponse | null>;
+}
 // Class, to fetch resources from the backend. Responses will be
 // set with the Zustand setters
 export class DefaultBackendApi implements BackendApiInterface {}
