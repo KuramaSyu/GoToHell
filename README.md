@@ -8,7 +8,8 @@ progress of your friends
 
 ### TODO:
 
-- Make Settings Scrollable
+- move API calls to utils/api
+- add functions to these apis, which only fetch, if zustand store has nothing stored in it
 
 ### Things required to add a game:
 
