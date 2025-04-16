@@ -10,6 +10,10 @@ progress of your friends
 
 - move API calls to utils/api
 - add functions to these apis, which only fetch, if zustand store has nothing stored in it
+- make plank formula changable in settings. 
+- presets, which set plank seconds and multiplier asking the user how much sports he want to do
+- 2 Buttons for Multiplier; one global one local
+- box for dragging workouts in
 
 ### Things required to add a game:
 
