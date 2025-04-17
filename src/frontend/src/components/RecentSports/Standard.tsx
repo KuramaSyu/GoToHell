@@ -63,8 +63,12 @@ export const RecentSportsStandard = () => {
         throw new Error('Failed to delete record');
       }
       if (!recentSports) return;
-      const newRecords = recentSports.data.filter((item) => item.id !== id);
-      setPageOffset(Math.max(0, newRecords.length - 5));
+      // update recent sports by filtering out the deleted one
+      const filteredRecords = recentSports.data.filter(
+        (item) => item.id !== id
+      );
+      setPageOffset(Math.max(0, filteredRecords.length - 5));
+      setRecentSports({ ...recentSports, data: filteredRecords });
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
