@@ -14,8 +14,8 @@ class SportRow {
   toJson(): string {
     const rounded = {
       ...this,
-      amount: Math.round(this.amount)
-    }
+      amount: Math.round(this.amount),
+    };
     return JSON.stringify([rounded]);
   }
 
@@ -68,4 +68,17 @@ export interface SportDefinition {
 export interface GetSportsResponse {
   sports: Record<string, number>;
   games: Record<string, number>;
+}
+
+export interface Sport {
+  id: number;
+  kind: string;
+  amount: number;
+  timedate: string;
+  user_id: string;
+  game: string;
+}
+
+export interface SportsApiResponse {
+  data: Sport[];
 }
