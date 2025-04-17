@@ -10,30 +10,18 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import useAppState from '../../zustand/Error';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
-
-interface Sport {
-  id: number;
-  kind: string;
-  amount: number;
-  timedate: string;
-  user_id: string;
-  game: string;
-}
-
-interface SportsApiResponse {
-  data: Sport[];
-}
+import { Sport, SportsApiResponse } from '../../models/Sport';
 
 const AnimatedBox = animated(Box);
 
 export const RecentSportsStandard = () => {
-  const [data, setData] = useState<SportsApiResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [pageOffset, setPageOffset] = useState<number>(0);
   const { user } = useUserStore();
   const { theme } = useThemeStore();
   const { setErrorMessage } = useAppState();
-  const { refreshTrigger } = useRecentSportsStore();
+  const { refreshTrigger, setRecentSports, recentSports } =
+    useRecentSportsStore();
   const { users } = useUsersStore();
 
   useEffect(() => {
@@ -57,7 +45,7 @@ export const RecentSportsStandard = () => {
         (a, b) =>
           new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
       );
-      setData(fetchedData);
+      setRecentSports(fetchedData);
       // Set offset to show the last 5 records if available.
       setPageOffset(Math.max(0, fetchedData.data.length - 5));
       setLoading(false);
@@ -74,9 +62,8 @@ export const RecentSportsStandard = () => {
       if (!response.ok) {
         throw new Error('Failed to delete record');
       }
-      if (!data) return;
-      const newRecords = data.data.filter((item) => item.id !== id);
-      setData({ data: newRecords });
+      if (!recentSports) return;
+      const newRecords = recentSports.data.filter((item) => item.id !== id);
       setPageOffset(Math.max(0, newRecords.length - 5));
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
@@ -86,7 +73,7 @@ export const RecentSportsStandard = () => {
     }
   };
 
-  const records = data ? data.data : [];
+  const records = recentSports ? recentSports.data : [];
   const visibleRecords = records.slice(pageOffset, pageOffset + 5);
 
   const transitions = useTransition(visibleRecords, {
