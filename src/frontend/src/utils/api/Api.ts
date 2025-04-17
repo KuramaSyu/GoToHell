@@ -5,12 +5,15 @@ import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { DiscordUser, DiscordUserImpl } from '../../components/DiscordLogin';
 import { useUsersStore, useUserStore } from '../../userStore';
 import { FriendshipReply } from '../../pages/friends/FriendOverview';
+import { StreakData } from '../../models/Streak';
+import { useStreakStore } from '../../zustand/StreakStore';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
   fetchTotalScore(): Promise<Response>;
   fetchUser(): Promise<Response>;
   fetchFriends(): Promise<FriendshipReply | null>;
+  fetchStreak(): Promise<StreakData | null>;
 }
 export interface SportApiInterface {
   fetchDefault(): Promise<GetSportsResponse | null>;
@@ -90,6 +93,31 @@ export class UserApi implements UserApiInterface {
     } else {
       // log error and return null
       this.logError(API_ENDPOINT, await result.json());
+    }
+    return null;
+  }
+
+  /**
+   * fetches Streak from the user who is logged in.
+   *
+   * @Note
+   * sets the useStreakStore Zustand
+   */
+  async fetchStreak(): Promise<StreakData | null> {
+    const API_ENDPOINT = '/api/sports/streak/';
+    const response = await fetch(`${BACKEND_BASE}${API_ENDPOINT}`, {
+      credentials: 'include',
+      method: 'GET',
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      const setStreak = useStreakStore.getState().setStreak;
+      const reply = result['data'] as StreakData;
+      setStreak(reply.days);
+      return reply;
+    } else {
+      this.logError(API_ENDPOINT, result);
     }
     return null;
   }
