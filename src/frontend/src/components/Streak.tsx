@@ -6,36 +6,17 @@ import { BACKEND_BASE, NUMBER_FONT } from '../statics';
 
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { useStreakStore } from '../zustand/StreakStore';
+import { StreakData } from '../models/Streak';
+import { UserApi } from '../utils/api/Api';
 
-interface StreakData {
-  days: number;
-  user_id: string;
-}
 export const Streak = () => {
   const { user } = useUserStore();
-  const [streak, setStreak] = useState<number | null>(null);
+  const { streak } = useStreakStore();
   const { theme } = useThemeStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user) {
-        return;
-      }
-      const resp = await fetch(`${BACKEND_BASE}/api/sports/streak/${user.id}`, {
-        credentials: 'include',
-        method: 'GET',
-      });
-      if (resp.ok) {
-        // mapping from data: StreakData
-        const json = await resp.json();
-        console.log('/api/sports/streaks:', json);
-        const answ = json['data'] as StreakData;
-        setStreak(answ.days);
-      } else {
-        console.error('Failed to fetch streak data:', resp.statusText);
-      }
-    };
-    fetchData();
+    new UserApi().fetchStreak();
   }, [user]);
 
   if (!user || streak === null) {
