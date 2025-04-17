@@ -105,14 +105,21 @@ export class UserApi implements UserApiInterface {
    */
   async fetchStreak(): Promise<StreakData | null> {
     const API_ENDPOINT = '/api/sports/streak/';
-    const response = await fetch(`${BACKEND_BASE}${API_ENDPOINT}`, {
+    // get user
+    const user = useUserStore.getState().user;
+    if (user === null) {
+      return null;
+    }
+    const response = await fetch(`${BACKEND_BASE}${API_ENDPOINT}${user.id}`, {
       credentials: 'include',
       method: 'GET',
     });
 
     const result = await response.json();
     if (response.ok) {
+      // get zustand setter
       const setStreak = useStreakStore.getState().setStreak;
+
       const reply = result['data'] as StreakData;
       setStreak(reply.days);
       return reply;
