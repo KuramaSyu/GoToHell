@@ -19,4 +19,27 @@ export interface Multiplier {
 export interface UserPreferences {
   game_overrides: OverrideSportDefinition[];
   multipliers: Multiplier[];
+  sport_specific: SportSpecific;
+  max_deaths: number;
+}
+
+export interface SportSpecific {
+  plank: PlankSettings;
+}
+
+export interface PlankSettings {
+  seconds: number; // this number will be the amount of seconds, with max_deaths
+}
+
+export function defaultPreferences(): UserPreferences {
+  return {
+    game_overrides: [],
+    multipliers: [],
+    sport_specific: {
+      plank: {
+        seconds: 180,
+      },
+    },
+    max_deaths: 10,
+  };
 }
