@@ -21,13 +21,7 @@ export const Streak = () => {
   const today_stripped = today.toISOString().split('T')[0]!; // YYYY-MM-DD
 
   useEffect(() => {
-    console.log('Called useEffect in Streak');
     if (lastUpdated === null || lastUpdated !== today_stripped) {
-      console.log(
-        'Streak useEeffect in if; lastUsed = ',
-        lastUpdated,
-        today_stripped
-      );
       var resp = new UserApi().fetchStreak();
 
       // get latest date in recentSports
