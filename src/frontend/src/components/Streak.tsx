@@ -9,19 +9,43 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { useStreakStore } from '../zustand/StreakStore';
 import { StreakData } from '../models/Streak';
 import { UserApi } from '../utils/api/Api';
+import { useRecentSportsStore } from '../zustand/RecentSportsState';
 
 export const Streak = () => {
+  const [lastUpdated, setLastUpdated] = useState<String | null>(null);
   const { user } = useUserStore();
   const { streak } = useStreakStore();
   const { theme } = useThemeStore();
+  const { recentSports } = useRecentSportsStore();
+  const today = new Date();
+  const today_stripped = today.toISOString().split('T')[0]!; // YYYY-MM-DD
 
   useEffect(() => {
-    new UserApi().fetchStreak();
-  }, [user]);
+    console.log('Called useEffect in Streak');
+    if (lastUpdated === null || lastUpdated !== today_stripped) {
+      console.log(
+        'Streak useEeffect in if; lastUsed = ',
+        lastUpdated,
+        today_stripped
+      );
+      var resp = new UserApi().fetchStreak();
 
-  if (!user || streak === null) {
-    return null;
-  }
+      // get latest date in recentSports
+      const latest_date = new Date(
+        recentSports?.data[recentSports!.data.length - 1]?.timedate ?? 0
+      )
+        .toISOString()
+        .split('T')[0]!;
+
+      // update if fetch was successfull
+      resp.then((answ) => {
+        if (answ == null) {
+          return;
+        }
+        setLastUpdated(latest_date);
+      });
+    }
+  }, [user, recentSports]);
 
   return (
     <Box
