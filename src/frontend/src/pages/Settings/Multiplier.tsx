@@ -11,8 +11,6 @@ export const MultiplierSettings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   const [sliderValue, setSliderValue] = React.useState<number>(1);
   var multipliers: Multiplier[] = [];
-  const min = 0;
-  const max = 4;
   const GAME = null; // null means global
 
   // set multiplier value from perferences
@@ -29,13 +27,10 @@ export const MultiplierSettings: React.FC = () => {
     }
   }, []);
 
-  var labels: number[] = [];
-  for (var i = min; i >= max; i += 0.5) {
-    labels.push(i);
-  }
   const saveMultiplier = (game: string | null, value: number) => {
     setSliderValue(Number(value));
     const newPreferences: UserPreferences = {
+      ...preferences,
       multipliers: [
         {
           game: game, // null means global
@@ -46,13 +41,39 @@ export const MultiplierSettings: React.FC = () => {
           (multiplier) => multiplier.game !== game
         ),
       ],
-      game_overrides: preferences.game_overrides,
     };
     setPreferences(newPreferences);
     setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
 
-  const { marks, stepValue } = GenerateMarks(4, min, max);
+  return (
+    <Box>
+      <SettingsSlider
+        min={0}
+        max={4}
+        saveValue={saveMultiplier}
+        setSliderValue={setSliderValue}
+        sliderValue={sliderValue}
+      ></SettingsSlider>
+    </Box>
+  );
+};
+
+export interface SettingsSliderProperties {
+  min: number;
+  max: number;
+  sliderValue: number;
+  setSliderValue: React.Dispatch<React.SetStateAction<number>>;
+  saveValue: (game: string | null, value: number) => void;
+}
+export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
+  min,
+  max,
+  sliderValue,
+  setSliderValue,
+  saveValue,
+}) => {
+  const { marks } = GenerateMarks(4, min, max);
 
   return (
     <Box
@@ -71,44 +92,37 @@ export const MultiplierSettings: React.FC = () => {
         value={sliderValue}
         type="number"
         onChange={(e) => {
-          const value = parseFloat(e.target.value) || 0;
+          const value = parseFloat(e.target.value) || min;
           setSliderValue(value);
-          saveMultiplier(GAME, value);
+          saveValue(null, value);
         }}
         inputProps={{
           step: 0.05,
           style: {
-            textAlign: 'center', // Center the number in the input
+            textAlign: 'center',
           },
         }}
         sx={{
           fontSize: '24px',
           justifyContent: 'center',
-          justifyItems: 'center',
           alignItems: 'center',
           display: 'flex',
-          alignContent: 'center',
         }}
-      ></OutlinedInput>
+      />
       <Slider
         size="medium"
         value={sliderValue}
         marks={marks}
         onChange={(e, value) =>
-          // store just in state
-          setSliderValue(Array.isArray(value) ? value[0] ?? 1 : value)
+          setSliderValue(Array.isArray(value) ? value[0] ?? min : value)
         }
         onChangeCommitted={(e, value) =>
-          // store to cookie
-          saveMultiplier(
-            GAME,
-            Array.isArray(value) ? value[0] ?? 1 : value ?? 1
-          )
+          saveValue(null, Array.isArray(value) ? value[0] ?? min : value ?? min)
         }
         min={min}
         max={max}
         step={0.05}
-      ></Slider>
+      />
     </Box>
   );
 };
