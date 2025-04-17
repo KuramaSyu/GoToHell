@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserPreferences } from '../models/Preferences';
+import { defaultPreferences, UserPreferences } from '../models/Preferences';
 
 interface PreferencesState {
   preferences: UserPreferences;
@@ -7,10 +7,7 @@ interface PreferencesState {
 }
 
 const usePreferenceStore = create<PreferencesState>((set) => ({
-  preferences: {
-    game_overrides: [],
-    multipliers: [],
-  },
+  preferences: defaultPreferences(),
   setPreferences: (preferences) => set({ preferences: preferences }),
 }));
 
