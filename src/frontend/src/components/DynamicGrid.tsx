@@ -115,7 +115,6 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
     };
     game_items.push(gameitem);
   }
-  // Always call useMediaQuery hooks unconditionally
   const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
   const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));

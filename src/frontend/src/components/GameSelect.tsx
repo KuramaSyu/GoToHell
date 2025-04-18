@@ -12,7 +12,7 @@ export const GameSelector = () => {
   return (
     <DynamicGameGrid
       items={validGames}
-      capacity={{ xs: 5, sm: 8, md: 11, lg: 14, xl: 17 }}
+      capacity={{ xs: 20, sm: 25, md: 11, lg: 14, xl: 17 }}
       selectedItem={theme.custom.themeName}
       onSelect={async (item) => {
         await setTheme(item);
@@ -27,12 +27,14 @@ export const PopNumber = ({
   stiffness,
   damping,
   mass,
+  fontsize,
 }: {
   value: number;
   font: string;
   damping: number;
   stiffness: number;
   mass: number;
+  fontsize?: string;
 }) => {
   // Start with an initial spring value (can be 0 or value)
   const springValue = useSpring(0, {
@@ -65,7 +67,7 @@ export const PopNumber = ({
         <motion.span
           key={index}
           style={{
-            fontSize: index === randomIndex ? '12vh' : '12vh',
+            fontSize: fontsize ?? '12vh',
           }}
         >
           {char}

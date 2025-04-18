@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Button, Box, Typography, ButtonGroup, alpha } from '@mui/material';
+import {
+  Button,
+  Box,
+  Typography,
+  ButtonGroup,
+  alpha,
+  useMediaQuery,
+} from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
@@ -51,9 +58,10 @@ export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
   const { sportResponse, setSportResponse } = useSportResponseStore();
-  const { calculator, setCalculator } = useCalculatorStore();
+  const { setCalculator } = useCalculatorStore();
   const { preferences } = usePreferenceStore();
 
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const buildDecoratorStack = () => {
     const BASE_SETTINGS = sportResponse ?? { sports: {}, games: {} };
 
@@ -113,6 +121,57 @@ export const SportSelector = () => {
   }
   console.log(sportResponse);
 
+  if (isMobile) {
+    // return only a grid with 5 per row, with only icons
+    return (
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: 2,
+          padding: 2,
+        }}
+      >
+        {Object.entries(sportResponse.sports).map(([sport, multiplier]) => {
+          const isSelected = sport === currentSport?.sport;
+
+          return (
+            <Button
+              onClick={() => {
+                currentSport.sport = sport;
+                currentSport.sport_multiplier = multiplier;
+                setSport(currentSport);
+              }}
+              variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
+              key={sport}
+              sx={{
+                backgroundColor: isSelected
+                  ? null
+                  : alpha(theme.palette.muted.dark, 0.2),
+                textShadow: isSelected
+                  ? null
+                  : `2px 2px 2px ${theme.palette.muted.dark}`,
+              }}
+            >
+              <img
+                src={sportIconMap[sport]}
+                alt={sport}
+                style={{
+                  width: 50,
+                  height: 50,
+                  filter: isSelected
+                    ? 'brightness(0) invert(1)'
+                    : theme.palette.mode === 'dark'
+                    ? 'brightness(0) invert(0.8)'
+                    : 'none',
+                }}
+              />
+            </Button>
+          );
+        })}
+      </Box>
+    );
+  }
   return (
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}

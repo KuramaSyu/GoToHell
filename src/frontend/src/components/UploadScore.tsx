@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Box, Typography, Snackbar, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Snackbar,
+  CircularProgress,
+  useMediaQuery,
+} from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountState } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
@@ -11,6 +17,7 @@ import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import useCalculatorStore from '../zustand/CalculatorStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -22,7 +29,9 @@ export const UploadScore = () => {
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts } = useTotalScoreStore();
   const { calculator } = useCalculatorStore();
+  const { theme } = useThemeStore();
 
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const OnUploadClick = async () => {
     if (!currentSport) {
       return setErrorMessage('Please select a Sport first');
@@ -88,6 +97,26 @@ export const UploadScore = () => {
     currentSport.game!,
     amount
   );
+  if (isMobile) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <AnimatedButton
+          onClick={OnUploadClick}
+          duration={amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0}
+        >
+          <SendIcon></SendIcon>
+        </AnimatedButton>
+      </Box>
+    );
+  }
   return (
     <Box>
       <AnimatedButton
@@ -104,7 +133,7 @@ export const UploadScore = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h4" fontWeight="bold">
+          <Typography sx={{ fontSize: '3vh' }} fontWeight="bold">
             Upload
           </Typography>
           <SendIcon></SendIcon>

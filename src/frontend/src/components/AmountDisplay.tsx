@@ -26,6 +26,7 @@ export const AmountDisplay = () => {
   const { preferences } = usePreferenceStore();
 
   const isXL = useMediaQuery(theme.breakpoints.up('xl'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   if (currentSport.game == null || currentSport.sport == null) {
     return <Box></Box>;
@@ -76,6 +77,7 @@ export const AmountDisplay = () => {
           <PopNumber
             value={computedValue}
             font={NUMBER_FONT}
+            fontsize={isMobile ? '6vh' : '12vh'}
             stiffness={1000}
             damping={300}
             mass={1}
@@ -88,7 +90,7 @@ export const AmountDisplay = () => {
             height: '100%',
             justifyContent: 'right',
             alignItems: 'right',
-            mt: { xs: -4, md: -4 }, // Remove weird padding from font
+            mt: { xs: -2, md: -4 }, // Remove weird padding from font
           }}
         >
           <Typography variant="h5" fontFamily={'inherit'}>

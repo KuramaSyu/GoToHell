@@ -6,9 +6,10 @@ import { SportScore } from '../models/Sport';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { PopNumber } from './GameSelect';
 import { useSportStore } from '../useSportStore';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { NUMBER_FONT } from '../statics';
 import { GameSelectionMap } from './SportSelect';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -21,7 +22,9 @@ export const TotalScoreDisplay = () => {
   const { currentSport } = useSportStore();
   const { user } = useUserStore();
   const { amounts, setAmounts, refreshTrigger } = useTotalScoreStore();
+  const { theme } = useThemeStore();
 
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   useEffect(() => {
     const fetchData = async () => {
       if (!user) {
@@ -70,6 +73,7 @@ export const TotalScoreDisplay = () => {
           stiffness={500}
           damping={200}
           mass={1}
+          fontsize={isMobile ? '6vh' : '12vh'}
         ></PopNumber>
       </Box>
       <Box
@@ -78,13 +82,13 @@ export const TotalScoreDisplay = () => {
           flexDirection: 'column',
           height: '100%',
           alignItems: 'left',
-          mt: { xs: -4, md: -4 }, // Remove weird padding from font
+          mt: { xs: -2, md: -4 }, // Remove weird padding from font
         }}
       >
-        <Typography variant="h5" fontFamily={'inherit'}>
+        <Typography sx={{ fontSize: '3vh' }} fontFamily={'inherit'}>
           {currentSportString}
         </Typography>
-        <Typography variant="subtitle1" fontFamily={'inherit'}>
+        <Typography sx={{ fontSize: '2vh' }} fontFamily={'inherit'}>
           in total
         </Typography>
       </Box>

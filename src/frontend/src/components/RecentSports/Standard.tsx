@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography, useMediaQuery } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSpring, useTransition, animated } from 'react-spring';
@@ -23,12 +23,23 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
   this_tab,
   current_tab,
 }) => {
+  const { theme } = useThemeStore();
+
   // number of items by display size
-  var numberItems = 5;
+  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+
+  var numberItems = 3;
+  if (isLgUp) {
+    numberItems = 4;
+  }
+  if (isXlUp) {
+    numberItems = 5;
+  }
+
   // use react mediaquery to get the current display si
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useUserStore();
-  const { theme } = useThemeStore();
   const { setErrorMessage } = useAppState();
   const { refreshTrigger, setRecentSports, recentSports } =
     useRecentSportsStore();
@@ -36,7 +47,7 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
 
   const getOffset = (recentSports: SportsApiResponse | null) => {
     if (recentSports && recentSports.data) {
-      return Math.max(0, recentSports.data.length - 5);
+      return Math.max(0, recentSports.data.length - numberItems);
     }
     return 0;
   };

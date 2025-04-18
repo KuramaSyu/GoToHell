@@ -43,3 +43,20 @@ progress of your friends
     }
   ];
   ```
+
+
+# Development
+## Installation & Start
+### Install Dependencies
+...
+### Starting Website:
+- Frontend:
+  ```bash
+  cd src/frontend
+  npm run dev
+  ```
+- Backend:
+  ```bash
+  cd src/backend/src
+  go run main.go
+  ```

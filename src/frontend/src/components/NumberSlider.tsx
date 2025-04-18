@@ -5,6 +5,7 @@ import {
   useTheme,
   Button,
   OutlinedInput,
+  useMediaQuery,
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
@@ -31,6 +32,8 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const max = Math.max(12, amount);
   const selectableMax = 2 ** 11;
 
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   // Slider Change
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
     setAmount(Math.min(newValue as number, selectableMax));
@@ -47,8 +50,8 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   const title = (
     <Typography
-      variant="h5"
       sx={{
+        fontSize: 'clamp(16px, 2vw, 24px)',
         fontWeight: 'bold',
         WebkitTextFillColor: `${theme.palette.text.primary}`,
         textShadow: `0 0 20px ${theme.palette.secondary.main}, 0 0 20px ${theme.palette.secondary.main}`,
@@ -144,6 +147,46 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const { marks } = GenerateMarks(12, min, max);
   const stepValue = 1;
 
+  if (isMobile) {
+    // Mobile view
+    return (
+      <Box
+        sx={{
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 1,
+        }}
+      >
+        {withInput ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            {customInput}
+          </Box>
+        ) : (
+          <Slider
+            value={amount}
+            onChange={handleSliderChange}
+            min={min}
+            max={max}
+            step={1}
+            aria-labelledby="number-slider"
+            marks={GenerateMarks(12, min, max).marks}
+          />
+        )}
+      </Box>
+    );
+  }
+
+  // Desktop view
   return (
     <Box
       sx={{
