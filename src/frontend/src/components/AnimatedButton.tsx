@@ -21,6 +21,7 @@ const AnimatedButton = ({
   const AnimatedBtn = styled(motion(Button))({
     position: 'relative',
     overflow: 'hidden',
+    width: '100%',
     borderWidth: '3px', // increased outline width
     color: theme.palette.common.white,
     fontWeight: 'bold',
