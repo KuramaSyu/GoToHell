@@ -11,12 +11,22 @@ import useAppState from '../../zustand/Error';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { Sport, SportsApiResponse } from '../../models/Sport';
+import { flushSync } from 'react-dom';
 
 const AnimatedBox = animated(Box);
 
-export const RecentSportsStandard = () => {
+export interface RecentSportStandardProps {
+  this_tab: number;
+  current_tab: number;
+}
+export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
+  this_tab,
+  current_tab,
+}) => {
+  // number of items by display size
+  var numberItems = 5;
+  // use react mediaquery to get the current display si
   const [loading, setLoading] = useState<boolean>(true);
-  const [pageOffset, setPageOffset] = useState<number>(0);
   const { user } = useUserStore();
   const { theme } = useThemeStore();
   const { setErrorMessage } = useAppState();
@@ -24,8 +34,19 @@ export const RecentSportsStandard = () => {
     useRecentSportsStore();
   const { users } = useUsersStore();
 
+  const getOffset = (recentSports: SportsApiResponse | null) => {
+    if (recentSports && recentSports.data) {
+      return Math.max(0, recentSports.data.length - 5);
+    }
+    return 0;
+  };
+
+  const [pageOffset, setPageOffset] = useState<number>(getOffset(recentSports));
+
   useEffect(() => {
     if (!user) return;
+    if (current_tab !== this_tab) return;
+    console.log(`call useffect loading: ${loading}`);
     const fetchResponse = async () => {
       const url = new URL(`${BACKEND_BASE}/api/sports`);
       // creat an array with the users id
@@ -45,13 +66,24 @@ export const RecentSportsStandard = () => {
         (a, b) =>
           new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
       );
-      setRecentSports(fetchedData);
+
+      flushSync(() => {
+        setPageOffset(getOffset(fetchedData));
+        setRecentSports(fetchedData);
+        setLoading(false);
+      });
       // Set offset to show the last 5 records if available.
-      setPageOffset(Math.max(0, fetchedData.data.length - 5));
-      setLoading(false);
     };
     fetchResponse();
-  }, [user, refreshTrigger, users]);
+  }, [user, refreshTrigger, users, current_tab]);
+
+  useEffect(() => {
+    return () => {
+      console.log('cleanup');
+      setPageOffset(0);
+      setLoading(true);
+    };
+  }, []);
 
   const deleteRecord = async (id: number) => {
     try {
@@ -67,7 +99,7 @@ export const RecentSportsStandard = () => {
       const filteredRecords = recentSports.data.filter(
         (item) => item.id !== id
       );
-      setPageOffset(Math.max(0, filteredRecords.length - 5));
+      setPageOffset(Math.max(0, filteredRecords.length - numberItems));
       setRecentSports({ ...recentSports, data: filteredRecords });
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
@@ -78,19 +110,20 @@ export const RecentSportsStandard = () => {
   };
 
   const records = recentSports ? recentSports.data : [];
-  const visibleRecords = records.slice(pageOffset, pageOffset + 5);
+
+  const visibleRecords = records.slice(pageOffset, pageOffset + numberItems);
+
+  const containerSpring = useSpring({
+    transform: `translateX(5px)`,
+    config: { tension: 220, friction: 26 },
+  });
 
   const transitions = useTransition(visibleRecords, {
     keys: (item: Sport) => item.id,
     from: { opacity: 0, transform: 'translateY(-20px)' },
     enter: { opacity: 1, transform: 'translateY(0px)' },
-    leave: { opacity: 0, transform: 'translateY(20px)' },
+    //leave: { opacity: 0, transform: 'translateY(20px)' },
     config: { tension: 220, friction: 20 },
-  });
-
-  const containerSpring = useSpring({
-    transform: `translateX(0px)`,
-    config: { tension: 220, friction: 26 },
   });
 
   if (!user) {

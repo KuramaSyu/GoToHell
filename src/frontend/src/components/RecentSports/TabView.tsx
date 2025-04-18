@@ -54,7 +54,13 @@ export const RecentSports = () => {
           </Tabs>
         </Box>
         <Box mt={2} display={'flex'} justifyContent="center" width={'100%'}>
-          {activeTab === 0 && <RecentSportsStandard />}
+          {activeTab === 0 && (
+            <RecentSportsStandard
+              key={`recent-${activeTab}`}
+              this_tab={0}
+              current_tab={activeTab}
+            />
+          )}
           {activeTab === 1 && (
             <Box sx={{ width: '100%' }}>
               <MultiplierSettings />
