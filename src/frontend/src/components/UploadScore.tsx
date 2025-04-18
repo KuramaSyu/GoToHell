@@ -97,21 +97,21 @@ export const UploadScore = () => {
     currentSport.game!,
     amount
   );
+  const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
   if (isMobile) {
     return (
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          height: '100%',
+          justifyItems: 'center',
+          alignItems: 'stretch',
+
+          height: '60%',
+          flexGrow: 1,
         }}
       >
-        <AnimatedButton
-          onClick={OnUploadClick}
-          duration={amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0}
-        >
+        <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
           <SendIcon></SendIcon>
         </AnimatedButton>
       </Box>
@@ -119,10 +119,7 @@ export const UploadScore = () => {
   }
   return (
     <Box>
-      <AnimatedButton
-        onClick={OnUploadClick}
-        duration={amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0}
-      >
+      <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
         <Box
           sx={{
             px: 5,
