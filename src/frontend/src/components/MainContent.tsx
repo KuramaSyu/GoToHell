@@ -49,7 +49,7 @@ const MainContent: React.FC = () => {
           </Box>
         </Box>
 
-        {/* box for middle col */}
+        {/* box for middle row */}
         <Box
           sx={{
             position: 'relative',
@@ -78,7 +78,14 @@ const MainContent: React.FC = () => {
             <Box sx={{ width: 3 / 4 }}>
               <NumberSlider withInput={theme.custom.themeName === 'custom'} />
             </Box>
-            <Box sx={{ width: 1 / 4 }}>
+            <Box
+              sx={{
+                width: 1 / 4,
+                display: 'flex',
+                alignItems: 'center',
+                px: 1,
+              }}
+            >
               <UploadScore />
             </Box>
           </Box>
