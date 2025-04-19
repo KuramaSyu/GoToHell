@@ -7,13 +7,20 @@ in what amount. Hence this projects goal is to not only show you your progress, 
 progress of your friends
 
 ### TODO:
+#### Done
+- [x] make plank formula changable in settings. 
 
-- move API calls to utils/api
-- add functions to these apis, which only fetch, if zustand store has nothing stored in it
-- make plank formula changable in settings. 
+#### Ongoing
+- [ ] move API calls to utils/api
+- [ ] add functions to these apis, which only fetch, if zustand store has nothing stored in it
+
+#### Features
 - presets, which set plank seconds and multiplier asking the user how much sports he want to do
 - 2 Buttons for Multiplier; one global one local
-- box for dragging workouts in
+- box for dragging workouts in. Upload multiple things at once
+- Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
+#### Fixes / QoL
+- number in custom and other inputs has anoying 0 which is not deletable. Maybe accept string, and convert string
 
 ### Things required to add a game:
 
