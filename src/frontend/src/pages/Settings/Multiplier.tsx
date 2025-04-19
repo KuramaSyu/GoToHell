@@ -10,7 +10,7 @@ import { SettingsSlider } from './SettingsSlider';
 
 export const MultiplierSettings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
-  const [sliderValue, setSliderValue] = React.useState<number>(1);
+  const [sliderValue, setSliderValue] = React.useState<number | null>(1);
   var multipliers: Multiplier[] = [];
   const GAME = null; // null means global
 
