@@ -5,6 +5,7 @@ import AppBackground from '../../components/AppBackground';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { MultiplierSettings } from './Multiplier';
 import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
+import { PlankOverride } from './PlankOverride';
 
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
@@ -77,6 +78,25 @@ export const Settings: React.FC = () => {
             Multipliers
           </Typography>
           <MultiplierSettings />
+        </Box>
+
+        {/* Plank Seconds */}
+        <Box
+          sx={{
+            width: 4 / 5,
+            flex: '0 1 auto',
+            justifyItems: 'center',
+            zIndex: 1,
+          }}
+        >
+          <Typography variant="h2" sx={{ zIndex: 1 }}>
+            Plank Settings
+          </Typography>
+          <Typography variant="subtitle1" sx={{ zIndex: 1 }}>
+            How many seconds plank is the maximum, you are able to? Usually 2 -
+            4 Minutes
+          </Typography>
+          <PlankOverride />
         </Box>
       </Box>
     </>
