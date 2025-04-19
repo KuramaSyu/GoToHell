@@ -7,6 +7,7 @@ export interface SettingsSliderProperties {
   sliderValue: number | null;
   setSliderValue: React.Dispatch<React.SetStateAction<number | null>>;
   saveValue: (game: string | null, value: number) => void;
+  step?: number;
 }
 export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
   min,
@@ -14,6 +15,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
   sliderValue,
   setSliderValue,
   saveValue,
+  step = 0.05,
 }) => {
   const { marks } = GenerateMarks(4, min, max);
 
@@ -39,7 +41,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
           saveValue(null, value);
         }}
         inputProps={{
-          step: 0.05,
+          step: step,
           style: {
             textAlign: 'center',
           },
@@ -55,15 +57,11 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
         size="medium"
         value={sliderValue ?? min}
         marks={marks}
-        onChange={(e, value) =>
-          setSliderValue(Array.isArray(value) ? value[0] ?? min : value)
-        }
-        onChangeCommitted={(e, value) =>
-          saveValue(null, Array.isArray(value) ? value[0] ?? min : value ?? min)
-        }
+        onChange={(e, value) => setSliderValue(value)}
+        onChangeCommitted={(e, value) => saveValue(null, value)}
         min={min}
         max={max}
-        step={0.05}
+        step={step}
       />
     </Box>
   );
