@@ -1,8 +1,11 @@
+import { Box, OutlinedInput, Slider } from '@mui/material';
+import { GenerateMarks } from '../../utils/Marks';
+
 export interface SettingsSliderProperties {
   min: number;
   max: number;
-  sliderValue: number;
-  setSliderValue: React.Dispatch<React.SetStateAction<number>>;
+  sliderValue: number | null;
+  setSliderValue: React.Dispatch<React.SetStateAction<number | null>>;
   saveValue: (game: string | null, value: number) => void;
 }
 export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
@@ -50,7 +53,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
       />
       <Slider
         size="medium"
-        value={sliderValue}
+        value={sliderValue ?? min}
         marks={marks}
         onChange={(e, value) =>
           setSliderValue(Array.isArray(value) ? value[0] ?? min : value)
