@@ -3,24 +3,31 @@
 A project, which aims to help me, to make sport while playing games, with the main idea, of
 making a specific amount of sport, whenever you die in a game.
 The main goal was, to replace a Google Sheet, where we wrote in what sport we did
-in what amount. Hence this projects goal is to not only show you your progress, but also the
+in what amount. Hence, this projects goal is to not only show you your progress, but also the
 progress of your friends
+**Important:** Without the discord login, this website is basically useless! I decided to use
+Discord, since most people playing games in their leisure time, including me, use it. Hence, I don't need
+to think about storing passwords, and I also have access to their Avatars, which make the site more appealing.
+
+**Is it somewhere running?**
+Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.inu-the-bot.com)
+
 
 ### TODO:
 #### Done
-- [x] make plank formula changable in settings. 
+- [x] make plank formula changeable in settings. 
 
 #### Ongoing
-- [ ] move API calls to utils/api
-- [ ] add functions to these apis, which only fetch, if zustand store has nothing stored in it
+- [ ] move API calls to utils/API
+- [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
 
 #### Features
-- presets, which set plank seconds and multiplier asking the user how much sports he want to do
+- presets, which set plank seconds and multiplier asking the user how many sports he wants to do
 - 2 Buttons for Multiplier; one global one local
 - box for dragging workouts in. Upload multiple things at once
 - Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
 #### Fixes / QoL
-- number in custom and other inputs has anoying 0 which is not deletable. Maybe accept string, and convert string
+- number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string
 
 ### Things required to add a game:
 
