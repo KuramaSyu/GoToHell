@@ -28,6 +28,8 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
 #### Fixes / QoL
 - number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string
+#### Ideas
+- [ ] Linking, who invited who, displaying a tree of all users, showing you, how you probably get here
 
 ### Things required to add a game:
 
