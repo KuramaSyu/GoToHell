@@ -7,6 +7,7 @@ import Latex from 'react-latex-next';
 import Hexagon from '../components/Shapes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { NUMBER_FONT } from '../statics';
+import usePreferenceStore from '../zustand/PreferenceStore';
 /**
  * A calculator for the amount of exercises of a given sport a user
  * has to do. This is effected by game and amount of deaths.
@@ -404,19 +405,37 @@ export const wrapWithColor = (content: string, color: string): string => {
  * Decorator for the plank, which uses a custom formula to calculate the amount of planks
  */
 export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
+  get_max_seconds_from_preferences(): number {
+    const preferences = usePreferenceStore.getState().preferences;
+    const max_seconds = preferences.sport_specific.plank.seconds ?? 180;
+    return max_seconds;
+  }
+
+  strength_factor(deaths: number, game: string, sport: string): number {
+    const max_seconds = this.get_max_seconds_from_preferences();
+    // initially, asume, 10 deaths are maximum
+    return max_seconds / this.log_formula(10, game, sport, 1, 1);
+  }
+
+  log_formula(
+    deaths: number,
+    game: string,
+    sport: string,
+    game_base: number | null,
+    multiplier: number | null
+  ): number {
+    game_base = game_base ?? this.get_game_base(game);
+    multiplier =
+      multiplier ?? this.get_multiplier(sport, game)?.multiplier ?? 1;
+    return Math.log(1 + deaths * multiplier * game_base) / Math.log(1.75);
+  }
   calculate_amount(sport: string, game: string, deaths: number): number {
     const safeDeaths =
       typeof deaths === 'number' && !isNaN(deaths) ? deaths : 0;
     if (sport == 'plank') {
       return (
-        (42 *
-          Math.log(
-            1 +
-              safeDeaths *
-                (this.get_multiplier(sport, game)?.multiplier ?? 1) *
-                this.get_game_base(game)
-          )) /
-        Math.log(1.75)
+        this.strength_factor(safeDeaths, game, sport) *
+        this.log_formula(safeDeaths, game, sport, null, null)
       );
     }
     return this.decorated.calculate_amount(sport, game, safeDeaths);
@@ -429,6 +448,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     const theme = useThemeStore.getState().theme;
     const text_color = lighten(theme.palette.muted.main, 0.5);
     const multiplier = this.get_multiplier(sport, game)?.multiplier;
+    const strength_factor = this.strength_factor(deaths, game, sport);
     const multiplier_latex = multiplier
       ? `\\overbrace{\\times\\ ${multiplier}}^{multiplier}`
       : ``;
@@ -497,7 +517,9 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
               flexShrink: 0,
             }}
           >
-            <Latex>{`$\\underbrace{42\\ \\cdot}_{strength} log_{\\frac{7}{4}}{1 \\overbrace{+${deaths}}^{deaths} ${game_base_latex} ${multiplier_latex}}$`}</Latex>
+            <Latex>{`$\\underbrace{${strength_factor.toFixed(
+              1
+            )}\\ \\cdot}_{strength} log_{\\frac{7}{4}}{1 \\overbrace{+${deaths}}^{deaths} ${game_base_latex} ${multiplier_latex}}$`}</Latex>
           </Box>
         </Box>
       </Box>
