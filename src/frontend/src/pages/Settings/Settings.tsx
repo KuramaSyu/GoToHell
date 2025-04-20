@@ -6,7 +6,14 @@ import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { MultiplierSettings } from './Multiplier';
 import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
 import { PlankOverride } from './PlankOverride';
+import { SportDragDrop } from './SportDragDrop';
 
+const SettingsBoxSX = {
+  width: 4 / 5,
+  flex: '0 1 auto',
+  justifyItems: 'center',
+  zIndex: 1,
+};
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
 
@@ -36,13 +43,9 @@ export const Settings: React.FC = () => {
 
         <Box
           sx={{
-            width: 4 / 5,
-            flex: '0 1 auto',
-            justifyItems: 'center',
-            zIndex: 1,
-
             display: 'flex',
             flexDirection: 'column',
+            ...SettingsBoxSX,
           }}
         >
           <Typography variant="h2" sx={{ zIndex: 1 }}>
@@ -50,8 +53,6 @@ export const Settings: React.FC = () => {
           </Typography>
           <Box
             sx={{
-              flex: '0 1 auto',
-              justifyItems: 'center',
               backdropFilter: 'blur(25px)',
               borderRadius: 5,
               display: 'flex',
@@ -66,14 +67,7 @@ export const Settings: React.FC = () => {
 
         {/* Grid with game multipliers */}
 
-        <Box
-          sx={{
-            width: 4 / 5,
-            flex: '0 1 auto',
-            justifyItems: 'center',
-            zIndex: 1,
-          }}
-        >
+        <Box sx={SettingsBoxSX}>
           <Typography variant="h2" sx={{ zIndex: 1 }}>
             Multipliers
           </Typography>
@@ -81,14 +75,7 @@ export const Settings: React.FC = () => {
         </Box>
 
         {/* Plank Seconds */}
-        <Box
-          sx={{
-            width: 4 / 5,
-            flex: '0 1 auto',
-            justifyItems: 'center',
-            zIndex: 1,
-          }}
-        >
+        <Box sx={SettingsBoxSX}>
           <Typography variant="h2" sx={{ zIndex: 1 }}>
             Plank Settings
           </Typography>
@@ -97,6 +84,13 @@ export const Settings: React.FC = () => {
             4 Minutes
           </Typography>
           <PlankOverride />
+        </Box>
+        {/* Sport Select */}
+        <Box sx={SettingsBoxSX}>
+          <Typography variant="h2" sx={{ zIndex: 1 }}>
+            Sport Select
+          </Typography>
+          <SportDragDrop></SportDragDrop>
         </Box>
       </Box>
     </>
