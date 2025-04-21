@@ -20,7 +20,13 @@ export interface UserPreferences {
   game_overrides: OverrideSportDefinition[];
   multipliers: Multiplier[];
   sport_specific: SportSpecific;
+  ui: UIPreferences;
   max_deaths: number;
+}
+
+export interface UIPreferences {
+  displayedGames: string[];
+  displayedSports: string[];
 }
 
 export interface SportSpecific {
