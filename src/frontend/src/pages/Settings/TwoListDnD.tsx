@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Paper, Box, Typography, alpha } from '@mui/material';
+import { Paper, Box, Typography, alpha, Grid } from '@mui/material';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import zIndex from '@mui/material/styles/zIndex';
 import { useThemeStore } from '../../zustand/useThemeStore';
@@ -57,6 +57,7 @@ const ListSX = {
   minWidth: 200,
   minHeight: 500,
   p: 1,
+  backgroundColor: alpha('#000000', 0.2),
 };
 
 export interface TwoListDnDProps {
@@ -103,7 +104,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
    * @returns True, if the list does NOT contain the item.
    */
   const PreventDoublePredicate = (item: string, list: string[]): Boolean => {
-    return list.includes(item);
+    return !list.includes(item);
   };
   /**
    * Moves a dragged element from source to destination list. If source and destination
@@ -115,13 +116,20 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     const pred = PreventDoublePredicate;
-
+    console.log(
+      `in DnD event: active: ${JSON.stringify(active)}, over: ${JSON.stringify(
+        over
+      )}`
+    );
     if (!over) return;
 
-    const activeList = findList(active.id as string); // source list
-    const overList = findList(over.id as string); // destination list
+    var activeList = findList(active.id as string); // source list
+    var overList = findList(over.id as string); // destination list
 
-    if (!activeList || !overList) return;
+    if (over.id === 'listB' || over.id === 'listA') {
+      activeList = over.id === 'listB' ? 'A' : 'B';
+      overList = over.id === 'listB' ? 'B' : 'A';
+    }
 
     // get setters and getters
     const sourceList = activeList === 'A' ? listA : listB;
@@ -138,7 +146,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
     } else {
       // Move item between lists
       // return if item is already in that list
-      // if (pred(active.id as string, targetList) === false) return;
+      if (pred(active.id as string, targetList) === false) return;
       const newSource = sourceList.filter((item) => item !== active.id);
       const overIndex =
         targetList.length == 0 ? 0 : targetList.indexOf(over.id as string);
@@ -151,6 +159,18 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
       setTargetList(newTarget);
     }
   };
+
+  const centeredDropHereBox = (
+    <Box
+      sx={{
+        alignContent: 'center',
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      <Typography align={'center'}>Drop here</Typography>
+    </Box>
+  );
 
   // TODO: drag for empty target not working
   return (
@@ -166,41 +186,31 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
       </DragOverlay>
       <Box display="flex" gap={4}>
         {/* List A */}
-        <Box
-          sx={{
-            ...ListSX,
-            backgroundColor: alpha('#000000', 0.2),
-          }}
-        >
+        <Box sx={ListSX}>
           <Typography variant="h6">Available Sportkinds</Typography>
-
-          <SortableContext items={listA} strategy={verticalListSortingStrategy}>
-            {listA.length > 0 ? (
-              listA.map((id) => <SortableItem key={id} id={id} />)
-            ) : (
-              <p>drop here</p>
-            )}
-          </SortableContext>
+          <DroppableArea id={'listA'}>
+            <SortableContext
+              items={listA}
+              strategy={verticalListSortingStrategy}
+            >
+              {listA.length > 0
+                ? listA.map((id) => <SortableItem key={id} id={id} />)
+                : centeredDropHereBox}
+            </SortableContext>
+          </DroppableArea>
         </Box>
 
         {/* List B */}
-        <Box
-          sx={{
-            ...ListSX,
-            backgroundColor: alpha('#000000', 0.2),
-          }}
-        >
+        <Box sx={ListSX}>
           <Typography variant="h6">Shown Sportkinds</Typography>
           <DroppableArea id={'listB'}>
             <SortableContext
               items={listB}
               strategy={verticalListSortingStrategy}
             >
-              {listB.length > 0 ? (
-                listB.map((id) => <SortableItem key={id} id={id} />)
-              ) : (
-                <p>Drop here</p>
-              )}
+              {listB.length > 0
+                ? listB.map((id) => <SortableItem key={id} id={id} />)
+                : centeredDropHereBox}
             </SortableContext>
           </DroppableArea>
         </Box>
