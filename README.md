@@ -29,6 +29,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### Fixes / QoL
 - number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string
 #### Ideas
+- [ ] Go Loading icon
 - [ ] Linking, who invited who, displaying a tree of all users, showing you, how you probably get here
 
 ### Things required to add a game:
