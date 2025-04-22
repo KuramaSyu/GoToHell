@@ -28,9 +28,11 @@ export const SportDragDrop = () => {
   const { sportResponse } = useSportResponseStore();
   const { theme } = useThemeStore();
   const { preferences, setPreferences } = usePreferenceStore();
-  const [listA, setListA] = useState(Object.keys(sportResponse?.sports ?? {}));
   const [listB, setListB] = useState<string[]>(
-    preferences.ui.displayedGames ?? []
+    preferences.ui.displayedSports ?? []
+  );
+  const [listA, setListA] = useState(
+    Object.keys(sportResponse?.sports ?? {}).filter((v) => !listB.includes(v))
   );
 
   const saveListsToCookies = (
