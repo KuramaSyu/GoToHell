@@ -116,11 +116,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     const pred = PreventDoublePredicate;
-    console.log(
-      `in DnD event: active: ${JSON.stringify(active)}, over: ${JSON.stringify(
-        over
-      )}`
-    );
+
     if (!over) return;
 
     var activeList = findList(active.id as string); // source list
