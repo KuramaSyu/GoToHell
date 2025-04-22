@@ -20,7 +20,13 @@ export interface UserPreferences {
   game_overrides: OverrideSportDefinition[];
   multipliers: Multiplier[];
   sport_specific: SportSpecific;
+  ui: UIPreferences;
   max_deaths: number;
+}
+
+export interface UIPreferences {
+  displayedGames: string[] | null; // null means, all Games will be shown
+  displayedSports: string[] | null; // null means, all Sports will be shown
 }
 
 export interface SportSpecific {
@@ -35,6 +41,10 @@ export function defaultPreferences(): UserPreferences {
   return {
     game_overrides: [],
     multipliers: [],
+    ui: {
+      displayedGames: null,
+      displayedSports: null,
+    },
     sport_specific: {
       plank: {
         seconds: 180,
