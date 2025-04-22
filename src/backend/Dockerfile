@@ -11,8 +11,11 @@ RUN go mod download
 # Copy the rest of the source code
 COPY . .
 
+# Set Gin to Release
+ENV GIN_RELEASE=1
+
 # Build the binary.
-# Since your main file is in src/main.go, we build from the ./src directory.
+# Since the main file is in src/main.go, we build from the ./src directory.
 # The binary is explicitly named "server" via the -o flag.
 RUN CGO_ENABLED=1 go build -o server ./src
 
