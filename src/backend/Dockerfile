@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Set Gin to Release
-ENV GIN_RELEASE=1
+ENV GIN_MODE=release
 
 # Build the binary.
 # Since the main file is in src/main.go, we build from the ./src directory.
@@ -37,6 +37,9 @@ COPY --from=builder /app/server .
 
 # Expose the port your server listens on (assumed 8080)
 EXPOSE 8080
+
+# Set Gin to Release
+ENV GIN_MODE=release
 
 # Run the Go server
 CMD ["./server"]
