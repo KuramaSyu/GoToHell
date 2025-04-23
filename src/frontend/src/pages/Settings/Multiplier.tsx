@@ -6,11 +6,13 @@ import { getCookie, setCookie } from '../../utils/cookies';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { Multiplier, UserPreferences } from '../../models/Preferences';
 import { GenerateMarks } from '../../utils/Marks';
-import { SettingsSlider } from './SettingsSlider';
+import { MultiplierSlieder, SettingsSlider } from './SettingsSlider';
+import { useThemeStore } from '../../zustand/useThemeStore';
 
 export const MultiplierSettings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   const [sliderValue, setSliderValue] = React.useState<number | null>(1);
+  const { theme } = useThemeStore();
   var multipliers: Multiplier[] = [];
   const GAME = null; // null means global
 
@@ -49,13 +51,13 @@ export const MultiplierSettings: React.FC = () => {
 
   return (
     <Box>
-      <SettingsSlider
+      <MultiplierSlieder
         min={0}
         max={4}
         saveValue={saveMultiplier}
         setSliderValue={setSliderValue}
         sliderValue={sliderValue}
-      ></SettingsSlider>
+      ></MultiplierSlieder>
     </Box>
   );
 };
