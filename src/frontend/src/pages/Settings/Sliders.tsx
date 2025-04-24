@@ -9,7 +9,14 @@ import {
 import { GenerateMarks } from '../../utils/Marks';
 import { Add, Remove } from '@mui/icons-material';
 import { useThemeStore } from '../../zustand/useThemeStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useUsedMultiplierStore } from '../../zustand/usedMultiplierStore';
+import {
+  DefaultSportsCalculator,
+  MultiplierDecorator,
+} from '../../utils/SportCalculator';
+import { useSportResponseStore } from '../../zustand/sportResponseStore';
+import usePreferenceStore from '../../zustand/PreferenceStore';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -104,15 +111,56 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
 }) => {
   const { marks } = GenerateMarks(4, min, max);
   const { theme } = useThemeStore();
-  const [selectedBtn, setSelectedBtn] = useState<null | string>(null); // null means global
+  const { usedMultiplier, setUsedMultiplier } = useUsedMultiplierStore(); // null means global
+  const { preferences } = usePreferenceStore();
 
+  // update sliderValue if another game is selected
+  useEffect(() => {
+    if (usedMultiplier !== null && usedMultiplier !== undefined)
+      setUsedMultiplier(theme.custom.themeName);
+    UpdateSliderValue();
+  }, [theme]);
+
+  /**
+   * returns the color of the button, depending if it's selected or not
+   * @param btn same as usedMultiplier
+   */
   const getColor = (btn: null | string) => {
-    if (btn == selectedBtn) {
+    if (btn == usedMultiplier) {
       return theme.palette.secondary.main;
     } else {
       return null;
     }
   };
+
+  /**
+   * Updates the sliderValue by useing the MultiplierDecorator.
+   */
+  const UpdateSliderValue = () => {
+    const multiplierCalculator = new MultiplierDecorator(
+      new DefaultSportsCalculator(
+        useSportResponseStore.getState().sportResponse ??
+          useSportResponseStore.getState().emptySportsResponse()
+      ),
+      preferences.multipliers
+    );
+    const multiplier = multiplierCalculator.get_multiplier(
+      '',
+      theme.custom.themeName
+    );
+    setSliderValue(multiplier?.multiplier ?? 1);
+  };
+
+  /**
+   * This function updates the usedMultiplierStore and then sets the slider value. The Slider value will
+   * be calcuated with the MultiplierDecorator, to get the right multiplier, depending on the usedMultiplierStore.
+   * If the Decorator returns null, 1 will be used as value
+   */
+  const setUsedMultiplierAndUpdateValue = (usedMultiplier: string | null) => {
+    setUsedMultiplier(usedMultiplier);
+    UpdateSliderValue();
+  };
+
   return (
     <Box
       sx={{
@@ -182,14 +230,16 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         }}
       >
         <Button
-          onClick={() => setSelectedBtn(null)}
+          onClick={() => setUsedMultiplierAndUpdateValue(null)}
           sx={{ backgroundColor: getColor(null) }}
         >
           Global
         </Button>
         <Button
           sx={{ backgroundColor: getColor(theme.custom.themeName) }}
-          onClick={() => setSelectedBtn(theme.custom.themeName)}
+          onClick={() =>
+            setUsedMultiplierAndUpdateValue(theme.custom.themeName)
+          }
         >
           {theme.custom.themeName}
         </Button>
@@ -198,8 +248,10 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         size="medium"
         value={sliderValue ?? min}
         marks={marks}
-        onChange={(e, value) => setSliderValue(value)}
-        onChangeCommitted={(e, value) => saveValue(null, value)}
+        onChange={(_e, value) => setSliderValue(value)}
+        onChangeCommitted={(_e, value) =>
+          saveValue(usedMultiplier ?? null, value)
+        }
         min={min}
         max={max}
         step={step}
