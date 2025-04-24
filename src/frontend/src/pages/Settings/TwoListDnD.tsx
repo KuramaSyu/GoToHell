@@ -65,6 +65,8 @@ export interface TwoListDnDProps {
   setListA: React.Dispatch<React.SetStateAction<string[]>>;
   listB: string[];
   setListB: React.Dispatch<React.SetStateAction<string[]>>;
+  nameA: string;
+  nameB: string;
   saveChange: (listA: string[], listB: string[]) => void;
 }
 
@@ -74,6 +76,8 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
   listB,
   setListB,
   saveChange,
+  nameA,
+  nameB,
 }) => {
   const { theme } = useThemeStore();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -183,7 +187,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
       <Box display="flex" gap={4}>
         {/* List A */}
         <Box sx={ListSX}>
-          <Typography variant="h6">Available Sportkinds</Typography>
+          <Typography variant="h6">{nameA}</Typography>
           <DroppableArea id={'listA'}>
             <SortableContext
               items={listA}
@@ -198,7 +202,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
 
         {/* List B */}
         <Box sx={ListSX}>
-          <Typography variant="h6">Shown Sportkinds</Typography>
+          <Typography variant="h6">{nameB}</Typography>
           <DroppableArea id={'listB'}>
             <SortableContext
               items={listB}
