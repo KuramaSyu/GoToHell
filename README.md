@@ -12,23 +12,31 @@ to think about storing passwords, and I also have access to their Avatars, which
 **Is it somewhere running?**
 Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.inu-the-bot.com)
 
-
 ### TODO:
+
 #### Done
-- [x] make plank formula changeable in settings. 
+
+- [x] make plank formula changeable in settings.
+- [x] Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
 
 #### Ongoing
+
 - [ ] move API calls to utils/API
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
 
 #### Features
-- presets, which set plank seconds and multiplier asking the user how many sports he wants to do
+
+- Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
 - 2 Buttons for Multiplier; one global one local
 - box for dragging workouts in. Upload multiple things at once
-- Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
+
 #### Fixes / QoL
-- number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string
+
+- Number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string
+- Show all multipliers in the settings
+
 #### Ideas
+
 - [ ] Go Loading icon
 - [ ] Linking, who invited who, displaying a tree of all users, showing you, how you probably get here
 
@@ -61,12 +69,16 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   ];
   ```
 
-
 # Development
+
 ## Installation & Start
+
 ### Install Dependencies
+
 ...
+
 ### Starting Website:
+
 - Frontend:
   ```bash
   cd src/frontend
