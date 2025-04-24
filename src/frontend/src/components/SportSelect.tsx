@@ -67,6 +67,19 @@ export const SportSelector = () => {
   }
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  /**
+   * builds up the Decorator Stack, which is used to calculate the amount of exercies
+   * and display it's latex.
+   *
+   * The Decorator Stack contains:
+   *  - `DefaultCalculator` for backend defaults
+   *  - `OverrideSportDecorator` for custom Sport overrides
+   *  - `DeathDecorator` to include deaths in LaTeX calculation
+   *  - `MultiplierDecorator` to include Multiplier Settings
+   *  - `HumanLockDecorator` for custom Plank formula
+   *  - `ExactlyOneDecorator` (only when game is custom) to set all previous values to 1
+   */
   const buildDecoratorStack = () => {
     const BASE_SETTINGS = sportResponse ?? { sports: {}, games: {} };
 
