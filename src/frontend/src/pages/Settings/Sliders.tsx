@@ -121,6 +121,13 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     UpdateSliderValue();
   }, [theme]);
 
+  // when selecting, set from undefined to null
+  useEffect(() => {
+    if (usedMultiplier === undefined) {
+      setUsedMultiplier(null);
+    }
+  });
+
   /**
    * returns the color of the button, depending if it's selected or not
    * @param btn same as usedMultiplier
@@ -200,8 +207,8 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           alignItems: 'center',
           display: 'flex',
           width: '10%', // Set width to 1/10
-          minWidth: '30px', // Minimum width of 20px
-          maxWidth: '200px', // Maximum width of 100px
+          minWidth: '100px', // Minimum width of 20px
+          maxWidth: '300px', // Maximum width of 100px
         }}
       />
 
