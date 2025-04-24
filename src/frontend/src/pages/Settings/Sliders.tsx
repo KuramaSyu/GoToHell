@@ -196,6 +196,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         }}
       />
 
+      {/* Col for Add and Remove button */}
       <Box
         sx={{
           display: 'flex',
@@ -212,6 +213,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         >
           <Add></Add>
         </Button>
+
         <Button
           sx={{
             backgroundColor: alpha('#000000', 0.2),
@@ -221,6 +223,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           <Remove></Remove>
         </Button>
       </Box>
+      {/* Col for Global or Game Switch */}
       <Box
         sx={{
           display: 'flex',
@@ -231,12 +234,20 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       >
         <Button
           onClick={() => setUsedMultiplierAndUpdateValue(null)}
-          sx={{ backgroundColor: getColor(null) }}
+          sx={{
+            backgroundColor: getColor(null),
+            whiteSpace: 'nowrap', // Prevent text wrapping
+            justifyContent: 'center',
+          }}
         >
           Global
         </Button>
         <Button
-          sx={{ backgroundColor: getColor(theme.custom.themeName) }}
+          sx={{
+            backgroundColor: getColor(theme.custom.themeName),
+            whiteSpace: 'nowrap', // Prevent text wrapping
+            justifyContent: 'center',
+          }}
           onClick={() =>
             setUsedMultiplierAndUpdateValue(theme.custom.themeName)
           }
