@@ -16,7 +16,7 @@ export const MultiplierSettings: React.FC = () => {
   var multipliers: Multiplier[] = [];
   const GAME = null; // null means global
 
-  // set multiplier value from perferences
+  // load multiplier value from perferences
   useEffect(() => {
     // find global multiplier
     multipliers = preferences.multipliers;
@@ -31,8 +31,7 @@ export const MultiplierSettings: React.FC = () => {
   }, []);
 
   const saveMultiplier = (game: string | null, value: number) => {
-    setSliderValue(Number(value));
-    const newPreferences: UserPreferences = {
+    var newPreferences: UserPreferences = {
       ...preferences,
       multipliers: [
         {
@@ -45,6 +44,15 @@ export const MultiplierSettings: React.FC = () => {
         ),
       ],
     };
+
+    // clear all game overrides, where the multiplier is 1, since default is 1
+    // and this would make the cookie unnecessarily big
+    newPreferences = {
+      ...newPreferences,
+      multipliers: newPreferences.multipliers.filter((v) => v.multiplier !== 1),
+    };
+    setSliderValue(Number(value));
+
     setPreferences(newPreferences);
     setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
