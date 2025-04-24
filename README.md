@@ -37,6 +37,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - Show all multipliers in the settings
 - some pictures (league ezreal & riven are private)
 - ordering for sports does not work
+- reparate repository for background pictures
 
 #### Ideas
 
