@@ -43,6 +43,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 - [ ] Go Loading icon
 - [ ] Linking, who invited who, displaying a tree of all users, showing you, how you probably get here
+- [ ] Websocket connection, saying when timeline got an update (api request -> Observer -> listener for ongoing connections (maybe even directly send data?))
 
 ### Things required to add a game:
 
