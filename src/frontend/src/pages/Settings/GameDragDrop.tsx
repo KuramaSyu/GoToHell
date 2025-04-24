@@ -25,9 +25,6 @@ import { UserPreferences } from '../../models/Preferences';
 import { setCookie } from '../../utils/cookies';
 
 export const GameDragDrop = () => {
-  const { sportResponse } = useSportResponseStore();
-  const { theme } = useThemeStore();
-
   const { preferences, setPreferences } = usePreferenceStore();
   // use preferred games, or in case of null, all games
   const [shownGames, setShownGames] = useState<string[]>(
