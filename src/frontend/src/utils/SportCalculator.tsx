@@ -8,6 +8,7 @@ import Hexagon from '../components/Shapes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { NUMBER_FONT } from '../statics';
 import usePreferenceStore from '../zustand/PreferenceStore';
+import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 /**
  * A calculator for the amount of exercises of a given sport a user
  * has to do. This is effected by game and amount of deaths.
@@ -173,17 +174,46 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
     this.multipliers = multipliers;
   }
 
+  /**
+   * Depending on the usedMultiplierStore, either the
+   * game specific multiplier or global multiplier will be returned
+   *
+   * @param sport the currently selected sport
+   * @param game the currently selected game
+   * @returns the multiplier.
+   */
   get_multiplier(sport: string, game: string): Multiplier | null {
-    // find multiplier for the specific game and sport
-    var multipliers = this.multipliers.filter(
-      (entry) => entry.game == game && entry.sport == sport
-    );
+    var multipliers: Multiplier[] = [];
+    // CURRENTLY NOT IN USE! -- find multiplier for the specific game and sport
+    // var multipliers = this.multipliers.filter(
+    //   (entry) => entry.game == game && entry.sport == sport
+    // );
 
-    // TODO: check for global game or sport multipliers
-    // if multiplier is not found, check for the global multiplier
-    multipliers = this.multipliers.filter((entry) => entry.game == null);
+    const getGlobalMultipliers = () =>
+      this.multipliers.filter((entry) => entry.game == null);
+    const getGameSpecificMultipliers = () =>
+      (multipliers = this.multipliers.filter((entry) => entry.game == game));
+
+    // TODO: check for global sport multiplier
+
+    const usedMultiplier = useUsedMultiplierStore.getState().usedMultiplier;
+
+    if (usedMultiplier === null) {
+      // global multiplier
+      multipliers = getGlobalMultipliers();
+    } else if (usedMultiplier === undefined) {
+      // game specific multiplier or global multiplier in this order
+      multipliers = getGameSpecificMultipliers();
+      if (multipliers.length === 0) {
+        multipliers = getGlobalMultipliers();
+      }
+    } else {
+      // return game specific multiplier
+      multipliers = getGameSpecificMultipliers();
+    }
 
     if (multipliers[0] !== null && multipliers[0]?.multiplier !== 1) {
+      // return the first found multiplier, if it's not 1
       return multipliers[0]!;
     }
     return null;
