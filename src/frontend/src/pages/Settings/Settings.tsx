@@ -7,6 +7,7 @@ import { MultiplierSettings } from './Multiplier';
 import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
 import { PlankOverride } from './PlankOverride';
 import { SportDragDrop } from './SportDragDrop';
+import { GameDragDrop } from './GameDragDrop';
 
 const SettingsBoxSX = {
   width: 4 / 5,
@@ -91,6 +92,13 @@ export const Settings: React.FC = () => {
             Sport Select
           </Typography>
           <SportDragDrop></SportDragDrop>
+        </Box>
+        {/* Game Select */}
+        <Box sx={SettingsBoxSX}>
+          <Typography variant="h2" sx={{ zIndex: 1 }}>
+            Game Select
+          </Typography>
+          <GameDragDrop></GameDragDrop>
         </Box>
       </Box>
     </>
