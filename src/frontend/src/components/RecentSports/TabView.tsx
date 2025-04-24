@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Box, useMediaQuery } from '@mui/material';
+import { Tabs, Tab, Box, useMediaQuery, alpha } from '@mui/material';
 import { RecentSportsStandard } from './Standard';
 import { MultiplierSettings } from '../../pages/Settings/Multiplier';
 import { useSportStore } from '../../useSportStore';
@@ -45,6 +45,14 @@ export const RecentSports = () => {
             onChange={handleChange}
             textColor="primary"
             indicatorColor="primary"
+            sx={{
+              backgroundColor: alpha(
+                theme.palette.getContrastText(theme.palette.primary.main),
+                0.2
+              ),
+              borderRadius: '50px',
+              padding: '5px',
+            }}
           >
             <Tab
               label="Recent Activities"
