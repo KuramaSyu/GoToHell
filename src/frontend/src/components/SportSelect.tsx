@@ -32,6 +32,7 @@ import dipSVG from '../assets/sports-dip.svg';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
+import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -60,6 +61,7 @@ export const SportSelector = () => {
   const { sportResponse, setSportResponse } = useSportResponseStore();
   const { setCalculator } = useCalculatorStore();
   const { preferences } = usePreferenceStore();
+  const { usedMultiplier } = useUsedMultiplierStore();
 
   function isInPreferences(value: string): Boolean {
     if (preferences.ui.displayedSports === null) return true;
@@ -107,9 +109,17 @@ export const SportSelector = () => {
     setCalculator(base);
   };
 
+  /**
+   * updates the DecoratorStack, when:
+   *  - game changs
+   *  - selected sport changes
+   *  - sport response from backend changes
+   *  - preferences changes
+   *  - usedMultiplier changes
+   */
   useEffect(() => {
     buildDecoratorStack();
-  }, [theme, currentSport, sportResponse, preferences]);
+  }, [theme, currentSport, sportResponse, preferences, usedMultiplier]);
 
   // Fetch data from /api/default on localhost:8080
   useEffect(() => {
