@@ -1,6 +1,6 @@
 import { Box, OutlinedInput, Slider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { SettingsSlider } from './SettingsSlider';
+import { SettingsSlider } from './Sliders';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { UserPreferences } from '../../models/Preferences';
 import { setCookie } from '../../utils/cookies';

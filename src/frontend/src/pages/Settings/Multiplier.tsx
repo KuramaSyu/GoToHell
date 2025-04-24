@@ -6,7 +6,7 @@ import { getCookie, setCookie } from '../../utils/cookies';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { Multiplier, UserPreferences } from '../../models/Preferences';
 import { GenerateMarks } from '../../utils/Marks';
-import { MultiplierSlieder, SettingsSlider } from './SettingsSlider';
+import { MultiplierSlieder, SettingsSlider } from './Sliders';
 import { useThemeStore } from '../../zustand/useThemeStore';
 
 export const MultiplierSettings: React.FC = () => {
