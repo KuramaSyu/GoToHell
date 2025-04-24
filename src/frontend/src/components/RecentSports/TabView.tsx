@@ -61,7 +61,17 @@ export const RecentSports = () => {
             <Tab label="Multiplier" sx={{ minWidth: 150, width: 'auto' }} />
           </Tabs>
         </Box>
-        <Box mt={2} display={'flex'} justifyContent="center" width={'100%'}>
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            position: 'relative',
+            width: '100%',
+            justifyContent: 'center',
+            minHeight: 129, // ← reserve space
+            overflow: 'hidden', // optional, to clip off‑screen anims
+          }}
+        >
           {activeTab === 0 && (
             <RecentSportsStandard
               key={`recent-${activeTab}`}
