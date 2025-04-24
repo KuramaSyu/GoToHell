@@ -161,6 +161,14 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     UpdateSliderValue();
   };
 
+  const updateSilderVlaueByStep = (step: number) => {
+    var value = (sliderValue ?? 0) + step;
+    // round value to .2f to prevent float issues
+    value = Math.round(value * 100) / 100;
+    saveValue(usedMultiplier ?? null, value);
+    setSliderValue(value);
+  };
+
   return (
     <Box
       sx={{
@@ -175,18 +183,11 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       }}
     >
       <OutlinedInput
-        value={sliderValue}
-        type="number"
+        value={sliderValue} // TODO: use own state here, sync the state with value, and only saveValue or setLiderValue if this new state is a number
         onChange={(e) => {
           const value = parseFloat(e.target.value) || min;
           setSliderValue(value);
-          saveValue(null, value);
-        }}
-        inputProps={{
-          step: step,
-          style: {
-            textAlign: 'center',
-          },
+          saveValue(usedMultiplier ?? null, value);
         }}
         sx={{
           fontSize: '24px',
@@ -209,7 +210,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           sx={{
             backgroundColor: alpha('#000000', 0.2),
           }}
-          onClick={() => setSliderValue((sliderValue ?? 0) + step)}
+          onClick={() => updateSilderVlaueByStep(step)}
         >
           <Add></Add>
         </Button>
@@ -218,7 +219,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           sx={{
             backgroundColor: alpha('#000000', 0.2),
           }}
-          onClick={() => setSliderValue((sliderValue ?? 0) - step)}
+          onClick={() => updateSilderVlaueByStep(-step)}
         >
           <Remove></Remove>
         </Button>
