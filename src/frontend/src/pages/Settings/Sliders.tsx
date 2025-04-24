@@ -189,11 +189,19 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           setSliderValue(value);
           saveValue(usedMultiplier ?? null, value);
         }}
+        inputProps={{
+          style: {
+            textAlign: 'center',
+          },
+        }}
         sx={{
           fontSize: '24px',
           justifyContent: 'center',
           alignItems: 'center',
           display: 'flex',
+          width: '10%', // Set width to 1/10
+          minWidth: '30px', // Minimum width of 20px
+          maxWidth: '200px', // Maximum width of 100px
         }}
       />
 
