@@ -8,7 +8,7 @@ import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 
 export const RecentSports = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
   const { calculator } = useCalculatorStore();
