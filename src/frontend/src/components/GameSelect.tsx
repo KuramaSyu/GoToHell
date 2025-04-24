@@ -4,10 +4,15 @@ import { Typography } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
 
 import { DynamicGameGrid } from './DynamicGrid';
+import usePreferenceStore from '../zustand/PreferenceStore';
 
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
-  const validGames = getThemeNames();
+  const {} = usePreferenceStore;
+  const [validGames, setValidGames] = useState<string[]>(
+    usePreferenceStore.getState().preferences.ui.displayedGames ??
+      getThemeNames()
+  );
 
   return (
     <DynamicGameGrid
