@@ -28,8 +28,11 @@ export const SportDragDrop = () => {
   const { sportResponse } = useSportResponseStore();
   const { theme } = useThemeStore();
   const { preferences, setPreferences } = usePreferenceStore();
+  // listB are the preferences or all Sports in case of None
   const [listB, setListB] = useState<string[]>(
-    preferences.ui.displayedSports ?? []
+    preferences.ui.displayedSports ??
+      (Object.keys(sportResponse?.sports ?? {}) as string[]) ??
+      []
   );
   const [listA, setListA] = useState(
     Object.keys(sportResponse?.sports ?? {}).filter((v) => !listB.includes(v))
@@ -58,6 +61,8 @@ export const SportDragDrop = () => {
       setListA={setListA}
       setListB={setListB}
       saveChange={saveListsToCookies}
+      nameA="Hidden Sports"
+      nameB="Shown Sports"
     ></TwoListDnD>
   );
 };
