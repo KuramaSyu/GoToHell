@@ -90,7 +90,8 @@ export const RecentSports = () => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'right',
+            justifyContent: 'end',
+            alignItems: 'end',
             flexGrow: '1',
           }}
         >
