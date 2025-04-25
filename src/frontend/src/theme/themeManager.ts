@@ -89,21 +89,20 @@ export class ThemeManager {
    * The full extracted palette is used to populate primary, secondary, and extra palette keys.
    */
   public async generateTheme(themeName: string): Promise<CustomTheme | null> {
-    const { background, setBackground } = useThemeStore.getState();
-    const config = this.themes.get(themeName);
-    if (!config) {
+    const background = useThemeStore.getState().theme.custom.backgroundImage;
+    const themeConfig = this.themes.get(themeName);
+    if (!themeConfig) {
       console.warn(`Theme "${themeName}" not found.`);
       return null;
     }
 
     // Randomly choose one background image.
-    var backgrounds = config.backgrounds;
+    var backgrounds = themeConfig.backgrounds;
     if (backgrounds.length > 1) {
       backgrounds = backgrounds.filter((b) => b !== background);
     }
     const randomIndex = Math.floor(Math.random() * backgrounds.length);
     const chosenBackground = backgrounds[randomIndex];
-    setBackground(chosenBackground ?? null);
 
     // Always extract the palette using Vibrant.
     let extractedPalette;
@@ -150,8 +149,8 @@ export class ThemeManager {
       : '#494949';
 
     // Use provided primary/secondary if available.
-    const primaryMain = config.primary || vibrantHex;
-    const secondaryMain = config.secondary || darkVibrantHex;
+    const primaryMain = themeConfig.primary || vibrantHex;
+    const secondaryMain = themeConfig.secondary || darkVibrantHex;
 
     // Build and return the full MUI theme.
     return createTheme({
@@ -181,8 +180,8 @@ export class ThemeManager {
       },
       custom: {
         backgroundImage: chosenBackground,
-        themeName: config.name,
-        longName: config.longName,
+        themeName: themeConfig.name,
+        longName: themeConfig.longName,
       },
     }) as CustomTheme;
   }
