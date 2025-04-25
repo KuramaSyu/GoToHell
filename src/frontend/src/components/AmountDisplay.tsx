@@ -18,6 +18,18 @@ import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { GameSelectionMap } from './SportSelect';
 
+export const BIG_NUMBER_SIZE_MOBILE = '6vh';
+export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
+export const AMOUNT_DISPLAY_TITLE_SX = { fontSize: '3vh' };
+export const AMOUNT_DISPLAY_CONENT_SX = { fontSize: '2vh' };
+export const AMOUNT_DISPLAY_CONTENT_BOX_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  alignItems: 'left',
+  mt: { xs: -2, md: -4 }, // Remove weird padding from font
+};
+
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountState();
@@ -77,26 +89,19 @@ export const AmountDisplay = () => {
           <PopNumber
             value={computedValue}
             font={NUMBER_FONT}
-            fontsize={isMobile ? '6vh' : '12vh'}
+            fontsize={
+              isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP
+            }
             stiffness={1000}
             damping={300}
             mass={1}
           />
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            justifyContent: 'right',
-            alignItems: 'right',
-            mt: { xs: -2, md: -4 }, // Remove weird padding from font
-          }}
-        >
-          <Typography variant="h5" fontFamily={'inherit'}>
+        <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
+          <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
             {GameSelectionMap.get(currentSport.sport)}
           </Typography>
-          <Typography variant="subtitle1" fontFamily={'inherit'}>
+          <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
             to do now
           </Typography>
         </Box>

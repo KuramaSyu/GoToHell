@@ -10,6 +10,13 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import { NUMBER_FONT } from '../statics';
 import { GameSelectionMap } from './SportSelect';
 import { useThemeStore } from '../zustand/useThemeStore';
+import {
+  AMOUNT_DISPLAY_CONENT_SX,
+  AMOUNT_DISPLAY_CONTENT_BOX_SX,
+  AMOUNT_DISPLAY_TITLE_SX,
+  BIG_NUMBER_SIZE_DESKTOP,
+  BIG_NUMBER_SIZE_MOBILE,
+} from './AmountDisplay';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -73,22 +80,14 @@ export const TotalScoreDisplay = () => {
           stiffness={500}
           damping={200}
           mass={1}
-          fontsize={isMobile ? '6vh' : '12vh'}
+          fontsize={isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP}
         ></PopNumber>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          alignItems: 'left',
-          mt: { xs: -2, md: -4 }, // Remove weird padding from font
-        }}
-      >
-        <Typography sx={{ fontSize: '3vh' }} fontFamily={'inherit'}>
+      <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
+        <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
           {currentSportString}
         </Typography>
-        <Typography sx={{ fontSize: '2vh' }} fontFamily={'inherit'}>
+        <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
           in total
         </Typography>
       </Box>
