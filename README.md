@@ -19,6 +19,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [x] make plank formula changeable in settings.
 - [x] Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
 - [x] 2 Buttons for Multiplier; one global one local
+- [x] Display sports in order
 
 #### Ongoing
 
@@ -36,7 +37,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - Number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string (use own state here, sync the state with value, and only saveValue or setLiderValue if this new state is a number)
 - Show all multipliers in the settings
 - ordering for sports does not work
-- reparate repository for background pictures
+- separate repository for background pictures
 
 #### Ideas
 
