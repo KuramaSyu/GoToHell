@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
 import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -88,6 +89,7 @@ export class ThemeManager {
    * The full extracted palette is used to populate primary, secondary, and extra palette keys.
    */
   public async generateTheme(themeName: string): Promise<CustomTheme | null> {
+    const { background, setBackground } = useThemeStore.getState();
     const config = this.themes.get(themeName);
     if (!config) {
       console.warn(`Theme "${themeName}" not found.`);
@@ -95,9 +97,13 @@ export class ThemeManager {
     }
 
     // Randomly choose one background image.
-    const backgrounds = config.backgrounds;
+    var backgrounds = config.backgrounds;
+    if (backgrounds.length > 1) {
+      backgrounds = backgrounds.filter((b) => b !== background);
+    }
     const randomIndex = Math.floor(Math.random() * backgrounds.length);
     const chosenBackground = backgrounds[randomIndex];
+    setBackground(chosenBackground ?? null);
 
     // Always extract the palette using Vibrant.
     let extractedPalette;
