@@ -37,7 +37,7 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
     numberItems = 5;
   }
 
-  // use react mediaquery to get the current display si
+  // use react mediaquery to get the current display
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useUserStore();
   const { setErrorMessage } = useAppState();
