@@ -34,6 +34,8 @@ interface ThemeState {
   theme: CustomTheme;
   themeName: string;
   themeLongName: string;
+  background: string | null;
+  setBackground: (url: string | null) => void;
   /**
    * setTheme accepts a theme string, asynchronously generates the MUI theme (including Vibrant extraction),
    * and updates the store with the theme and its names.
@@ -50,6 +52,10 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   theme: defaultTheme,
   themeName: defaultTheme.custom.themeName,
   themeLongName: defaultTheme.custom.longName,
+  background: null,
+  setBackground: (url: string | null) => {
+    set({ background: url });
+  },
   setTheme: async (themeName: string) => {
     const generatedTheme = await themeManager.generateTheme(themeName);
     if (generatedTheme) {
