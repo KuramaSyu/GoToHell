@@ -33,6 +33,7 @@ import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
+import { Multiplier } from '../models/Preferences';
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -66,6 +67,23 @@ export const SportSelector = () => {
   function isInPreferences(value: string): Boolean {
     if (preferences.ui.displayedSports === null) return true;
     return preferences.ui.displayedSports.includes(value);
+  }
+
+  function displayedSports(): Multiplier[] {
+    if (sportResponse?.sports === undefined) {
+      return [];
+    }
+    const sports = sportResponse!.sports!;
+    return (preferences.ui.displayedSports ?? Object.keys(sports)).map(
+      (sport) => {
+        const multiplier: Multiplier = {
+          game: null,
+          multiplier: sports[sport] ?? 1,
+          sport: sport,
+        };
+        return multiplier;
+      }
+    );
   }
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -160,7 +178,7 @@ export const SportSelector = () => {
           padding: 2,
         }}
       >
-        {Object.entries(sportResponse.sports).map(([sport, multiplier]) => {
+        {displayedSports().map(({ sport, multiplier }) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
@@ -204,50 +222,46 @@ export const SportSelector = () => {
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
-        {Object.entries(sportResponse.sports)
-          .filter((v) => isInPreferences(v[0]))
-          .map(([sport, multiplier]) => {
-            const isSelected = sport === currentSport?.sport;
+        {displayedSports().map(({ sport, multiplier }) => {
+          const isSelected = sport === currentSport?.sport;
 
-            return (
-              <Button
-                onClick={() => {
-                  currentSport.sport = sport;
-                  currentSport.sport_multiplier = multiplier;
-                  setSport(currentSport);
+          return (
+            <Button
+              onClick={() => {
+                currentSport.sport = sport;
+                currentSport.sport_multiplier = multiplier;
+                setSport(currentSport);
+              }}
+              variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
+              key={sport}
+              sx={{
+                gap: 3,
+                backgroundColor: isSelected
+                  ? null
+                  : alpha(theme.palette.muted.dark, 0.2),
+                textShadow: isSelected
+                  ? null
+                  : `2px 2px 2px ${theme.palette.muted.dark}`,
+              }}
+            >
+              <img
+                src={sportIconMap[String(sport)]}
+                alt={String(sport)}
+                style={{
+                  width: 50,
+                  height: 50,
+                  filter: isSelected
+                    ? 'brightness(0) invert(1)'
+                    : theme.palette.mode === 'dark'
+                    ? 'brightness(0) invert(0.8)'
+                    : 'none',
+                  marginRight: 1,
                 }}
-                variant={
-                  sport === currentSport?.sport ? 'contained' : 'outlined'
-                }
-                key={sport}
-                sx={{
-                  gap: 3,
-                  backgroundColor: isSelected
-                    ? null
-                    : alpha(theme.palette.muted.dark, 0.2),
-                  textShadow: isSelected
-                    ? null
-                    : `2px 2px 2px ${theme.palette.muted.dark}`,
-                }}
-              >
-                <img
-                  src={sportIconMap[sport]}
-                  alt={sport}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    filter: isSelected
-                      ? 'brightness(0) invert(1)'
-                      : theme.palette.mode === 'dark'
-                      ? 'brightness(0) invert(0.8)'
-                      : 'none',
-                    marginRight: 1,
-                  }}
-                />
-                <Typography>{sport.replace('_', ' ')}</Typography>
-              </Button>
-            );
-          })}
+              />
+              <Typography>{String(sport).replace('_', ' ')}</Typography>
+            </Button>
+          );
+        })}
       </ButtonGroup>
     </Box>
   );
