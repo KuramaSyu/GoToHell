@@ -200,8 +200,8 @@ export const SportSelector = () => {
               }}
             >
               <img
-                src={sportIconMap[sport]}
-                alt={sport}
+                src={sportIconMap[String(sport)]}
+                alt={String(sport)}
                 style={{
                   width: 50,
                   height: 50,
