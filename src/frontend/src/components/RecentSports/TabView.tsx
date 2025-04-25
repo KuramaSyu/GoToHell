@@ -46,12 +46,11 @@ export const RecentSports = () => {
             textColor="primary"
             indicatorColor="primary"
             sx={{
-              backgroundColor: alpha(
-                theme.palette.getContrastText(theme.palette.primary.main),
-                0.2
-              ),
+              backgroundColor: alpha('#000000', 0.2),
               borderRadius: '50px',
               padding: '5px',
+              backdropFilter: 'blur(10px)',
+              p: 1,
             }}
           >
             <Tab
