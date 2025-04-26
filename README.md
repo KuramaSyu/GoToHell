@@ -24,19 +24,25 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### Ongoing
 
 - [ ] move API calls to utils/API
+  - standard.tsx: DELETE api/sports
+  - Sport.tsx: POST api/sports
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
 
 #### Features
 
-- update script: make a backup of db in same folder under backups/iso-date.sql
-- Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
-- box for dragging workouts in. Upload multiple things at once
-- leg_raises
+- [ ] update script: make a backup of db in same folder under backups/iso-date.sql
+- [ ] Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
+- [ ] box for dragging workouts in. Upload multiple things at once
+- [ ] leg_raises
 
 #### Fixes / QoL
 
-- Show all multipliers in the settings
-- separate repository for background pictures
+- [ ] Show all multipliers in the settings
+- [ ] separate repository for background pictures
+
+#### Perf
+
+- [ ] Backend Delete Sport: add userid to db request, instead of making multiple requests
 
 #### Ideas
 
