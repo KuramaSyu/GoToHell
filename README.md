@@ -35,10 +35,17 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] box for dragging workouts in. Upload multiple things at once
 - [ ] leg_raises
 
-#### Fixes / QoL
+#### Fixes
+
+- [ ] separate repository for background pictures
+
+#### QoL
 
 - [ ] Show all multipliers in the settings
-- [ ] separate repository for background pictures
+- [ ] Keyboard Shortcuts:
+  - ESC to exit settings to /
+  - ENTER to upload
+  - number, to write into custom
 
 #### Perf
 
