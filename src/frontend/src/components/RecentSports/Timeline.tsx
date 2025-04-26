@@ -19,6 +19,7 @@ import { TransitionGroup } from 'react-transition-group';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SportCard, SportCardNumber } from './SportCard';
 import { before } from 'node:test';
+import { UserApi } from '../../utils/api/Api';
 
 export interface Sport {
   id: number;
@@ -46,26 +47,13 @@ export const SportsTimeline = () => {
     if (!user) return;
 
     const fetchSports = async () => {
-      const url = new URL(`${BACKEND_BASE}/api/sports`);
       // Include both the current user and others from the store.
       const userIds: string[] = [
-        ...Object.values(users).map((u) => u.id),
-        user.id,
+        ...Object.values(users).map((u) => u.id), // friends
+        user.id, // self
       ];
-      url.searchParams.append('user_ids', userIds.join(','));
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch /api/sports');
-      }
-      const fetchedData: SportsApiResponse = await response.json();
-      // Sort sports by time (ascending)
-      fetchedData.data.sort(
-        (a, b) =>
-          new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
-      );
+      const fetchedData = await new UserApi().fetchRecentSports(userIds, 50);
+      if (fetchedData === null) return;
       setData(fetchedData);
     };
 

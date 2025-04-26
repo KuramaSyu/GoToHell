@@ -28,7 +28,8 @@ export const UploadScore = () => {
   const { user } = useUserStore();
   const { setErrorMessage } = useAppState();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
-  const { setAmounts } = useTotalScoreStore();
+  const { setAmounts, triggerRefresh: triggerScoreRefresh } =
+    useTotalScoreStore();
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
 
@@ -74,8 +75,9 @@ export const UploadScore = () => {
           // data.results is now an array of SportAmount
           console.log(data.results);
           setAmounts(parsed_data.results);
-          // TODO: return id in POST, and just add it without another api call
-          await new UserApi().fetchRecentSports([user.id as string], 10);
+          // TODO: this also triggers timeline to update
+          // recent activities. make better with websocket
+          triggerScoreRefresh();
           setDeathAmount(0);
         }
       } else {

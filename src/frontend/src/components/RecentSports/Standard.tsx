@@ -42,8 +42,14 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useUserStore();
   const { setErrorMessage } = useAppState();
-  const { refreshTrigger, setRecentSports, recentSports } =
-    useRecentSportsStore();
+  const {
+    refreshTrigger,
+    setRecentSports: setAllRecentSports,
+    recentSports: allRecentSports,
+  } = useRecentSportsStore();
+  const [recentSports, setRecentSports] = useState<SportsApiResponse | null>(
+    null
+  );
   const { users } = useUsersStore();
 
   const getOffset = (recentSports: SportsApiResponse | null) => {
@@ -55,6 +61,23 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
 
   const [pageOffset, setPageOffset] = useState<number>(getOffset(recentSports));
 
+  // update recentSports, when item was added to timeline
+  useEffect(() => {
+    if (
+      user === null ||
+      allRecentSports === undefined ||
+      allRecentSports?.data === null
+    )
+      return;
+
+    const sortedApiResponse = {
+      data: allRecentSports!.data.filter((v) => v.user_id === user.id),
+    };
+    setRecentSports(sortedApiResponse);
+    setPageOffset(getOffset(sortedApiResponse));
+  }, [allRecentSports]);
+
+  // startup and update useEffect
   useEffect(() => {
     if (!user) return;
     if (current_tab !== this_tab) return;
@@ -71,7 +94,7 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
       // Set offset to show the last 5 records if available.
     };
     fetchResponse();
-  }, [user, refreshTrigger, users, current_tab]);
+  }, [user, refreshTrigger, users]);
 
   useEffect(() => {
     return () => {
