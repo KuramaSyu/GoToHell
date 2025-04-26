@@ -89,21 +89,16 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
         }}
       />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          gap: 1,
-        }}
-      >
-        <Add
-          sx={{ borderRadius: '100%', backgroundColor: alpha('#000000', 0.2) }}
-        ></Add>
-        <Remove
-          sx={{ borderRadius: '100%', backgroundColor: alpha('#000000', 0.2) }}
-        ></Remove>
-      </Box>
+      {/* Col for Add and Remove button */}
+      <PlusMinusCol
+        sliderValue={sliderValue}
+        game={null}
+        saveValue={saveValue}
+        setSliderValue={setSliderValue}
+        setStringNumber={setStringNumber}
+        step={step}
+      />
+
       <Slider
         size="medium"
         value={sliderValue ?? min}
@@ -265,32 +260,14 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       />
 
       {/* Col for Add and Remove button */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          gap: 1,
-        }}
-      >
-        <Button
-          sx={{
-            backgroundColor: alpha('#000000', 0.2),
-          }}
-          onClick={() => updateSilderVlaueByStep(step)}
-        >
-          <Add></Add>
-        </Button>
-
-        <Button
-          sx={{
-            backgroundColor: alpha('#000000', 0.2),
-          }}
-          onClick={() => updateSilderVlaueByStep(-step)}
-        >
-          <Remove></Remove>
-        </Button>
-      </Box>
+      <PlusMinusCol
+        sliderValue={sliderValue}
+        game={usedMultiplier}
+        saveValue={saveValue}
+        setSliderValue={setSliderValue}
+        setStringNumber={setStringNumber}
+        step={step}
+      />
       {/* Col for Global or Game Switch */}
       <Box
         sx={{
@@ -347,6 +324,61 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         max={max}
         step={step}
       />
+    </Box>
+  );
+};
+
+interface PlusMinusColProps {
+  sliderValue: number | null;
+  step: number;
+  game: string | null | undefined;
+  saveValue: (game: string | null, value: number) => void;
+  setSliderValue: React.Dispatch<React.SetStateAction<number | null>>;
+  setStringNumber: React.Dispatch<React.SetStateAction<string | null>>;
+}
+const PlusMinusCol: React.FC<PlusMinusColProps> = ({
+  sliderValue,
+  game,
+  step,
+  saveValue,
+  setSliderValue,
+  setStringNumber,
+}: PlusMinusColProps) => {
+  const updateSilderVlaueByStep = (step: number) => {
+    var value = (sliderValue ?? 0) + step;
+    // round value to .2f to prevent float issues
+    value = Math.round(value * 100) / 100;
+    saveValue(game ?? null, value);
+    setSliderValue(value);
+    setStringNumber(String(value));
+  };
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        gap: 1,
+      }}
+    >
+      <Button
+        sx={{
+          backgroundColor: alpha('#000000', 0.2),
+        }}
+        onClick={() => updateSilderVlaueByStep(step)}
+      >
+        <Add></Add>
+      </Button>
+
+      <Button
+        sx={{
+          backgroundColor: alpha('#000000', 0.2),
+        }}
+        onClick={() => updateSilderVlaueByStep(-step)}
+      >
+        <Remove></Remove>
+      </Button>
     </Box>
   );
 };
