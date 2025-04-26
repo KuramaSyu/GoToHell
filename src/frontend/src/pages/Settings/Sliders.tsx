@@ -86,6 +86,9 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
           justifyContent: 'center',
           alignItems: 'center',
           display: 'flex',
+          width: '15%',
+          minWidth: '150px', // Minimum width of 20px
+          maxWidth: '400px', // Maximum width of 100px
         }}
       />
 
@@ -103,7 +106,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
         size="medium"
         value={sliderValue ?? min}
         marks={marks}
-        onChange={(e, value) =>
+        onChange={(_e, value) =>
           // set conent of Input Box to number
           handleStringNumber({
             ...defaultProps,
