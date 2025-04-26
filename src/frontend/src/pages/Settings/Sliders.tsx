@@ -17,6 +17,7 @@ import {
 } from '../../utils/SportCalculator';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
+import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -35,7 +36,19 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
   step = 0.05,
 }) => {
   const { marks } = GenerateMarks(4, min, max);
-  const { theme } = useThemeStore();
+  const [stringNumber, setStringNumber] = useState<string | null>(null);
+
+  useEffect(() => {
+    setStringNumber(String(sliderValue));
+  }, [sliderValue]);
+
+  const defaultProps: StringNumberProps = {
+    number: sliderValue,
+    setNumber: setSliderValue,
+    stringNumber: stringNumber,
+    setStringNumber: setStringNumber,
+    overrideStringNumber: false,
+  };
 
   return (
     <Box
@@ -51,11 +64,15 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
       }}
     >
       <OutlinedInput
-        value={sliderValue}
+        value={stringNumber}
         type="number"
         onChange={(e) => {
-          const value = parseFloat(e.target.value) || min;
-          setSliderValue(value);
+          setStringNumber(e.target.value);
+          const value = handleStringNumber({
+            ...defaultProps,
+            stringNumber: e.target.value,
+          });
+          if (value === null) return;
           saveValue(null, value);
         }}
         inputProps={{
@@ -91,8 +108,22 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
         size="medium"
         value={sliderValue ?? min}
         marks={marks}
-        onChange={(e, value) => setSliderValue(value)}
-        onChangeCommitted={(e, value) => saveValue(null, value)}
+        onChange={(e, value) =>
+          // set conent of Input Box to number
+          handleStringNumber({
+            ...defaultProps,
+            overrideStringNumber: true,
+            number: value,
+          })
+        }
+        onChangeCommitted={(e, value) => {
+          handleStringNumber({
+            ...defaultProps,
+            overrideStringNumber: true,
+            number: value,
+          });
+          saveValue(null, value);
+        }}
         min={min}
         max={max}
         step={step}
@@ -113,6 +144,15 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
   const { theme } = useThemeStore();
   const { usedMultiplier, setUsedMultiplier } = useUsedMultiplierStore(); // null means global
   const { preferences } = usePreferenceStore();
+  const [stringNumber, setStringNumber] = useState<string | null>(null);
+
+  const defaultProps: StringNumberProps = {
+    number: sliderValue,
+    setNumber: setSliderValue,
+    stringNumber: stringNumber,
+    setStringNumber: setStringNumber,
+    overrideStringNumber: false,
+  };
 
   // update sliderValue if another game is selected
   useEffect(() => {
@@ -142,6 +182,11 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
 
   /**
    * Updates the sliderValue by useing the MultiplierDecorator.
+   * Also Updates the string value.
+   *
+   * The value is determined by the Decorator stack, with returns the
+   * multiplier which should be used. this multipliers value will be set
+   * for both states
    */
   const UpdateSliderValue = () => {
     const multiplierCalculator = new MultiplierDecorator(
@@ -155,7 +200,9 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       '',
       theme.custom.themeName
     );
-    setSliderValue(multiplier?.multiplier ?? 1);
+    const number = multiplier?.multiplier ?? 1;
+    setSliderValue(number);
+    setStringNumber(String(number));
   };
 
   /**
@@ -174,6 +221,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     value = Math.round(value * 100) / 100;
     saveValue(usedMultiplier ?? null, value);
     setSliderValue(value);
+    setStringNumber(String(value));
   };
 
   return (
@@ -190,11 +238,15 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       }}
     >
       <OutlinedInput
-        value={sliderValue} // TODO: use own state here, sync the state with value, and only saveValue or setLiderValue if this new state is a number
+        value={stringNumber} // TODO: use own state here, sync the state with value, and only saveValue or setLiderValue if this new state is a number
         onChange={(e) => {
-          const value = parseFloat(e.target.value) || min;
-          setSliderValue(value);
-          saveValue(usedMultiplier ?? null, value);
+          setStringNumber(e.target.value);
+          const value = handleStringNumber({
+            ...defaultProps,
+            stringNumber: e.target.value,
+          });
+          if (value === null) return;
+          saveValue(null, value);
         }}
         inputProps={{
           style: {
@@ -275,10 +327,22 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         size="medium"
         value={sliderValue ?? min}
         marks={marks}
-        onChange={(_e, value) => setSliderValue(value)}
-        onChangeCommitted={(_e, value) =>
-          saveValue(usedMultiplier ?? null, value)
-        }
+        onChange={(_e, value) => {
+          handleStringNumber({
+            ...defaultProps,
+            overrideStringNumber: true,
+            number: value,
+          });
+        }}
+        onChangeCommitted={(_e, value) => {
+          handleStringNumber({
+            ...defaultProps,
+            overrideStringNumber: true,
+            number: value,
+          });
+
+          saveValue(usedMultiplier ?? null, value);
+        }}
         min={min}
         max={max}
         step={step}
