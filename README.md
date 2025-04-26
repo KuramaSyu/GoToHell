@@ -35,7 +35,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 #### Fixes / QoL
 
-- Number in custom and other inputs has annoying 0 which is not deletable. Maybe accept string, and convert string (use own state here, sync the state with value, and only saveValue or setLiderValue if this new state is a number)
 - Show all multipliers in the settings
 - separate repository for background pictures
 
