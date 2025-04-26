@@ -73,7 +73,7 @@ func csvToMap(csv [][]string) map[string]float64 {
 // GetSports retrieves sports from the database.
 // Query parameters:
 //   - user_id: (optional) if provided, filters sports for that user (default 0)
-//   - amount: (optional) limits the number of returned sports (default all)
+//   - limit: (optional) limits the number of returned sports (default all)
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
 	userIdList := c.Query("user_ids")
@@ -98,21 +98,20 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 		return
 	}
 
-	sports, err := sc.repo.GetSports(user_ids)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-	}
-	// Limit result if "amount" query parameter is provided.
-	amountStr := c.Query("amount")
-	if amountStr != "" {
-		amount, err := strconv.Atoi(amountStr)
+	// Limit result if "limit" query parameter is provided.
+	limitStr := c.Query("limit")
+	limit := 50
+	if limitStr != "" {
+		amount, err := strconv.Atoi(limitStr)
 		if err != nil || amount < 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid amount parameter"})
 			return
 		}
-		if amount < len(sports) {
-			sports = sports[:amount]
-		}
+		limit = amount
+	}
+	sports, err := sc.repo.GetSports(user_ids, limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": sports})
@@ -215,7 +214,8 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 
 	// Check if sport exists and belongs to the user
 	user_ids := append(make([]models.Snowflake, 0, 5), user.ID)
-	sports, err := sc.repo.GetSports(user_ids)
+	// TODO: just check in DeleteSport, in where for userid
+	sports, err := sc.repo.GetSports(user_ids, 20)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
