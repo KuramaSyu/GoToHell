@@ -18,6 +18,7 @@ import AnimatedButton from './AnimatedButton';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { UserApi } from '../utils/api/Api';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -37,6 +38,9 @@ export const UploadScore = () => {
       return setErrorMessage('Please select a Sport first');
     }
 
+    if (!user) {
+      return setErrorMessage('Please Login with Discord');
+    }
     if (amount == 0) {
       return setErrorMessage('Yeah, just upload nothing. Good idea indeed');
     }
@@ -51,7 +55,8 @@ export const UploadScore = () => {
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
       const fut = await sport.upload();
       const data = await fut.json();
-      console.log(data);
+
+      // wait artificially 1s, for upload animation
       // Calculate elapsed time in milliseconds.
       const elapsedTime = new Date().getTime() - startTime;
       const minimumDuration = 1000;
@@ -69,7 +74,8 @@ export const UploadScore = () => {
           // data.results is now an array of SportAmount
           console.log(data.results);
           setAmounts(parsed_data.results);
-          useRecentSportsStore.getState().triggerRefresh();
+          // TODO: return id in POST, and just add it without another api call
+          await new UserApi().fetchRecentSports([user.id as string], 10);
           setDeathAmount(0);
         }
       } else {
