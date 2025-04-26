@@ -143,6 +143,9 @@ export class UserApi implements UserApiInterface {
    *
    * @Note
    * sets the useRecentSportsStore Zustand
+   *
+   * @returns
+   * SportsApiResponse | null: the Response (already sorted), or null if failed
    */
   async fetchRecentSports(
     userIds: string[],
