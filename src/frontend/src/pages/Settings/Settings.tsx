@@ -49,7 +49,7 @@ export const Settings: React.FC = () => {
             ...SettingsBoxSX,
           }}
         >
-          <Typography variant="h2" sx={{ zIndex: 1 }}>
+          <Typography variant="h4" sx={{ zIndex: 1 }}>
             Overrides
           </Typography>
           <Box
@@ -69,7 +69,7 @@ export const Settings: React.FC = () => {
         {/* Grid with game multipliers */}
 
         <Box sx={SettingsBoxSX}>
-          <Typography variant="h2" sx={{ zIndex: 1 }}>
+          <Typography variant="h4" sx={{ zIndex: 1 }}>
             Multipliers
           </Typography>
           <MultiplierSettings />
@@ -77,7 +77,7 @@ export const Settings: React.FC = () => {
 
         {/* Plank Seconds */}
         <Box sx={SettingsBoxSX}>
-          <Typography variant="h2" sx={{ zIndex: 1 }}>
+          <Typography variant="h4" sx={{ zIndex: 1 }}>
             Plank Settings
           </Typography>
           <Typography variant="subtitle1" sx={{ zIndex: 1 }}>
@@ -88,14 +88,14 @@ export const Settings: React.FC = () => {
         </Box>
         {/* Sport Select */}
         <Box sx={SettingsBoxSX}>
-          <Typography variant="h2" sx={{ zIndex: 1 }}>
+          <Typography variant="h4" sx={{ zIndex: 1 }}>
             Sport Select
           </Typography>
           <SportDragDrop></SportDragDrop>
         </Box>
         {/* Game Select */}
         <Box sx={SettingsBoxSX}>
-          <Typography variant="h2" sx={{ zIndex: 1 }}>
+          <Typography variant="h4" sx={{ zIndex: 1 }}>
             Game Select
           </Typography>
           <GameDragDrop></GameDragDrop>
