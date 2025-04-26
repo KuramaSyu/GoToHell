@@ -1,4 +1,4 @@
-export interface StringNumber {
+export interface StringNumberProps {
   number: number | null;
   setNumber: React.Dispatch<React.SetStateAction<number | null>>;
   stringNumber: string | null;
@@ -17,8 +17,9 @@ export interface StringNumber {
  *   @param props.setStringNumber - A function to update the string representation of the number.
  *   @param props.overrideStringNumber - A boolean indicating whether to override the string representation
  *                                       with the numeric value.
+ * @returns The number which was set. It's returned, since states don't change instantly
  */
-export function handleStringNumber(props: StringNumber): void {
+export function handleStringNumber(props: StringNumberProps): number | null {
   const {
     number,
     setNumber,
@@ -26,13 +27,16 @@ export function handleStringNumber(props: StringNumber): void {
     setStringNumber,
     overrideStringNumber,
   } = props;
-  if (overrideStringNumber) {
+  if (overrideStringNumber === true) {
     setStringNumber(String(number));
-    return;
+    return number;
   }
-  if (isNumeric(stringNumber)) {
-    setNumber(Number(stringNumber));
+  if (isNumeric(stringNumber) === true) {
+    const n = Number(stringNumber?.trim());
+    setNumber(n);
+    return n;
   }
+  return null;
 }
 
 /**
@@ -43,5 +47,5 @@ export function isNumeric(s: string | null): boolean {
   s = s.trim();
   if (s === '') return false;
   const n = Number(s);
-  return !Number.isNaN(n) && !Number.isFinite(n);
+  return !Number.isNaN(n) && Number.isFinite(n);
 }
