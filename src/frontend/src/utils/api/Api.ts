@@ -1,5 +1,9 @@
 import { J } from 'framer-motion/dist/types.d-6pKw1mTI';
-import { GetSportsResponse, SportScore } from '../../models/Sport';
+import {
+  GetSportsResponse,
+  SportsApiResponse,
+  SportScore,
+} from '../../models/Sport';
 import { BACKEND_BASE } from '../../statics';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { DiscordUser, DiscordUserImpl } from '../../components/DiscordLogin';
@@ -7,6 +11,7 @@ import { useUsersStore, useUserStore } from '../../userStore';
 import { FriendshipReply } from '../../pages/friends/FriendOverview';
 import { StreakData } from '../../models/Streak';
 import { useStreakStore } from '../../zustand/StreakStore';
+import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
@@ -14,6 +19,10 @@ export interface UserApiInterface {
   fetchUser(): Promise<Response>;
   fetchFriends(): Promise<FriendshipReply | null>;
   fetchStreak(): Promise<StreakData | null>;
+  fetchRecentSports(
+    user_ids: string[],
+    limit: number
+  ): Promise<SportsApiResponse | null>;
 }
 export interface SportApiInterface {
   fetchDefault(): Promise<GetSportsResponse | null>;
@@ -122,6 +131,51 @@ export class UserApi implements UserApiInterface {
 
       const reply = result['data'] as StreakData;
       setStreak(reply.days);
+      return reply;
+    } else {
+      this.logError(API_ENDPOINT, result);
+    }
+    return null;
+  }
+
+  /**
+   * fetches Recent Sports for userIds
+   *
+   * @Note
+   * sets the useRecentSportsStore Zustand
+   */
+  async fetchRecentSports(
+    userIds: string[],
+    limit: number | undefined
+  ): Promise<SportsApiResponse | null> {
+    limit = limit ?? 50;
+    const API_ENDPOINT = '/api/sports';
+    // get user
+    const user = useUserStore.getState().user;
+    if (user === null) {
+      return null;
+    }
+    const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
+    url.searchParams.append('user_ids', userIds.join(','));
+    url.searchParams.append('limit', limit.toString());
+
+    const response = await fetch(url, {
+      credentials: 'include',
+      method: 'GET',
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      // get zustand setter
+      const setRecentSports = useRecentSportsStore.getState().setRecentSports;
+
+      var reply = result as SportsApiResponse;
+      reply.data.sort(
+        (a, b) =>
+          new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
+      );
+
+      setRecentSports(reply);
       return reply;
     } else {
       this.logError(API_ENDPOINT, result);

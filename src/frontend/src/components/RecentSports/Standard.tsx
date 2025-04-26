@@ -12,6 +12,7 @@ import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { Sport, SportsApiResponse } from '../../models/Sport';
 import { flushSync } from 'react-dom';
+import { UserApi } from '../../utils/api/Api';
 
 const AnimatedBox = animated(Box);
 
@@ -59,30 +60,14 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
     if (current_tab !== this_tab) return;
     console.log(`call useffect loading: ${loading}`);
     const fetchResponse = async () => {
-      const url = new URL(`${BACKEND_BASE}/api/sports`);
-      // creat an array with the users id
-      const userIds: string[] = [user.id];
-
-      url.searchParams.append('user_ids', userIds.join(','));
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        throw new Error('Failed to get /api/sports');
-      }
-      const fetchedData: SportsApiResponse = await response.json();
-      // Sort records ascending by time so the newest is at the end.
-      fetchedData.data.sort(
-        (a, b) =>
-          new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
+      const fetchedData = await new UserApi().fetchRecentSports(
+        [user.id as string],
+        10
       );
 
-      flushSync(() => {
-        setPageOffset(getOffset(fetchedData));
-        setRecentSports(fetchedData);
-        setLoading(false);
-      });
+      setPageOffset(getOffset(fetchedData));
+      setLoading(false);
+
       // Set offset to show the last 5 records if available.
     };
     fetchResponse();
