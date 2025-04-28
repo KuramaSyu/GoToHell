@@ -9,6 +9,7 @@ import { useUsersStore, useUserStore } from '../userStore';
 import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 import { UserApi } from '../utils/api/Api';
 import { ThemeProvider } from '@emotion/react';
+import { QuickActionMenu } from './QuickActions/QuckActionMenu';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -70,6 +71,7 @@ const HomePage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <QuickActionMenu></QuickActionMenu>
       <Box
         sx={{
           display: 'flex',
