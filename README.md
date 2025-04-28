@@ -33,7 +33,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] update script: make a backup of db in same folder under backups/iso-date.sql
 - [ ] Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
 - [ ] box for dragging workouts in. Upl oad multiple things at once
-- [ ] leg_raises
 - [ ] Keyboard Shortcuts:
   - ESC to exit settings to /
   - ENTER to upload
