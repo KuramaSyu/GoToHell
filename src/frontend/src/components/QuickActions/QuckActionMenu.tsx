@@ -10,6 +10,8 @@ import PinIcon from '@mui/icons-material/Pin';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import DialpadIcon from '@mui/icons-material/Dialpad';
 import React from 'react';
+import { ModalOverview } from './ModalOverview';
+import { SearchModal } from './SearchModal';
 
 const AnimatedBox = animated(Box);
 
@@ -54,15 +56,18 @@ export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
   );
 };
 
-const ICON_QICK_ACTION_SX = {
+export const ICON_QICK_ACTION_SX = {
   height: '80%',
   width: 'auto',
   alignContent: 'center',
 };
+
 export const QuickActionMenu: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const { theme } = useThemeStore();
+  const [typed, SetTyped] = useState<string | null>(null);
+  const [page, setPage] = useState('overview');
 
   const transitions = useTransition(open, {
     from: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
@@ -76,12 +81,66 @@ export const QuickActionMenu: React.FC = () => {
       if (open) setVisible(true);
     },
     onRest: () => {
-      if (!open) setVisible(false);
+      if (!open) {
+        setVisible(false);
+        SetTyped(null);
+      }
     },
     exitBeforeEnter: true,
     immediate: (state) => state === 'leave' && open,
   });
-  // keyboard listener
+
+  // opening keyboard listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Handle opening/closing first
+      if (e.key === '/') {
+        e.preventDefault();
+        e.stopPropagation();
+        // Toggle open state and reset typed state if opening
+        setOpen((currentOpen) => {
+          if (!currentOpen) {
+            SetTyped(null); // Reset typed when opening
+            setPage('overview'); // Ensure starting page is overview
+          }
+          return !currentOpen;
+        });
+        return; // Don't process '/' further for typing
+      }
+
+      // Handle closing with Escape key (more conventional than 'a')
+      if (e.key === 'Escape') {
+        setOpen(false);
+        return;
+      }
+
+      // Handle typing only if the modal is currently open
+      if (open) {
+        // Basic check for printable characters (length 1)
+        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          SetTyped((prev) => (prev ? prev + e.key : e.key));
+        } else if (e.key === 'Backspace') {
+          // Handle backspace
+          SetTyped((prev) => (prev ? prev.slice(0, -1) : null));
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // change window when something was typed
+  useEffect(() => {
+    if (typed?.length ?? 0 > 0) {
+      setPage('SportSearch');
+    } else {
+      setPage('overview');
+    }
+  }, [typed]);
+
+  // opening keyboard listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === '/') {
@@ -97,7 +156,7 @@ export const QuickActionMenu: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [open]);
   return (
     <Modal
       open={visible}
@@ -137,32 +196,11 @@ export const QuickActionMenu: React.FC = () => {
             >
               Quick Actions
             </Box>
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-around',
-                py: 2,
-              }}
-            >
-              <QuickActionEntry
-                keys="Any Number"
-                title="Exercises"
-                icon={<PinIcon sx={ICON_QICK_ACTION_SX} />}
-              />
-              <QuickActionEntry
-                keys="Any Letter"
-                title="Sport Kind"
-                icon={<DialpadIcon sx={ICON_QICK_ACTION_SX} />}
-              />
-              <QuickActionEntry
-                keys="Enter"
-                title="Upload"
-                icon={<KeyboardReturnIcon sx={ICON_QICK_ACTION_SX} />}
-              />
-            </Box>
+            {page === 'overview' ? (
+              <ModalOverview key={1}></ModalOverview>
+            ) : page === 'SportSearch' ? (
+              <SearchModal key={2} typed={typed}></SearchModal>
+            ) : null}
           </AnimatedBox>
         ) : null
       )}
