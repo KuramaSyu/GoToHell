@@ -1,41 +1,64 @@
-import { alpha, Box, duration, Modal, Typography } from '@mui/material';
+import { alpha, Box, duration, Icon, Modal, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import SearchIcon from '@mui/icons-material/Search';
-import { Title } from '@mui/icons-material';
+import { SvgIconComponent, Title } from '@mui/icons-material';
 import { animated, useTransition } from 'react-spring';
 import { transform } from 'framer-motion';
+import AbcIcon from '@mui/icons-material/Abc';
+import PinIcon from '@mui/icons-material/Pin';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import DialpadIcon from '@mui/icons-material/Dialpad';
+import React from 'react';
 
 const AnimatedBox = animated(Box);
 
 export interface QuickActionEntryProps {
   title: string;
   keys: string;
+  icon: React.ReactNode;
 }
 
 export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
   title,
   keys,
+  icon,
 }) => {
   const { theme } = useThemeStore();
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         p: 1,
         borderRadius: 5,
         borderColor: theme.palette.primary.main,
         borderWidth: '2px',
-        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 2,
       }}
     >
-      <Box sx={{ fontSize: '3vh' }}>{title}</Box>
-      <Box sx={{ fontSize: '2vh' }}>{keys}</Box>
+      <Box sx={ICON_QICK_ACTION_SX}>{icon}</Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <Box sx={{ fontSize: '3vh', whiteSpace: 'nowrap' }}>{title}</Box>
+        <Box sx={{ fontSize: '2vh' }}>{keys}</Box>
+      </Box>
     </Box>
   );
 };
 
+const ICON_QICK_ACTION_SX = {
+  height: '80%',
+  width: 'auto',
+  alignContent: 'center',
+};
 export const QuickActionMenu: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -91,7 +114,8 @@ export const QuickActionMenu: React.FC = () => {
               left: '50%',
               width: '80%',
               height: '20%',
-              backgroundColor: alpha('#000000', 0.6),
+              backgroundColor: alpha('#000000', 0.3),
+              backdropFilter: 'blur(15px)',
               outline: 'none',
               borderRadius: 5,
               justifyContent: 'center',
@@ -123,9 +147,21 @@ export const QuickActionMenu: React.FC = () => {
                 py: 2,
               }}
             >
-              <QuickActionEntry keys="Any Number" title="Exercises" />
-              <QuickActionEntry keys="Any Letter" title="Sport Kind" />
-              <QuickActionEntry keys="Enter" title="Upload" />
+              <QuickActionEntry
+                keys="Any Number"
+                title="Exercises"
+                icon={<PinIcon sx={ICON_QICK_ACTION_SX} />}
+              />
+              <QuickActionEntry
+                keys="Any Letter"
+                title="Sport Kind"
+                icon={<DialpadIcon sx={ICON_QICK_ACTION_SX} />}
+              />
+              <QuickActionEntry
+                keys="Enter"
+                title="Upload"
+                icon={<KeyboardReturnIcon sx={ICON_QICK_ACTION_SX} />}
+              />
             </Box>
           </AnimatedBox>
         ) : null
