@@ -1,4 +1,4 @@
-import { alpha, Box, Modal, Typography } from '@mui/material';
+import { alpha, Box, duration, Modal, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import SearchIcon from '@mui/icons-material/Search';
@@ -38,12 +38,25 @@ export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
 
 export const QuickActionMenu: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
   const { theme } = useThemeStore();
 
   const transitions = useTransition(open, {
-    from: { opacity: 0, transform: 'translateY(50px) translateX(-50%)' },
+    from: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
     enter: { opacity: 1, transform: 'translateY(0px) translateX(-50%)' },
-    leave: { opacity: 0, transform: 'translateY(50px) translateX(-50%)' },
+    leave: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
+    config: (item, index, state) =>
+      state === 'enter'
+        ? { tension: 250, friction: 18 } // bouncy fade in
+        : { duration: 150 }, // ease out
+    onStart: () => {
+      if (open) setVisible(true);
+    },
+    onRest: () => {
+      if (!open) setVisible(false);
+    },
+    exitBeforeEnter: true,
+    immediate: (state) => state === 'leave' && open,
   });
   // keyboard listener
   useEffect(() => {
@@ -64,9 +77,9 @@ export const QuickActionMenu: React.FC = () => {
   }, []);
   return (
     <Modal
-      open={open}
+      open={visible}
       onClose={() => setOpen(false)}
-      slotProps={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.2)' } } }}
+      hideBackdrop // { backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.2)' } } }
     >
       {transitions((style, item) =>
         item ? (
