@@ -140,6 +140,14 @@ export const QuickActionMenu: React.FC = () => {
     }
   }, [typed]);
 
+  const pageTransitions = useTransition(page, {
+    from: { opacity: 0, transform: 'scale(0.7)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    // better without leave animation
+    config: (_item, _index, state) =>
+      state === 'enter' ? { tension: 350, friction: 25 } : { duration: 150 },
+  });
+
   return (
     <Modal
       open={visible}
@@ -175,15 +183,35 @@ export const QuickActionMenu: React.FC = () => {
                 px: 3,
                 display: 'flex',
                 fontSize: '4vh',
+                flexShrink: 0,
               }}
             >
               Quick Actions
             </Box>
-            {page === 'overview' ? (
-              <ModalOverview key={1}></ModalOverview>
-            ) : page === 'SportSearch' ? (
-              <SearchModal key={2} typed={typed}></SearchModal>
-            ) : null}
+            <Box
+              sx={{
+                flexGrow: 1,
+                width: '100%',
+              }}
+            >
+              {pageTransitions((style, currentPage) => (
+                <AnimatedBox
+                  style={{
+                    ...style,
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {currentPage === 'overview' ? (
+                    <ModalOverview key="overview" />
+                  ) : currentPage === 'SportSearch' ? (
+                    <SearchModal key="search" typed={typed} />
+                  ) : (
+                    <Box sx={{ flexGrow: 1 }}></Box>
+                  )}
+                </AnimatedBox>
+              ))}
+            </Box>
           </AnimatedBox>
         ) : null
       )}
