@@ -108,7 +108,7 @@ export const QuickActionMenu: React.FC = () => {
         return; // Don't process '/' further for typing
       }
 
-      // Handle closing with Escape key (more conventional than 'a')
+      // Handle closing with Escape key
       if (e.key === 'Escape') {
         setOpen(false);
         return;
@@ -129,7 +129,7 @@ export const QuickActionMenu: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [open]);
 
   // change window when something was typed
   useEffect(() => {
@@ -140,23 +140,6 @@ export const QuickActionMenu: React.FC = () => {
     }
   }, [typed]);
 
-  // opening keyboard listener
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '/') {
-        e.preventDefault();
-        e.stopPropagation();
-        setOpen((old_value) => !old_value);
-      }
-      if (e.key === 'a') {
-        setOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
   return (
     <Modal
       open={visible}
