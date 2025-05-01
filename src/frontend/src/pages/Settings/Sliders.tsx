@@ -154,17 +154,15 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
 
   // update sliderValue if another game is selected
   useEffect(() => {
-    if (usedMultiplier !== null && usedMultiplier !== undefined)
-      setUsedMultiplier(theme.custom.themeName);
-    UpdateSliderValue();
+    setUsedMultiplier(undefined);
+    const actualMultiplier = getCurrentMultiplier();
+    setUsedMultiplierAndUpdateValue(actualMultiplier?.game);
   }, [theme]);
 
   // when selecting, set from undefined to null
   useEffect(() => {
-    if (usedMultiplier === undefined) {
-      setUsedMultiplier(null);
-    }
-  });
+    setUsedMultiplierAndUpdateValue(undefined);
+  }, []);
 
   /**
    * returns the color of the button, depending if it's selected or not
@@ -178,15 +176,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     }
   };
 
-  /**
-   * Updates the sliderValue by useing the MultiplierDecorator.
-   * Also Updates the string value.
-   *
-   * The value is determined by the Decorator stack, with returns the
-   * multiplier which should be used. this multipliers value will be set
-   * for both states
-   */
-  const UpdateSliderValue = () => {
+  const getCurrentMultiplier = () => {
     const multiplierCalculator = new MultiplierDecorator(
       new DefaultSportsCalculator(
         useSportResponseStore.getState().sportResponse ??
@@ -198,6 +188,19 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       '',
       theme.custom.themeName
     );
+    return multiplier;
+  };
+
+  /**
+   * Updates the sliderValue by useing the MultiplierDecorator.
+   * Also Updates the string value.
+   *
+   * The value is determined by the Decorator stack, with returns the
+   * multiplier which should be used. this multipliers value will be set
+   * for both states
+   */
+  const UpdateSliderValue = () => {
+    const multiplier = getCurrentMultiplier();
     const number = multiplier?.multiplier ?? 1;
     setSliderValue(number);
     setStringNumber(String(number));
@@ -208,7 +211,9 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
    * be calcuated with the MultiplierDecorator, to get the right multiplier, depending on the usedMultiplierStore.
    * If the Decorator returns null, 1 will be used as value
    */
-  const setUsedMultiplierAndUpdateValue = (usedMultiplier: string | null) => {
+  const setUsedMultiplierAndUpdateValue = (
+    usedMultiplier: string | null | undefined
+  ) => {
     setUsedMultiplier(usedMultiplier);
     UpdateSliderValue();
   };
