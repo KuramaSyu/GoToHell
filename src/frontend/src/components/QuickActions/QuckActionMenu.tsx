@@ -200,6 +200,7 @@ export const QuickActionMenu: React.FC = () => {
                     ...style,
                     display: 'flex',
                     justifyContent: 'center',
+                    height: '100%',
                   }}
                 >
                   {currentPage === 'overview' ? (
