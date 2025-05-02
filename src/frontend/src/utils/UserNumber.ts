@@ -29,6 +29,7 @@ export function handleStringNumber(props: StringNumberProps): number | null {
   } = props;
   if (overrideStringNumber === true) {
     setStringNumber(String(number));
+    setNumber(number);
     return number;
   }
   if (isNumeric(stringNumber) === true) {
