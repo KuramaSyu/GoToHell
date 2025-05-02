@@ -46,6 +46,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### QoL
 
 - [ ] Show all multipliers in the settings
+- [ ] spring for modal search results
 
 #### Perf
 
