@@ -10,7 +10,7 @@ import PinIcon from '@mui/icons-material/Pin';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import DialpadIcon from '@mui/icons-material/Dialpad';
 import React from 'react';
-import { ModalOverview } from './ModalOverview';
+import { ModalOverview } from './ModalOverviewCards';
 import { SearchModal } from './SearchModal';
 
 const AnimatedBox = animated(Box);
