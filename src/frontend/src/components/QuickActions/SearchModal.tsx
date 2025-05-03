@@ -1,8 +1,10 @@
 import { Box, InputAdornment, TextField, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
+import { animated, useSprings, useTransition } from 'react-spring';
 
+const AnimatedBox = animated(Box);
 export interface SearchModalProps {
   typed: String | null;
 }
@@ -20,6 +22,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({ typed }) => {
     }
     return sports.filter((s) => s.toLowerCase().includes(typed!.toLowerCase()));
   }, [typed]);
+
+  const springs = useSprings(
+    filteredSports.length,
+    filteredSports.map((_, index) => ({
+      from: { opacity: 0, transform: 'scale(0.7)' },
+      to: { opacity: 1, transform: 'scale(1)' },
+
+      config: { tension: 200, friction: 20 },
+    }))
+  );
+
   return (
     <Box
       sx={{
@@ -61,8 +74,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ typed }) => {
           flexDirection: 'column',
         }}
       >
-        {filteredSports.map((s) => (
-          <Box
+        {springs.map((style, i) => (
+          <AnimatedBox
             sx={{
               width: '100%',
               height: '40px',
@@ -73,12 +86,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ typed }) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            key={s}
+            key={filteredSports[i]}
+            style={style}
           >
             <Typography variant="h5" sx={{ fontWeight: '300' }}>
-              {s.toUpperCase()}
+              {filteredSports[i]!.toUpperCase()}
             </Typography>
-          </Box>
+          </AnimatedBox>
         ))}
       </Box>
     </Box>
