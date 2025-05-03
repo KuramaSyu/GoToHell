@@ -82,12 +82,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       variant="outlined"
       sx={{
         display: 'inline-flex', // Use inline-flex to size based on content
-        flexDirection: 'row', // Explicitly set direction (though it's the default for flex)
+        flexDirection: 'row',
         alignItems: 'center',
-        gap: 1, // Space between icon and text
-        padding: '8px 16px', // Padding around content
-        borderRadius: 6, // Rounded corners
-        border: '1px solid rgba(255, 255, 255, 0.3)', // Optional: subtle border
+        gap: 1,
+        padding: '8px 16px',
+        borderRadius: 6,
+        border: '1px solid rgba(255, 255, 255, 0.3)',
       }}
     >
       <KeyboardReturnTwoTone sx={{ fontSize: '1.2rem' }} />
