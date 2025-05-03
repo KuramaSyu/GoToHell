@@ -27,6 +27,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
+- [ ] add AmountModal when number is entered
 
 #### Features
 
@@ -46,7 +47,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### QoL
 
 - [ ] Show all multipliers in the settings
-- [ ] spring for modal search results
 
 #### Perf
 
