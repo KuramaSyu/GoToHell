@@ -1,27 +1,69 @@
-import { Box, InputAdornment, TextField, Typography } from '@mui/material';
-import { useMemo, useRef, useState } from 'react';
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import { animated, useSprings, useTransition } from 'react-spring';
+import { useSportStore } from '../../useSportStore';
+import {
+  KeyboardReturn,
+  KeyboardReturnOutlined,
+  KeyboardReturnTwoTone,
+} from '@mui/icons-material';
 
 const AnimatedBox = animated(Box);
 export interface SearchModalProps {
-  typed: String | null;
+  typed: string | null;
+  setTyped: React.Dispatch<React.SetStateAction<string | null>>;
 }
-export const SearchModal: React.FC<SearchModalProps> = ({ typed }) => {
-  const [searchValue, setSearchValue] = useState('');
+export const SearchModal: React.FC<SearchModalProps> = ({
+  typed,
+  setTyped,
+}) => {
   const { sportResponse } = useSportResponseStore();
+  const { currentSport, setSport } = useSportStore();
   const sports = Object.keys(sportResponse?.sports ?? {});
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-    console.log('Search query:', event.target.value); // Handle search logic here
-  };
+
   const filteredSports = useMemo(() => {
     if (typed === null) {
       return [];
     }
     return sports.filter((s) => s.toLowerCase().includes(typed!.toLowerCase()));
   }, [typed]);
+
+  // triggerd when clicked or enter pressed
+  const onEnter = () => {
+    // select first element
+    const element = filteredSports[0];
+    if (element === undefined) return;
+    const sportMultiplier = sportResponse?.sports[element];
+    if (sportMultiplier === undefined) return;
+    setSport({
+      ...currentSport,
+      sport: element,
+      sport_multiplier: sportMultiplier,
+    });
+
+    setTyped(null);
+  };
+
+  // opening keyboard listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        onEnter();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [filteredSports]);
 
   const springs = useSprings(
     filteredSports.length,
@@ -33,6 +75,27 @@ export const SearchModal: React.FC<SearchModalProps> = ({ typed }) => {
     }))
   );
 
+  // box with enter icon and Select as text, rounded, with blur
+  const selectBox = (
+    <Button
+      onClick={onEnter}
+      variant="outlined"
+      sx={{
+        display: 'inline-flex', // Use inline-flex to size based on content
+        flexDirection: 'row', // Explicitly set direction (though it's the default for flex)
+        alignItems: 'center',
+        gap: 1, // Space between icon and text
+        padding: '8px 16px', // Padding around content
+        borderRadius: 6, // Rounded corners
+        border: '1px solid rgba(255, 255, 255, 0.3)', // Optional: subtle border
+      }}
+    >
+      <KeyboardReturnTwoTone sx={{ fontSize: '1.2rem' }} />
+      <Typography variant="body2" fontWeight={600}>
+        Select
+      </Typography>
+    </Button>
+  );
   return (
     <Box
       sx={{
@@ -82,16 +145,45 @@ export const SearchModal: React.FC<SearchModalProps> = ({ typed }) => {
               display: 'flex',
               backdropFilter: 'blur(30px)',
               borderRadius: 6,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backgroundColor:
+                i === 0
+                  ? 'rgba(255, 255, 255, 0.2)'
+                  : 'rgba(255, 255, 255, 0.08)',
               alignItems: 'center',
               justifyContent: 'center',
             }}
             key={filteredSports[i]}
             style={style}
           >
-            <Typography variant="h5" sx={{ fontWeight: '300' }}>
-              {filteredSports[i]!.toUpperCase()}
-            </Typography>
+            {i !== 0 ? (
+              <Typography variant="h5" sx={{ fontWeight: '300' }}>
+                {filteredSports[i]!.toUpperCase()}
+              </Typography>
+            ) : (
+              // flex with one empty element, the typography and selectbox
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <Box width={1 / 3}></Box>
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: '300', width: 1 / 3, textAlign: 'center' }}
+                >
+                  {filteredSports[i]!.toUpperCase()}
+                </Typography>
+                <Box
+                  width={1 / 3}
+                  sx={{ display: 'flex', justifyContent: 'right' }}
+                >
+                  {selectBox}
+                </Box>
+              </Box>
+            )}
           </AnimatedBox>
         ))}
       </Box>
