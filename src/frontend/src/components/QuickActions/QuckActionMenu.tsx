@@ -2,7 +2,7 @@ import { alpha, Box, duration, Icon, Modal, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import SearchIcon from '@mui/icons-material/Search';
-import { SvgIconComponent, Title } from '@mui/icons-material';
+import { Backspace, SvgIconComponent, Title } from '@mui/icons-material';
 import { animated, useTransition } from 'react-spring';
 import { transform } from 'framer-motion';
 import AbcIcon from '@mui/icons-material/Abc';
@@ -119,6 +119,9 @@ export const QuickActionMenu: React.FC = () => {
         // Basic check for printable characters (length 1)
         if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
           SetTyped((prev) => (prev ? prev + e.key : e.key));
+        } else if (e.key === 'Backspace' && e.ctrlKey) {
+          // Handle full delete
+          SetTyped(null);
         } else if (e.key === 'Backspace') {
           // Handle backspace
           SetTyped((prev) => (prev ? prev.slice(0, -1) : null));
@@ -206,7 +209,11 @@ export const QuickActionMenu: React.FC = () => {
                   {currentPage === 'overview' ? (
                     <ModalOverview key="overview" />
                   ) : currentPage === 'SportSearch' ? (
-                    <SearchModal key="search" typed={typed} />
+                    <SearchModal
+                      key="search"
+                      typed={typed}
+                      setTyped={SetTyped}
+                    />
                   ) : (
                     <Box sx={{ flexGrow: 1 }}></Box>
                   )}
