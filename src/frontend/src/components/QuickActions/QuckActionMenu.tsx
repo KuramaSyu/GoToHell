@@ -152,7 +152,7 @@ export const QuickActionMenu: React.FC = () => {
     <Modal
       open={visible}
       onClose={() => setOpen(false)}
-      hideBackdrop // { backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.2)' } } }
+      sx={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.2)' } } }}
     >
       {transitions((style, item) =>
         item ? (
