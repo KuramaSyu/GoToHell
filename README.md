@@ -43,6 +43,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### Fixes
 
 - [ ] separate repository for background pictures
+- [ ] fetch streak in .then to be sure that result is already set
 
 #### QoL
 
