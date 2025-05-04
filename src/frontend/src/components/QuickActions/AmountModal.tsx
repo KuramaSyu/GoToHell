@@ -15,41 +15,32 @@ import {
   KeyboardReturnOutlined,
   KeyboardReturnTwoTone,
 } from '@mui/icons-material';
+import { useDeathAmountStore } from '../NumberSlider';
+import { isNumeric } from '../../utils/UserNumber';
+import { isValid } from 'date-fns';
+import { SearchModalProps } from './SearchModal';
 
-const AnimatedBox = animated(Box);
-export interface SearchModalProps {
-  typed: string | null;
-  setTyped: React.Dispatch<React.SetStateAction<string | null>>;
-}
-export const SearchModal: React.FC<SearchModalProps> = ({
+export const AmountModal: React.FC<SearchModalProps> = ({
   typed,
   setTyped,
 }) => {
-  const { sportResponse } = useSportResponseStore();
-  const { currentSport, setSport } = useSportStore();
-  const sports = Object.keys(sportResponse?.sports ?? {});
-
-  const filteredSports = useMemo(() => {
-    if (typed === null) {
-      return [];
-    }
-    return sports.filter((s) => s.toLowerCase().includes(typed!.toLowerCase()));
-  }, [typed]);
+  const { setAmount } = useDeathAmountStore();
+  const [error, setError] = useState<null | string>(null);
 
   // triggerd when clicked or enter pressed
   const onEnter = () => {
     // select first element
-    const element = filteredSports[0];
-    if (element === undefined) return;
-    const sportMultiplier = sportResponse?.sports[element];
-    if (sportMultiplier === undefined) return;
-    setSport({
-      ...currentSport,
-      sport: element,
-      sport_multiplier: sportMultiplier,
-    });
-
+    if (!checkIfValid(typed)) {
+      setError('Please enter a valid number');
+      return;
+    }
+    setError(null);
+    setAmount(Math.round(Number(typed)));
     setTyped(null);
+  };
+
+  const checkIfValid = (value: string | null): boolean => {
+    return isNumeric(value);
   };
 
   // opening keyboard listener
@@ -63,29 +54,33 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [filteredSports]);
+  }, [typed]);
 
-  const springs = useSprings(
-    filteredSports.length,
-    filteredSports.map((_, index) => ({
-      from: { opacity: 0, transform: 'scale(0.7)' },
-      to: { opacity: 1, transform: 'scale(1)' },
-
-      config: { tension: 200, friction: 20 },
-    }))
-  );
-
+  // error box
+  const errorBox = useMemo(() => {
+    if (error) {
+      return (
+        <Box>
+          <Typography variant="body2" color="error">
+            {error}
+          </Typography>
+        </Box>
+      );
+    }
+    return null;
+  }, [error]);
   // box with enter icon and Select as text, rounded, with blur
   const selectBox = (
     <Button
       onClick={onEnter}
       variant="outlined"
       sx={{
-        display: 'inline-flex', // Use inline-flex to size based on content
+        height: 'auto',
+        display: 'flex',
+        flex: '0 0 auto',
         flexDirection: 'row',
         alignItems: 'center',
         gap: 1,
-        padding: '8px 16px',
         borderRadius: 6,
         border: '1px solid rgba(255, 255, 255, 0.3)',
       }}
@@ -100,33 +95,53 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
-        width: '100%',
+        alignItems: 'center',
       }}
     >
-      <TextField
-        variant="outlined"
-        placeholder="Search..."
-        value={typed}
-        onChange={() => {}}
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          },
-        }}
+      <Box
         sx={{
           display: 'flex',
+
           justifyContent: 'center',
-          height: '100%',
           width: '100%',
-          maxWidth: 600,
+          height: '60px',
+          gap: 2,
         }}
-      />
-      {selectBox}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            justifyContent: 'center',
+          }}
+        >
+          {errorBox}
+          <TextField
+            variant="outlined"
+            placeholder="Search..."
+            value={typed}
+            onChange={() => {}}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%',
+              maxWidth: 600,
+            }}
+          />
+        </Box>
+        {selectBox}
+      </Box>
     </Box>
   );
 };
