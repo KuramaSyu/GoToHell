@@ -12,6 +12,8 @@ import DialpadIcon from '@mui/icons-material/Dialpad';
 import React from 'react';
 import { ModalOverview } from './ModalOverviewCards';
 import { SearchModal } from './SearchModal';
+import { isNumeric } from '../../utils/UserNumber';
+import { AmountModal } from './AmountModal';
 
 const AnimatedBox = animated(Box);
 
@@ -50,7 +52,7 @@ export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
         }}
       >
         <Box sx={{ fontSize: '3vh', whiteSpace: 'nowrap' }}>{title}</Box>
-        <Box sx={{ fontSize: '2vh' }}>{keys}</Box>
+        <Box sx={{ fontSize: '2vh', whiteSpace: 'nowrap' }}>{keys}</Box>
       </Box>
     </Box>
   );
@@ -137,8 +139,16 @@ export const QuickActionMenu: React.FC = () => {
   // change window when something was typed
   useEffect(() => {
     if (typed?.length ?? 0 > 0) {
-      setPage('SportSearch');
+      // something was typed -> either sport or amount modal
+      if (isNumeric(typed![0]!)) {
+        // first character is a number -> amount modal
+        setPage('AmountModal');
+      } else {
+        // first character is a letter -> sport modal
+        setPage('SportSearch');
+      }
     } else {
+      // nothing was typed -> overview
       setPage('overview');
     }
   }, [typed]);
@@ -210,6 +220,12 @@ export const QuickActionMenu: React.FC = () => {
                     <ModalOverview key="overview" />
                   ) : currentPage === 'SportSearch' ? (
                     <SearchModal
+                      key="search"
+                      typed={typed}
+                      setTyped={SetTyped}
+                    />
+                  ) : currentPage === 'AmountModal' ? (
+                    <AmountModal
                       key="search"
                       typed={typed}
                       setTyped={SetTyped}
