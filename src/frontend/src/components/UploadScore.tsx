@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -19,6 +19,7 @@ import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { UserApi } from '../utils/api/Api';
+import useUploadStore from '../zustand/UploadStore';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -32,6 +33,13 @@ export const UploadScore = () => {
     useTotalScoreStore();
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
+  const { uploadTrigger } = useUploadStore();
+
+  // for triggers coming from outside (eg shortcut modal)
+  useEffect(() => {
+    if (uploadTrigger === 0) return;
+    OnUploadClick();
+  }, [uploadTrigger]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const OnUploadClick = async () => {
