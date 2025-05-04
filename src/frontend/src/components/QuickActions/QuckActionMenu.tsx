@@ -14,6 +14,7 @@ import { ModalOverview } from './ModalOverviewCards';
 import { SearchModal } from './SearchModal';
 import { isNumeric } from '../../utils/UserNumber';
 import { AmountModal } from './AmountModal';
+import useUploadStore from '../../zustand/UploadStore';
 
 const AnimatedBox = animated(Box);
 
@@ -70,6 +71,7 @@ export const QuickActionMenu: React.FC = () => {
   const { theme } = useThemeStore();
   const [typed, SetTyped] = useState<string | null>(null);
   const [page, setPage] = useState('overview');
+  const { triggerUpload } = useUploadStore();
 
   const transitions = useTransition(open, {
     from: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
@@ -152,6 +154,22 @@ export const QuickActionMenu: React.FC = () => {
       setPage('overview');
     }
   }, [typed]);
+
+  // Listen for Enter to trigger upload and close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!open) return; // Only listen when modal is open
+
+      if (e.key === 'Enter') {
+        triggerUpload();
+        setOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [typed, open]);
 
   const pageTransitions = useTransition(page, {
     from: { opacity: 0, transform: 'scale(0.7)' },
