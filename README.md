@@ -27,17 +27,17 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
+- [ ] Keyboard Shortcuts:
+  - ESC to exit settings to /
+  - ENTER to upload
+  - number, to write into custom
+  - letter to start search in sports. If only one sport left, select it. otherwise require enter to select the first one. block during this part the upload enter (a sport needs to be selected anyway). after pressing enter, reset search. when searching, and multile results fould, put enter symbol behind first sport, to indicate, that selection is done with enter. otherwise but the enter symbol infront of the upload symbol. Display a box, when "short search" is used, and how it works. Always.
 
 #### Features
 
 - [ ] update script: make a backup of db in same folder under backups/iso-date.sql
 - [ ] Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
 - [ ] box for dragging workouts in. Upl oad multiple things at once
-- [ ] Keyboard Shortcuts:
-  - ESC to exit settings to /
-  - ENTER to upload
-  - number, to write into custom
-  - letter to start search in sports. If only one sport left, select it. otherwise require enter to select the first one. block during this part the upload enter (a sport needs to be selected anyway). after pressing enter, reset search. when searching, and multile results fould, put enter symbol behind first sport, to indicate, that selection is done with enter. otherwise but the enter symbol infront of the upload symbol. Display a box, when "short search" is used, and how it works. Always.
 
 #### Fixes
 
@@ -47,6 +47,10 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### QoL
 
 - [ ] Show all multipliers in the settings
+- [ ] make Overview boxes in Shortcut Modal clickable
+- [ ] ShortcutModal: better red outlined input box for wrong number input
+- [ ] ShortcutModal: better error handling, when enter pressed, but upload inactive
+- [ ] ShortcutModal: Show active shortcut on left side (e.g. death select or sport select)
 
 #### Perf
 
