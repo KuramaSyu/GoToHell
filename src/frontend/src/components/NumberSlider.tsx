@@ -34,7 +34,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Slider Change
+  // Slider Change - set value or current maximum
   const handleSliderChange = (_: Event, newValue: number | number[]) => {
     setAmount(Math.min(newValue as number, selectableMax));
   };
