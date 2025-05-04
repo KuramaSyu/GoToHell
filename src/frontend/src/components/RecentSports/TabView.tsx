@@ -3,14 +3,14 @@ import { Tabs, Tab, Box, useMediaQuery, alpha } from '@mui/material';
 import { RecentSportsStandard } from './Standard';
 import { MultiplierSettings } from '../../pages/Settings/Multiplier';
 import { useSportStore } from '../../useSportStore';
-import { useDeathAmountState } from '../NumberSlider';
+import { useDeathAmountStore } from '../NumberSlider';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 
 export const RecentSports = () => {
   const [activeTab, setActiveTab] = useState(1);
   const { currentSport } = useSportStore();
-  const { amount } = useDeathAmountState();
+  const { amount } = useDeathAmountStore();
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
 

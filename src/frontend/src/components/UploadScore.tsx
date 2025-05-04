@@ -7,7 +7,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useSportStore } from '../useSportStore';
-import { useDeathAmountState } from './NumberSlider';
+import { useDeathAmountStore } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from '../userStore';
 import SportRow, { SportScore } from '../models/Sport';
@@ -24,7 +24,7 @@ type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
 export const UploadScore = () => {
   const { currentSport } = useSportStore();
-  const { amount, setAmount: setDeathAmount } = useDeathAmountState();
+  const { amount, setAmount: setDeathAmount } = useDeathAmountStore();
   const { user } = useUserStore();
   const { setErrorMessage } = useAppState();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);

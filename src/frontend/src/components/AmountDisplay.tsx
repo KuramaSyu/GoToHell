@@ -1,6 +1,6 @@
 import { Box, lighten, Typography, useMediaQuery } from '@mui/material';
 import { useSportStore } from '../useSportStore';
-import { useDeathAmountState } from './NumberSlider';
+import { useDeathAmountStore } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
 import { PopNumber } from './GameSelect';
 import { useState } from 'react';
@@ -32,7 +32,7 @@ export const AMOUNT_DISPLAY_CONTENT_BOX_SX = {
 
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
-  const { amount } = useDeathAmountState();
+  const { amount } = useDeathAmountStore();
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
   const { preferences } = usePreferenceStore();

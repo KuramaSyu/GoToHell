@@ -16,7 +16,7 @@ interface DeathAmountState {
   setAmount: (value: number) => void;
 }
 
-export const useDeathAmountState = create<DeathAmountState>((set) => ({
+export const useDeathAmountStore = create<DeathAmountState>((set) => ({
   amount: 0, // initial state
   setAmount: (value: number) => set({ amount: value }),
 }));
@@ -26,7 +26,7 @@ export interface NumberSliderProps {
 }
 
 export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
-  const { amount, setAmount } = useDeathAmountState();
+  const { amount, setAmount } = useDeathAmountStore();
   const theme = useTheme();
   const min = Math.min(0, amount);
   const max = Math.max(12, amount);
