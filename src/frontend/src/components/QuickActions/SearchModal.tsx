@@ -16,7 +16,7 @@ import {
   KeyboardReturnTwoTone,
 } from '@mui/icons-material';
 
-const AnimatedBox = animated(Box);
+export const AnimatedBox = animated(Box);
 export interface SearchModalProps {
   typed: string | null;
   setTyped: React.Dispatch<React.SetStateAction<string | null>>;
