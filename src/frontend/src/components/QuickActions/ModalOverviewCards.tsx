@@ -19,7 +19,7 @@ export const ModalOverview: React.FC = () => {
     >
       <QuickActionEntry
         keys="Any Number"
-        title="Exercises"
+        title="Deaths"
         icon={<DialpadIcon sx={ICON_QICK_ACTION_SX} />}
       />
       <QuickActionEntry
