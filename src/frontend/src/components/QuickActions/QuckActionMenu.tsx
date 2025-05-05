@@ -158,7 +158,7 @@ export const QuickActionMenu: React.FC = () => {
   // Listen for Enter to trigger upload and close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return; // Only listen when modal is open
+      if (!open || page !== 'overview') return; // Only listen when modal is open
 
       if (e.key === 'Enter') {
         triggerUpload();
@@ -169,7 +169,7 @@ export const QuickActionMenu: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [typed, open]);
+  }, [typed, open, page]);
 
   const pageTransitions = useTransition(page, {
     from: { opacity: 0, transform: 'scale(0.7)' },
