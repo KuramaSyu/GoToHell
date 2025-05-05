@@ -15,6 +15,55 @@ import {
   KeyboardReturnOutlined,
   KeyboardReturnTwoTone,
 } from '@mui/icons-material';
+import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
+
+/**
+ * Represents an Abstract Element, which can be selected
+ */
+interface SearchEntry {
+  name: string;
+  /**
+   * This "selects" the current Search Entry in sense of, that is is now the used Game/Sport
+   */
+  select(): void;
+}
+
+/**
+ * Represents any of the available Sport Kinds
+ */
+class SportEntry implements SearchEntry {
+  name: string;
+  constructor(sport: string) {
+    this.name = sport;
+  }
+
+  select(): void {
+    const sportResponse = useSportResponseStore.getState().sportResponse;
+    const { setSport, currentSport } = useSportStore.getState();
+    const sportMultiplier = sportResponse?.sports[this.name];
+    if (sportMultiplier === undefined) return;
+    setSport({
+      ...currentSport,
+      sport: this.name,
+      sport_multiplier: sportMultiplier,
+    });
+  }
+}
+
+/**
+ * Represents any of the available games
+ */
+class GameEntry implements SearchEntry {
+  name: string;
+  constructor(game: string) {
+    this.name = game;
+  }
+
+  select(): void {
+    const { setTheme } = useThemeStore.getState();
+    setTheme(this.name);
+  }
+}
 
 export const AnimatedBox = animated(Box);
 export interface SearchModalProps {
@@ -27,28 +76,31 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 }) => {
   const { sportResponse } = useSportResponseStore();
   const { currentSport, setSport } = useSportStore();
+  getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
 
-  const filteredSports = useMemo(() => {
+  const filteredSearch: SearchEntry[] = useMemo(() => {
     if (typed === null) {
       return [];
     }
-    return sports.filter((s) => s.toLowerCase().includes(typed!.toLowerCase()));
+    // filter sports and wrap into SearchEntry
+    const sportSearch = sports
+      .filter((s) => s.toLowerCase().includes(typed!.toLowerCase()))
+      .map((e) => new SportEntry(e));
+
+    // filter games and wrap into SearchEntry
+    const gameSearch = getThemeNames()
+      .filter((s) => s.toLowerCase().includes(typed!.toLowerCase()))
+      .map((e) => new GameEntry(e));
+    return [...sportSearch, ...gameSearch];
   }, [typed]);
 
   // triggerd when clicked or enter pressed
   const onEnter = () => {
     // select first element
-    const element = filteredSports[0];
+    const element = filteredSearch[0];
     if (element === undefined) return;
-    const sportMultiplier = sportResponse?.sports[element];
-    if (sportMultiplier === undefined) return;
-    setSport({
-      ...currentSport,
-      sport: element,
-      sport_multiplier: sportMultiplier,
-    });
-
+    element.select();
     setTyped(null);
   };
 
@@ -63,11 +115,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [filteredSports]);
+  }, [filteredSearch]);
 
   const springs = useSprings(
-    filteredSports.length,
-    filteredSports.map((_, index) => ({
+    filteredSearch.length,
+    filteredSearch.map((_, index) => ({
       from: { opacity: 0, transform: 'scale(0.7)' },
       to: { opacity: 1, transform: 'scale(1)' },
 
@@ -152,12 +204,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            key={filteredSports[i]}
+            key={filteredSearch[i]?.name}
             style={style}
           >
             {i !== 0 ? (
               <Typography variant="h5" sx={{ fontWeight: '300' }}>
-                {filteredSports[i]!.toUpperCase()}
+                {filteredSearch[i]!.name.toUpperCase()}
               </Typography>
             ) : (
               // flex with one empty element, the typography and selectbox
@@ -174,7 +226,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   variant="h5"
                   sx={{ fontWeight: '300', width: 1 / 3, textAlign: 'center' }}
                 >
-                  {filteredSports[i]!.toUpperCase()}
+                  {filteredSearch[i]!.name.toUpperCase()}
                 </Typography>
                 <Box
                   width={1 / 3}
