@@ -122,6 +122,7 @@ export const AmountModal: React.FC<SearchModalProps> = ({
             placeholder="Search..."
             value={typed}
             onChange={() => {}}
+            error={!isNumeric(typed)}
             slotProps={{
               input: {
                 startAdornment: (
