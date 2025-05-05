@@ -8,6 +8,7 @@ import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
 import { PlankOverride } from './PlankOverride';
 import { SportDragDrop } from './SportDragDrop';
 import { GameDragDrop } from './GameDragDrop';
+import useUploadStore from '../../zustand/UploadStore';
 
 const SettingsBoxSX = {
   width: 4 / 5,
@@ -17,6 +18,11 @@ const SettingsBoxSX = {
 };
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
+
+  useEffect(() => {
+    const { setUpload } = useUploadStore.getState();
+    setUpload(0);
+  }, []);
 
   useEffect(() => {
     // read preferences on page load
