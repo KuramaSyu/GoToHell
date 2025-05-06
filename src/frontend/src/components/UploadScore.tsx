@@ -38,10 +38,11 @@ export const UploadScore = () => {
   // for triggers coming from outside (eg shortcut modal)
   useEffect(() => {
     if (uploadTrigger === 0) return;
-    OnUploadClick();
+    OnUploadClick().finally();
   }, [uploadTrigger]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const OnUploadClick = async () => {
     if (!currentSport) {
       return setErrorMessage('Please select a Sport first');
@@ -52,6 +53,12 @@ export const UploadScore = () => {
     }
     if (amount == 0) {
       return setErrorMessage('Yeah, just upload nothing. Good idea indeed');
+    }
+
+    if (useSportStore.getState().currentSport.sport == null) {
+      return setErrorMessage(
+        `What? Should I upload ${amount} apples? Perhaps oranges?`
+      );
     }
     const startTime = new Date().getTime();
     setSnackbarState('uploading');
