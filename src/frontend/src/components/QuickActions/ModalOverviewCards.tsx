@@ -4,6 +4,7 @@ import AbcIcon from '@mui/icons-material/Abc';
 import PinIcon from '@mui/icons-material/Pin';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import DialpadIcon from '@mui/icons-material/Dialpad';
+import { UploadCardButton } from './UploadButton';
 
 export const ModalOverview: React.FC = () => {
   return (
@@ -24,14 +25,10 @@ export const ModalOverview: React.FC = () => {
       />
       <QuickActionEntry
         keys="Any Letter"
-        title="Sport Kind"
+        title="Sport or Game"
         icon={<AbcIcon sx={ICON_QICK_ACTION_SX} />}
       />
-      <QuickActionEntry
-        keys="Enter"
-        title="Upload"
-        icon={<KeyboardReturnIcon sx={ICON_QICK_ACTION_SX} />}
-      />
+      <UploadCardButton></UploadCardButton>
     </Box>
   );
 };
