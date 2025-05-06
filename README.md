@@ -48,8 +48,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 - [ ] Show all multipliers in the settings
 - [ ] make Overview boxes in Shortcut Modal clickable
-- [ ] ShortcutModal: better red outlined input box for wrong number input
-- [ ] ShortcutModal: better error handling, when enter pressed, but upload inactive
 - [ ] ShortcutModal: Show active shortcut on left side (e.g. death select or sport select)
 
 #### Perf
