@@ -35,6 +35,7 @@ const ErrorDisplay: React.FC = () => {
   ) => {
     if (reason === 'clickaway') return;
     setOpen(false);
+    //setErrorMessage('');
   };
 
   // Handle cleanup after animation
@@ -42,15 +43,14 @@ const ErrorDisplay: React.FC = () => {
     setErrorMessage('');
   };
 
-  console.log('ErrorDisplay rendering:', { errorMessage, open }); // Debug info
-
   return (
     <Snackbar
       open={open}
       autoHideDuration={5000}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      key={errorMessage}
+      key={errorMessage} // This key is important for re-triggering with the same message
+      slotProps={{ transition: { onExited: handleExited } }}
     >
       <Typography variant="h4" component="div">
         <Alert severity="error">{errorMessage}</Alert>
