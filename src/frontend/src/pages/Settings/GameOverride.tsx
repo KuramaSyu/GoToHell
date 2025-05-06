@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { getThemeNames } from '../../zustand/useThemeStore';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import useAppState from '../../zustand/Error';
+import useErrorStore from '../../zustand/Error';
 import { Add, Remove } from '@mui/icons-material';
 import { setCookie } from '../../utils/cookies';
 import { CustomSelect } from './CustomSelect';
@@ -34,7 +34,7 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
   sport,
   amount,
 }) => {
-  const { setErrorMessage } = useAppState();
+  const { setErrorMessage } = useErrorStore();
   const { preferences, setPreferences } = usePreferenceStore();
 
   const removeItem = (game: string, sport: string, amount: number) => {
@@ -142,7 +142,7 @@ export const GameOverrideSettings: React.FC = () => {
   const [sport, setSport] = useState<string | null>(null);
   const [exerciseAmount, setExerciseAmount] = useState<number>(0);
   const menuItems = getThemeNames();
-  const { setErrorMessage } = useAppState();
+  const { setErrorMessage } = useErrorStore();
 
   const add = () => {
     if (game === null) {

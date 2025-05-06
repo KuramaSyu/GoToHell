@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Snackbar, Alert, Typography } from '@mui/material';
-import useAppState from '../zustand/Error';
+import useErrorStore from '../zustand/Error';
 
 const ErrorDisplay: React.FC = () => {
-  const { errorMessage, setErrorMessage } = useAppState();
+  const { errorMessage, setErrorMessage } = useErrorStore();
   const [open, setOpen] = useState(false);
 
   // Monitor error message changes

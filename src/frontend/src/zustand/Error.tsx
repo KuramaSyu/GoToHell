@@ -5,9 +5,9 @@ interface AppState {
   setErrorMessage: (message: string) => void;
 }
 
-const useAppState = create<AppState>((set) => ({
+const useErrorStore = create<AppState>((set) => ({
   errorMessage: '',
   setErrorMessage: (message) => set({ errorMessage: message }),
 }));
 
-export default useAppState;
+export default useErrorStore;

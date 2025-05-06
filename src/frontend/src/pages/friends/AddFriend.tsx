@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { Box, TextField, Button, Typography } from '@mui/material';
 import { BACKEND_BASE } from '../../statics';
-import useAppState from '../../zustand/Error';
+import useErrorStore from '../../zustand/Error';
 
 const AddFriend: React.FC = () => {
   const [friendId, setFriendId] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const { setErrorMessage } = useAppState();
+  const { setErrorMessage } = useErrorStore();
 
   const update = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {

@@ -7,7 +7,7 @@ import { BACKEND_BASE } from '../../statics';
 import { useUsersStore, useUserStore } from '../../userStore';
 import { formatDistanceToNow } from 'date-fns';
 import { useThemeStore } from '../../zustand/useThemeStore';
-import useAppState from '../../zustand/Error';
+import useErrorStore from '../../zustand/Error';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { Sport, SportsApiResponse } from '../../models/Sport';
@@ -41,7 +41,7 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
   // use react mediaquery to get the current display
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useUserStore();
-  const { setErrorMessage } = useAppState();
+  const { setErrorMessage } = useErrorStore();
   const {
     refreshTrigger,
     setRecentSports: setAllRecentSports,

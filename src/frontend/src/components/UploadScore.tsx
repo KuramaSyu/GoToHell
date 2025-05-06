@@ -11,7 +11,7 @@ import { useDeathAmountStore } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from '../userStore';
 import SportRow, { SportScore } from '../models/Sport';
-import useAppState from '../zustand/Error';
+import useErrorStore from '../zustand/Error';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
@@ -27,7 +27,7 @@ export const UploadScore = () => {
   const { currentSport } = useSportStore();
   const { amount, setAmount: setDeathAmount } = useDeathAmountStore();
   const { user } = useUserStore();
-  const { setErrorMessage } = useAppState();
+  const { setErrorMessage } = useErrorStore();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts, triggerRefresh: triggerScoreRefresh } =
     useTotalScoreStore();
@@ -44,10 +44,6 @@ export const UploadScore = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const OnUploadClick = async () => {
-    if (!currentSport) {
-      return setErrorMessage('Please select a Sport first');
-    }
-
     if (!user) {
       return setErrorMessage('Please Login with Discord');
     }
@@ -112,8 +108,7 @@ export const UploadScore = () => {
       currentSport.game_multiplier
     )
   ) {
-    //setErrorMessage("Please Login")
-    return <Box></Box>;
+    return null;
   }
   const computedValue = calculator.calculate_amount(
     currentSport.sport!,
