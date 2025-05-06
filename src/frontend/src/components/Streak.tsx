@@ -22,21 +22,23 @@ export const Streak = () => {
 
   useEffect(() => {
     if (lastUpdated === null || lastUpdated !== today_stripped) {
-      var resp = new UserApi().fetchStreak();
-
-      // get latest date in recentSports
-      const latest_date = new Date(
-        recentSports?.data[recentSports!.data.length - 1]?.timedate ?? 0
-      )
-        .toISOString()
-        .split('T')[0]!;
+      var resp = new UserApi().fetchStreak().then(() => {
+        console.timeLog(`Updated Streak ${useStreakStore.getState().streak}`);
+      });
 
       // update if fetch was successfull
       resp.then((answ) => {
         if (answ == null) {
+          // get latest date in recentSports
+          const latest_date = new Date(
+            recentSports?.data[recentSports!.data.length - 1]?.timedate ?? 0
+          )
+            .toISOString()
+            .split('T')[0]!;
+
+          setLastUpdated(latest_date);
           return;
         }
-        setLastUpdated(latest_date);
       });
     }
   }, [user, recentSports]);
