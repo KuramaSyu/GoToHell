@@ -48,7 +48,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 - [ ] Show all multipliers in the settings
 - [ ] make Overview boxes in Shortcut Modal clickable
-- [ ] ShortcutModal: Show active shortcut on left side (e.g. death select or sport select)
 
 #### Perf
 
