@@ -19,6 +19,7 @@ import { useDeathAmountStore } from '../NumberSlider';
 import { isNumeric } from '../../utils/UserNumber';
 import { isValid } from 'date-fns';
 import { SearchModalProps } from './SearchModal';
+import { NumberCardButton } from './QuickActionEntries';
 
 export const AmountModal: React.FC<SearchModalProps> = ({
   typed,
@@ -96,15 +97,23 @@ export const AmountModal: React.FC<SearchModalProps> = ({
       sx={{
         display: 'flex',
         alignItems: 'center',
+        justifyItems: 'center',
+        justifyContent: 'start',
+        flexDirection: 'row',
+        width: '100%',
       }}
     >
+      <Box sx={{ width: 1 / 4, display: 'flex', justifyContent: 'center' }}>
+        <NumberCardButton />
+      </Box>
+
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          width: '100%',
           height: '60px',
           gap: 2,
+          flexGrow: 1,
         }}
       >
         <Box

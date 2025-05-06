@@ -16,6 +16,7 @@ import {
   KeyboardReturnTwoTone,
 } from '@mui/icons-material';
 import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
+import { SearchCardButton } from './QuickActionEntries';
 
 /**
  * Represents an Abstract Element, which can be selected
@@ -152,10 +153,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         width: '100%',
+        height: '80%',
       }}
     >
+      <Box sx={{ width: 1 / 4, display: 'flex' }}>
+        <SearchCardButton />
+      </Box>
       <TextField
         variant="outlined"
         placeholder="Search..."
@@ -174,7 +179,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           display: 'flex',
           justifyContent: 'center',
           height: '100%',
-          width: '100%',
+          width: '80%',
           maxWidth: 600,
         }}
       />
