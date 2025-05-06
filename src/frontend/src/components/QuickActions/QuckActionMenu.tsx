@@ -1,4 +1,12 @@
-import { alpha, Box, duration, Icon, Modal, Typography } from '@mui/material';
+import {
+  alpha,
+  Box,
+  Button,
+  duration,
+  Icon,
+  Modal,
+  Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import SearchIcon from '@mui/icons-material/Search';
@@ -31,36 +39,47 @@ export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
 }) => {
   const { theme } = useThemeStore();
   return (
-    <Box
+    <Button
+      variant="outlined"
       sx={{
-        display: 'flex',
-        flexDirection: 'row',
         p: 1,
         borderRadius: 5,
         borderColor: theme.palette.primary.main,
         borderWidth: '2px',
-        alignItems: 'center',
-        gap: 2,
       }}
     >
-      <Box sx={ICON_QICK_ACTION_SX}>{icon}</Box>
-
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 2,
+          width: '100%',
         }}
       >
-        <Box sx={{ fontSize: '3vh', whiteSpace: 'nowrap' }}>{title}</Box>
-        <Box sx={{ fontSize: '2vh', whiteSpace: 'nowrap' }}>{keys}</Box>
+        <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>{icon}</Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Box sx={{ fontSize: '3vh', whiteSpace: 'nowrap', color: 'white' }}>
+            {title}
+          </Box>
+          <Box
+            sx={{ fontSize: '1.8 vh', whiteSpace: 'nowrap', color: 'white' }}
+          >
+            {keys}
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </Button>
   );
 };
 
 export const ICON_QICK_ACTION_SX = {
-  height: '80%',
+  height: '6vh',
   width: 'auto',
   alignContent: 'center',
 };
