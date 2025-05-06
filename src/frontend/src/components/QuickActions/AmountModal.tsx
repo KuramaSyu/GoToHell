@@ -101,7 +101,6 @@ export const AmountModal: React.FC<SearchModalProps> = ({
       <Box
         sx={{
           display: 'flex',
-
           justifyContent: 'center',
           width: '100%',
           height: '60px',
