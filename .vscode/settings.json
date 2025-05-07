@@ -16,6 +16,6 @@
     "markdown": false,
     "scminput": false,
     "python": true,
-    "typescriptreact": false
+    "typescriptreact": true
   }
 }
