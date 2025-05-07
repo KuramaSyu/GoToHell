@@ -23,6 +23,7 @@ import { SearchModal } from './SearchModal';
 import { isNumeric } from '../../utils/UserNumber';
 import { AmountModal } from './AmountModal';
 import useUploadStore from '../../zustand/UploadStore';
+import usePreferenceStore from '../../zustand/PreferenceStore';
 
 const AnimatedBox = animated(Box);
 
@@ -33,6 +34,7 @@ export const QuickActionMenu: React.FC = () => {
   const [typed, SetTyped] = useState<string | null>(null);
   const [page, setPage] = useState('overview');
   const { triggerUpload } = useUploadStore();
+  const { preferences } = usePreferenceStore();
 
   const transitions = useTransition(open, {
     from: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
@@ -71,27 +73,19 @@ export const QuickActionMenu: React.FC = () => {
           return !currentOpen;
         });
         return; // Don't process '/' further for typing
+      } else if (preferences.other.instant_open_modal === true && !open) {
+        setOpen(true);
+        processTyping(e);
       }
 
-      // Handle closing with Escape key
       if (e.key === 'Escape') {
+        // Handle closing with Escape key
         setOpen(false);
         return;
       }
 
       // Handle typing only if the modal is currently open
-      if (open) {
-        // Basic check for printable characters (length 1)
-        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-          SetTyped((prev) => (prev ? prev + e.key : e.key));
-        } else if (e.key === 'Backspace' && e.ctrlKey) {
-          // Handle full delete
-          SetTyped(null);
-        } else if (e.key === 'Backspace') {
-          // Handle backspace
-          SetTyped((prev) => (prev ? prev.slice(0, -1) : null));
-        }
-      }
+      if (open) processTyping(e);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -99,6 +93,18 @@ export const QuickActionMenu: React.FC = () => {
     };
   }, [open]);
 
+  const processTyping = (e: KeyboardEvent) => {
+    // Basic check for printable characters (length 1)
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      SetTyped((prev) => (prev ? prev + e.key : e.key));
+    } else if (e.key === 'Backspace' && e.ctrlKey) {
+      // Handle full delete
+      SetTyped(null);
+    } else if (e.key === 'Backspace') {
+      // Handle backspace
+      SetTyped((prev) => (prev ? prev.slice(0, -1) : null));
+    }
+  };
   // change window when something was typed
   useEffect(() => {
     if (typed?.length ?? 0 > 0) {
