@@ -20,6 +20,12 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [x] Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
 - [x] 2 Buttons for Multiplier; one global one local
 - [x] Display sports in order
+- [x] Keyboard Shortcuts:
+  - ESC to exit settings to /
+  - Quick Action Modal for:
+    - Number, to set deaths
+    - Letter, to set games and sports
+    - Enter, to upload
 
 #### Ongoing
 
@@ -27,11 +33,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
-- [ ] Keyboard Shortcuts:
-  - ESC to exit settings to /
-  - ENTER to upload
-  - number, to write into custom
-  - letter to start search in sports. If only one sport left, select it. otherwise require enter to select the first one. block during this part the upload enter (a sport needs to be selected anyway). after pressing enter, reset search. when searching, and multile results fould, put enter symbol behind first sport, to indicate, that selection is done with enter. otherwise but the enter symbol infront of the upload symbol. Display a box, when "short search" is used, and how it works. Always.
 
 #### Features
 
