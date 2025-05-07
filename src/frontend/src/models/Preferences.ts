@@ -22,6 +22,11 @@ export interface UserPreferences {
   sport_specific: SportSpecific;
   ui: UIPreferences;
   max_deaths: number;
+  other: OtherPreferences;
+}
+
+export interface OtherPreferences {
+  instant_open_modal: boolean; // whether or not to open the quick action modal with every key
 }
 
 export interface UIPreferences {
@@ -51,5 +56,8 @@ export function defaultPreferences(): UserPreferences {
       },
     },
     max_deaths: 10,
+    other: {
+      instant_open_modal: true,
+    },
   };
 }
