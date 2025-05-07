@@ -44,12 +44,14 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 - [ ] separate repository for background pictures
 - [ ] fetch streak in .then to be sure that result is already set
+- [ ] add option button for accessing the modal in a short way
 
 #### QoL
 
 - [ ] Show all multipliers in the settings
 - [ ] Show sport (when selected via modal) even if it's not in UI preferences. Push it to top. Remove it afterward
 - [ ] make Overview boxes in Shortcut Modal clickable
+- [ ] add "home" button in quick action modal
 
 #### Perf
 
