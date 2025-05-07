@@ -9,7 +9,7 @@ import TopBar from './components/TopBar';
 import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
 import { useThemeStore } from './zustand/useThemeStore';
 import ErrorDisplay from './components/ErrorDisplay';
-import { Settings } from './pages/Settings/Settings';
+import { Settings } from './pages/Settings/Main';
 // Import other components as needed
 
 const App: React.FC = () => {
