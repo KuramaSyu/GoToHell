@@ -9,6 +9,7 @@ import { PlankOverride } from './PlankOverride';
 import { SportDragDrop } from './SportDragDrop';
 import { GameDragDrop } from './GameDragDrop';
 import useUploadStore from '../../zustand/UploadStore';
+import { useNavigate } from 'react-router-dom';
 
 const SettingsBoxSX = {
   width: 4 / 5,
@@ -18,6 +19,7 @@ const SettingsBoxSX = {
 };
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const { setUpload } = useUploadStore.getState();
@@ -27,6 +29,19 @@ export const Settings: React.FC = () => {
   useEffect(() => {
     // read preferences on page load
     loadPreferencesFromCookie();
+  }, []);
+
+  // Listen for esc, to navigate to home page
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        navigate('/');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
