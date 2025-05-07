@@ -3,7 +3,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import DialpadIcon from '@mui/icons-material/Dialpad';
 import AbcIcon from '@mui/icons-material/Abc';
 import { useSportStore } from '../../useSportStore';
-import { ICON_QICK_ACTION_SX, QuickActionEntry } from './Main';
+import { ICON_QICK_ACTION_SX, QuickActionEntry } from './QuickActionEntry';
 
 export const UploadCardButton: React.FC = () => {
   return (

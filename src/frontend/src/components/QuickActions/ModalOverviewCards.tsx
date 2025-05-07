@@ -8,7 +8,7 @@ import {
   SearchCardButton,
   UploadCardButton,
 } from './QuickActionEntries';
-import { ICON_QICK_ACTION_SX, QuickActionEntry } from './Main';
+import { ICON_QICK_ACTION_SX, QuickActionEntry } from './QuickActionEntry';
 
 export const ModalOverview: React.FC = () => {
   return (
