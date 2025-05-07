@@ -158,7 +158,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         height: '80%',
       }}
     >
-      <Box sx={{ width: 1 / 4, display: 'flex' }}>
+      <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
         <SearchCardButton />
       </Box>
       <TextField
