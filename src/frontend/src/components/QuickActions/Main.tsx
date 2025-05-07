@@ -10,7 +10,12 @@ import {
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import SearchIcon from '@mui/icons-material/Search';
-import { Backspace, SvgIconComponent, Title } from '@mui/icons-material';
+import {
+  Backspace,
+  Height,
+  SvgIconComponent,
+  Title,
+} from '@mui/icons-material';
 import { animated, useTransition } from 'react-spring';
 import { transform } from 'framer-motion';
 import AbcIcon from '@mui/icons-material/Abc';
@@ -24,6 +29,7 @@ import { isNumeric } from '../../utils/UserNumber';
 import { AmountModal } from './AmountModal';
 import useUploadStore from '../../zustand/UploadStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const AnimatedBox = animated(Box);
 
@@ -177,15 +183,61 @@ export const QuickActionMenu: React.FC = () => {
           >
             <Box
               sx={{
-                justifyContent: 'center',
-                justifyItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
                 px: 3,
                 display: 'flex',
                 fontSize: '4vh',
                 flexShrink: 0,
               }}
             >
-              Quick Actions
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              ></Box>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Quick Actions
+              </Box>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  justifyContent: 'end',
+                  alignItems: 'center',
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'end',
+                    gap: 1,
+                    px: 2,
+                    fontSize: '1.5vh',
+                  }}
+                >
+                  ESC
+                  <ExitToAppIcon
+                    sx={{
+                      height: '2vh',
+                      width: 'auto',
+                    }}
+                  />
+                </Button>
+              </Box>
             </Box>
             <Box
               sx={{
