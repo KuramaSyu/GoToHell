@@ -164,7 +164,7 @@ export const QuickActionMenu: React.FC = () => {
               height: '20%',
               backgroundColor: alpha(theme.palette.muted.main, 0.5),
               border: `4px solid ${alpha(theme.palette.muted.main, 0.55)}`,
-              backdropFilter: 'blur(15px)',
+              backdropFilter: 'blur(8px)',
               outline: 'none',
               borderRadius: 5,
               justifyContent: 'center',
