@@ -40,7 +40,7 @@ export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
             flexDirection: 'column',
           }}
         >
-          <Box sx={{ fontSize: '3vh', whiteSpace: 'nowrap', color: 'white' }}>
+          <Box sx={{ fontSize: '2.5vh', whiteSpace: 'nowrap', color: 'white' }}>
             {title}
           </Box>
           <Box

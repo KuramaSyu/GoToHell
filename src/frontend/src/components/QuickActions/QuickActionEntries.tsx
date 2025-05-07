@@ -29,7 +29,7 @@ export const SearchCardButton: React.FC = () => {
   return (
     <QuickActionEntry
       keys="Any Letter"
-      title="Sport or Game"
+      title="Sport / Game"
       icon={<AbcIcon sx={ICON_QICK_ACTION_SX} />}
     />
   );
