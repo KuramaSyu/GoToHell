@@ -9,7 +9,7 @@ import { useUsersStore, useUserStore } from '../userStore';
 import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 import { UserApi } from '../utils/api/Api';
 import { ThemeProvider } from '@emotion/react';
-import { QuickActionMenu } from './QuickActions/QuckActionMenu';
+import { QuickActionMenu } from './QuickActions/Main';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
