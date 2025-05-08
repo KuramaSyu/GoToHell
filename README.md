@@ -53,7 +53,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] Show sport (when selected via modal) even if it's not in UI preferences. Push it to top. Remove it afterward
 - [ ] make Overview boxes in Shortcut Modal clickable
 - [ ] add "home" button in quick action modal
-- [ ] show long names of games in modal search, but also search short names
 
 #### Perf
 
