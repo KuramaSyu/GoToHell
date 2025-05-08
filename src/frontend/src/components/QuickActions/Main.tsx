@@ -65,6 +65,14 @@ export const QuickActionMenu: React.FC = () => {
 
   // opening keyboard listener
   useEffect(() => {
+    const alphanumericRegex = /^[a-zA-Z0-9]$/;
+    const isAlphanumberic = (e: KeyboardEvent): boolean => {
+      return (
+        alphanumericRegex.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey
+      );
+    };
+    const INSTANT_OPEN = preferences.other.instant_open_modal;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       // Handle opening/closing first
       if (e.key === '/') {
@@ -79,7 +87,7 @@ export const QuickActionMenu: React.FC = () => {
           return !currentOpen;
         });
         return; // Don't process '/' further for typing
-      } else if (preferences.other.instant_open_modal === true && !open) {
+      } else if (INSTANT_OPEN && !open && isAlphanumberic(e)) {
         setOpen(true);
         processTyping(e);
       }
