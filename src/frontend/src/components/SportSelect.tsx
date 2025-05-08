@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   Box,
@@ -72,22 +72,35 @@ export const SportSelector = () => {
     return preferences.ui.displayedSports.includes(value);
   }
 
-  function displayedSports(): Multiplier[] {
+  const displayedSports = useMemo((): Multiplier[] => {
     if (sportResponse?.sports === undefined) {
       return [];
     }
     const sports = sportResponse!.sports!;
-    return (preferences.ui.displayedSports ?? Object.keys(sports)).map(
-      (sport) => {
-        const multiplier: Multiplier = {
-          game: null,
-          multiplier: sports[sport] ?? 1,
-          sport: sport,
-        };
-        return multiplier;
-      }
-    );
-  }
+    const sportPerferences = (
+      preferences.ui.displayedSports ?? Object.keys(sports)
+    ).map((sport) => {
+      const multiplier: Multiplier = {
+        game: null,
+        multiplier: sports[sport] ?? 1,
+        sport: sport,
+      };
+      return multiplier;
+    });
+
+    if (
+      sportPerferences.filter((s) => s.sport === currentSport?.sport).length <=
+      0
+    ) {
+      const multiplier: Multiplier = {
+        game: null,
+        multiplier: currentSport?.sport_multiplier ?? 1,
+        sport: currentSport?.sport,
+      };
+      return [multiplier, ...sportPerferences];
+    }
+    return sportPerferences;
+  }, [preferences, sportResponse, currentSport]);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -181,7 +194,7 @@ export const SportSelector = () => {
           padding: 2,
         }}
       >
-        {displayedSports().map(({ sport, multiplier }) => {
+        {displayedSports.map(({ sport, multiplier }) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
@@ -225,7 +238,7 @@ export const SportSelector = () => {
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
-        {displayedSports().map(({ sport, multiplier }) => {
+        {displayedSports.map(({ sport, multiplier }) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
