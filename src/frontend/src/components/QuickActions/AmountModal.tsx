@@ -24,6 +24,8 @@ import { NumberCardButton } from './QuickActionEntries';
 export const AmountModal: React.FC<SearchModalProps> = ({
   typed,
   setTyped,
+  page,
+  setPage,
 }) => {
   const { setAmount } = useDeathAmountStore();
   const [error, setError] = useState<null | string>(null);
@@ -104,7 +106,7 @@ export const AmountModal: React.FC<SearchModalProps> = ({
       }}
     >
       <Box sx={{ width: 1 / 4, display: 'flex', justifyContent: 'center' }}>
-        <NumberCardButton />
+        <NumberCardButton page={page} setPage={setPage} />
       </Box>
 
       <Box
