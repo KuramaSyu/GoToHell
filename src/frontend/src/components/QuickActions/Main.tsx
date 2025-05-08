@@ -296,12 +296,16 @@ export const QuickActionMenu: React.FC = () => {
                       key="search"
                       typed={typed}
                       setTyped={SetTyped}
+                      page={page}
+                      setPage={setPage}
                     />
                   ) : currentPage === 'AmountModal' ? (
                     <AmountModal
                       key="search"
                       typed={typed}
                       setTyped={SetTyped}
+                      page={page}
+                      setPage={setPage}
                     />
                   ) : (
                     <Box sx={{ flexGrow: 1 }}></Box>

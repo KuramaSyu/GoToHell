@@ -110,6 +110,8 @@ export const AnimatedBox = animated(Box);
 export interface SearchModalProps {
   typed: string | null;
   setTyped: React.Dispatch<React.SetStateAction<string | null>>;
+  page: string;
+  setPage: React.Dispatch<React.SetStateAction<string>>;
 }
 export const SearchModal: React.FC<SearchModalProps> = ({
   typed,
