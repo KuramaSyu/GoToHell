@@ -37,17 +37,17 @@ interface SearchEntry {
    * This "selects" the current Search Entry in sense of, that is is now the used Game/Sport
    */
   select(): void;
-  getDisplayName(): string;
+  displayName(): string;
   getNames(): string[];
 }
 
 abstract class DefaultSearchEntry implements SearchEntry {
   abstract name: string;
   abstract select(): void;
-  abstract getDisplayName(): string;
+  abstract displayName(): string;
 
   getNames(): string[] {
-    return [this.name, this.getDisplayName()];
+    return [this.name, this.displayName()];
   }
 }
 /**
@@ -72,7 +72,7 @@ class SportEntry extends DefaultSearchEntry {
     });
   }
 
-  getDisplayName(): string {
+  displayName(): string {
     return this.name;
   }
 }
@@ -92,7 +92,7 @@ class GameEntry extends DefaultSearchEntry {
     setTheme(this.name);
   }
 
-  getDisplayName(): string {
+  displayName(): string {
     const theme = customThemes.find((theme) => theme.name === this.name);
     return theme?.longName ?? this.name;
   }
@@ -250,7 +250,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           >
             {i !== 0 ? (
               <Typography variant="h5" sx={{ fontWeight: '300' }}>
-                {filteredSearch[i]!.getDisplayName()}
+                {filteredSearch[i]!.displayName()}
               </Typography>
             ) : (
               // flex with one empty element, the typography and selectbox
@@ -267,7 +267,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   variant="h5"
                   sx={{ fontWeight: '300', width: 3 / 5, textAlign: 'center' }}
                 >
-                  {filteredSearch[i]!.getDisplayName()}
+                  {filteredSearch[i]!.displayName()}
                 </Typography>
                 <Box
                   width={1 / 5}
