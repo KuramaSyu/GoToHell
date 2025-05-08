@@ -52,6 +52,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] Show all multipliers in the settings
 - [ ] make Overview boxes in Shortcut Modal clickable
 - [ ] animation when the one not added sport via modal is added to the col
+- [ ] calculate Plank seconds to minutes
 
 #### Perf
 
