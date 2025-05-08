@@ -6,16 +6,27 @@ export interface QuickActionEntryProps {
   title: string;
   keys: string;
   icon: React.ReactNode;
+  page: string;
+  setPage: React.Dispatch<React.SetStateAction<string>>;
+  navigateToPage: string;
 }
 
 export const QuickActionEntry: React.FC<QuickActionEntryProps> = ({
   title,
   keys,
   icon,
+  page,
+  setPage,
+  navigateToPage,
 }) => {
   const { theme } = useThemeStore();
   return (
     <Button
+      onClick={() => {
+        if (page !== navigateToPage) {
+          setPage(navigateToPage);
+        }
+      }}
       variant="outlined"
       sx={{
         p: 1,

@@ -23,7 +23,7 @@ import PinIcon from '@mui/icons-material/Pin';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import DialpadIcon from '@mui/icons-material/Dialpad';
 import React from 'react';
-import { ModalOverview } from './ModalOverviewCards';
+import { ModalOverview, ModalPages } from './ModalOverviewCards';
 import { SearchModal } from './SearchModal';
 import { isNumeric } from '../../utils/UserNumber';
 import { AmountModal } from './AmountModal';
@@ -126,14 +126,14 @@ export const QuickActionMenu: React.FC = () => {
       // something was typed -> either sport or amount modal
       if (isNumeric(typed![0]!)) {
         // first character is a number -> amount modal
-        setPage('AmountModal');
+        setPage(ModalPages.AMOUNT_MODAL);
       } else {
         // first character is a letter -> sport modal
-        setPage('SportSearch');
+        setPage(ModalPages.SEARCH_MODAL);
       }
     } else {
       // nothing was typed -> overview
-      setPage('overview');
+      setPage(ModalPages.OVERVIEW);
     }
   }, [typed]);
 
@@ -289,9 +289,13 @@ export const QuickActionMenu: React.FC = () => {
                     height: '100%',
                   }}
                 >
-                  {currentPage === 'overview' ? (
-                    <ModalOverview key="overview" />
-                  ) : currentPage === 'SportSearch' ? (
+                  {currentPage === ModalPages.OVERVIEW ? (
+                    <ModalOverview
+                      key="overview"
+                      page={page}
+                      setPage={setPage}
+                    />
+                  ) : currentPage === ModalPages.SEARCH_MODAL ? (
                     <SearchModal
                       key="search"
                       typed={typed}
@@ -299,7 +303,7 @@ export const QuickActionMenu: React.FC = () => {
                       page={page}
                       setPage={setPage}
                     />
-                  ) : currentPage === 'AmountModal' ? (
+                  ) : currentPage === ModalPages.AMOUNT_MODAL ? (
                     <AmountModal
                       key="search"
                       typed={typed}

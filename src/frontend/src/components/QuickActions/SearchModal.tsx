@@ -116,6 +116,8 @@ export interface SearchModalProps {
 export const SearchModal: React.FC<SearchModalProps> = ({
   typed,
   setTyped,
+  page,
+  setPage,
 }) => {
   const { sportResponse } = useSportResponseStore();
   const { currentSport, setSport } = useSportStore();
@@ -205,7 +207,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       }}
     >
       <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-        <SearchCardButton />
+        <SearchCardButton page={page} setPage={setPage} />
       </Box>
       <TextField
         variant="outlined"
