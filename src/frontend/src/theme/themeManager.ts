@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
 import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { customThemes, useThemeStore } from '../zustand/useThemeStore';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -74,12 +74,20 @@ export function buildCustomTheme(
 //   isDark ? dark : light;
 export class ThemeManager {
   private themes: Map<string, CustomThemeConfig>;
+  private static instance: ThemeManager | undefined;
   // For now, we use a constant to choose dark mode; later this can be dynamically set.
   private readonly isDark: boolean = true;
 
-  constructor(configs: CustomThemeConfig[]) {
+  private constructor(configs: CustomThemeConfig[]) {
     this.themes = new Map();
     configs.forEach((config) => this.themes.set(config.name, config));
+  }
+
+  public static getInstance(): ThemeManager {
+    if (ThemeManager.instance === undefined) {
+      ThemeManager.instance = new ThemeManager(customThemes);
+    }
+    return ThemeManager.instance;
   }
 
   /**

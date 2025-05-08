@@ -28,7 +28,7 @@ export const getThemeNames = () => {
 };
 
 // Instantiate our ThemeManager with the custom configurations.
-const themeManager = new ThemeManager(customThemes);
+const themeManager = ThemeManager.getInstance();
 
 interface ThemeState {
   theme: CustomTheme;
