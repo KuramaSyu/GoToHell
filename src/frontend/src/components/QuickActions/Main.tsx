@@ -30,6 +30,7 @@ import { AmountModal } from './AmountModal';
 import useUploadStore from '../../zustand/UploadStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AppsIcon from '@mui/icons-material/Apps';
 
 const AnimatedBox = animated(Box);
 
@@ -160,6 +161,48 @@ export const QuickActionMenu: React.FC = () => {
       state === 'enter' ? { tension: 350, friction: 25 } : { duration: 150 },
   });
 
+  const overviewButton = (
+    <Button
+      variant="outlined"
+      onClick={() => setPage('overview')}
+      sx={{
+        display: 'flex',
+        justifyContent: 'end',
+        gap: 1,
+        px: 2,
+        fontSize: '1.5vh',
+      }}
+    >
+      Overview
+      <AppsIcon
+        sx={{
+          height: '2vh',
+          width: 'auto',
+        }}
+      />
+    </Button>
+  );
+  const exitButton = (
+    <Button
+      variant="outlined"
+      onClick={() => setOpen(false)}
+      sx={{
+        display: 'flex',
+        justifyContent: 'end',
+        gap: 1,
+        px: 2,
+        fontSize: '1.5vh',
+      }}
+    >
+      ESC
+      <ExitToAppIcon
+        sx={{
+          height: '2vh',
+          width: 'auto',
+        }}
+      />
+    </Button>
+  );
   return (
     <Modal
       open={visible}
@@ -203,10 +246,12 @@ export const QuickActionMenu: React.FC = () => {
                 sx={{
                   flex: 1,
                   display: 'flex',
-                  justifyContent: 'center',
+                  justifyContent: 'start',
                   alignItems: 'center',
                 }}
-              ></Box>
+              >
+                {page !== 'overview' ? overviewButton : null}
+              </Box>
               <Box
                 sx={{
                   flex: 1,
@@ -226,25 +271,7 @@ export const QuickActionMenu: React.FC = () => {
                   alignItems: 'center',
                 }}
               >
-                <Button
-                  variant="outlined"
-                  onClick={() => setOpen(false)}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'end',
-                    gap: 1,
-                    px: 2,
-                    fontSize: '1.5vh',
-                  }}
-                >
-                  ESC
-                  <ExitToAppIcon
-                    sx={{
-                      height: '2vh',
-                      width: 'auto',
-                    }}
-                  />
-                </Button>
+                {exitButton}
               </Box>
             </Box>
             <Box
