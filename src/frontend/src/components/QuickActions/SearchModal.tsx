@@ -118,15 +118,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     }
 
     // filter sports and wrap into SearchEntry
-    const sportSearch = sports
-      .filter((s) => s.toLowerCase().includes(typed!.toLowerCase()))
-      .map((e) => new SportEntry(e));
+    const sportSearch = sports.map((e) => new SportEntry(e));
 
     // filter games and wrap into SearchEntry
-    const gameSearch = getThemeNames()
-      .filter((s) => s.toLowerCase().includes(typed!.toLowerCase()))
-      .map((e) => new GameEntry(e));
-    return [...sportSearch, ...gameSearch];
+    const gameSearch = getThemeNames().map((e) => new GameEntry(e));
+    const searchData = [...sportSearch, ...gameSearch];
+    const gameFuse = new Fuse(searchData, {
+      threshold: 0.5,
+      keys: ['getNames'],
+      getFn: (e: SearchEntry) => e.getNames().join(' '),
+    });
+    return gameFuse.search(typed).map((result) => result.item);
   }, [typed]);
 
   // triggerd when clicked or enter pressed
@@ -182,6 +184,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       </Typography>
     </Button>
   );
+
   return (
     <Box
       sx={{
@@ -219,7 +222,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       <Box
         sx={{
           position: 'absolute',
-          width: '33vw',
+          width: '50vw',
           height: '33vh',
           top: '15vh',
           gap: 1,
@@ -247,7 +250,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           >
             {i !== 0 ? (
               <Typography variant="h5" sx={{ fontWeight: '300' }}>
-                {filteredSearch[i]!.name.toUpperCase()}
+                {filteredSearch[i]!.getDisplayName()}
               </Typography>
             ) : (
               // flex with one empty element, the typography and selectbox
@@ -259,15 +262,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   width: '100%',
                 }}
               >
-                <Box width={1 / 3}></Box>
+                <Box width={1 / 5}></Box>
                 <Typography
                   variant="h5"
-                  sx={{ fontWeight: '300', width: 1 / 3, textAlign: 'center' }}
+                  sx={{ fontWeight: '300', width: 3 / 5, textAlign: 'center' }}
                 >
-                  {filteredSearch[i]!.name.toUpperCase()}
+                  {filteredSearch[i]!.getDisplayName()}
                 </Typography>
                 <Box
-                  width={1 / 3}
+                  width={1 / 5}
                   sx={{ display: 'flex', justifyContent: 'right' }}
                 >
                   {selectBox}
