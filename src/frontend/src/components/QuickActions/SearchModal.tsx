@@ -15,8 +15,18 @@ import {
   KeyboardReturnOutlined,
   KeyboardReturnTwoTone,
 } from '@mui/icons-material';
-import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
+import {
+  customThemes,
+  getThemeNames,
+  useThemeStore,
+} from '../../zustand/useThemeStore';
 import { SearchCardButton } from './QuickActionEntries';
+import Fuse from 'fuse.js';
+
+const gameFuse = new Fuse(customThemes, {
+  keys: ['name', 'longName'],
+  threshold: 0.5,
+});
 
 /**
  * Represents an Abstract Element, which can be selected
@@ -27,14 +37,26 @@ interface SearchEntry {
    * This "selects" the current Search Entry in sense of, that is is now the used Game/Sport
    */
   select(): void;
+  getDisplayName(): string;
+  getNames(): string[];
 }
 
+abstract class DefaultSearchEntry implements SearchEntry {
+  abstract name: string;
+  abstract select(): void;
+  abstract getDisplayName(): string;
+
+  getNames(): string[] {
+    return [this.name, this.getDisplayName()];
+  }
+}
 /**
  * Represents any of the available Sport Kinds
  */
-class SportEntry implements SearchEntry {
+class SportEntry extends DefaultSearchEntry {
   name: string;
   constructor(sport: string) {
+    super();
     this.name = sport;
   }
 
@@ -49,20 +71,30 @@ class SportEntry implements SearchEntry {
       sport_multiplier: sportMultiplier,
     });
   }
+
+  getDisplayName(): string {
+    return this.name;
+  }
 }
 
 /**
  * Represents any of the available games
  */
-class GameEntry implements SearchEntry {
+class GameEntry extends DefaultSearchEntry {
   name: string;
   constructor(game: string) {
+    super();
     this.name = game;
   }
 
   select(): void {
     const { setTheme } = useThemeStore.getState();
     setTheme(this.name);
+  }
+
+  getDisplayName(): string {
+    const theme = customThemes.find((theme) => theme.name === this.name);
+    return theme?.longName ?? this.name;
   }
 }
 
@@ -84,6 +116,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     if (typed === null) {
       return [];
     }
+
     // filter sports and wrap into SearchEntry
     const sportSearch = sports
       .filter((s) => s.toLowerCase().includes(typed!.toLowerCase()))
