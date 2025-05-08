@@ -89,8 +89,9 @@ export const SportSelector = () => {
     });
 
     if (
+      currentSport !== null &&
       sportPerferences.filter((s) => s.sport === currentSport?.sport).length <=
-      0
+        0
     ) {
       const multiplier: Multiplier = {
         game: null,
