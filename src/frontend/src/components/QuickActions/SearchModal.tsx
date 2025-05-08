@@ -72,8 +72,16 @@ class SportEntry extends DefaultSearchEntry {
     });
   }
 
+  /**
+   *
+   * @returns The display name of the sport, e.g. "Russian Twist" for "russian_twist"
+   */
   displayName(): string {
-    return this.name;
+    return this.name
+      .replace('_', ' ')
+      .split(' ')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
   }
 }
 
