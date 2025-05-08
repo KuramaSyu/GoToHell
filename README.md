@@ -50,7 +50,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### QoL
 
 - [ ] Show all multipliers in the settings
-- [ ] Show sport (when selected via modal) even if it's not in UI preferences. Push it to top. Remove it afterward
 - [ ] make Overview boxes in Shortcut Modal clickable
 
 #### Perf
