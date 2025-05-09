@@ -58,6 +58,12 @@ GameSelectionMap.set('russian_twist', 'Russian Twists');
 GameSelectionMap.set('dip', 'Dips');
 GameSelectionMap.set('leg_raises', 'Leg Raises');
 
+export interface ISportService {
+  constructor: (sport: string) => void;
+  toExercisesString: () => string;
+  toReact: () => React.FC;
+}
+
 // Select the sport kind with a button
 export const SportSelector = () => {
   const { theme } = useThemeStore();
