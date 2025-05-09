@@ -3,7 +3,7 @@ import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
 import { PopNumber } from './GameSelect';
-import { useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import {
   DefaultSportsCalculator,
   ExactlyOneDecorator,
@@ -30,6 +30,91 @@ export const AMOUNT_DISPLAY_CONTENT_BOX_SX = {
   mt: { xs: -2, md: -4 }, // Remove weird padding from font
 };
 
+export interface SportServiceProps {
+  computedValue: number;
+  isMobile: boolean;
+}
+export interface ISportService {
+  toExercisesString: () => string;
+  toReact: () => React.FC<SportServiceProps>;
+}
+
+class BaseSportService implements ISportService {
+  sport: string;
+  constructor(sport: string) {
+    this.sport = sport;
+  }
+  toExercisesString(): string {
+    return 'Exercises';
+  }
+  toReact(): React.FC<SportServiceProps> {
+    return ({ computedValue, isMobile }) => (
+      <PopNumber
+        value={computedValue}
+        font={NUMBER_FONT}
+        fontsize={isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP}
+        stiffness={1000}
+        damping={300}
+        mass={1}
+      />
+    );
+  }
+}
+
+class EmptySportService implements ISportService {
+  constructor() {
+    this.sport = '';
+  }
+  sport: string;
+
+  toExercisesString(): string {
+    return 'Exercises';
+  }
+  toReact(): React.FC<SportServiceProps> {
+    return ({ computedValue, isMobile }) => null;
+  }
+}
+
+class PlankService extends BaseSportService {
+  constructor() {
+    super('plank');
+  }
+
+  toExercisesString(): string {
+    return 'Seconds Plank';
+  }
+  toReact(): React.FC<SportServiceProps> {
+    return ({ computedValue, isMobile }) => (
+      <Box>
+        <PopNumber
+          value={computedValue}
+          font={NUMBER_FONT}
+          fontsize={isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP}
+          stiffness={1000}
+          damping={300}
+          mass={1}
+        />
+        s
+      </Box>
+    );
+  }
+}
+
+class SimpleFactory {
+  static createSportService(sport: string | null): ISportService {
+    if (sport == null) {
+      return new EmptySportService();
+    }
+
+    switch (sport) {
+      case 'plank':
+        return new PlankService();
+      default:
+        return new BaseSportService(sport);
+    }
+  }
+}
+
 export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountStore();
@@ -39,6 +124,10 @@ export const AmountDisplay = () => {
 
   const isXL = useMediaQuery(theme.breakpoints.up('xl'));
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const sportService = useMemo(() => {
+    return SimpleFactory.createSportService(currentSport.sport);
+  }, [currentSport.sport]);
 
   if (currentSport.game == null || currentSport.sport == null) {
     return <Box></Box>;
