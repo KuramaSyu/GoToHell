@@ -17,6 +17,7 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { GameSelectionMap } from './SportSelect';
+import { Timedelta } from '../utils/Timedelta';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
@@ -41,8 +42,10 @@ export interface ISportService {
 
 class BaseSportService implements ISportService {
   sport: string;
-  constructor(sport: string) {
+  amount: number;
+  constructor(sport: string, amonut: number) {
     this.sport = sport;
+    this.amount = amonut;
   }
   toExercisesString(): string {
     return 'Exercises';
@@ -76,41 +79,103 @@ class EmptySportService implements ISportService {
 }
 
 class PlankService extends BaseSportService {
-  constructor() {
-    super('plank');
+  timedelta: Timedelta;
+  constructor(amount: number) {
+    super('plank', amount);
+    this.timedelta = new Timedelta(amount);
   }
 
   toExercisesString(): string {
     return 'Seconds Plank';
   }
   toReact(): React.FC<SportServiceProps> {
-    return ({ computedValue, isMobile }) => (
-      <Box>
-        <PopNumber
-          value={computedValue}
-          font={NUMBER_FONT}
-          fontsize={isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP}
-          stiffness={1000}
-          damping={300}
-          mass={1}
-        />
-        s
-      </Box>
-    );
+    return ({ computedValue, isMobile }) => {
+      const timedelta = new Timedelta(computedValue);
+      const seconds = timedelta.seconds();
+      const minutes = timedelta.minutes();
+      const hours = timedelta.hours();
+      return (
+        <Box>
+          {hours > 0 ? (
+            <Box sx={{ display: 'flex' }}>
+              <PopNumber
+                value={hours}
+                font={NUMBER_FONT}
+                fontsize={
+                  isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP
+                }
+                stiffness={1000}
+                damping={300}
+                mass={1}
+              />
+              <Typography
+                fontFamily={NUMBER_FONT}
+                fontSize={BIG_NUMBER_SIZE_DESKTOP}
+              >
+                :
+              </Typography>
+            </Box>
+          ) : null}
+          {minutes > 0 ? (
+            <Box sx={{ display: 'flex' }}>
+              <PopNumber
+                value={minutes}
+                font={NUMBER_FONT}
+                fontsize={
+                  isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP
+                }
+                stiffness={1000}
+                damping={300}
+                mass={1}
+              />
+              <Typography
+                fontFamily={NUMBER_FONT}
+                fontSize={BIG_NUMBER_SIZE_DESKTOP}
+              >
+                :
+              </Typography>
+            </Box>
+          ) : null}
+          {seconds > 0 ? (
+            <Box sx={{ display: 'flex' }}>
+              <PopNumber
+                value={seconds}
+                font={NUMBER_FONT}
+                fontsize={
+                  isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP
+                }
+                stiffness={1000}
+                damping={300}
+                mass={1}
+              />
+              <Typography
+                fontFamily={NUMBER_FONT}
+                fontSize={BIG_NUMBER_SIZE_DESKTOP}
+              >
+                :
+              </Typography>
+            </Box>
+          ) : null}
+        </Box>
+      );
+    };
   }
 }
 
 class SimpleFactory {
-  static createSportService(sport: string | null): ISportService {
+  static createSportService(
+    sport: string | null,
+    amount: number
+  ): ISportService {
     if (sport == null) {
       return new EmptySportService();
     }
 
     switch (sport) {
       case 'plank':
-        return new PlankService();
+        return new PlankService(amount);
       default:
-        return new BaseSportService(sport);
+        return new BaseSportService(sport, amount);
     }
   }
 }
@@ -125,8 +190,15 @@ export const AmountDisplay = () => {
   const isXL = useMediaQuery(theme.breakpoints.up('xl'));
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const sportService = useMemo(() => {
-    return SimpleFactory.createSportService(currentSport.sport);
+  const { sportService, SportNumberComponent } = useMemo(() => {
+    const sport_service = SimpleFactory.createSportService(
+      currentSport.sport,
+      amount
+    );
+    return {
+      sportService: sport_service,
+      SportNumberComponent: sport_service.toReact(),
+    };
   }, [currentSport.sport]);
 
   if (currentSport.game == null || currentSport.sport == null) {
@@ -175,15 +247,9 @@ export const AmountDisplay = () => {
           : null}
 
         <Box sx={{ mr: 2 }}>
-          <PopNumber
-            value={computedValue}
-            font={NUMBER_FONT}
-            fontsize={
-              isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP
-            }
-            stiffness={1000}
-            damping={300}
-            mass={1}
+          <SportNumberComponent
+            computedValue={computedValue}
+            isMobile={isMobile}
           />
         </Box>
         <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
