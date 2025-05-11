@@ -75,6 +75,14 @@ export const QuickActionMenu: React.FC = () => {
     const INSTANT_OPEN = preferences.other.instant_open_modal;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // check if any input field is focused. If so, do not open the modal
+      const active = document.activeElement;
+      const isFormField =
+        active instanceof HTMLInputElement ||
+        active instanceof HTMLTextAreaElement ||
+        active?.getAttribute('contenteditable') === 'true';
+      if (isFormField) return;
+
       // Handle opening/closing first
       if (e.key === '/') {
         e.preventDefault();
