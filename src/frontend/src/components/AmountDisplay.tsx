@@ -17,7 +17,7 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { GameSelectionMap } from './SportSelect';
-import { Timedelta } from '../utils/Timedelta';
+import { Timedelta, Unit } from '../utils/Timedelta';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
@@ -33,7 +33,7 @@ export const AMOUNT_DISPLAY_CONTENT_BOX_SX = {
 
 export function getAnimatedNumberSize(isMobile: boolean, numberKind: string) {
   if (numberKind === 'time') {
-    return isMobile ? '3vh' : '6vh';
+    return isMobile ? '4vh' : '8vh';
   }
   return isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP;
 }
@@ -68,10 +68,11 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
   const seconds = timedelta.seconds();
   const minutes = timedelta.minutes();
   const hours = timedelta.hours();
+  const biggestUnit = timedelta.biggestUnit();
   const numberKind = 'time';
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {hours > 0 ? (
+      {biggestUnit >= Unit.hours ? (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PopNumber
             value={hours}
@@ -89,7 +90,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
           </Typography>
         </Box>
       ) : null}
-      {minutes > 0 ? (
+      {biggestUnit >= Unit.minutes ? (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PopNumber
             value={minutes}
@@ -98,7 +99,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
             stiffness={1000}
             damping={300}
             mass={1}
-            zeroPadding={2}
+            zeroPadding={hours > 0 ? 2 : undefined}
           />
           <Typography
             fontFamily={NUMBER_FONT}
@@ -108,19 +109,19 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
           </Typography>
         </Box>
       ) : null}
-      {seconds > 0 ? (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <PopNumber
-            value={seconds}
-            font={NUMBER_FONT}
-            fontsize={getAnimatedNumberSize(isMobile, numberKind)}
-            stiffness={1000}
-            damping={300}
-            mass={1}
-            zeroPadding={2}
-          />
-        </Box>
-      ) : null}
+
+      {/* seconds are always shown */}
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <PopNumber
+          value={seconds}
+          font={NUMBER_FONT}
+          fontsize={getAnimatedNumberSize(isMobile, numberKind)}
+          stiffness={1000}
+          damping={300}
+          mass={1}
+          zeroPadding={minutes > 0 ? 2 : undefined}
+        />
+      </Box>
     </Box>
   );
 };
