@@ -11,6 +11,6 @@ export class Timedelta {
     return Math.floor(this.totalSeconds / 60) % 60;
   }
   hours(): number {
-    return Math.floor(this.totalSeconds / (60 ^ 2));
+    return Math.floor(this.totalSeconds / (60 * 60));
   }
 }
