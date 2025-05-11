@@ -33,6 +33,7 @@ export const PopNumber = ({
   damping,
   mass,
   fontsize,
+  zeroPadding,
 }: {
   value: number;
   font: string;
@@ -40,6 +41,7 @@ export const PopNumber = ({
   stiffness: number;
   mass: number;
   fontsize?: string;
+  zeroPadding?: number;
 }) => {
   // Start with an initial spring value (can be 0 or value)
   const springValue = useSpring(0, {
@@ -60,7 +62,10 @@ export const PopNumber = ({
     setDisplayed(Math.round(v));
   });
 
-  const str = displayed.toString();
+  var str = displayed.toString();
+  if (zeroPadding) {
+    str = str.padStart(zeroPadding, '0');
+  }
   const randomIndex =
     str.length > 0 ? Math.floor(Math.random() * str.length) : 0;
 
