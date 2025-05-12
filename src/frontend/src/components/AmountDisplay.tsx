@@ -3,7 +3,7 @@ import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
 import { PopNumber } from './GameSelect';
-import { ReactElement, useMemo, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import {
   DefaultSportsCalculator,
   ExactlyOneDecorator,
@@ -17,7 +17,7 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { GameSelectionMap } from './SportSelect';
-import { Timedelta, Unit } from '../utils/Timedelta';
+import { Timedelta, Unit, unitToString } from '../utils/Timedelta';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
@@ -126,13 +126,28 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
   );
 };
 
-export function getDisplayComponent(sport: string | undefined) {
+export function getDisplayComponent(
+  sport: string | undefined
+): React.FC<SportServiceProps> {
   switch (sport) {
     case 'plank':
       return TimeDisplay;
     default:
       return NumberDisplay;
   }
+}
+
+export function getSportDescription(
+  sport: string | undefined,
+  computedValue: number
+): string | undefined {
+  if (sport === 'plank') {
+    const timedelta = new Timedelta(computedValue);
+    const biggestUnit = timedelta.biggestUnit();
+    return unitToString(biggestUnit);
+  }
+  if (sport === undefined) return;
+  return GameSelectionMap[sport];
 }
 
 export const AmountDisplay = () => {
@@ -197,7 +212,7 @@ export const AmountDisplay = () => {
         </Box>
         <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
           <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-            {GameSelectionMap.get(currentSport.sport)}
+            {getSportDescription(currentSport.sport, computedValue)}
           </Typography>
           <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
             to do now
