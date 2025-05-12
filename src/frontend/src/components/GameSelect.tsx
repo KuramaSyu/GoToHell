@@ -8,11 +8,15 @@ import usePreferenceStore from '../zustand/PreferenceStore';
 
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
-  const {} = usePreferenceStore;
+  const { preferences } = usePreferenceStore();
   const [validGames, setValidGames] = useState<string[]>(
     usePreferenceStore.getState().preferences.ui.displayedGames ??
       getThemeNames()
   );
+
+  useEffect(() => {
+    setValidGames(preferences.ui.displayedGames ?? getThemeNames());
+  }, [preferences]);
 
   return (
     <DynamicGameGrid
