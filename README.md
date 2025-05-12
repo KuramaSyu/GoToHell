@@ -46,9 +46,9 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] separate repository for background pictures
 - [ ] fetch streak in .then to be sure that result is already set
 - [ ] add option button for accessing the modal in a short way
-- [ ] fix "Seconds Plank" even though minutes or hours are used. Make own function for creating this string
 - [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
-
+- [ ] update TotalScoreDisplay to match AmountDisplay
+  
 #### QoL
 
 - [ ] Show all multipliers in the settings
