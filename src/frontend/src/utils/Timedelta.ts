@@ -4,6 +4,19 @@ export enum Unit {
   hours = 3,
 }
 
+export function unitToString(unit: Unit): string {
+  switch (unit) {
+    case Unit.seconds:
+      return 'seconds';
+    case Unit.minutes:
+      return 'minutes';
+    case Unit.hours:
+      return 'hours';
+    default:
+      throw new Error('Invalid unit');
+  }
+}
+
 export class Timedelta {
   totalSeconds: number;
   constructor(seconds: number) {
