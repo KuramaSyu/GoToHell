@@ -16,6 +16,8 @@ import {
   AMOUNT_DISPLAY_TITLE_SX,
   BIG_NUMBER_SIZE_DESKTOP,
   BIG_NUMBER_SIZE_MOBILE,
+  getDisplayComponent,
+  getSportDescription,
 } from './AmountDisplay';
 
 // returns the score of the kind
@@ -45,6 +47,8 @@ export const TotalScoreDisplay = () => {
   if (!currentSport || !user) {
     return <Typography></Typography>;
   }
+  const DisplayComponent = getDisplayComponent(currentSport.sport!);
+
   // const for current sport score display
   const currentSportString = currentSport.sport
     ? GameSelectionMap.get(currentSport.sport)?.replace('_', ' ')
@@ -74,18 +78,11 @@ export const TotalScoreDisplay = () => {
           //width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
         }}
       >
-        <PopNumber
-          value={bigNumber}
-          font={NUMBER_FONT}
-          stiffness={500}
-          damping={200}
-          mass={1}
-          fontsize={isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP}
-        ></PopNumber>
+        <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
       </Box>
       <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
         <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-          {currentSportString}
+          {getSportDescription(currentSport.sport!, bigNumber)}
         </Typography>
         <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
           in total
