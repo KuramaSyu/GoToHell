@@ -10,6 +10,7 @@ import { SportDragDrop } from './SportDragDrop';
 import { GameDragDrop } from './GameDragDrop';
 import useUploadStore from '../../zustand/UploadStore';
 import { useNavigate } from 'react-router-dom';
+import { defaultPreferences, savePreferences } from '../../models/Preferences';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -116,6 +117,24 @@ export const Settings: React.FC = () => {
             Game Select
           </Typography>
           <GameDragDrop></GameDragDrop>
+        </Box>
+        {/* reset button */}
+        <Box sx={{ mb: 5, ...SettingsBoxSX }}>
+          <Typography variant="h4" sx={{ zIndex: 1 }}>
+            Reset Settings
+          </Typography>
+          <Typography variant="subtitle1" sx={{ zIndex: 1 }}>
+            This will reset all your settings to default. You can also do this
+            in the settings menu.
+          </Typography>
+          <button
+            onClick={() => {
+              savePreferences(defaultPreferences());
+              setPreferences(defaultPreferences());
+            }}
+          >
+            Reset Settings
+          </button>
         </Box>
       </Box>
     </>
