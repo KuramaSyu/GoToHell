@@ -12,6 +12,8 @@ import useUploadStore from '../../zustand/UploadStore';
 import { useNavigate } from 'react-router-dom';
 
 const SettingsBoxSX = {
+  display: 'flex',
+  flexDirection: 'column',
   width: 4 / 5,
   flex: '0 1 auto',
   justifyItems: 'center',
@@ -63,13 +65,7 @@ export const Settings: React.FC = () => {
       >
         {/* Grid with overrides */}
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            ...SettingsBoxSX,
-          }}
-        >
+        <Box sx={SettingsBoxSX}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Overrides
           </Typography>
