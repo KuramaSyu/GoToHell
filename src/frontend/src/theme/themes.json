@@ -48,11 +48,11 @@
     {
       "name": "valorant",
       "longName": "Valorant",
-      "backgrounds": []
+      "backgrounds": ["https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/Valorant/01.png", "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/Valorant/02.png"]
     },
     {
       "name": "pubg",
       "longName": "Player Unknowns Battlegrounds",
-      "backgrounds": ["https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/main/PUBG/pubg-1.jpg"]
+      "backgrounds": ["https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/main/PUBG/01.jpg"]
     }
 ]
