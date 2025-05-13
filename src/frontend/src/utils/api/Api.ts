@@ -12,6 +12,7 @@ import { FriendshipReply } from '../../pages/friends/FriendOverview';
 import { StreakData } from '../../models/Streak';
 import { useStreakStore } from '../../zustand/StreakStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
+import { useSportStore } from '../../useSportStore';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
@@ -23,6 +24,7 @@ export interface UserApiInterface {
     user_ids: string[],
     limit: number
   ): Promise<SportsApiResponse | null>;
+  deleteRecord(id: number);
 }
 export interface SportApiInterface {
   fetchDefault(): Promise<GetSportsResponse | null>;
@@ -179,6 +181,31 @@ export class UserApi implements UserApiInterface {
       );
 
       setRecentSports(reply);
+      return reply;
+    } else {
+      this.logError(API_ENDPOINT, result);
+    }
+    return null;
+  }
+
+  /**
+   * Deletes a Sport Record
+   */
+  async deleteRecord(id: number): Promise<SportsApiResponse | null> {
+    const API_ENDPOINT = '/api/sports/';
+    // get user
+    const user = useUserStore.getState().user;
+    if (user === null) {
+      return null;
+    }
+    const response = await fetch(`${BACKEND_BASE}${API_ENDPOINT}${id}`, {
+      credentials: 'include',
+      method: 'DELETE',
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      const reply: SportsApiResponse = result.data;
       return reply;
     } else {
       this.logError(API_ENDPOINT, result);
