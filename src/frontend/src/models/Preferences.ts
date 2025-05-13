@@ -47,7 +47,7 @@ export function defaultPreferences(): UserPreferences {
     game_overrides: [],
     multipliers: [],
     ui: {
-      displayedGames: null,
+      displayedGames: ['league', 'overwatch', 'repo', 'custom'],
       displayedSports: null,
     },
     sport_specific: {
