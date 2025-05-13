@@ -33,6 +33,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
+- [ ] separate repository for background pictures
 
 #### Features
 
@@ -43,11 +44,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 #### Fixes
 
-- [ ] separate repository for background pictures
-- [ ] fetch streak in .then to be sure that result is already set
-- [ ] add option button for accessing the modal in a short way
 - [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
-- [ ] update TotalScoreDisplay to match AmountDisplay
   
 #### QoL
 
