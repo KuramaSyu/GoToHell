@@ -106,11 +106,8 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
 
   const deleteRecord = async (id: number) => {
     try {
-      const response = await fetch(`${BACKEND_BASE}/api/sports/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-      if (!response.ok) {
+      const response = await new UserApi().deleteRecord(id);
+      if (response === null) {
         throw new Error('Failed to delete record');
       }
       if (!recentSports) return;
