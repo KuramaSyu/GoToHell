@@ -1,3 +1,5 @@
+import { setCookie } from '../utils/cookies';
+
 // used for custom overrides, if default definitions are not good enough
 export interface OverrideSportDefinition {
   sport: string;
@@ -48,7 +50,7 @@ export function defaultPreferences(): UserPreferences {
     multipliers: [],
     ui: {
       displayedGames: ['league', 'overwatch', 'repo', 'custom'],
-      displayedSports: null,
+      displayedSports: ['pushup', 'leg_raises', 'plank', 'squats', 'situps'],
     },
     sport_specific: {
       plank: {
@@ -60,4 +62,8 @@ export function defaultPreferences(): UserPreferences {
       instant_open_modal: true,
     },
   };
+}
+
+export function savePreferences(p: UserPreferences): void {
+  setCookie('preferences', JSON.stringify(p), 9999);
 }
