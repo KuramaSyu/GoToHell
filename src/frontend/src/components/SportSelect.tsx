@@ -35,6 +35,9 @@ import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 import { Multiplier } from '../models/Preferences';
+import { animated, useSpring, useTransition } from 'react-spring';
+
+const AnimatedButton = animated(Button);
 
 const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -101,6 +104,20 @@ export const SportSelector = () => {
     }
     return sportPerferences;
   }, [preferences, sportResponse, currentSport]);
+
+  // transition for button elements in button group
+  const transitions = useTransition(displayedSports, {
+    from: { opacity: 0, transform: 'scale(0.7) translateY(-20px)' },
+    enter: { opacity: 1, transform: 'scale(1) translateY(0px)' },
+    leave: {
+      opacity: 0,
+      transform: 'scale(0.7) translateY(20px)',
+      position: 'absolute',
+    },
+    keys: (item) => item.sport ?? 'none', // Use a unique key for each item
+    config: { tension: 220, friction: 12 },
+    trail: 100, // Optional: add a small delay between each item's animation
+  });
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -238,11 +255,12 @@ export const SportSelector = () => {
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
       <ButtonGroup orientation="vertical" fullWidth>
-        {displayedSports.map(({ sport, multiplier }) => {
+        {transitions((style, { sport, multiplier }) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
-            <Button
+            <AnimatedButton
+              style={style}
               onClick={() => {
                 currentSport.sport = sport;
                 currentSport.sport_multiplier = multiplier;
@@ -275,7 +293,7 @@ export const SportSelector = () => {
                 }}
               />
               <Typography>{String(sport).replace('_', ' ')}</Typography>
-            </Button>
+            </AnimatedButton>
           );
         })}
       </ButtonGroup>
