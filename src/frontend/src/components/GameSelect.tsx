@@ -5,18 +5,43 @@ import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
 
 import { DynamicGameGrid } from './DynamicGrid';
 import usePreferenceStore from '../zustand/PreferenceStore';
+import { CustomTheme } from '../theme/customTheme';
+
+/**
+ *
+ * @param preferences the user preferences to filter themes
+ * @param getThemeNames function, which returns a list of available themes
+ * @param currentTheme the currently selected theme - will be pushed to index 0 if not present
+ * @returns the list of shown themes in the UI
+ */
+function getValidGames(
+  preferences: string[] | null,
+  getThemeNames: () => string[],
+  currentTheme: CustomTheme
+): string[] {
+  var themes = getThemeNames();
+  if (preferences !== null && preferences.length > 0) {
+    themes = themes.filter((theme) => preferences!.includes(theme));
+  }
+  if (!themes.includes(currentTheme.custom.themeName)) {
+    // push theme to index 0
+    themes = [currentTheme.custom.themeName, ...themes];
+  }
+  return themes;
+}
 
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
   const { preferences } = usePreferenceStore();
   const [validGames, setValidGames] = useState<string[]>(
-    usePreferenceStore.getState().preferences.ui.displayedGames ??
-      getThemeNames()
+    getValidGames(preferences.ui.displayedGames, getThemeNames, theme)
   );
 
   useEffect(() => {
-    setValidGames(preferences.ui.displayedGames ?? getThemeNames());
-  }, [preferences]);
+    setValidGames(
+      getValidGames(preferences.ui.displayedGames, getThemeNames, theme)
+    );
+  }, [preferences, theme]);
 
   return (
     <DynamicGameGrid
