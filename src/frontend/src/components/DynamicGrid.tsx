@@ -49,13 +49,12 @@ const computeRows = (items: GameItem[], capacity: number): GameItem[][] => {
   return rows;
 };
 
-const AnimatedDiv = animated.div as React.FC<
-  AnimatedProps<{ style: React.CSSProperties }> & { children: React.ReactNode }
->;
+export const AnimatedButton = animated(Button);
+
 /**
  * A button with react-spring animation.
  */
-const AnimatedButton: React.FC<{
+const AnimatedThemeButton: React.FC<{
   item: GameItem;
   isSelected: boolean;
   onClick: () => void;
@@ -68,29 +67,28 @@ const AnimatedButton: React.FC<{
   });
 
   return (
-    <AnimatedDiv style={spring}>
-      <Button
-        fullWidth
-        variant={isSelected ? 'contained' : 'outlined'}
-        onClick={onClick}
-        sx={{
-          fontSize: 'clamp(12px, 1.5vw, 32px)',
-          padding: 2,
-          border: '2px solid',
-          borderColor: 'secondary.main',
-          backgroundColor: isSelected ? undefined : 'transparent',
-          color: 'text.primary',
-          fontWeight: 'bold',
-          height: '100%',
-          '&:hover': {
-            backgroundColor: (theme) => darken(theme.palette.primary.main, 0.2),
-            borderColor: (theme) => darken(theme.palette.secondary.main, 0.2),
-          },
-        }}
-      >
-        {item.text}
-      </Button>
-    </AnimatedDiv>
+    <AnimatedButton
+      fullWidth
+      style={spring}
+      variant={isSelected ? 'contained' : 'outlined'}
+      onClick={onClick}
+      sx={{
+        fontSize: 'clamp(12px, 1.5vw, 32px)',
+        padding: 2,
+        border: '2px solid',
+        borderColor: 'secondary.main',
+        backgroundColor: isSelected ? undefined : 'transparent',
+        color: 'text.primary',
+        fontWeight: 'bold',
+        height: '100%',
+        '&:hover': {
+          backgroundColor: (theme) => darken(theme.palette.primary.main, 0.2),
+          borderColor: (theme) => darken(theme.palette.secondary.main, 0.2),
+        },
+      }}
+    >
+      {item.text}
+    </AnimatedButton>
   );
 };
 
@@ -159,7 +157,7 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
               const widthPercent = (item.size / totalSize) * 100;
               return (
                 <Box key={item.text} sx={{ width: `${widthPercent}%`, px: 1 }}>
-                  <AnimatedButton
+                  <AnimatedThemeButton
                     item={item}
                     isSelected={currentmixItem === item.text}
                     onClick={() => {
