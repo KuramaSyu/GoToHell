@@ -62,9 +62,9 @@ const AnimatedButton: React.FC<{
 }> = ({ item, isSelected, onClick }) => {
   // Animate opacity and scale on mount
   const spring = useSpring({
-    from: { opacity: 0, transform: 'scale(0.8)' },
+    from: { opacity: 0, transform: 'scale(0.7)' },
     to: { opacity: 1, transform: 'scale(1)' },
-    config: { tension: 220, friction: 20 },
+    config: { tension: 220, friction: 12 },
   });
 
   return (
