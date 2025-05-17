@@ -3,6 +3,7 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
 import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
 import customThemeData from '../theme/themes.json';
+import usePreferenceStore from './PreferenceStore';
 
 // Define a default theme as a fallback.
 const defaultTheme = createTheme({
@@ -42,6 +43,7 @@ interface ThemeState {
 
   /**
    * initializeTheme picks a random theme from custom themes and sets it.
+   * It respects the user's preferences if any are set.
    */
   initializeTheme: () => Promise<void>;
 }
@@ -64,9 +66,18 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     }
   },
   initializeTheme: async () => {
-    // Pick a random theme from customThemes.
+    // get preferences from the store
+    const preferences = usePreferenceStore.getState().preferences;
+
+    // filter out valid games, or use all if no preferences are set
+    var validThemes = customThemes;
+    if (preferences.ui.displayedGames !== null) {
+      validThemes = customThemes.filter((theme) =>
+        preferences.ui.displayedGames!.includes(theme.name)
+      );
+    }
     const randomTheme =
-      customThemes[Math.floor(Math.random() * customThemes.length)];
+      validThemes[Math.floor(Math.random() * validThemes.length)];
     // If a theme is found, apply it using "get" provided as the second parameter.
     if (randomTheme) {
       await get().setTheme(randomTheme.name);
