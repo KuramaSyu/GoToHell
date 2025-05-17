@@ -41,11 +41,10 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
 - [ ] box for dragging workouts in. Upl oad multiple things at once
 - [ ] when auto opend modal, close it after 10 seconds of inactivity
+- [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
 
 #### Fixes
 
-- [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
-  
 #### QoL
 
 - [ ] Show all multipliers in the settings
