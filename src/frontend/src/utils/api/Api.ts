@@ -95,11 +95,9 @@ export class UserApi implements UserApiInterface {
     const result = await response.json();
     if (response.ok) {
       // set zustand store and return reply
-      const addUser = useUsersStore.getState().addUser;
+      const addFriends = useUsersStore.getState().addFriends;
       const reply = result['data'] as FriendshipReply;
-      reply.users.forEach((friend) => {
-        addUser(new DiscordUserImpl(friend));
-      });
+      addFriends(reply.users.map((user) => new DiscordUserImpl(user)));
       return reply;
     } else {
       // log error and return null
