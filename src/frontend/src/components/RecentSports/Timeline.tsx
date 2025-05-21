@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SportCard, SportCardNumber } from './SportCard';
 import { before } from 'node:test';
 import { UserApi } from '../../utils/api/Api';
+import { animated, config, useTransition } from 'react-spring';
 
 export interface Sport {
   id: number;
@@ -34,19 +35,22 @@ interface SportsApiResponse {
   data: Sport[];
 }
 
+const AnimatedBox = animated(Box);
+
 export const SportsTimeline = () => {
   const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
-  const { users, addUser } = useUsersStore();
+  const { users, friendsLoaded: usersLoaded } = useUsersStore();
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
   const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
 
   // hook for fetching sports
   useEffect(() => {
-    if (!user) return;
+    if (!user || !usersLoaded) return;
 
     const fetchSports = async () => {
+      if (!user || !usersLoaded) return;
       // Include both the current user and others from the store.
       const userIds: string[] = [
         ...Object.values(users).map((u) => u.id), // friends
@@ -65,22 +69,41 @@ export const SportsTimeline = () => {
 
     // cleanup
     return () => clearInterval(interval);
-  }, [users, user, ScoreRefreshTrigger, RecentSportsRefreshTrigger]);
+  }, [users, ScoreRefreshTrigger, RecentSportsRefreshTrigger, user]);
 
-  if (!user) return <Box />;
-  if (!data) return <Typography>Loading Timeline</Typography>;
+  const itemsToAnimate = data?.data.toReversed() || [];
+  const transition = useTransition(itemsToAnimate, {
+    key: (sport) => sport.id,
+    from: { opacity: 0, y: 20, scale: 0.3 },
+    enter: { opacity: 1, y: 0, scale: 1 },
+    leave: { opacity: 0, y: 20, scale: 0.3 },
+    config: config.default,
+    trail: 80,
+  });
 
-  const timelineItems: ReactElement[] = data.data.map((sport) => {
+  if (!user || !usersLoaded) return <Box />;
+  if (!data || !data.data) return <Typography>Loading Timeline</Typography>;
+
+  const timelineItems: ReactElement[] = transition((style, sport) => {
+    if (sport === undefined) return null;
     const sportUser = users[sport.user_id];
     return (
-      <motion.div
+      <AnimatedBox
         key={sport.id}
-        initial={{ opacity: 0, y: 20, scale: 0.8 }}
-        animate={{ opacity: 1, y: 0, scale: [0.7, 1.2, 1] }}
-        exit={{ opacity: 0, y: 20, scale: 0.8 }}
-        transition={{ duration: 0.5 }}
+        style={style}
+        sx={{
+          width: '100%',
+          padding: 0,
+          margin: 0,
+        }}
       >
-        <TimelineItem key={sport.id}>
+        <TimelineItem
+          sx={{
+            width: '100%',
+            padding: 0,
+            margin: 0,
+          }}
+        >
           <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
             <SportCardNumber data={sport}></SportCardNumber>
           </TimelineOppositeContent>
@@ -105,6 +128,7 @@ export const SportsTimeline = () => {
                   position: 'absolute',
                   top: 0,
                   left: 0,
+                  objectFit: 'cover',
                 }}
               />
             </TimelineDot>
@@ -114,41 +138,28 @@ export const SportsTimeline = () => {
             <SportCard data={sport} />
           </TimelineContent>
         </TimelineItem>
-      </motion.div>
+      </AnimatedBox>
     );
   });
 
   return (
-    <Box
+    <Timeline
       sx={{
-        height: '100%',
-        overflowY: 'auto',
-        display: 'flex',
-        width: 'auto',
-        flexShrink: 0,
-        alignSelf: 'flex-start',
+        // weird CSS hack, to align the timeline dots left
+        [`& .${timelineOppositeContentClasses.root}`]: {
+          flex: '0 1 auto',
+          //flex: 0,
+          padding: 0,
+          height: '100%',
+          overflowY: 'auto',
+        },
+        [`& .${timelineItemClasses.root}:before`]: {
+          padding: 0,
+          margin: 0,
+        },
       }}
     >
-      <TransitionGroup component={Timeline}>
-        <Timeline
-          sx={{
-            // weird CSS hack, to align the timeline dots left
-            [`& .${timelineOppositeContentClasses.root}`]: {
-              flex: '0 1 auto',
-              //flex: 0,
-              padding: 0,
-              height: '100%',
-              overflowY: 'auto',
-            },
-            [`& .${timelineItemClasses.root}:before`]: {
-              padding: 0,
-              margin: 0,
-            },
-          }}
-        >
-          <AnimatePresence>{timelineItems.reverse()}</AnimatePresence>
-        </Timeline>
-      </TransitionGroup>
-    </Box>
+      {timelineItems}
+    </Timeline>
   );
 };
