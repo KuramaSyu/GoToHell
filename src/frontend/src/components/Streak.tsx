@@ -10,6 +10,7 @@ import { useStreakStore } from '../zustand/StreakStore';
 import { StreakData } from '../models/Streak';
 import { UserApi } from '../utils/api/Api';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
+import { PopNumber } from './GameSelect';
 
 export const Streak = () => {
   const [lastUpdated, setLastUpdated] = useState<String | null>(null);
@@ -61,9 +62,17 @@ export const Streak = () => {
       <LocalFireDepartmentIcon sx={{ mr: 1 }} />
       <Typography
         fontSize={'1.2rem'}
-        sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))' }}
+        sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
       >
-        {streak}
+        <PopNumber
+          damping={50}
+          font={NUMBER_FONT}
+          mass={20}
+          stiffness={40}
+          value={streak ?? 0}
+          fontsize="1.5rem"
+        ></PopNumber>
+        {/* {streak} */}
       </Typography>
     </Box>
   );
