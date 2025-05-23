@@ -6,7 +6,7 @@ import customThemeData from '../theme/themes.json';
 import usePreferenceStore from './PreferenceStore';
 
 // Define a Nord-themed default theme as a fallback.
-const defaultTheme = createTheme({
+export const defaultTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: { main: '#5E81AC', light: '#81A1C1', dark: '#4C688A' }, // Nord10, Nord9
