@@ -1,7 +1,11 @@
 import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
 import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
-import { customThemes, useThemeStore } from '../zustand/useThemeStore';
+import {
+  customThemes,
+  defaultTheme,
+  useThemeStore,
+} from '../zustand/useThemeStore';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -134,6 +138,14 @@ export class ThemeManager {
     } catch (err) {
       console.error('Error extracting colors with Node-Vibrant:', err);
       extractedPalette = {};
+      return {
+        ...defaultTheme,
+        custom: {
+          themeName: themeConfig.name,
+          longName: themeConfig.longName,
+          backgroundImage: themeConfig.backgrounds[0] ?? '',
+        },
+      };
     }
 
     // Get extracted swatches (with sensible fallbacks).
