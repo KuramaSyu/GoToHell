@@ -49,6 +49,13 @@ class DiscordUserImpl implements DiscordUser {
   }
 
   getAvatarUrl(): string {
+    if (!this.avatar) {
+      // Return Discord's default avatar based on the user's discriminator
+      const defaultAvatarIndex = this.discriminator
+        ? parseInt(this.discriminator) % 5
+        : 0;
+      return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`;
+    }
     return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
   }
 
@@ -96,10 +103,6 @@ const DiscordLogin: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
   // on mobile, only show the avatar
   if (isMobile) {
     return user ? (
@@ -146,7 +149,7 @@ const DiscordLogin: React.FC = () => {
       {/* CssBaseline applies the theme's background and text colors */}
       <CssBaseline />
 
-      {user ? (
+      {user || loading ? (
         <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
           <Button variant="outlined" color="primary" onClick={handleLogout}>
             <LogoutIcon
@@ -155,8 +158,8 @@ const DiscordLogin: React.FC = () => {
           </Button>
 
           <Avatar
-            src={user.getAvatarUrl()}
-            alt={user.username}
+            src={user ? user.getAvatarUrl() : ''}
+            alt={user ? user.username : ''}
             sx={{
               width: 60,
               height: 60,
