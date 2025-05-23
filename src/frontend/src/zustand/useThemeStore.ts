@@ -5,19 +5,19 @@ import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
 import customThemeData from '../theme/themes.json';
 import usePreferenceStore from './PreferenceStore';
 
-// Define a default theme as a fallback.
+// Define a Nord-themed default theme as a fallback.
 const defaultTheme = createTheme({
   palette: {
     mode: 'dark',
-    primary: { main: '#1976d2', light: '#63a4ff', dark: '#004ba0' },
-    secondary: { main: '#9c27b0', light: '#ba68c8', dark: '#7b1fa2' },
-    vibrant: { main: '#1976d2', light: '#63a4ff', dark: '#004ba0' },
-    muted: { main: '#757575', light: '#a4a4a4', dark: '#494949' },
+    primary: { main: '#5E81AC', light: '#81A1C1', dark: '#4C688A' }, // Nord10, Nord9
+    secondary: { main: '#B48EAD', light: '#D8DEE9', dark: '#3B4252' }, // Nord15
+    vibrant: { main: '#88C0D0', light: '#8FBCBB', dark: '#5E81AC' }, // Nord8, Nord7
+    muted: { main: '#4C566A', light: '#616E88', dark: '#3B4252' }, // Nord3, Nord1
   },
   custom: {
     backgroundImage: 'https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg',
     themeName: 'default',
-    longName: 'Default Theme',
+    longName: 'Nord Theme',
   },
 }) as CustomTheme;
 
