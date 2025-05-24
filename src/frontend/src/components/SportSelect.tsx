@@ -183,22 +183,26 @@ export const SportSelector = () => {
       .catch(console.error);
     buildDecoratorStack();
   }, []);
+
+  // when game changes: change game multiplier and maybe change currentSport
+  useEffect(() => {
+    if (sportResponse?.games && theme.custom.themeName != currentSport?.game) {
+      const gameMultiplierValue = sportResponse.games[theme.custom.themeName];
+
+      if (gameMultiplierValue != null) {
+        setSport({
+          ...currentSport,
+          game: theme.custom.themeName,
+          game_multiplier: gameMultiplierValue,
+        });
+      }
+    }
+    console.log(sportResponse);
+  }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
+
   if (sportResponse === null) {
     return <Typography>Waiting for Gin</Typography>;
   }
-
-  // when game changes: change game multiplier and maybe change currentSport
-  if (sportResponse.games && theme.custom.themeName != currentSport?.game) {
-    const matchingGame = sportResponse.games[theme.custom.themeName];
-
-    if (matchingGame != null) {
-      currentSport.game = theme.custom.themeName;
-      currentSport.game_multiplier =
-        sportResponse.games?.[theme.custom.themeName] ?? null;
-      setSport(currentSport);
-    }
-  }
-  console.log(sportResponse);
 
   if (isMobile) {
     // return only a grid with 5 per row, with only icons
