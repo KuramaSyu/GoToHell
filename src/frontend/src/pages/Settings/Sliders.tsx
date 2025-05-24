@@ -64,7 +64,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
       }}
     >
       <OutlinedInput
-        value={stringNumber}
+        value={stringNumber ?? String(min)}
         type="number"
         onChange={(e) => {
           setStringNumber(e.target.value);
@@ -241,7 +241,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       }}
     >
       <OutlinedInput
-        value={stringNumber} // TODO: use own state here, sync the state with value, and only saveValue or setLiderValue if this new state is a number
+        value={stringNumber ?? String(min)}
         onChange={(e) => {
           setStringNumber(e.target.value);
           const value = handleStringNumber({
