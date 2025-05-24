@@ -100,6 +100,7 @@ export const PopNumber = ({
 
   return (
     <Typography
+      component="span"
       style={{ fontFamily: `'${font}', cursive`, display: 'inline-block' }}
     >
       {str.split('').map((char, index) => (
