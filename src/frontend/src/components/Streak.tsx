@@ -11,6 +11,7 @@ import { StreakData } from '../models/Streak';
 import { UserApi } from '../utils/api/Api';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import { PopNumber } from './GameSelect';
+import { Sport } from '../models/Sport';
 
 export const Streak = () => {
   const [lastUpdated, setLastUpdated] = useState<String | null>(null);
@@ -18,10 +19,30 @@ export const Streak = () => {
   const { streak } = useStreakStore();
   const { theme } = useThemeStore();
   const { recentSports } = useRecentSportsStore();
+  const [usersLastSport, setUsersLastSport] = useState<Sport | null>(null);
   const today = new Date();
   const today_stripped = today.toISOString().split('T')[0]!; // YYYY-MM-DD
 
+  // keep track of the users last sport
   useEffect(() => {
+    if (!user || !recentSports) return;
+    // find the last sport of the user
+    const lastUserSport = recentSports.data
+      .filter((d) => d.user_id === user.id)
+      .pop();
+    if (
+      lastUserSport !== undefined &&
+      lastUserSport !== null &&
+      lastUserSport.id !== usersLastSport?.id
+    ) {
+      // the last entry is actually new
+      setUsersLastSport(lastUserSport!);
+    }
+  }, [user, recentSports]);
+
+  // when the users last sport changes, maybe update streak
+  useEffect(() => {
+    if (!user || !usersLastSport) return;
     if (lastUpdated === null || lastUpdated !== today_stripped) {
       // there was no last update, or it was not today -> fetch streak
       var resp = new UserApi().fetchStreak();
@@ -32,11 +53,7 @@ export const Streak = () => {
           console.log(`Updated Streak ${useStreakStore.getState().streak}`);
           console.log(`Streak fetch response: `, JSON.stringify(answ));
           // get the date from the users latest exercise
-          const latest_date = new Date(
-            recentSports?.data.filter((d) => d.user_id === user?.id)[
-              recentSports!.data.length - 1
-            ]?.timedate ?? 0
-          )
+          const latest_date = new Date(usersLastSport?.timedate ?? 0)
             .toISOString()
             .split('T')[0]!;
 
@@ -48,7 +65,7 @@ export const Streak = () => {
           console.error('Error fetching streak:', err);
         });
     }
-  }, [user, recentSports]);
+  }, [user, usersLastSport]);
 
   return (
     <Box
