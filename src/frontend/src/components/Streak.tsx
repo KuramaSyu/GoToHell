@@ -23,24 +23,30 @@ export const Streak = () => {
 
   useEffect(() => {
     if (lastUpdated === null || lastUpdated !== today_stripped) {
-      var resp = new UserApi().fetchStreak().then(() => {
-        console.timeLog(`Updated Streak ${useStreakStore.getState().streak}`);
-      });
+      // there was no last update, or it was not today -> fetch streak
+      var resp = new UserApi().fetchStreak();
 
-      // update if fetch was successfull
-      resp.then((answ) => {
-        if (answ == null) {
-          // get latest date in recentSports
+      resp
+        // fetch streak from backend
+        .then((answ) => {
+          console.log(`Updated Streak ${useStreakStore.getState().streak}`);
+          console.log(`Streak fetch response: `, JSON.stringify(answ));
+          // get the date from the users latest exercise
           const latest_date = new Date(
-            recentSports?.data[recentSports!.data.length - 1]?.timedate ?? 0
+            recentSports?.data.filter((d) => d.user_id === user?.id)[
+              recentSports!.data.length - 1
+            ]?.timedate ?? 0
           )
             .toISOString()
             .split('T')[0]!;
 
+          // set this date as last updated
           setLastUpdated(latest_date);
           return;
-        }
-      });
+        })
+        .catch((err) => {
+          console.error('Error fetching streak:', err);
+        });
     }
   }, [user, recentSports]);
 
