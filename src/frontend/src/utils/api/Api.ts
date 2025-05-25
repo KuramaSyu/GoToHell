@@ -144,6 +144,11 @@ export class UserApi implements UserApiInterface {
    * @Note
    * sets the useRecentSportsStore Zustand
    *
+   * @throws Error: if the fetch fails
+   *
+   * @param userIds: string[]: the user ids to fetch sports for
+   * @param limit: number | undefined: the limit of sports to fetch, defaults to 50
+   *
    * @returns
    * SportsApiResponse | null: the Response (already sorted), or null if failed
    */
@@ -162,28 +167,33 @@ export class UserApi implements UserApiInterface {
     url.searchParams.append('user_ids', userIds.join(','));
     url.searchParams.append('limit', limit.toString());
 
-    const response = await fetch(url, {
-      credentials: 'include',
-      method: 'GET',
-    });
+    try {
+      const response = await fetch(url, {
+        credentials: 'include',
+        method: 'GET',
+      });
 
-    const result = await response.json();
-    if (response.ok) {
-      // get zustand setter
-      const setRecentSports = useRecentSportsStore.getState().setRecentSports;
+      const result = await response.json();
+      if (response.ok) {
+        // get zustand setter
+        const setRecentSports = useRecentSportsStore.getState().setRecentSports;
 
-      var reply = result as SportsApiResponse;
-      reply.data.sort(
-        (a, b) =>
-          new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
-      );
+        var reply = result as SportsApiResponse;
+        reply.data.sort(
+          (a, b) =>
+            new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
+        );
 
-      setRecentSports(reply);
-      return reply;
-    } else {
-      this.logError(API_ENDPOINT, result);
+        setRecentSports(reply);
+        return reply;
+      } else {
+        this.logError(API_ENDPOINT, result);
+      }
+      return null;
+    } catch (error) {
+      this.logError(API_ENDPOINT, error);
+      throw error;
     }
-    return null;
   }
 
   /**
