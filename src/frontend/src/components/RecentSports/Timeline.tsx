@@ -21,6 +21,7 @@ import { SportCard, SportCardNumber } from './SportCard';
 import { before } from 'node:test';
 import { UserApi } from '../../utils/api/Api';
 import { animated, config, useTransition } from 'react-spring';
+import useErrorStore from '../../zustand/Error';
 
 export interface Sport {
   id: number;
@@ -41,6 +42,7 @@ export const SportsTimeline = () => {
   const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
   const { users, friendsLoaded: usersLoaded } = useUsersStore();
+  const { setErrorMessage } = useErrorStore();
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
   const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
@@ -56,9 +58,21 @@ export const SportsTimeline = () => {
         ...Object.values(users).map((u) => u.id), // friends
         user.id, // self
       ];
-      const fetchedData = await new UserApi().fetchRecentSports(userIds, 50);
-      if (fetchedData === null) return;
-      setData(fetchedData);
+      try {
+        const fetchedData = await new UserApi().fetchRecentSports(userIds, 50);
+        if (fetchedData === null) return;
+        setData(fetchedData);
+      } catch (error) {
+        console.error(
+          `Error fetching recent sports: ${error}`,
+          error instanceof Error ? error.message : ''
+        );
+        setErrorMessage(
+          `Error fetching recent sports: ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }`
+        );
+      }
     };
 
     // call once directly
@@ -82,7 +96,7 @@ export const SportsTimeline = () => {
   });
 
   if (!user || !usersLoaded) return <Box />;
-  if (!data || !data.data) return <Typography>Loading Timeline</Typography>;
+  if (!data || !data.data) return <Box />;
 
   const timelineItems: ReactElement[] = transition((style, sport) => {
     if (sport === undefined) return null;
