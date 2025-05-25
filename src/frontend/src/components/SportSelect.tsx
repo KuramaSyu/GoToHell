@@ -36,6 +36,7 @@ import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 import { Multiplier } from '../models/Preferences';
 import { animated, useSpring, useTransition } from 'react-spring';
+import useErrorStore from '../zustand/Error';
 
 const AnimatedButton = animated(Button);
 
@@ -69,6 +70,7 @@ export const SportSelector = () => {
   const { setCalculator } = useCalculatorStore();
   const { preferences } = usePreferenceStore();
   const { usedMultiplier } = useUsedMultiplierStore();
+  const { setErrorMessage } = useErrorStore();
 
   function isInPreferences(value: string): Boolean {
     if (preferences.ui.displayedSports === null) return true;
@@ -180,7 +182,10 @@ export const SportSelector = () => {
         console.log(`response /api/sports/default: `, data);
         setSportResponse(data);
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error;
+        setErrorMessage(`Error fetching sports data: ${e}`);
+      });
     buildDecoratorStack();
   }, []);
 
@@ -201,7 +206,7 @@ export const SportSelector = () => {
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
   if (sportResponse === null) {
-    return <Typography>Waiting for Gin</Typography>;
+    return <Box />;
   }
 
   if (isMobile) {
