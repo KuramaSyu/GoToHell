@@ -48,13 +48,13 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### QoL
 
 - [ ] Show all multipliers in the settings
-- [ ] make Overview boxes in Shortcut Modal clickable
-- [ ] animation when the one not added sport via modal is added to the col
 - [ ] better animate TimeDisplay
+- [ ] add time (seconds) parameter to setErrorMessage. Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
 
 #### Perf
 
 - [ ] Backend Delete Sport: add userid to db request, instead of making multiple requests
+- [ ] Don't fetch sports from backend, but ship them directly with frontend
 
 #### Ideas
 
