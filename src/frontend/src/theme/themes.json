@@ -54,5 +54,14 @@
       "name": "pubg",
       "longName": "Player Unknowns Battlegrounds",
       "backgrounds": ["https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/main/PUBG/01.jpg"]
+    },
+    {
+      "name": "rainbow",
+      "longName": "Rainbow Six: Siege",
+      "backgrounds": [
+        "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/RainbowSix/01.jpg", 
+        "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/RainbowSix/02.jpg", 
+        "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/RainbowSix/03.jpg"
+      ]
     }
 ]
