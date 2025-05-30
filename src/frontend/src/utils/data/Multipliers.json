@@ -1,0 +1,23 @@
+{
+  "sports": {
+    "pushup": 2.5,
+    "plank": 10,
+    "leg_raises": 2,
+    "pilates": 2.5,
+    "squats": 10,
+    "situps": 4,
+    "russian_twist": 3.5,
+    "dip": 1.8
+  },
+  "games": {
+    "overwatch": 1,
+    "league": 1.5,
+    "tft": 1,
+    "repo": 5,
+    "zelda eow": 8,
+    "custom": 0.5,
+    "valorant": 1.2,
+    "pubg": 8,
+    "rainbow": 4
+  }
+}
