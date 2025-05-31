@@ -9,6 +9,7 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { NUMBER_FONT } from '../statics';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
+import { isNumeric } from './UserNumber';
 /**
  * A calculator for the amount of exercises of a given sport a user
  * has to do. This is effected by game and amount of deaths.
@@ -49,7 +50,10 @@ export class DefaultSportsCalculator implements SportsCalculator {
   get(sport: string, game: string): number {
     const game_base = this.get_game_base(game);
     const sport_base = this.get_sport_base(sport);
-    return game_base * sport_base;
+    const product = game_base * sport_base;
+
+    // Round to 2 decimal places to avoid floating point inaccuracies
+    return parseFloat(product.toFixed(5));
   }
 
   calculate_amount(sport: string, game: string, deaths: number): number {
@@ -60,6 +64,7 @@ export class DefaultSportsCalculator implements SportsCalculator {
     const text_color = lighten(theme.palette.muted.main, 0.5);
     const sport_base = this.get_sport_base(sport);
     const game_base = this.get_game_base(game);
+    const sport_times_game_base = this.get(sport, game);
     return (
       <Box
         sx={{
@@ -93,8 +98,8 @@ export class DefaultSportsCalculator implements SportsCalculator {
             fontFamily: NUMBER_FONT,
           }}
         >
-          Game Base ({this.get_game_base(game)}) x Sport Base (
-          {this.get_sport_base(sport)}) = {this.get(sport, game)}
+          Game Base ({game_base}) x Sport Base ({sport_base}) ={' '}
+          {sport_times_game_base}
         </Box>
 
         {/* Main Box */}
@@ -117,9 +122,7 @@ export class DefaultSportsCalculator implements SportsCalculator {
           }}
         >
           <Latex>
-            {`$\\frac{\\overbrace{${game_base}\\ \\times \\ ${sport_base}}^{${
-              game_base * sport_base
-            }}}{death}$`}
+            {`$\\frac{\\overbrace{${game_base}\\ \\times \\ ${sport_base}}^{${sport_times_game_base}}}{death}$`}
           </Latex>
         </Box>
       </Box>
@@ -457,7 +460,11 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     game_base = game_base ?? this.get_game_base(game);
     multiplier =
       multiplier ?? this.get_multiplier(sport, game)?.multiplier ?? 1;
-    return Math.log(1 + deaths * multiplier * game_base) / Math.log(1.75);
+    let result = Math.log(1 + deaths * multiplier * game_base) / Math.log(1.75);
+    if (Number.isNaN(result)) {
+      return 0;
+    }
+    return result;
   }
   calculate_amount(sport: string, game: string, deaths: number): number {
     const safeDeaths =
@@ -522,9 +529,10 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
             flexDirection: 'column',
           }}
         >
-          <Box>This weird formula is used, </Box>
-          <Box>to flat out the amount of </Box>
-          <Box>planks at around 180s</Box>
+          <Box>With 10 Deaths, and a game base of 1, </Box>
+          <Box>
+            you have to do {this.get_max_seconds_from_preferences()}s plank
+          </Box>
         </Box>
 
         {/* Main Box */}
