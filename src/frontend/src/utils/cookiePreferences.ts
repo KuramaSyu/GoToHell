@@ -3,7 +3,7 @@ import usePreferenceStore from '../zustand/PreferenceStore';
 import { getCookie } from './cookies';
 
 /**
- * loads the 'preferences' cookie and sets the zustand state to the cookie value
+ * loads the 'preferences' cookie and sets the zustand state to the cookie value or default value
  */
 export function loadPreferencesFromCookie() {
   const setPreferences = usePreferenceStore.getState().setPreferences;
