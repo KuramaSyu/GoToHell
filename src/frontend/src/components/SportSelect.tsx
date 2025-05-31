@@ -29,6 +29,7 @@ import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 import { Multiplier } from '../models/Preferences';
 import { animated, useSpring, useTransition } from 'react-spring';
 import useErrorStore from '../zustand/Error';
+import { GameSelectionMap, sportIconMap } from '../utils/data/Sports';
 
 const AnimatedButton = animated(Button);
 
@@ -269,5 +270,3 @@ export const SportSelector = () => {
     </Box>
   );
 };
-
-export { sportIconMap, GameSelectionMap };

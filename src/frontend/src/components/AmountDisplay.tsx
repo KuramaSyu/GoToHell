@@ -16,8 +16,8 @@ import Star from './Shapes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
-import { GameSelectionMap } from './SportSelect';
 import { Timedelta, Unit, unitToString } from '../utils/Timedelta';
+import { GameSelectionMap } from '../utils/data/Sports';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
