@@ -22,14 +22,6 @@ import {
   SportsCalculator,
 } from '../utils/SportCalculator';
 
-import pushupSVG from '../assets/sports-pushup.svg';
-import plankSVG from '../assets/sports-plank.svg';
-import pilatesSVG from '../assets/sports-pilates.svg';
-import squatsSVG from '../assets/sports-squats.svg';
-import situpsSVG from '../assets/sports-situps.svg';
-import russian_twistSVG from '../assets/sports-russian_twist.svg';
-import dipSVG from '../assets/sports-dip.svg';
-import legRaisesSVG from '../assets/sports-leg_raises.svg';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
@@ -39,28 +31,6 @@ import { animated, useSpring, useTransition } from 'react-spring';
 import useErrorStore from '../zustand/Error';
 
 const AnimatedButton = animated(Button);
-
-const sportIconMap: Record<string, string> = {
-  pushup: pushupSVG,
-  plank: plankSVG,
-  pilates: pilatesSVG,
-  squats: squatsSVG,
-  situps: situpsSVG,
-  russian_twist: russian_twistSVG,
-  dip: dipSVG,
-  leg_raises: legRaisesSVG,
-};
-
-// map for which is shown next to the score
-const GameSelectionMap: Map<String, String> = new Map();
-GameSelectionMap.set('pushup', 'Push-Ups');
-GameSelectionMap.set('plank', 'Seconds Plank');
-GameSelectionMap.set('pilates', 'Exercises');
-GameSelectionMap.set('situps', 'Sit-Ups');
-GameSelectionMap.set('squats', 'Squats');
-GameSelectionMap.set('russian_twist', 'Russian Twists');
-GameSelectionMap.set('dip', 'Dips');
-GameSelectionMap.set('leg_raises', 'Leg Raises');
 
 // Select the sport kind with a button
 export const SportSelector = () => {
