@@ -13,7 +13,11 @@
     {
       "name": "overwatch",
       "longName": "Overwatch",
-      "backgrounds": ["https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg"]
+      "backgrounds": [
+        "https://i.postimg.cc/y8xwW3tp/01.jpg", 
+        "https://i.postimg.cc/bN37z9C2/02.jpg", 
+        "https://i.postimg.cc/pLS3jXtW/03.jpg"
+      ]
     },
     {
       "name": "tft",
