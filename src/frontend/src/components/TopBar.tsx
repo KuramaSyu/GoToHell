@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { Button, CssBaseline } from '@mui/material';
+import { alpha, Button, CssBaseline } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
@@ -96,18 +96,25 @@ const TopBar: React.FC = () => {
           }}
         >
           {/* Title */}
-          <Typography
-            variant="h2"
-            component="div"
+          <Button
             onClick={() => navigate('/')}
             sx={{
+              borderRadius: 6,
               color: theme.palette.vibrant.main,
-              fontFamily: '"Architects Daughter", cursive', // custom font
+              fontFamily: '"Architects Daughter", cursive',
               textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
+              fontSize: theme.typography.h2.fontSize, // Maintain h2 size
+              fontWeight: theme.typography.h2.fontWeight, // Maintain h2 weight
+              lineHeight: theme.typography.h2.lineHeight, // Maintain h2 line height
+              padding: '0px 8px',
+              textTransform: 'none', // Prevent uppercase transformation
+              '&:hover': {
+                backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
+              },
             }}
           >
             Go To Hell
-          </Typography>
+          </Button>
 
           {/* Streak */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
