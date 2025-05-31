@@ -21,7 +21,7 @@ function getValidGames(
 ): string[] {
   var themes = getThemeNames();
   if (preferences !== null && preferences.length > 0) {
-    themes = themes.filter((theme) => preferences!.includes(theme));
+    themes = preferences;
   }
   if (!themes.includes(currentTheme.custom.themeName)) {
     // push theme to index 0
