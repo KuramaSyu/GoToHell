@@ -54,7 +54,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### Perf
 
 - [ ] Backend Delete Sport: add userid to db request, instead of making multiple requests
-- [ ] Don't fetch sports from backend, but ship them directly with frontend
 
 #### Ideas
 
