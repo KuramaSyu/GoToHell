@@ -6,6 +6,8 @@ import {
   defaultTheme,
   useThemeStore,
 } from '../zustand/useThemeStore';
+import { error } from 'console';
+import useErrorStore from '../zustand/Error';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -123,10 +125,29 @@ export class ThemeManager {
       const img = new Image();
       img.crossOrigin = 'Anonymous'; // Needed for CORS if images are on different domain
 
+      // display timer after too much loading time
+      const warningTimer = setTimeout(() => {
+        useErrorStore
+          .getState()
+          .setErrorMessage(
+            `Loading image for theme ${themeName} takes longer then expected`
+          );
+      }, 1200);
       // Create a promise to wait for the image to load
       const imageLoaded = new Promise((resolve, reject) => {
-        img.onload = () => resolve(img);
-        img.onerror = (e) => reject(e);
+        img.onload = () => {
+          clearTimeout(warningTimer);
+          resolve(img);
+        };
+        img.onerror = (e) => {
+          clearTimeout(warningTimer);
+          reject(e);
+          useErrorStore
+            .getState()
+            .setErrorMessage(
+              `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`
+            );
+        };
         img.src = chosenBackground!;
       });
 
