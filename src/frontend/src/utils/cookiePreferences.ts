@@ -15,5 +15,8 @@ export function loadPreferencesFromCookie() {
       ...json,
     };
     setPreferences(preferences);
+  } else {
+    // if the cookie is not set, we set the default preferences
+    setPreferences(defaultPreferences());
   }
 }
