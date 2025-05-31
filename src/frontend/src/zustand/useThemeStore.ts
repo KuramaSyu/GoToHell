@@ -4,6 +4,7 @@ import { ThemeManager } from '../theme/themeManager';
 import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
 import customThemeData from '../theme/themes.json';
 import usePreferenceStore from './PreferenceStore';
+import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 
 // Define a Nord-themed default theme as a fallback.
 export const defaultTheme = createTheme({
@@ -67,6 +68,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   },
   initializeTheme: async () => {
     // get preferences from the store
+    loadPreferencesFromCookie();
     const preferences = usePreferenceStore.getState().preferences;
 
     // filter out valid games, or use all if no preferences are set
