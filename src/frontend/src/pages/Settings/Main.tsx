@@ -29,10 +29,11 @@ export const Settings: React.FC = () => {
     setUpload(0);
   }, []);
 
-  useEffect(() => {
-    // read preferences on page load
-    loadPreferencesFromCookie();
-  }, []);
+  // done in theme store
+  // useEffect(() => {
+  //   // read preferences on page load
+  //   loadPreferencesFromCookie();
+  // }, []);
 
   // Listen for esc, to navigate to home page
   useEffect(() => {

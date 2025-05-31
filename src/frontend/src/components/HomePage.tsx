@@ -19,10 +19,11 @@ const HomePage: React.FC = () => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // initially, load preferences from cookie
-  useEffect(() => {
-    loadPreferencesFromCookie();
-  }, []);
+  // done in theme store
+  // // initially, load preferences from cookie
+  // useEffect(() => {
+  //   loadPreferencesFromCookie();
+  // }, []);
 
   // add current user to user array
   useEffect(() => {
