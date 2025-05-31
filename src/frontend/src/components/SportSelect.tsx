@@ -66,9 +66,9 @@ GameSelectionMap.set('leg_raises', 'Leg Raises');
 export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
-  const { sportResponse, setSportResponse } = useSportResponseStore();
+  const { sportResponse } = useSportResponseStore();
   const { setCalculator } = useCalculatorStore();
-  const { preferences } = usePreferenceStore();
+  const { preferences, preferencesLoaded } = usePreferenceStore();
   const { usedMultiplier } = useUsedMultiplierStore();
   const { setErrorMessage } = useErrorStore();
 
@@ -108,7 +108,7 @@ export const SportSelector = () => {
   }, [preferences, sportResponse, currentSport]);
 
   // transition for button elements in button group
-  const transitions = useTransition(displayedSports, {
+  const transitions = useTransition(preferencesLoaded ? displayedSports : [], {
     from: { opacity: 0, transform: 'scale(0.7) translateY(-20px)' },
     enter: { opacity: 1, transform: 'scale(1) translateY(0px)' },
     leave: {
@@ -118,7 +118,7 @@ export const SportSelector = () => {
     },
     keys: (item) => item.sport ?? 'none', // Use a unique key for each item
     config: { tension: 220, friction: 12 },
-    trail: 100, // Optional: add a small delay between each item's animation
+    trail: 120, // Optional: add a small delay between each item's animation
   });
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -174,21 +174,6 @@ export const SportSelector = () => {
     buildDecoratorStack();
   }, [theme, currentSport, sportResponse, preferences, usedMultiplier]);
 
-  // Fetch data from /api/default on localhost:8080
-  useEffect(() => {
-    fetch(`${BACKEND_BASE}/api/default`)
-      .then((response) => response.json())
-      .then((data: GetSportsResponse) => {
-        console.log(`response /api/sports/default: `, data);
-        setSportResponse(data);
-      })
-      .catch((e) => {
-        console.error;
-        setErrorMessage(`Error fetching sports data: ${e}`);
-      });
-    buildDecoratorStack();
-  }, []);
-
   // when game changes: change game multiplier and maybe change currentSport
   useEffect(() => {
     if (sportResponse?.games && theme.custom.themeName != currentSport?.game) {
@@ -205,7 +190,7 @@ export const SportSelector = () => {
     console.log(sportResponse);
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
-  if (sportResponse === null) {
+  if (sportResponse === null || !preferencesLoaded) {
     return <Box />;
   }
 
