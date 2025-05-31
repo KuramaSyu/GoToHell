@@ -64,30 +64,47 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 ### Things required to add a game:
 
-- an entry in the default sports in `src/backend/config/default_sports.csv`
+- an entry for the new game in `src/frontend/src/utils/data/Multipliers.json`:
+
+```js
+{
+  "sports": {
+    "pushup": 2.5,
+    "plank": 10,
+    // ...
+  },
+  "games": {
+    "overwatch": 1,
+    "league": 1.5,
+    "tft": 1,
+    "your new game": 1 // compared to overwatch, is the average death amount within 30 minutes higher (then value <1) or lower (value >1)
+  }
+}
+```
+
 - the definition for the frontend in `src/frontend/src/theme/themes.json` in this format:
 
-  ```json
+  ```js
   [
     // example for Teamfight Tactics
     {
-      "name": "tft",
-      "longName": "Teamfight Tactics",
-      "backgrounds": [
-        "https://i.postimg.cc/cCc5PpJN/wp7407642-little-legends-wallpapers.jpg",
-        "https://i.postimg.cc/k4kdHDQk/teamfight-tactics-galaxies-penguin-featherknight-uhdpaper-com-4-K-7-1270.jpg"
-      ]
+      name: 'tft',
+      longName: 'Teamfight Tactics',
+      backgrounds: [
+        'https://i.postimg.cc/cCc5PpJN/wp7407642-little-legends-wallpapers.jpg',
+        'https://i.postimg.cc/k4kdHDQk/teamfight-tactics-galaxies-penguin-featherknight-uhdpaper-com-4-K-7-1270.jpg',
+      ],
     },
 
     // your new game
     {
-      "name": "your new game",
-      "longName": "the actuall full name",
-      "backgrounds": [
-        "https://url.to_background_1.png",
-        "https://url.to_background_2.png"
-      ]
-    }
+      name: 'your new game',
+      longName: 'the actuall full name',
+      backgrounds: [
+        'https://url.to_background_1.png',
+        'https://url.to_background_2.png',
+      ],
+    },
   ];
   ```
 
