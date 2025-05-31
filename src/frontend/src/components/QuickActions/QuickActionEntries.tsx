@@ -21,7 +21,7 @@ export const UploadCardButton: React.FC<CardButtonProps> = ({
       icon={<KeyboardReturnIcon sx={ICON_QICK_ACTION_SX} />}
       page={page}
       setPage={setPage}
-      navigateToPage=""
+      navigateToPage={ModalPages.UPLOAD_MODAL}
     />
   );
 };

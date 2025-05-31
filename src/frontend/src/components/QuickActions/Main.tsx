@@ -67,9 +67,13 @@ export const QuickActionMenu: React.FC = () => {
   // opening keyboard listener
   useEffect(() => {
     const alphanumericRegex = /^[a-zA-Z0-9]$/;
-    const isAlphanumberic = (e: KeyboardEvent): boolean => {
+    const isAlphanumbericOrReturn = (e: KeyboardEvent): boolean => {
       return (
-        alphanumericRegex.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey
+        (alphanumericRegex.test(e.key) &&
+          !e.ctrlKey &&
+          !e.metaKey &&
+          !e.altKey) ||
+        e.key === 'Enter'
       );
     };
     const INSTANT_OPEN = preferences.other.instant_open_modal;
@@ -96,7 +100,7 @@ export const QuickActionMenu: React.FC = () => {
           return !currentOpen;
         });
         return; // Don't process '/' further for typing
-      } else if (INSTANT_OPEN && !open && isAlphanumberic(e)) {
+      } else if (INSTANT_OPEN && !open && isAlphanumbericOrReturn(e)) {
         setOpen(true);
         processTyping(e);
       }
@@ -148,13 +152,21 @@ export const QuickActionMenu: React.FC = () => {
   // Listen for Enter to trigger upload and close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open || page !== 'overview') return; // Only listen when modal is open
+      if (!open || page !== ModalPages.OVERVIEW) return; // Only listen when modal is open
 
       if (e.key === 'Enter') {
+        // upload was triggerd by keyboard
         triggerUpload();
         setOpen(false);
       }
     };
+    if (open && page === ModalPages.UPLOAD_MODAL) {
+      // Upload button was pressed with mouse
+      triggerUpload();
+      setOpen(false);
+      setPage(ModalPages.OVERVIEW); // Reset to overview after upload
+    }
+
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
@@ -240,6 +252,7 @@ export const QuickActionMenu: React.FC = () => {
               flexDirection: 'column',
             }}
           >
+            {/* Header  */}
             <Box
               sx={{
                 justifyContent: 'space-between',
@@ -282,6 +295,8 @@ export const QuickActionMenu: React.FC = () => {
                 {exitButton}
               </Box>
             </Box>
+
+            {/* Content Area */}
             <Box
               sx={{
                 flexGrow: 1,
