@@ -77,7 +77,9 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
       "overwatch": 1,
       "league": 1.5,
       "tft": 1,
-      "your new game": 1 // compared to overwatch, is the average death amount within 30 minutes higher (then value <1) or lower (value >1)
+      "your new game": 1  // compared to overwatch, is the average death amount
+                          // within 30 minutes higher (then value <1)
+                          // or lower (value >1)
     }
   }
   ```
