@@ -32,10 +32,8 @@ function getValidGames(
 
 export const GameSelector = () => {
   const { theme, setTheme } = useThemeStore();
-  const { preferences } = usePreferenceStore();
-  const [validGames, setValidGames] = useState<string[]>(
-    getValidGames(preferences.ui.displayedGames, getThemeNames, theme)
-  );
+  const { preferences, preferencesLoaded } = usePreferenceStore();
+  const [validGames, setValidGames] = useState<string[]>([]);
 
   useEffect(() => {
     setValidGames(
@@ -43,6 +41,11 @@ export const GameSelector = () => {
     );
   }, [preferences, theme]);
 
+  if (!preferencesLoaded || theme.custom.themeName === 'default') {
+    // the displayed games depend on preferences, so we wait until they are loaded
+    // which is done in the theme store
+    return null;
+  }
   return (
     <DynamicGameGrid
       items={validGames}

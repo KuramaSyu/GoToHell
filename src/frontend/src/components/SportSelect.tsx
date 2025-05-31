@@ -190,7 +190,12 @@ export const SportSelector = () => {
     console.log(sportResponse);
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
-  if (sportResponse === null || !preferencesLoaded) {
+  if (
+    sportResponse === null ||
+    !preferencesLoaded ||
+    theme.custom.themeName === 'default'
+  ) {
+    // the displayed sports depend on preferences, so we wait until they are loaded
     return <Box />;
   }
 

@@ -10,6 +10,8 @@ import {
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
 import { GenerateMarks } from '../utils/Marks';
+import usePreferenceStore from '../zustand/PreferenceStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 interface DeathAmountState {
   amount: number;
@@ -27,7 +29,8 @@ export interface NumberSliderProps {
 
 export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const { amount, setAmount } = useDeathAmountStore();
-  const theme = useTheme();
+  const { preferencesLoaded } = usePreferenceStore();
+  const { theme } = useThemeStore();
   const min = Math.min(0, amount);
   const max = Math.max(12, amount);
   const selectableMax = 2 ** 11;
@@ -47,6 +50,12 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       setAmount(newValue);
     }
   };
+
+  if (!preferencesLoaded || theme.custom.themeName === 'default') {
+    // the displayed games depend on preferences, so we wait until they are loaded
+    // which is done in the theme store
+    return null;
+  }
 
   const title = (
     <Typography
