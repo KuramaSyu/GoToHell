@@ -8,7 +8,6 @@ import { PopNumber } from './GameSelect';
 import { useSportStore } from '../useSportStore';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { NUMBER_FONT } from '../statics';
-import { GameSelectionMap } from './SportSelect';
 import { useThemeStore } from '../zustand/useThemeStore';
 import {
   AMOUNT_DISPLAY_CONENT_SX,
@@ -19,6 +18,7 @@ import {
   getDisplayComponent,
   getSportDescription,
 } from './AmountDisplay';
+import { GameSelectionMap } from '../utils/data/Sports';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -49,10 +49,6 @@ export const TotalScoreDisplay = () => {
   }
   const DisplayComponent = getDisplayComponent(currentSport.sport!);
 
-  // const for current sport score display
-  const currentSportString = currentSport.sport
-    ? GameSelectionMap.get(currentSport.sport)?.replace('_', ' ')
-    : null;
   const bigNumber = GetScore(currentSport!.sport!, amounts);
   return (
     <Box
