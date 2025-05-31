@@ -66,21 +66,21 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 - an entry for the new game in `src/frontend/src/utils/data/Multipliers.json`:
 
-```js
-{
-  "sports": {
-    "pushup": 2.5,
-    "plank": 10,
-    // ...
-  },
-  "games": {
-    "overwatch": 1,
-    "league": 1.5,
-    "tft": 1,
-    "your new game": 1 // compared to overwatch, is the average death amount within 30 minutes higher (then value <1) or lower (value >1)
+  ```js
+  {
+    "sports": {
+      "pushup": 2.5,
+      "plank": 10,
+      // ...
+    },
+    "games": {
+      "overwatch": 1,
+      "league": 1.5,
+      "tft": 1,
+      "your new game": 1 // compared to overwatch, is the average death amount within 30 minutes higher (then value <1) or lower (value >1)
+    }
   }
-}
-```
+  ```
 
 - the definition for the frontend in `src/frontend/src/theme/themes.json` in this format:
 
