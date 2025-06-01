@@ -11,6 +11,7 @@ import { GameDragDrop } from './GameDragDrop';
 import useUploadStore from '../../zustand/UploadStore';
 import { useNavigate } from 'react-router-dom';
 import { defaultPreferences, savePreferences } from '../../models/Preferences';
+import { BaseMultiplierModifier } from './BaseMultiplierModifier';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -86,7 +87,6 @@ export const Settings: React.FC = () => {
         </Box>
 
         {/* Grid with game multipliers */}
-
         <Box sx={SettingsBoxSX}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Multipliers
@@ -94,6 +94,8 @@ export const Settings: React.FC = () => {
           <MultiplierSettings />
         </Box>
 
+        {/* Table with Sport Base Multipliers */}
+        <BaseMultiplierModifier></BaseMultiplierModifier>
         {/* Plank Seconds */}
         <Box sx={SettingsBoxSX}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
