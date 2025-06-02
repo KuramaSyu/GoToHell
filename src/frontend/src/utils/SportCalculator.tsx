@@ -510,7 +510,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
           className="hoverBox"
           sx={{
             position: 'absolute',
-            top: '-40px', // adjust as needed
+            // adjust as needed
             left: '50%',
             transform: 'translateX(-50%)',
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -523,7 +523,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
             opacity: 0,
             visibility: 'hidden',
             transition: 'opacity 0.2s ease, visibility 0.2s ease',
-            zIndex: 1,
+            zIndex: 1301, // MUI AppBar default zIndex is 1100, so use higher value
             fontFamily: NUMBER_FONT,
             display: 'flex',
             flexDirection: 'column',
