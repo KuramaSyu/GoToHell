@@ -67,5 +67,13 @@
         "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/RainbowSix/02.jpg", 
         "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/RainbowSix/03.jpg"
       ]
+    },
+    {
+      "name": "among us",
+      "longName": "Among Us",
+      "backgrounds": [
+        "https://i.postimg.cc/25J0LXZV/01.jpg",
+        "https://i.postimg.cc/HxyBw4w3/02.jpg"
+      ]
     }
 ]
