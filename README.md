@@ -46,6 +46,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### Fixes
 - Pushup Tooltip: Zindex >1100
 - Plank: don't show tooltip in the middle of the box
+- Reloading in Settings sets Streak to 0
 #### QoL
 
 - [ ] Show all multipliers in the settings
