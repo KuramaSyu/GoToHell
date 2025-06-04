@@ -10,6 +10,7 @@ import { NUMBER_FONT } from '../statics';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 import { isNumeric } from './UserNumber';
+import { ToolTip } from '../components/ToolTip';
 /**
  * A calculator for the amount of exercises of a given sport a user
  * has to do. This is effected by game and amount of deaths.
@@ -77,30 +78,10 @@ export class DefaultSportsCalculator implements SportsCalculator {
         }}
       >
         {/* Tooltip Box */}
-        <Box
-          className="hoverBox"
-          sx={{
-            position: 'absolute',
-            top: '-40px', // adjust as needed
-            left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            color: 'white',
-            px: 2,
-            py: 1,
-            borderRadius: 2,
-            fontSize: 14,
-            whiteSpace: 'nowrap',
-            opacity: 0,
-            visibility: 'hidden',
-            transition: 'opacity 0.2s ease, visibility 0.2s ease',
-            zIndex: 1,
-            fontFamily: NUMBER_FONT,
-          }}
-        >
+        <ToolTip>
           Game Base ({game_base}) x Sport Base ({sport_base}) ={' '}
           {sport_times_game_base}
-        </Box>
+        </ToolTip>
 
         {/* Main Box */}
         <Box
@@ -322,29 +303,9 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
           }}
         >
           {/* Tooltip Box */}
-          <Box
-            className="hoverBox"
-            sx={{
-              position: 'absolute',
-              top: '-40px', // adjust as needed
-              left: '50%',
-              transform: 'translateX(-50%)',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              color: 'white',
-              px: 2,
-              py: 1,
-              borderRadius: 2,
-              fontSize: 14,
-              whiteSpace: 'nowrap',
-              opacity: 0,
-              visibility: 'hidden',
-              transition: 'opacity 0.2s ease, visibility 0.2s ease',
-              zIndex: 1,
-              fontFamily: NUMBER_FONT,
-            }}
-          >
+          <ToolTip>
             Override for Game {game} and Sport {sport}: {override.amount}
-          </Box>
+          </ToolTip>
 
           {/* Main Box */}
           <Box
@@ -506,34 +467,12 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
         }}
       >
         {/* Tooltip Box */}
-        <Box
-          className="hoverBox"
-          sx={{
-            position: 'absolute',
-            // adjust as needed
-            left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            color: 'white',
-            px: 2,
-            py: 1,
-            borderRadius: 2,
-            fontSize: 14,
-            whiteSpace: 'nowrap',
-            opacity: 0,
-            visibility: 'hidden',
-            transition: 'opacity 0.2s ease, visibility 0.2s ease',
-            zIndex: 1301, // MUI AppBar default zIndex is 1100, so use higher value
-            fontFamily: NUMBER_FONT,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <ToolTip>
           <Box>With 10 Deaths, and a game base of 1, </Box>
           <Box>
             you have to do {this.get_max_seconds_from_preferences()}s plank
           </Box>
-        </Box>
+        </ToolTip>
 
         {/* Main Box */}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
