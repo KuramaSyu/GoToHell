@@ -18,7 +18,7 @@ const AnimatedButton = ({
 
   const isAnimationActive = duration !== 0;
 
-  const AnimatedBtn = styled(motion(Button))({
+  const AnimatedBtn = styled(motion.create(Button))({
     position: 'relative',
     overflow: 'hidden',
     width: '100%',
