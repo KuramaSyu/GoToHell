@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import { darken } from '@mui/material/styles';
 import { animated, AnimatedProps, useSpring } from '@react-spring/web';
+import { useThemeStore } from '../zustand/useThemeStore';
 
 export interface GameItem {
   text: string;
@@ -102,9 +103,18 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
   onSelect,
   selectedItem,
 }) => {
-  const [currentItem, setItem] = useState<String | null>();
-  const currentmixItem = currentItem || selectedItem;
-  const theme = useTheme();
+  const { theme } = useThemeStore();
+
+  // state is used to be more responsive, since setTheme is async, and needs a bit time
+  const [currentItem, setItem] = useState<String | null>(
+    theme.custom.themeName
+  );
+
+  // when theme is changed from outside (modal), then adopt it
+  useEffect(() => {
+    if (theme.custom.themeName !== currentItem) setItem(theme.custom.themeName);
+  }, [theme]);
+
   let game_items: GameItem[] = [];
   for (let i = 0; i < items.length; i++) {
     const gameitem: GameItem = {
@@ -159,7 +169,7 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
                 <Box key={item.text} sx={{ width: `${widthPercent}%`, px: 1 }}>
                   <AnimatedThemeButton
                     item={item}
-                    isSelected={currentmixItem === item.text}
+                    isSelected={currentItem === item.text}
                     onClick={() => {
                       setItem(item.text);
                       onSelect(item.text);
