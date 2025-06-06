@@ -44,14 +44,17 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
 
 #### Fixes
+
 - Pushup Tooltip: Zindex >1100
 - Plank: don't show tooltip in the middle of the box
 - Reloading in Settings sets Streak to 0
+
 #### QoL
 
 - [ ] Show all multipliers in the settings
 - [ ] better animate TimeDisplay
 - [ ] add time (seconds) parameter to setErrorMessage. Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
+- [ ] add a function to theme, to return primary/secondary color, but brightend up if it's too dark (for better contrast in app bar)
 
 #### Perf
 
