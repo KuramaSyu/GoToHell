@@ -64,7 +64,19 @@ export const QuickActionMenu: React.FC = () => {
     immediate: (state) => state === 'leave' && open,
   });
 
-  // opening keyboard listener
+  /**
+   * Un-focuses an element, if one is active. This is mainly used,
+   * to prevent EnterKey from beeing registered from multiple components,
+   * when modal is active
+   */
+  const unfocusCurrentElement = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      console.log(`unfocus ${document.activeElement}`);
+      document.activeElement.blur();
+    }
+  };
+  // keyboard listener, which starts the modal if A-Z, Enter, 0-9 was pressed
+  // also, it ignores keystrokes, if a textfield is active
   useEffect(() => {
     const alphanumericRegex = /^[a-zA-Z0-9]$/;
     const isAlphanumbericOrReturn = (e: KeyboardEvent): boolean => {
@@ -94,6 +106,7 @@ export const QuickActionMenu: React.FC = () => {
         // Toggle open state and reset typed state if opening
         setOpen((currentOpen) => {
           if (!currentOpen) {
+            unfocusCurrentElement();
             SetTyped(null); // Reset typed when opening
             setPage('overview'); // Ensure starting page is overview
           }
@@ -101,6 +114,8 @@ export const QuickActionMenu: React.FC = () => {
         });
         return; // Don't process '/' further for typing
       } else if (INSTANT_OPEN && !open && isAlphanumbericOrReturn(e)) {
+        // a key was pressed and INSTANT_OPEN is active
+        unfocusCurrentElement();
         setOpen(true);
         processTyping(e);
       }
