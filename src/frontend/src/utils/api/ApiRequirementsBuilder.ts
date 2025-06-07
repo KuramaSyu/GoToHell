@@ -1,6 +1,19 @@
+import { useUserStore } from '../../userStore';
+import { UserApi } from './Api';
+
 interface ApiReuqirement {
   needsFetch: () => Boolean;
   fetch: () => Promise<void>;
+}
+
+export class UserRequirement implements ApiReuqirement {
+  needsFetch(): Boolean {
+    return useUserStore.getState().user === null;
+  }
+
+  async fetch(): Promise<void> {
+    await new UserApi().fetchUser();
+  }
 }
 
 /**
