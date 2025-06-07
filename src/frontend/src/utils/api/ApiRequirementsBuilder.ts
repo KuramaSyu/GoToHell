@@ -1,4 +1,5 @@
 import { useUserStore } from '../../userStore';
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UserApi } from './Api';
 
 interface ApiReuqirement {
@@ -13,6 +14,16 @@ export class UserRequirement implements ApiReuqirement {
 
   async fetch(): Promise<void> {
     await new UserApi().fetchUser();
+  }
+}
+
+export class TotalScoreRequirement implements ApiReuqirement {
+  needsFetch(): Boolean {
+    return useTotalScoreStore.getState().amounts.length === 0;
+  }
+
+  async fetch(): Promise<void> {
+    await new UserApi().fetchTotalScore();
   }
 }
 
