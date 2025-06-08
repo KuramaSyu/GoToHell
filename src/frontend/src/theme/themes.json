@@ -75,5 +75,12 @@
         "https://i.postimg.cc/25J0LXZV/01.jpg",
         "https://i.postimg.cc/HxyBw4w3/02.jpg"
       ]
+    },
+    {
+      "name": "terraria",
+      "longName": "Terraria",
+      "backgrounds": [
+        "https://i.postimg.cc/jqGdXjTH/01.jpg"
+      ]
     }
 ]
