@@ -8,6 +8,7 @@ import {
   PointerSensor,
   DragOverlay,
   useDroppable,
+  TouchSensor,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -82,7 +83,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
   const { theme } = useThemeStore();
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
 
   /**
    * Save changes with the outside function
