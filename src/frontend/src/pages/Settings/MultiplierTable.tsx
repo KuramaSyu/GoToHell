@@ -16,6 +16,9 @@ import EditableNumberTable, {
   TableDataRow,
 } from './EditableTable';
 import usePreferenceStore from '../../zustand/PreferenceStore';
+import { useSportResponseStore } from '../../zustand/sportResponseStore';
+import useCalculatorStore from '../../zustand/CalculatorStore';
+import Latex from 'react-latex-next';
 
 const getBaseColumns = (): EditableTableColumn[] => {
   return [
@@ -26,17 +29,50 @@ const getBaseColumns = (): EditableTableColumn[] => {
     },
     {
       id: 'multiplier',
-      label: 'Multiplier',
+      label: 'SportBase',
       isEditable: true,
     },
   ];
 };
+
 export const MultiplierTable: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
+  const { sportResponse, setSportResponse } = useSportResponseStore();
   const [data, setData] = useState<TableDataRow[]>([{ id: 0, key: 'test' }]);
+  const { calculator } = useCalculatorStore();
   const [columns, setColumns] = useState<EditableTableColumn[]>(
     getBaseColumns()
   );
+
+  /**
+   *
+   * @param sport the id (string) of the sport
+   * @returns the base multiplier of the sport
+   */
+  const getSportMultiplier = (sport: string): number => {
+    if (sportResponse === undefined) return 1;
+    return sportResponse?.sports[sport] ?? 1;
+  };
+
+  /**
+   *
+   */
+  const calculateGameCells = (sport: string): Record<string, number> => {
+    const multiplier = getSportMultiplier(sport);
+    const DEATHS = 10;
+    const games = preferences.ui.displayedGames;
+    return (
+      games?.reduce(
+        (prev, current) => ({
+          ...prev,
+          [current]: Math.round(
+            calculator.calculate_amount(sport, current, DEATHS)
+          ),
+        }),
+        {}
+      ) ?? {}
+    );
+  };
 
   // add games to columns when preferences are loaded
   useEffect(() => {
@@ -52,10 +88,18 @@ export const MultiplierTable: React.FC = () => {
     setColumns([...getBaseColumns(), ...(gameColumns || [])]);
   }, [preferences]);
 
-  // add sports to columns when preferences are loaded
+  // add records, with: sport, multiplier, ...<games at x deaths>
   useEffect(() => {
     const records = preferences.ui.displayedSports?.reduce<TableDataRow[]>(
-      (prev, current) => [...prev, { sport: current, id: current }],
+      (prev, current) => [
+        ...prev,
+        {
+          id: current,
+          sport: current,
+          multiplier: getSportMultiplier(current),
+          ...calculateGameCells(current),
+        },
+      ],
       []
     );
     setData([...(records || [])]);
@@ -65,6 +109,17 @@ export const MultiplierTable: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h4">Sport Multipliers</Typography>
+      <Latex>{`$\\texttt{SportBase} \\cdot \\texttt{GameBase} \\cdot \\texttt{Deaths} = \\texttt{ExerciseAmount}$`}</Latex>
+      <Typography>
+        This is the calculation, for how much exercises you have to do. In the
+        following table you can modify every to make an individual sport harder
+        or easier.
+      </Typography>
+      <Typography>
+        The table shows the sport, it's multiplier{' '}
+        <Latex>{`$\\texttt{SportBase}$`}</Latex>, and for several games the
+        amount of exercises with 10 Deaths and your current settings.
+      </Typography>
       <EditableNumberTable
         onDataChange={onChange}
         columns={columns}
