@@ -108,7 +108,7 @@ export const MultiplierTable: React.FC = () => {
   const onChange = (newData: TableDataRow[]) => {};
   return (
     <Box>
-      <Latex>{`$\\texttt{SportBase} \\cdot \\texttt{GameBase} \\cdot \\texttt{Deaths} = \\texttt{ExerciseAmount}$`}</Latex>
+      <Latex>{`$\\texttt{SportBase} \\cdot \\texttt{GameBase} \\cdot \\texttt{Multiplier} \\cdot \\texttt{Deaths} = \\texttt{ExerciseAmount}$`}</Latex>
       <Typography>
         This is the calculation, for how much exercises you have to do. In the
         following table you can modify every{' '}
