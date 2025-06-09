@@ -22,6 +22,15 @@ const SettingsBoxSX = {
   justifyItems: 'center',
   zIndex: 1,
 };
+
+const RoundedBlurBoxSX = {
+  backdropFilter: 'blur(25px)',
+  borderRadius: 5,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 5,
+  backgroundColor: 'rgba(0,0,0,0.2)',
+};
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   const navigate = useNavigate();
@@ -73,15 +82,7 @@ export const Settings: React.FC = () => {
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Overrides
           </Typography>
-          <Box
-            sx={{
-              backdropFilter: 'blur(25px)',
-              borderRadius: 5,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 5,
-            }}
-          >
+          <Box sx={RoundedBlurBoxSX}>
             <GameOverrideSettings />
             <GameOverrideList />
           </Box>
@@ -97,7 +98,10 @@ export const Settings: React.FC = () => {
 
         {/* Table with Sport Base Multipliers */}
         <Box sx={SettingsBoxSX}>
-          <MultiplierTable></MultiplierTable>
+          <Typography variant="h4">Sport Bases</Typography>
+          <Box sx={{ ...RoundedBlurBoxSX, p: 2 }}>
+            <MultiplierTable></MultiplierTable>
+          </Box>
         </Box>
         {/* Plank Seconds */}
         <Box sx={SettingsBoxSX}>
