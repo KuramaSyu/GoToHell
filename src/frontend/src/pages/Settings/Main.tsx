@@ -12,6 +12,7 @@ import useUploadStore from '../../zustand/UploadStore';
 import { useNavigate } from 'react-router-dom';
 import { defaultPreferences, savePreferences } from '../../models/Preferences';
 import { BaseMultiplierModifier } from './BaseMultiplierModifier';
+import { MultiplierTable } from './MultiplierTable';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -95,7 +96,9 @@ export const Settings: React.FC = () => {
         </Box>
 
         {/* Table with Sport Base Multipliers */}
-        <BaseMultiplierModifier></BaseMultiplierModifier>
+        <Box sx={SettingsBoxSX}>
+          <MultiplierTable></MultiplierTable>
+        </Box>
         {/* Plank Seconds */}
         <Box sx={SettingsBoxSX}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
