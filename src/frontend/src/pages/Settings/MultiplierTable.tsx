@@ -107,8 +107,7 @@ export const MultiplierTable: React.FC = () => {
 
   const onChange = (newData: TableDataRow[]) => {};
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Typography variant="h4">Sport Multipliers</Typography>
+    <Box>
       <Latex>{`$\\texttt{SportBase} \\cdot \\texttt{GameBase} \\cdot \\texttt{Deaths} = \\texttt{ExerciseAmount}$`}</Latex>
       <Typography>
         This is the calculation, for how much exercises you have to do. In the
@@ -116,9 +115,9 @@ export const MultiplierTable: React.FC = () => {
         or easier.
       </Typography>
       <Typography>
-        The table shows the sport, it's multiplier{' '}
-        <Latex>{`$\\texttt{SportBase}$`}</Latex>, and for several games the
-        amount of exercises with 10 Deaths and your current settings.
+        The table shows the sport, it's <Latex>{`$\\texttt{SportBase}$`}</Latex>
+        , and for several games the amount of exercises with 10 Deaths and your
+        current settings.
       </Typography>
       <EditableNumberTable
         onDataChange={onChange}
