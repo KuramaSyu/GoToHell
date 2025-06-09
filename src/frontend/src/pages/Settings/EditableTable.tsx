@@ -27,6 +27,12 @@ export interface TableDataRow {
   [key: string]: string | number;
 }
 
+export interface EditableTableColumn {
+  id: string;
+  label: string;
+  isEditable: boolean;
+}
+
 export interface EditableNumberTableProps {
   /**
    * initial table data
@@ -35,7 +41,7 @@ export interface EditableNumberTableProps {
   /**
    * List with mappings from id to label of the columns in the table
    */
-  columns: { id: string; label: string }[];
+  columns: EditableTableColumn[];
   /**
    * function, which is called, when data changes. Should be used to update
    * the data
@@ -143,24 +149,32 @@ export const EditableNumberTable: React.FC<EditableNumberTableProps> = ({
             <TableRow key={row.id}>
               {columns.map((column) => (
                 <TableCell key={`${row.id}-${column.id}`}>
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    value={row[column.id] !== undefined ? row[column.id] : ''}
-                    onChange={(e) =>
-                      handleCellChange(row.id, column.id, e.target.value)
-                    }
-                    error={errors[row.id] && errors[row.id]![column.id]}
-                    helperText={
-                      errors[row.id] && errors[row.id]![column.id]
-                        ? 'Please enter a valid number'
-                        : ''
-                    }
-                    inputProps={{
-                      'aria-label': `Edit ${column.label}`,
-                      style: { textAlign: 'right' },
-                    }}
-                  />
+                  {column.isEditable ? (
+                    // textfield, when it's editable
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      value={row[column.id] !== undefined ? row[column.id] : ''}
+                      onChange={(e) =>
+                        handleCellChange(row.id, column.id, e.target.value)
+                      }
+                      error={errors[row.id] && errors[row.id]![column.id]}
+                      helperText={
+                        errors[row.id] && errors[row.id]![column.id]
+                          ? 'Please enter a valid number'
+                          : ''
+                      }
+                      inputProps={{
+                        'aria-label': `Edit ${column.label}`,
+                        style: { textAlign: 'right' },
+                      }}
+                    />
+                  ) : (
+                    // otherwise just text
+                    <Typography>
+                      {row[column.id] !== undefined ? row[column.id] : ''}
+                    </Typography>
+                  )}
                 </TableCell>
               ))}
             </TableRow>
