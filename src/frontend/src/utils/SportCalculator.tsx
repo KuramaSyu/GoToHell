@@ -136,7 +136,7 @@ export class PreferenceRespectingDefaultSportsCalculator extends DefaultSportsCa
     return (
       this.preferences.multipliers.filter(
         (m) => m.sport === sport && m.game === null
-      )[0]?.multiplier ?? super.get_game_base(sport)
+      )[0]?.multiplier ?? super.get_sport_base(sport)
     );
   }
 }
