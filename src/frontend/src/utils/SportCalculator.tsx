@@ -1,5 +1,9 @@
 import { ReactNode } from 'react';
-import { Multiplier, OverrideSportDefinition } from '../models/Preferences';
+import {
+  Multiplier,
+  OverrideSportDefinition,
+  UserPreferences,
+} from '../models/Preferences';
 import { GetSportsResponse } from '../models/Sport';
 import { Box, darken, lighten, Typography } from '@mui/material';
 import 'katex/dist/katex.min.css';
@@ -111,6 +115,32 @@ export class DefaultSportsCalculator implements SportsCalculator {
   }
 }
 
+export class PreferenceRespectingDefaultSportsCalculator extends DefaultSportsCalculator {
+  preferences: UserPreferences;
+
+  constructor(
+    getSportsResposne: GetSportsResponse,
+    preferences: UserPreferences
+  ) {
+    super(getSportsResposne);
+    this.preferences = preferences;
+  }
+
+  /**
+   * Since there are multipliers which only affect a sport and not any game (game = null), these
+   * multipliers will be treatet as SportBase replacement
+   * @param sport
+   * @returns the preferred SportBase or the default SportBase
+   */
+  get_sport_base(sport: string): number {
+    return (
+      this.preferences.multipliers.filter(
+        (m) => m.sport === sport && m.game === null
+      )[0]?.multiplier ?? super.get_game_base(sport)
+    );
+  }
+}
+
 /**
  * Base Decorator, which does more or less the same as the DefaultSportsCalculator
  */
@@ -144,36 +174,6 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 
   make_box(sport: string, game: string, deaths: number): ReactNode | null {
     return this.decorated.make_box(sport, game, deaths);
-  }
-}
-
-/**
- * Decorator for overriding the SportBase, which overrides are saved as multiplier where game is null and
- * sport is defined sport
- */
-export class SportBaseOverrideDecorator extends BaseSportsCalculatorDecorator {
-  multipliers: Multiplier[];
-
-  constructor(decorated: SportsCalculator, multipliers: Multiplier[]) {
-    super(decorated);
-    this.multipliers = multipliers;
-  }
-
-  /**
-   * Since there are "multipliers" - actually just global overrides, which only affect a sport, these
-   * multipliers will be treatet as SportBase replacement
-   * @param sport
-   * @returns
-   */
-  get_sport_base(sport: string): number {
-    return 42;
-    const overriddenBase = this.multipliers.filter(
-      (m) => m.game === null && m.sport === sport
-    )[0]?.multiplier;
-    if (overriddenBase !== undefined) {
-      return overriddenBase;
-    }
-    return super.get_sport_base(sport);
   }
 }
 
