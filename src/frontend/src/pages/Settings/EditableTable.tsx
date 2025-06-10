@@ -46,8 +46,14 @@ export interface EditableNumberTableProps {
    * function, which is called, when data changes. Should be used to update
    * the data
    * @param newData the data, which will be used to override the existing data
+   * @param rowId the ID of the changed row
+   * @param columnId the ID of the column, in which the cell change was made
    */
-  onDataChange: (newData: TableDataRow[]) => void;
+  onDataChange: (
+    newData: TableDataRow[],
+    rowId: string | number,
+    columnId: string
+  ) => void;
 }
 
 export const EditableNumberTable: React.FC<EditableNumberTableProps> = ({
@@ -130,7 +136,7 @@ export const EditableNumberTable: React.FC<EditableNumberTableProps> = ({
         }
         return row;
       });
-      onDataChange(processedData);
+      onDataChange(processedData, rowId, columnId);
     }
   };
 
@@ -140,7 +146,9 @@ export const EditableNumberTable: React.FC<EditableNumberTableProps> = ({
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column.id}>{column.label}</TableCell>
+              <TableCell key={column.id} sx={{ fontWeight: 400 }}>
+                {column.label.toUpperCase()}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -152,7 +160,6 @@ export const EditableNumberTable: React.FC<EditableNumberTableProps> = ({
                   {column.isEditable ? (
                     // textfield, when it's editable
                     <TextField
-                      fullWidth
                       variant="outlined"
                       value={row[column.id] !== undefined ? row[column.id] : ''}
                       onChange={(e) =>
@@ -164,9 +171,11 @@ export const EditableNumberTable: React.FC<EditableNumberTableProps> = ({
                           ? 'Please enter a valid number'
                           : ''
                       }
-                      inputProps={{
-                        'aria-label': `Edit ${column.label}`,
-                        style: { textAlign: 'right' },
+                      slotProps={{
+                        htmlInput: {
+                          'aria-label': `Edit ${column.label}`,
+                          style: { textAlign: 'right' },
+                        },
                       }}
                     />
                   ) : (
