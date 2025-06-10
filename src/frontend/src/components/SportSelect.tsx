@@ -19,6 +19,7 @@ import {
   HumanLockDecorator,
   MultiplierDecorator,
   OverrideSportDecorator,
+  PreferenceRespectingDefaultSportsCalculator,
   SportsCalculator,
 } from '../utils/SportCalculator';
 
@@ -109,8 +110,12 @@ export const SportSelector = () => {
   const buildDecoratorStack = () => {
     const BASE_SETTINGS = sportResponse ?? { sports: {}, games: {} };
 
-    // base for calculating default values
-    var base: SportsCalculator = new DefaultSportsCalculator(BASE_SETTINGS);
+    // base for calculating default values with respecting the users overrides
+    var base: SportsCalculator =
+      new PreferenceRespectingDefaultSportsCalculator(
+        BASE_SETTINGS,
+        preferences
+      );
 
     // custom per game per sport overrides
     base = new OverrideSportDecorator(base, preferences.game_overrides);
