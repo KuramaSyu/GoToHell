@@ -148,6 +148,36 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 }
 
 /**
+ * Decorator for overriding the SportBase, which overrides are saved as multiplier where game is null and
+ * sport is defined sport
+ */
+export class SportBaseOverrideDecorator extends BaseSportsCalculatorDecorator {
+  multipliers: Multiplier[];
+
+  constructor(decorated: SportsCalculator, multipliers: Multiplier[]) {
+    super(decorated);
+    this.multipliers = multipliers;
+  }
+
+  /**
+   * Since there are "multipliers" - actually just global overrides, which only affect a sport, these
+   * multipliers will be treatet as SportBase replacement
+   * @param sport
+   * @returns
+   */
+  get_sport_base(sport: string): number {
+    return 42;
+    const overriddenBase = this.multipliers.filter(
+      (m) => m.game === null && m.sport === sport
+    )[0]?.multiplier;
+    if (overriddenBase !== undefined) {
+      return overriddenBase;
+    }
+    return super.get_sport_base(sport);
+  }
+}
+
+/**
  * Adds a custom set multiplier to Latex and calculation
  */
 export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
@@ -174,7 +204,9 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
     // );
 
     const getGlobalMultipliers = () =>
-      this.multipliers.filter((entry) => entry.game == null);
+      this.multipliers.filter(
+        (entry) => entry.game === null && entry.sport === null
+      );
     const getGameSpecificMultipliers = () =>
       (multipliers = this.multipliers.filter((entry) => entry.game == game));
 
