@@ -10,7 +10,7 @@ import {
 import { useThemeStore } from '../zustand/useThemeStore';
 import { useSportStore } from '../useSportStore';
 import { BACKEND_BASE } from '../statics';
-import { GetSportsResponse } from '../models/Sport';
+import { GetSportsResponse, SportsApiResponse } from '../models/Sport';
 
 import {
   DeathDecorator,
@@ -27,12 +27,58 @@ import useCalculatorStore from '../zustand/CalculatorStore';
 import { useSportResponseStore } from '../zustand/sportResponseStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
-import { Multiplier } from '../models/Preferences';
+import { Multiplier, UserPreferences } from '../models/Preferences';
 import { animated, useSpring, useTransition } from 'react-spring';
 import useErrorStore from '../zustand/Error';
 import { GameSelectionMap, sportIconMap } from '../utils/data/Sports';
 
 const AnimatedButton = animated(Button);
+
+/**
+ * builds up the Decorator Stack, which is used to calculate the amount of exercies
+ * and display it's latex.
+ *
+ * The Decorator Stack contains:
+ *  - `DefaultCalculator` for backend defaults
+ *  - `OverrideSportDecorator` for custom Sport overrides
+ *  - `DeathDecorator` to include deaths in LaTeX calculation
+ *  - `MultiplierDecorator` to include Multiplier Settings
+ *  - `HumanLockDecorator` for custom Plank formula
+ *  - `ExactlyOneDecorator` (only when game is custom) to set all previous values to 1
+ */
+export const buildDecoratorStack = (
+  sportResponse: GetSportsResponse,
+  preferences: UserPreferences,
+  themeName: string
+): SportsCalculator => {
+  const BASE_SETTINGS = sportResponse;
+
+  // base for calculating default values with respecting the users overrides
+  var base: SportsCalculator = new PreferenceRespectingDefaultSportsCalculator(
+    BASE_SETTINGS,
+    preferences
+  );
+
+  // custom per game per sport overrides
+  base = new OverrideSportDecorator(base, preferences.game_overrides);
+
+  // add DeathDecorator, to wrap the output with the death amount
+  base = new DeathDecorator(base);
+
+  // custom multipliers, either global or per game and sport
+  base = new MultiplierDecorator(base, preferences.multipliers);
+
+  // custom decorator for planks
+  base = new HumanLockDecorator(base);
+
+  // check if game: custom is selected
+  if (themeName == 'custom') {
+    // add ExactlyOneDecorator, to always return 1
+    base = new ExactlyOneDecorator(base);
+  }
+
+  return base;
+};
 
 // Select the sport kind with a button
 export const SportSelector = () => {
@@ -96,49 +142,6 @@ export const SportSelector = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   /**
-   * builds up the Decorator Stack, which is used to calculate the amount of exercies
-   * and display it's latex.
-   *
-   * The Decorator Stack contains:
-   *  - `DefaultCalculator` for backend defaults
-   *  - `OverrideSportDecorator` for custom Sport overrides
-   *  - `DeathDecorator` to include deaths in LaTeX calculation
-   *  - `MultiplierDecorator` to include Multiplier Settings
-   *  - `HumanLockDecorator` for custom Plank formula
-   *  - `ExactlyOneDecorator` (only when game is custom) to set all previous values to 1
-   */
-  const buildDecoratorStack = () => {
-    const BASE_SETTINGS = sportResponse ?? { sports: {}, games: {} };
-
-    // base for calculating default values with respecting the users overrides
-    var base: SportsCalculator =
-      new PreferenceRespectingDefaultSportsCalculator(
-        BASE_SETTINGS,
-        preferences
-      );
-
-    // custom per game per sport overrides
-    base = new OverrideSportDecorator(base, preferences.game_overrides);
-
-    // add DeathDecorator, to wrap the output with the death amount
-    base = new DeathDecorator(base);
-
-    // custom multipliers, either global or per game and sport
-    base = new MultiplierDecorator(base, preferences.multipliers);
-
-    // custom decorator for planks
-    base = new HumanLockDecorator(base);
-
-    // check if game: custom is selected
-    if (theme.custom.themeName == 'custom') {
-      // add ExactlyOneDecorator, to always return 1
-      base = new ExactlyOneDecorator(base);
-    }
-
-    setCalculator(base);
-  };
-
-  /**
    * updates the DecoratorStack, when:
    *  - game changs
    *  - selected sport changes
@@ -147,7 +150,9 @@ export const SportSelector = () => {
    *  - usedMultiplier changes
    */
   useEffect(() => {
-    buildDecoratorStack();
+    setCalculator(
+      buildDecoratorStack(sportResponse, preferences, theme.custom.themeName)
+    );
   }, [theme, currentSport, sportResponse, preferences, usedMultiplier]);
 
   // when game changes: change game multiplier and maybe change currentSport
