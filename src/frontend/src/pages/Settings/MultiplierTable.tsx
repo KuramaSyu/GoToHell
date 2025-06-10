@@ -20,6 +20,9 @@ import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import Latex from 'react-latex-next';
 import { Multiplier, UserPreferences } from '../../models/Preferences';
+import { PreferenceRespectingDefaultSportsCalculator } from '../../utils/SportCalculator';
+import { buildDecoratorStack } from '../../components/SportSelect';
+import { useThemeStore } from '../../zustand/useThemeStore';
 
 const getBaseColumns = (): EditableTableColumn[] => {
   return [
@@ -38,28 +41,29 @@ const getBaseColumns = (): EditableTableColumn[] => {
 
 export const MultiplierTable: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
-  const { sportResponse, setSportResponse } = useSportResponseStore();
+  const { theme } = useThemeStore();
+  const { sportResponse, setSportResponse, emptySportsResponse } =
+    useSportResponseStore();
   const [data, setData] = useState<TableDataRow[]>([{ id: 0, key: 'test' }]);
-  const { calculator } = useCalculatorStore();
+  const [calculator, setCalculator] = useState(
+    buildDecoratorStack(sportResponse, preferences, theme.custom.themeName)
+  );
   const [columns, setColumns] = useState<EditableTableColumn[]>(
     getBaseColumns()
   );
 
-  /**
-   *
-   * @param sport the id (string) of the sport
-   * @returns the base multiplier of the sport
-   */
-  const getSportMultiplier = (sport: string): number => {
-    if (sportResponse === undefined) return 1;
-    return sportResponse?.sports[sport] ?? 1;
-  };
+  useEffect(() => {
+    console.log(`sport Response: ${JSON.stringify(sportResponse)}`);
+    setCalculator(
+      buildDecoratorStack(sportResponse, preferences, theme.custom.themeName)
+    );
+  }, [preferences, sportResponse]);
 
   /**
    *
    */
   const calculateGameCells = (sport: string): Record<string, number> => {
-    const multiplier = getSportMultiplier(sport);
+    const multiplier = calculator.get_sport_base(sport);
     const DEATHS = 10;
     const games = preferences.ui.displayedGames;
     return (
@@ -87,24 +91,24 @@ export const MultiplierTable: React.FC = () => {
       )
       .filter((x) => x.id !== 'custom');
     setColumns([...getBaseColumns(), ...(gameColumns || [])]);
-  }, [preferences]);
+  }, [preferences, calculator]);
 
   // add records, with: sport, multiplier, ...<games at x deaths>
   useEffect(() => {
     const records = preferences.ui.displayedSports?.reduce<TableDataRow[]>(
-      (prev, current) => [
+      (prev, currentSport) => [
         ...prev,
         {
-          id: current,
-          sport: current,
-          multiplier: getSportMultiplier(current),
-          ...calculateGameCells(current),
+          id: currentSport,
+          sport: currentSport,
+          multiplier: calculator.get_sport_base(currentSport),
+          ...calculateGameCells(currentSport),
         },
       ],
       []
     );
     setData([...(records || [])]);
-  }, [preferences]);
+  }, [preferences, calculator]);
 
   const onChange = (
     newData: TableDataRow[],
@@ -123,7 +127,7 @@ export const MultiplierTable: React.FC = () => {
       multipliers: [
         ...preferences.multipliers.filter(
           (m) =>
-            m.game !== newMMultiplier.game && m.sport !== newMMultiplier.sport
+            !(m.game == newMMultiplier.game && m.sport == newMMultiplier.sport)
         ),
         newMMultiplier,
       ],
