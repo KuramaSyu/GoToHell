@@ -19,6 +19,7 @@ import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import Latex from 'react-latex-next';
+import { Multiplier, UserPreferences } from '../../models/Preferences';
 
 const getBaseColumns = (): EditableTableColumn[] => {
   return [
@@ -105,7 +106,30 @@ export const MultiplierTable: React.FC = () => {
     setData([...(records || [])]);
   }, [preferences]);
 
-  const onChange = (newData: TableDataRow[]) => {};
+  const onChange = (
+    newData: TableDataRow[],
+    rowId: string | number,
+    columnId: string
+  ) => {
+    if (columnId !== 'multiplier') return;
+    const newMMultiplier: Multiplier = {
+      game: null,
+      multiplier:
+        (newData.filter((r) => r.id === rowId)[0]?.[columnId] as number) ?? 1,
+      sport: rowId as string,
+    };
+    const newPreferences: UserPreferences = {
+      ...preferences,
+      multipliers: [
+        ...preferences.multipliers.filter(
+          (m) =>
+            m.game !== newMMultiplier.game && m.sport !== newMMultiplier.sport
+        ),
+        newMMultiplier,
+      ],
+    };
+    setPreferences(newPreferences);
+  };
   return (
     <Box>
       <Latex>{`$\\texttt{SportBase} \\cdot \\texttt{GameBase} \\cdot \\texttt{Multiplier} \\cdot \\texttt{Deaths} = \\texttt{ExerciseAmount}$`}</Latex>
