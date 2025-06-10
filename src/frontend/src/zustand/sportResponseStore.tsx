@@ -4,7 +4,7 @@ import multiplierData from '../utils/data/Multipliers.json';
 
 const data: GetSportsResponse = multiplierData;
 interface SportResponseState {
-  sportResponse: GetSportsResponse | null;
+  sportResponse: GetSportsResponse;
   setSportResponse: (sportResponse: GetSportsResponse) => void;
   emptySportsResponse: () => GetSportsResponse;
 }
