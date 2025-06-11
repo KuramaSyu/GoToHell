@@ -18,6 +18,7 @@ import {
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
+import { blendWithContrast } from '../../utils/blendWithContrast';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -289,6 +290,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           onClick={() => setUsedMultiplierAndUpdateValue(null)}
           sx={{
             backgroundColor: getColor(null),
+            color: blendWithContrast(theme.palette.secondary.main, theme, 0.5),
             whiteSpace: 'nowrap', // Prevent text wrapping
             justifyContent: 'center',
           }}
@@ -298,6 +300,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         <Button
           sx={{
             backgroundColor: getColor(theme.custom.themeName),
+            color: blendWithContrast(theme.palette.secondary.main, theme, 0.5),
             whiteSpace: 'nowrap', // Prevent text wrapping
             justifyContent: 'center',
           }}
