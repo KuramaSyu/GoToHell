@@ -19,6 +19,7 @@ import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
 import { blendWithContrast } from '../../utils/blendWithContrast';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -38,6 +39,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
 }) => {
   const { marks } = GenerateMarks(4, min, max);
   const [stringNumber, setStringNumber] = useState<string | null>(null);
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     setStringNumber(String(sliderValue));
@@ -86,10 +88,13 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
           fontSize: '24px',
           justifyContent: 'center',
           alignItems: 'center',
-          display: 'flex',
           width: '15%',
           minWidth: '150px', // Minimum width of 20px
           maxWidth: '400px', // Maximum width of 100px
+          display: {
+            xs: 'none',
+            sm: 'flex',
+          },
         }}
       />
 
@@ -104,7 +109,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
       />
 
       <Slider
-        size="medium"
+        size={isMobile ? 'small' : 'medium'}
         value={sliderValue ?? min}
         marks={marks}
         onChange={(_e, value) =>
@@ -144,6 +149,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
   const { usedMultiplier, setUsedMultiplier } = useUsedMultiplierStore(); // null means global
   const { preferences } = usePreferenceStore();
   const [stringNumber, setStringNumber] = useState<string | null>(null);
+  const { isMobile } = useBreakpoint();
 
   const defaultProps: StringNumberProps = {
     number: sliderValue,
@@ -261,10 +267,13 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           fontSize: '24px',
           justifyContent: 'center',
           alignItems: 'center',
-          display: 'flex',
           width: '10%', // Set width to 1/10
           minWidth: '100px', // Minimum width of 20px
           maxWidth: '300px', // Maximum width of 100px
+          display: {
+            xs: 'none',
+            sm: 'flex',
+          },
         }}
       />
 
@@ -284,6 +293,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           flexDirection: 'column',
           height: '100%',
           gap: 1,
+          xs: 'block',
         }}
       >
         <Button
@@ -312,7 +322,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         </Button>
       </Box>
       <Slider
-        size="medium"
+        size={isMobile ? 'small' : 'medium'}
         value={sliderValue ?? min}
         marks={marks}
         onChange={(_e, value) => {
@@ -367,10 +377,13 @@ const PlusMinusCol: React.FC<PlusMinusColProps> = ({
   return (
     <Box
       sx={{
-        display: 'flex',
         flexDirection: 'column',
         height: '100%',
         gap: 1,
+        display: {
+          xs: 'none', // dont show on mobile
+          sm: 'flex',
+        },
       }}
     >
       <Button
