@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { defaultPreferences, savePreferences } from '../../models/Preferences';
 import { BaseMultiplierModifier } from './BaseMultiplierModifier';
 import { MultiplierTable } from './MultiplierTable';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -34,12 +35,18 @@ const RoundedBlurBoxSX = {
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     const { setUpload } = useUploadStore.getState();
     setUpload(0);
   }, []);
 
+  const FullWidthOnMobile = () => {
+    return {
+      width: isMobile ? '100%' : '4/5',
+    };
+  };
   // done in theme store
   // useEffect(() => {
   //   // read preferences on page load
@@ -78,7 +85,7 @@ export const Settings: React.FC = () => {
       >
         {/* Grid with overrides */}
 
-        <Box sx={SettingsBoxSX}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Overrides
           </Typography>
@@ -89,7 +96,7 @@ export const Settings: React.FC = () => {
         </Box>
 
         {/* Grid with game multipliers */}
-        <Box sx={SettingsBoxSX}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Multipliers
           </Typography>
@@ -97,14 +104,14 @@ export const Settings: React.FC = () => {
         </Box>
 
         {/* Table with Sport Base Multipliers */}
-        <Box sx={SettingsBoxSX}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4">Sport Bases</Typography>
           <Box sx={{ ...RoundedBlurBoxSX, p: 2 }}>
             <MultiplierTable></MultiplierTable>
           </Box>
         </Box>
         {/* Plank Seconds */}
-        <Box sx={SettingsBoxSX}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Plank Settings
           </Typography>
@@ -115,21 +122,21 @@ export const Settings: React.FC = () => {
           <PlankOverride />
         </Box>
         {/* Sport Select */}
-        <Box sx={SettingsBoxSX}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Sport Select
           </Typography>
           <SportDragDrop></SportDragDrop>
         </Box>
         {/* Game Select */}
-        <Box sx={SettingsBoxSX}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Game Select
           </Typography>
           <GameDragDrop></GameDragDrop>
         </Box>
         {/* reset button */}
-        <Box sx={{ mb: 5, ...SettingsBoxSX }}>
+        <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
           <Typography variant="h4" sx={{ zIndex: 1 }}>
             Reset Settings
           </Typography>
