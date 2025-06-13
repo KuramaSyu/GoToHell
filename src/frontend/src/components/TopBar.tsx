@@ -13,11 +13,12 @@ import { Streak } from './Streak';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
   const { theme } = useThemeStore();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile } = useBreakpoint();
 
   if (isMobile) {
     // Mobile view

@@ -20,6 +20,7 @@ import useCalculatorStore from '../zustand/CalculatorStore';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { UserApi } from '../utils/api/Api';
 import useUploadStore from '../zustand/UploadStore';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -34,14 +35,13 @@ export const UploadScore = () => {
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
   const { uploadTrigger } = useUploadStore();
+  const { isMobile } = useBreakpoint();
 
   // for triggers coming from outside (eg shortcut modal)
   useEffect(() => {
     if (uploadTrigger === 0) return;
     OnUploadClick().finally();
   }, [uploadTrigger]);
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const OnUploadClick = async () => {
     if (!user) {

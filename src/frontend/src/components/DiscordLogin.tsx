@@ -16,6 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { SportScore } from '../models/Sport';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { UserApi } from '../utils/api/Api';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 // Define TypeScript interface for Discord user data
 interface DiscordUser {
@@ -71,8 +72,8 @@ const DiscordLogin: React.FC = () => {
   const { user, setUser } = useUserStore();
   const [loading, setLoading] = useState<boolean>(true);
   const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   // Check if user is already logged in
   useEffect(() => {
     const checkLoginStatus = async (): Promise<void> => {

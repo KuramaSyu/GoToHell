@@ -19,6 +19,7 @@ import {
   getSportDescription,
 } from './AmountDisplay';
 import { GameSelectionMap } from '../utils/data/Sports';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -32,8 +33,8 @@ export const TotalScoreDisplay = () => {
   const { user } = useUserStore();
   const { amounts, setAmounts, refreshTrigger } = useTotalScoreStore();
   const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   useEffect(() => {
     const fetchData = async () => {
       if (!user) {

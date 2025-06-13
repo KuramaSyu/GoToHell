@@ -18,6 +18,7 @@ import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { Timedelta, Unit, unitToString } from '../utils/Timedelta';
 import { GameSelectionMap } from '../utils/data/Sports';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
@@ -156,9 +157,7 @@ export const AmountDisplay = () => {
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
   const { preferences } = usePreferenceStore();
-
-  const isXL = useMediaQuery(theme.breakpoints.up('xl'));
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile, isXL } = useBreakpoint();
 
   if (currentSport.game == null || currentSport.sport == null) {
     return <Box></Box>;

@@ -31,6 +31,7 @@ import { Multiplier, UserPreferences } from '../models/Preferences';
 import { animated, useSpring, useTransition } from 'react-spring';
 import useErrorStore from '../zustand/Error';
 import { GameSelectionMap, sportIconMap } from '../utils/data/Sports';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const AnimatedButton = animated(Button);
 
@@ -89,6 +90,7 @@ export const SportSelector = () => {
   const { preferences, preferencesLoaded } = usePreferenceStore();
   const { usedMultiplier } = useUsedMultiplierStore();
   const { setErrorMessage } = useErrorStore();
+  const { isMobile } = useBreakpoint();
 
   function isInPreferences(value: string): Boolean {
     if (preferences.ui.displayedSports === null) return true;
@@ -138,8 +140,6 @@ export const SportSelector = () => {
     config: { tension: 220, friction: 12 },
     trail: 120, // Optional: add a small delay between each item's animation
   });
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   /**
    * updates the DecoratorStack, when:

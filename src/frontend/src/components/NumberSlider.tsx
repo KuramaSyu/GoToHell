@@ -12,6 +12,7 @@ import { Add, Remove } from '@mui/icons-material';
 import { GenerateMarks } from '../utils/Marks';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 interface DeathAmountState {
   amount: number;
@@ -34,8 +35,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const min = Math.min(0, amount);
   const max = Math.max(12, amount);
   const selectableMax = 2 ** 11;
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile } = useBreakpoint();
 
   // Slider Change - set value or current maximum
   const handleSliderChange = (_: Event, newValue: number | number[]) => {

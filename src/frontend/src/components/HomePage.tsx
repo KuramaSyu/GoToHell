@@ -10,14 +10,14 @@ import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 import { UserApi } from '../utils/api/Api';
 import { ThemeProvider } from '@emotion/react';
 import { QuickActionMenu } from './QuickActions/Main';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
   const [loaded, setLoaded] = useState(false);
   const { addUser } = useUsersStore();
   const { user } = useUserStore();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile } = useBreakpoint();
 
   // done in theme store
   // // initially, load preferences from cookie

@@ -8,6 +8,7 @@ import { SportSelector } from './SportSelect';
 import { RecentSports } from './RecentSports/TabView';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { AmountDisplay } from './AmountDisplay';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 interface MainContentProps {
   theme: any;
@@ -15,7 +16,7 @@ interface MainContentProps {
 
 const MainContent: React.FC = () => {
   const { theme } = useThemeStore();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile } = useBreakpoint();
 
   if (isMobile) {
     return (
