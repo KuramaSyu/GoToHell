@@ -1,4 +1,5 @@
 import { useUsersStore, useUserStore } from '../../userStore';
+import { useStreakStore } from '../../zustand/StreakStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UserApi } from './Api';
 
@@ -56,6 +57,22 @@ export class FriendsRquirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     await new UserApi().fetchFriends();
+  }
+}
+
+/**
+ * fetches Streak from the user who is logged in.
+ *
+ * @Note
+ * sets the useStreakStore Zustand
+ */
+export class StreakRequirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    return useStreakStore.getState().streak === null;
+  }
+
+  async fetch(): Promise<void> {
+    await new UserApi().fetchStreak();
   }
 }
 
