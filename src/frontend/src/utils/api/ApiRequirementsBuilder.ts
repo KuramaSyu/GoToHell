@@ -1,4 +1,5 @@
 import { useUsersStore, useUserStore } from '../../userStore';
+import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useStreakStore } from '../../zustand/StreakStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UserApi } from './Api';
@@ -73,6 +74,25 @@ export class StreakRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     await new UserApi().fetchStreak();
+  }
+}
+
+/**
+ * fetches Recent Sports for userIds
+ *
+ * @Note
+ * sets the useRecentSportsStore Zustand
+ * FriendsRequirement should be loaded before
+ */
+export class AllRecentSportsRequirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    return useRecentSportsStore.getState().recentSports === null;
+  }
+
+  async fetch(): Promise<void> {
+    await new FriendsRquirement().fetchIfNeeded();
+    const friends = Object.values(useUsersStore().users).map((user) => user.id);
+    await new UserApi().fetchRecentSports(friends, undefined);
   }
 }
 
