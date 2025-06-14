@@ -1,4 +1,4 @@
-import { useUserStore } from '../../userStore';
+import { useUsersStore, useUserStore } from '../../userStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UserApi } from './Api';
 
@@ -18,6 +18,10 @@ abstract class ApiRequirementABC implements ApiReuqirement {
   }
 }
 
+/**
+ * tries to authenticate a user by coockie.
+ * It sets `useUserStore` to the authenticated user
+ * */
 export class UserRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
     return useUserStore.getState().user === null;
@@ -28,6 +32,9 @@ export class UserRequirement extends ApiRequirementABC {
   }
 }
 
+/**
+ * fetches the total scores (the scores, which sum up all sport activities) for a user
+ * */
 export class TotalScoreRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
     return useTotalScoreStore.getState().amounts.length === 0;
@@ -35,6 +42,20 @@ export class TotalScoreRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     await new UserApi().fetchTotalScore();
+  }
+}
+
+/**
+ * This fetches all friendships and adds these users to the useUsersStore.
+ * It returns the friendshipreply
+ */
+export class FriendsRquirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    return useUsersStore.getState().friendsLoaded === false;
+  }
+
+  async fetch(): Promise<void> {
+    await new UserApi().fetchFriends();
   }
 }
 
