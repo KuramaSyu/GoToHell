@@ -4,13 +4,13 @@ import { useStreakStore } from '../../zustand/StreakStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UserApi } from './Api';
 
-interface ApiReuqirement {
+interface IApiReuqirement {
   needsFetch(): Boolean;
   fetch(): Promise<void>;
   fetchIfNeeded(): Promise<void>;
 }
 
-abstract class ApiRequirementABC implements ApiReuqirement {
+abstract class ApiRequirementABC implements IApiReuqirement {
   abstract needsFetch(): Boolean;
   abstract fetch(): Promise<void>;
   async fetchIfNeeded(): Promise<void> {
@@ -96,20 +96,47 @@ export class AllRecentSportsRequirement extends ApiRequirementABC {
   }
 }
 
+export enum ApiRequirement {
+  User = 0,
+  TotalScore = 1,
+  Friends = 2,
+  Streak = 3,
+  AllRecentSports = 4,
+}
+
+export namespace ApiRequirement {
+  export function toRequirement(req: ApiRequirement): IApiReuqirement {
+    switch (req) {
+      case ApiRequirement.User:
+        return new UserRequirement();
+      case ApiRequirement.TotalScore:
+        return new TotalScoreRequirement();
+      case ApiRequirement.Friends:
+        return new FriendsRquirement();
+      case ApiRequirement.Streak:
+        return new StreakRequirement();
+      case ApiRequirement.AllRecentSports:
+        return new AllRecentSportsRequirement();
+      default:
+        throw new Error('Unknown ApiRequirement');
+    }
+  }
+}
+
 /**
  * Class, to set, which API data is needed. This data is
  * fetched, in case it's null/undefined. Otherwise it will
  * ignore it. => It acts as assertion, that some responses are present
  */
 export class ApiRequirementsBuilder {
-  requirements: ApiReuqirement[];
+  requirements: IApiReuqirement[];
 
   constructor() {
     this.requirements = [];
   }
 
-  add(requirement: ApiReuqirement): ApiRequirementsBuilder {
-    this.requirements.push(requirement);
+  add(requirement: ApiRequirement): ApiRequirementsBuilder {
+    this.requirements.push(ApiRequirement.toRequirement(requirement));
     return this;
   }
 
