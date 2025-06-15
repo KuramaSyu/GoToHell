@@ -140,10 +140,19 @@ export class ApiRequirementsBuilder {
     return this;
   }
 
-  async build(): Promise<void> {
+  async forceFetch(): Promise<void> {
     var promises: Promise<void>[] = [];
     for (let requirement of this.requirements) {
       promises.push(requirement.fetch());
+    }
+
+    await Promise.all(promises);
+  }
+
+  async fetchIfNeeded(): Promise<void> {
+    var promises: Promise<void>[] = [];
+    for (let requirement of this.requirements) {
+      promises.push(requirement.fetchIfNeeded());
     }
 
     await Promise.all(promises);
