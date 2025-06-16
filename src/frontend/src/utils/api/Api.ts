@@ -24,6 +24,8 @@ export interface UserApiInterface {
     user_ids: string[],
     limit: number
   ): Promise<SportsApiResponse | null>;
+  fetchYourRecentSports(): Promise<SportsApiResponse | null>;
+  fetchAllRecentSports(): Promise<SportsApiResponse | null>;
   deleteRecord(id: number);
 }
 export interface SportApiInterface {
