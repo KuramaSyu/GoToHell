@@ -8,6 +8,7 @@ interface IApiReuqirement {
   needsFetch(): Boolean;
   fetch(): Promise<void>;
   fetchIfNeeded(): Promise<void>;
+  getPriority(): number;
 }
 
 abstract class ApiRequirementABC implements IApiReuqirement {
@@ -17,6 +18,9 @@ abstract class ApiRequirementABC implements IApiReuqirement {
     if (this.needsFetch()) {
       await this.fetch();
     }
+  }
+  getPriority(): number {
+    return 1;
   }
 }
 
@@ -31,6 +35,10 @@ export class UserRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     await new UserApi().fetchUser();
+  }
+
+  getPriority(): number {
+    return 0; // User requirement has the highest priority
   }
 }
 
@@ -69,7 +77,9 @@ export class FriendsRquirement extends ApiRequirementABC {
  */
 export class StreakRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
-    return useStreakStore.getState().streak === null;
+    const needsFetch = useStreakStore.getState().streak === null;
+    console.log(`Checking if streak needs fetch:  ${needsFetch}`);
+    return needsFetch;
   }
 
   async fetch(): Promise<void> {
@@ -150,11 +160,16 @@ export class ApiRequirementsBuilder {
   }
 
   async fetchIfNeeded(): Promise<void> {
-    var promises: Promise<void>[] = [];
+    var requirements: IApiReuqirement[][] = [[], [], []];
     for (let requirement of this.requirements) {
-      promises.push(requirement.fetchIfNeeded());
+      requirements[requirement.getPriority()]?.push(requirement);
     }
-
-    await Promise.all(promises);
+    for (let requirementList of requirements) {
+      var promises: Promise<void>[] = [];
+      for (let requirement of requirementList) {
+        promises.push(requirement.fetchIfNeeded());
+      }
+      await Promise.all(promises);
+    }
   }
 }
