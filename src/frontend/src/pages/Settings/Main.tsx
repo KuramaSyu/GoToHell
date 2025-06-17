@@ -14,6 +14,10 @@ import { defaultPreferences, savePreferences } from '../../models/Preferences';
 import { BaseMultiplierModifier } from './BaseMultiplierModifier';
 import { MultiplierTable } from './MultiplierTable';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -40,6 +44,10 @@ export const Settings: React.FC = () => {
   useEffect(() => {
     const { setUpload } = useUploadStore.getState();
     setUpload(0);
+    new ApiRequirementsBuilder()
+      .add(ApiRequirement.User)
+      .add(ApiRequirement.Streak)
+      .fetchIfNeeded();
   }, []);
 
   const FullWidthOnMobile = () => {
