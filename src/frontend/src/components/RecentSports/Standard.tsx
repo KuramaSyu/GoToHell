@@ -9,10 +9,18 @@ import { formatDistanceToNow } from 'date-fns';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import useErrorStore from '../../zustand/Error';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
-import { useRecentSportsStore } from '../../zustand/RecentSportsState';
+import {
+  useRecentSportsStore,
+  useYourRecentSportsStore,
+} from '../../zustand/RecentSportsState';
 import { Sport, SportsApiResponse } from '../../models/Sport';
 import { flushSync } from 'react-dom';
 import { UserApi } from '../../utils/api/Api';
+import { Api } from '@mui/icons-material';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
 
 const AnimatedBox = animated(Box);
 
@@ -83,12 +91,14 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
     if (current_tab !== this_tab) return;
     console.log(`call useffect loading: ${loading}`);
     const fetchResponse = async () => {
-      const fetchedData = await new UserApi().fetchRecentSports(
-        [user.id as string],
-        10
-      );
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .add(ApiRequirement.YourRecentSports)
+        .fetchIfNeeded();
 
-      setPageOffset(getOffset(fetchedData));
+      setPageOffset(
+        getOffset(useYourRecentSportsStore.getState().recentSports)
+      );
       setLoading(false);
 
       // Set offset to show the last 5 records if available.

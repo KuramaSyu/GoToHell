@@ -22,6 +22,10 @@ import { before } from 'node:test';
 import { UserApi } from '../../utils/api/Api';
 import { animated, config, useTransition } from 'react-spring';
 import useErrorStore from '../../zustand/Error';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
 
 export interface Sport {
   id: number;
@@ -59,7 +63,11 @@ export const SportsTimeline = () => {
         user.id, // self
       ];
       try {
-        const fetchedData = await new UserApi().fetchRecentSports(userIds, 50);
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.User)
+          .add(ApiRequirement.AllRecentSports)
+          .fetchIfNeeded();
+        const fetchedData = useRecentSportsStore.getState().recentSports;
         if (fetchedData === null) return;
         setData(fetchedData);
       } catch (error) {
