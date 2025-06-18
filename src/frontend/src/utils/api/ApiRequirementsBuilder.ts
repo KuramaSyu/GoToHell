@@ -101,8 +101,23 @@ export class AllRecentSportsRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     await new FriendsRquirement().fetchIfNeeded();
-    const friends = Object.values(useUsersStore().users).map((user) => user.id);
-    await new UserApi().fetchRecentSports(friends, undefined);
+    await new UserApi().fetchAllRecentSports();
+  }
+}
+
+/**
+ * fetches the users Recent Sports
+ *
+ * @Note
+ * sets the useYourRecentSportsStore Zustand
+ */
+export class YourRecentSportsRequirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    return useRecentSportsStore.getState().recentSports === null;
+  }
+
+  async fetch(): Promise<void> {
+    await new UserApi().fetchYourRecentSports();
   }
 }
 
@@ -112,6 +127,7 @@ export enum ApiRequirement {
   Friends = 2,
   Streak = 3,
   AllRecentSports = 4,
+  YourRecentSports = 5,
 }
 
 export namespace ApiRequirement {
@@ -127,6 +143,8 @@ export namespace ApiRequirement {
         return new StreakRequirement();
       case ApiRequirement.AllRecentSports:
         return new AllRecentSportsRequirement();
+      case ApiRequirement.YourRecentSports:
+        return new YourRecentSportsRequirement();
       default:
         throw new Error('Unknown ApiRequirement');
     }
