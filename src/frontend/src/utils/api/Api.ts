@@ -11,7 +11,11 @@ import { useUsersStore, useUserStore } from '../../userStore';
 import { FriendshipReply } from '../../pages/friends/FriendOverview';
 import { StreakData } from '../../models/Streak';
 import { useStreakStore } from '../../zustand/StreakStore';
-import { useRecentSportsStore } from '../../zustand/RecentSportsState';
+import {
+  RecentSportApi,
+  useRecentSportsStore,
+  useYourRecentSportsStore,
+} from '../../zustand/RecentSportsState';
 import { useSportStore } from '../../useSportStore';
 
 export interface BackendApiInterface {}
@@ -22,7 +26,8 @@ export interface UserApiInterface {
   fetchStreak(): Promise<StreakData | null>;
   fetchRecentSports(
     user_ids: string[],
-    limit: number
+    limit: number,
+    zustand: RecentSportApi
   ): Promise<SportsApiResponse | null>;
   fetchYourRecentSports(): Promise<SportsApiResponse | null>;
   fetchAllRecentSports(): Promise<SportsApiResponse | null>;
@@ -156,7 +161,8 @@ export class UserApi implements UserApiInterface {
    */
   async fetchRecentSports(
     userIds: string[],
-    limit: number | undefined
+    limit: number | undefined,
+    zustand: RecentSportApi
   ): Promise<SportsApiResponse | null> {
     limit = limit ?? 50;
     const API_ENDPOINT = '/api/sports';
@@ -196,6 +202,26 @@ export class UserApi implements UserApiInterface {
       this.logError(API_ENDPOINT, error);
       throw error;
     }
+  }
+
+  async fetchYourRecentSports(): Promise<SportsApiResponse | null> {
+    const user = useUserStore.getState().user;
+    if (user === null) {
+      return null;
+    }
+    return this.fetchRecentSports([user.id], 25, useYourRecentSportsStore);
+  }
+
+  async fetchAllRecentSports(): Promise<SportsApiResponse | null> {
+    const users = useUsersStore().users;
+    if (useUsersStore.getState().friendsLoaded === false) {
+      return null;
+    }
+    return this.fetchRecentSports(
+      Object.values(users).map((u) => u.id),
+      50,
+      useRecentSportsStore
+    );
   }
 
   /**
