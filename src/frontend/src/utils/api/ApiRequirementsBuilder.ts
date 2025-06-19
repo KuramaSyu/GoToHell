@@ -1,7 +1,9 @@
 import { useUsersStore, useUserStore } from '../../userStore';
+import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useStreakStore } from '../../zustand/StreakStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { loadPreferencesFromCookie } from '../cookiePreferences';
 import { UserApi } from './Api';
 
 interface IApiReuqirement {
@@ -121,6 +123,26 @@ export class YourRecentSportsRequirement extends ApiRequirementABC {
   }
 }
 
+/**
+ * reads the preferences out of the cookie
+ *
+ * @Note
+ * updates the usePreferenceStore
+ */
+export class PreferencesRequirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    return usePreferenceStore.getState().preferencesLoaded === false;
+  }
+
+  async fetch(): Promise<void> {
+    loadPreferencesFromCookie();
+  }
+
+  getPriority(): number {
+    return 0; // most important. Even works if user is not logged in
+  }
+}
+
 export enum ApiRequirement {
   User = 0,
   TotalScore = 1,
@@ -128,6 +150,7 @@ export enum ApiRequirement {
   Streak = 3,
   AllRecentSports = 4,
   YourRecentSports = 5,
+  Preferences = 6,
 }
 
 export namespace ApiRequirement {
@@ -145,6 +168,8 @@ export namespace ApiRequirement {
         return new AllRecentSportsRequirement();
       case ApiRequirement.YourRecentSports:
         return new YourRecentSportsRequirement();
+      case ApiRequirement.Preferences:
+        return new PreferencesRequirement();
       default:
         throw new Error('Unknown ApiRequirement');
     }
