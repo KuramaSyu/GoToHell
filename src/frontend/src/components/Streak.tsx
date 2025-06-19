@@ -12,6 +12,10 @@ import { UserApi } from '../utils/api/Api';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import { PopNumber } from './GameSelect';
 import { Sport } from '../models/Sport';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../utils/api/ApiRequirementsBuilder';
 
 export const Streak = () => {
   const [lastUpdated, setLastUpdated] = useState<String | null>(null);
@@ -45,25 +49,29 @@ export const Streak = () => {
     if (!user || !usersLastSport) return;
     if (lastUpdated === null || lastUpdated !== today_stripped) {
       // there was no last update, or it was not today -> fetch streak
-      var resp = new UserApi().fetchStreak();
-
-      resp
+      const fetchStreak = async () => {
         // fetch streak from backend
-        .then((answ) => {
-          console.log(`Updated Streak ${useStreakStore.getState().streak}`);
-          console.log(`Streak fetch response: `, JSON.stringify(answ));
-          // get the date from the users latest exercise
-          const latest_date = new Date(usersLastSport?.timedate ?? 0)
-            .toISOString()
-            .split('T')[0]!;
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.User)
+          .add(ApiRequirement.Streak)
+          .fetchIfNeeded();
 
-          // set this date as last updated
-          setLastUpdated(latest_date);
+        const resp = useStreakStore.getState().streak;
+        if (resp === null) {
+          console.error('Error fetching streak');
           return;
-        })
-        .catch((err) => {
-          console.error('Error fetching streak:', err);
-        });
+        }
+
+        console.log(`Updated Streak ${resp}`);
+        // get the date from the users latest exercise
+        const latest_date = new Date(usersLastSport?.timedate ?? 0)
+          .toISOString()
+          .split('T')[0]!;
+
+        // set this date as last updated
+        setLastUpdated(latest_date);
+        return;
+      };
     }
   }, [user, usersLastSport]);
 
