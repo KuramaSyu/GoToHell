@@ -11,6 +11,10 @@ import { UserApi } from '../utils/api/Api';
 import { ThemeProvider } from '@emotion/react';
 import { QuickActionMenu } from './QuickActions/Main';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../utils/api/ApiRequirementsBuilder';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -19,12 +23,14 @@ const HomePage: React.FC = () => {
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
 
-  // done in theme store
-  // // initially, load preferences from cookie
-  // useEffect(() => {
-  //   loadPreferencesFromCookie();
-  // }, []);
-
+  useEffect(() => {
+    (async () => {
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .add(ApiRequirement.Preferences)
+        .fetchIfNeeded();
+    })();
+  }, []);
   // add current user to user array
   useEffect(() => {
     if (user != null) {
@@ -43,16 +49,6 @@ const HomePage: React.FC = () => {
       setLoaded(true); // Trigger fade-in after component mounts
     }
   }, [theme]);
-
-  useEffect(() => {
-    if (user === null) {
-      return;
-    }
-    const fetch = async () => {
-      await new UserApi().fetchFriends();
-    };
-    fetch();
-  }, [addUser, user]);
 
   const TimelineBox = isMobile ? null : (
     <Box
