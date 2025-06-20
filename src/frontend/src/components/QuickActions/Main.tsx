@@ -135,6 +135,15 @@ export const QuickActionMenu: React.FC = () => {
     };
   }, [open]);
 
+  // Effect which handles upload press
+  useEffect(() => {
+    if (page === ModalPages.UPLOAD_MODAL) {
+      triggerUpload();
+      setOpen(false);
+      setPage(ModalPages.OVERVIEW);
+    }
+  }, [page, triggerUpload]);
+
   const processTyping = (e: KeyboardEvent) => {
     // Basic check for printable characters (length 1)
     if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -175,12 +184,6 @@ export const QuickActionMenu: React.FC = () => {
         setOpen(false);
       }
     };
-    if (open && page === ModalPages.UPLOAD_MODAL) {
-      // Upload button was pressed with mouse
-      triggerUpload();
-      setOpen(false);
-      setPage(ModalPages.OVERVIEW); // Reset to overview after upload
-    }
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
