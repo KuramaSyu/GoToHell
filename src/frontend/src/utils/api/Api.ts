@@ -213,7 +213,7 @@ export class UserApi implements UserApiInterface {
   }
 
   async fetchAllRecentSports(): Promise<SportsApiResponse | null> {
-    const users = useUsersStore().users;
+    const users = useUsersStore.getState().users;
     if (useUsersStore.getState().friendsLoaded === false) {
       return null;
     }
