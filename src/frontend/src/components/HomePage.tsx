@@ -27,6 +27,7 @@ const HomePage: React.FC = () => {
     (async () => {
       await new ApiRequirementsBuilder()
         .add(ApiRequirement.User)
+        .add(ApiRequirement.Friends)
         .add(ApiRequirement.Preferences)
         .fetchIfNeeded();
     })();
