@@ -32,10 +32,12 @@ abstract class ApiRequirementABC implements IApiReuqirement {
  * */
 export class UserRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
+    console.log(`DEBUG: Checking if user needs fetch`);
     return useUserStore.getState().user === null;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching user data`);
     await new UserApi().fetchUser();
   }
 
@@ -49,10 +51,12 @@ export class UserRequirement extends ApiRequirementABC {
  * */
 export class TotalScoreRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
+    console.log(`DEBUG: Checking if total scores need fetch`);
     return useTotalScoreStore.getState().amounts.length === 0;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching total scores`);
     await new UserApi().fetchTotalScore();
   }
 }
@@ -63,10 +67,16 @@ export class TotalScoreRequirement extends ApiRequirementABC {
  */
 export class FriendsRquirement extends ApiRequirementABC {
   needsFetch(): Boolean {
+    console.log(
+      `DEBUG: Checking if friends need fetch: ${
+        useUsersStore.getState().friendsLoaded === false
+      }`
+    );
     return useUsersStore.getState().friendsLoaded === false;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching friends data`);
     await new UserApi().fetchFriends();
   }
 }
@@ -80,11 +90,12 @@ export class FriendsRquirement extends ApiRequirementABC {
 export class StreakRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
     const needsFetch = useStreakStore.getState().streak === null;
-    console.log(`Checking if streak needs fetch:  ${needsFetch}`);
+    console.log(`DEBUG: Checking if streak needs fetch:  ${needsFetch}`);
     return needsFetch;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching streak data`);
     await new UserApi().fetchStreak();
   }
 }
@@ -98,10 +109,12 @@ export class StreakRequirement extends ApiRequirementABC {
  */
 export class AllRecentSportsRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
+    console.log(`DEBUG: Checking if recent sports need fetch`);
     return useRecentSportsStore.getState().recentSports === null;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching all recent sports`);
     await new FriendsRquirement().fetchIfNeeded();
     await new UserApi().fetchAllRecentSports();
   }
@@ -115,10 +128,12 @@ export class AllRecentSportsRequirement extends ApiRequirementABC {
  */
 export class YourRecentSportsRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
+    console.log(`DEBUG: Checking if your recent sports need fetch`);
     return useRecentSportsStore.getState().recentSports === null;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching your recent sports`);
     await new UserApi().fetchYourRecentSports();
   }
 }
@@ -131,10 +146,12 @@ export class YourRecentSportsRequirement extends ApiRequirementABC {
  */
 export class PreferencesRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
+    console.log(`DEBUG: Checking if preferences need fetch`);
     return usePreferenceStore.getState().preferencesLoaded === false;
   }
 
   async fetch(): Promise<void> {
+    console.log(`DEBUG: Loading preferences from cookie`);
     loadPreferencesFromCookie();
   }
 
