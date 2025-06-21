@@ -17,6 +17,7 @@ import { SportScore } from '../models/Sport';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { UserApi } from '../utils/api/Api';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { ApiRequirementsBuilder } from '../utils/api/ApiRequirementsBuilder';
 
 // Define TypeScript interface for Discord user data
 interface DiscordUser {
@@ -59,10 +60,6 @@ class DiscordUserImpl implements DiscordUser {
     }
     return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
   }
-
-  async fetchTotalScore(): Promise<Response> {
-    return await new UserApi().fetchTotalScore();
-  }
 }
 
 export { DiscordUserImpl };
@@ -76,18 +73,11 @@ const DiscordLogin: React.FC = () => {
 
   // Check if user is already logged in
   useEffect(() => {
-    const checkLoginStatus = async (): Promise<void> => {
-      try {
-        const _ = await new UserApi().fetchUser();
-      } catch (error) {
-        console.error('Error checking login status:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, []);
+    if (user) {
+      setLoading(false);
+      return;
+    }
+  }, [user]);
 
   const handleLogin = (): void => {
     window.location.href = `${BACKEND_BASE}/api/auth/discord`;
