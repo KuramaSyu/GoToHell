@@ -20,6 +20,10 @@ import {
 } from './AmountDisplay';
 import { GameSelectionMap } from '../utils/data/Sports';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../utils/api/ApiRequirementsBuilder';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -40,7 +44,10 @@ export const TotalScoreDisplay = () => {
       if (!user) {
         return;
       }
-      const fut = await user.fetchTotalScore();
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .add(ApiRequirement.TotalScore)
+        .fetchIfNeeded();
     };
     fetchData();
   }, [user, refreshTrigger]);
