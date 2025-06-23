@@ -34,7 +34,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   - Sport.tsx: POST api/sports
 - [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
 - [ ] separate repository for background pictures
-- [ ] implement 2 missing functions for UserApi
 
 #### Features
 
