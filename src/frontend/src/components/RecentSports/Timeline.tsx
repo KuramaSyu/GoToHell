@@ -65,8 +65,10 @@ export const SportsTimeline = () => {
       try {
         await new ApiRequirementsBuilder()
           .add(ApiRequirement.User)
-          .add(ApiRequirement.AllRecentSports)
           .fetchIfNeeded();
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.AllRecentSports)
+          .forceFetch();
         const fetchedData = useRecentSportsStore.getState().recentSports;
         if (fetchedData === null) return;
         setData(fetchedData);
