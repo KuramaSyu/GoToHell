@@ -45,7 +45,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 #### Fixes
 - Plank: don't show tooltip in the middle of the box
-
+- Workaround: add state for when modal was opend, and keep mind .2s open. When pressing upload, play also an animation in the modal, to prevent broken modal when quickly pressing enter twice
 #### QoL
 
 - [ ] Show all multipliers in the settings
