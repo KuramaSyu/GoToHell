@@ -10,12 +10,12 @@ import { useStreakStore } from '../zustand/StreakStore';
 import { StreakData } from '../models/Streak';
 import { UserApi } from '../utils/api/Api';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
-import { PopNumber } from './GameSelect';
 import { Sport } from '../models/Sport';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
+import { PopNumber } from './PopNumber';
 
 export const Streak = () => {
   const [lastUpdated, setLastUpdated] = useState<String | null>(null);

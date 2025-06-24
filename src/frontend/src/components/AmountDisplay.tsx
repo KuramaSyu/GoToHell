@@ -2,7 +2,6 @@ import { Box, lighten, Typography, useMediaQuery } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import { NUMBER_FONT } from '../statics';
-import { PopNumber } from './GameSelect';
 import React, { ReactElement, useMemo, useState } from 'react';
 import {
   DefaultSportsCalculator,
@@ -19,6 +18,9 @@ import usePreferenceStore from '../zustand/PreferenceStore';
 import { Timedelta, Unit, unitToString } from '../utils/Timedelta';
 import { GameSelectionMap } from '../utils/data/Sports';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { PopNumber } from './PopNumber';
+import { styled } from '@mui/material';
+import { motion } from 'framer-motion';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
@@ -57,6 +59,7 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
       damping={300}
       mass={1}
       key={'AnimatedNumber'}
+      style={{}}
     />
   );
 };

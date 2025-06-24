@@ -4,7 +4,6 @@ import { useUserStore } from '../userStore';
 import { SportScore } from '../models/Sport';
 
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
-import { PopNumber } from './GameSelect';
 import { useSportStore } from '../useSportStore';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { NUMBER_FONT } from '../statics';
