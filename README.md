@@ -44,10 +44,7 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
 
 #### Fixes
-
-- Pushup Tooltip: Zindex >1100
 - Plank: don't show tooltip in the middle of the box
-- Reloading in Settings sets Streak to 0
 
 #### QoL
 
