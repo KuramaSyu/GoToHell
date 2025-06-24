@@ -140,7 +140,7 @@ const DiscordLogin: React.FC = () => {
       {/* CssBaseline applies the theme's background and text colors */}
       <CssBaseline />
 
-      {user || loading ? (
+      {!loading ? (
         <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
           <Button variant="outlined" color="primary" onClick={handleLogout}>
             <LogoutIcon
