@@ -34,8 +34,14 @@ import AppsIcon from '@mui/icons-material/Apps';
 
 const AnimatedBox = animated(Box);
 
+type OpenState = {
+  open: boolean;
+  openedAt?: Date;
+};
+
 export const QuickActionMenu: React.FC = () => {
-  const [open, setOpen] = useState(false);
+  const MIN_OPEN_DURATION = 200; // Minimum time the modal should stay open
+  const [open, setOpen] = useState<OpenState>({ open: false });
   const [visible, setVisible] = useState(false);
   const { theme } = useThemeStore();
   const [typed, SetTyped] = useState<string | null>(null);
@@ -43,7 +49,7 @@ export const QuickActionMenu: React.FC = () => {
   const { triggerUpload } = useUploadStore();
   const { preferences } = usePreferenceStore();
 
-  const transitions = useTransition(open, {
+  const transitions = useTransition(open.open, {
     from: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
     enter: { opacity: 1, transform: 'translateY(0px) translateX(-50%)' },
     leave: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
@@ -52,17 +58,29 @@ export const QuickActionMenu: React.FC = () => {
         ? { tension: 250, friction: 18 } // bouncy fade in
         : { duration: 150 }, // ease out
     onStart: () => {
-      if (open) setVisible(true);
+      if (open.open) setVisible(true);
     },
     onRest: () => {
-      if (!open) {
+      if (!open.open) {
         setVisible(false);
         SetTyped(null);
       }
     },
     exitBeforeEnter: true,
-    immediate: (state) => state === 'leave' && open,
+    immediate: (state) => state === 'leave' && open.open,
   });
+
+  function missingOpenTime(): number {
+    if (!open.openedAt) return 0;
+    const now = new Date();
+    return Math.max(now.getTime() - open.openedAt.getTime(), 0);
+  }
+
+  function isOpenForMinimumDuration(): boolean {
+    if (!open.openedAt) return true;
+    const elapsed = missingOpenTime();
+    return elapsed >= MIN_OPEN_DURATION;
+  }
 
   /**
    * Un-focuses an element, if one is active. This is mainly used,
@@ -75,6 +93,7 @@ export const QuickActionMenu: React.FC = () => {
       document.activeElement.blur();
     }
   };
+
   // keyboard listener, which starts the modal if A-Z, Enter, 0-9 was pressed
   // also, it ignores keystrokes, if a textfield is active
   useEffect(() => {
@@ -110,24 +129,24 @@ export const QuickActionMenu: React.FC = () => {
             SetTyped(null); // Reset typed when opening
             setPage('overview'); // Ensure starting page is overview
           }
-          return !currentOpen;
+          return { open: !currentOpen.open, openedAt: new Date() };
         });
         return; // Don't process '/' further for typing
       } else if (INSTANT_OPEN && !open && isAlphanumbericOrReturn(e)) {
         // a key was pressed and INSTANT_OPEN is active
         unfocusCurrentElement();
-        setOpen(true);
+        setOpen({ open: true, openedAt: new Date() });
         processTyping(e);
       }
 
       if (e.key === 'Escape') {
         // Handle closing with Escape key
-        setOpen(false);
+        setOpen({ open: false });
         return;
       }
 
       // Handle typing only if the modal is currently open
-      if (open) processTyping(e);
+      if (open.open) processTyping(e);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -139,8 +158,16 @@ export const QuickActionMenu: React.FC = () => {
   useEffect(() => {
     if (page === ModalPages.UPLOAD_MODAL) {
       triggerUpload();
-      setOpen(false);
-      setPage(ModalPages.OVERVIEW);
+
+      // wait for minimum open duration before closing
+      const timeout = setTimeout(() => {
+        setPage(ModalPages.OVERVIEW);
+        setOpen({ open: false });
+      }, MIN_OPEN_DURATION - missingOpenTime());
+
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, [page, triggerUpload]);
 
@@ -181,7 +208,7 @@ export const QuickActionMenu: React.FC = () => {
       if (e.key === 'Enter') {
         // upload was triggerd by keyboard
         triggerUpload();
-        setOpen(false);
+        setOpen({ open: false });
       }
     };
 
@@ -223,7 +250,7 @@ export const QuickActionMenu: React.FC = () => {
   const exitButton = (
     <Button
       variant="outlined"
-      onClick={() => setOpen(false)}
+      onClick={() => setOpen({ open: false })}
       sx={{
         display: 'flex',
         justifyContent: 'end',
@@ -244,7 +271,7 @@ export const QuickActionMenu: React.FC = () => {
   return (
     <Modal
       open={visible}
-      onClose={() => setOpen(false)}
+      onClose={() => setOpen({ open: false })}
       sx={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.2)' } } }}
     >
       {transitions((style, item) =>
