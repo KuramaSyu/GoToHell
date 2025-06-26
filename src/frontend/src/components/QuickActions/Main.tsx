@@ -31,6 +31,7 @@ import useUploadStore from '../../zustand/UploadStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
+import { UploadModal } from './UploadModal';
 
 const AnimatedBox = animated(Box);
 
@@ -40,7 +41,7 @@ type OpenState = {
 };
 
 export const QuickActionMenu: React.FC = () => {
-  const MIN_OPEN_DURATION = 200; // Minimum time the modal should stay open
+  const MIN_OPEN_DURATION = 1000; // Minimum time the modal should stay open
   const [open, setOpen] = useState<OpenState>({ open: false });
   const [visible, setVisible] = useState(false);
   const { theme } = useThemeStore();
@@ -110,16 +111,24 @@ export const QuickActionMenu: React.FC = () => {
     const INSTANT_OPEN = preferences.other.instant_open_modal;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      console.log(
+        `Key pressed: ${e.key}, alphanumeric: ${isAlphanumbericOrReturn(
+          e
+        )}, instant_open: ${INSTANT_OPEN}, open: ${open.open}`
+      );
       // check if any input field is focused. If so, do not open the modal
       const active = document.activeElement;
       const isFormField =
         active instanceof HTMLInputElement ||
         active instanceof HTMLTextAreaElement ||
         active?.getAttribute('contenteditable') === 'true';
-      if (isFormField) return;
+      if (isFormField) {
+        console.log('Input field is focused, ignoring key press');
+        return;
+      }
 
-      // Handle opening/closing first
       if (e.key === '/') {
+        // open or close modal
         e.preventDefault();
         e.stopPropagation();
         // Toggle open state and reset typed state if opening
@@ -132,9 +141,10 @@ export const QuickActionMenu: React.FC = () => {
           return { open: !currentOpen.open, openedAt: new Date() };
         });
         return; // Don't process '/' further for typing
-      } else if (INSTANT_OPEN && !open && isAlphanumbericOrReturn(e)) {
+      } else if (INSTANT_OPEN && !open.open && isAlphanumbericOrReturn(e)) {
         // a key was pressed and INSTANT_OPEN is active
         unfocusCurrentElement();
+        console.log(`Opening modal due to key: ${e.key}`);
         setOpen({ open: true, openedAt: new Date() });
         processTyping(e);
       }
@@ -152,7 +162,7 @@ export const QuickActionMenu: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open]);
+  }, [open, preferences.other.instant_open_modal]);
 
   // Effect which handles upload press
   useEffect(() => {
@@ -203,12 +213,11 @@ export const QuickActionMenu: React.FC = () => {
   // Listen for Enter to trigger upload and close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open || page !== ModalPages.OVERVIEW) return; // Only listen when modal is open
+      if (!open.open || page !== ModalPages.OVERVIEW) return; // Only listen when modal is open
 
       if (e.key === 'Enter') {
         // upload was triggerd by keyboard
-        triggerUpload();
-        setOpen({ open: false });
+        setPage(ModalPages.UPLOAD_MODAL);
       }
     };
 
@@ -373,6 +382,14 @@ export const QuickActionMenu: React.FC = () => {
                     />
                   ) : currentPage === ModalPages.AMOUNT_MODAL ? (
                     <AmountModal
+                      key="search"
+                      typed={typed}
+                      setTyped={SetTyped}
+                      page={page}
+                      setPage={setPage}
+                    />
+                  ) : currentPage === ModalPages.UPLOAD_MODAL ? (
+                    <UploadModal
                       key="search"
                       typed={typed}
                       setTyped={SetTyped}
