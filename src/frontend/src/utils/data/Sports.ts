@@ -7,6 +7,7 @@ import russian_twistSVG from '../../assets/sports-russian_twist.svg';
 import dipSVG from '../../assets/sports-dip.svg';
 import legRaisesSVG from '../../assets/sports-leg_raises.svg';
 import lungesSVG from '../../assets/sports-lunges.svg';
+import glute_bridgesSVG from '../../assets/sports-glute_bridges.svg';
 
 export const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -18,6 +19,7 @@ export const sportIconMap: Record<string, string> = {
   dip: dipSVG,
   leg_raises: legRaisesSVG,
   lunges: lungesSVG,
+  glute_bridges: glute_bridgesSVG,
 };
 
 // map for which is shown next to the score
@@ -31,3 +33,4 @@ GameSelectionMap.set('russian_twist', 'Russian Twists');
 GameSelectionMap.set('dip', 'Dips');
 GameSelectionMap.set('leg_raises', 'Leg Raises');
 GameSelectionMap.set('lunges', 'Lunges');
+GameSelectionMap.set('glute_bridges', 'Glute Bridges');
