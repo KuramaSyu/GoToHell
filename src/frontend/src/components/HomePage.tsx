@@ -29,6 +29,7 @@ const HomePage: React.FC = () => {
         .add(ApiRequirement.User)
         .add(ApiRequirement.Friends)
         .add(ApiRequirement.Preferences)
+        .add(ApiRequirement.Streak)
         .fetchIfNeeded();
     })();
   }, []);
