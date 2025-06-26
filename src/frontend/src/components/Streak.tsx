@@ -53,8 +53,11 @@ export const Streak = () => {
         // fetch streak from backend
         await new ApiRequirementsBuilder()
           .add(ApiRequirement.User)
-          .add(ApiRequirement.Streak)
           .fetchIfNeeded();
+
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.Streak)
+          .forceFetch();
 
         const resp = useStreakStore.getState().streak;
         if (resp === null) {
@@ -72,6 +75,7 @@ export const Streak = () => {
         setLastUpdated(latest_date);
         return;
       };
+      fetchStreak();
     }
   }, [user, usersLastSport]);
 
