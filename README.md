@@ -43,7 +43,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] when auto opend modal, close it after 10 seconds of inactivity
 - [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
 - [ ] Page: where you can enter a sport afterwards, but you have to ask 2 friends, to sign that you did this sport
-- [ ] Sport: Glute Bridges
 
 #### Fixes
 
