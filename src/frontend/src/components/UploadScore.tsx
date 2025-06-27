@@ -33,7 +33,6 @@ export const UploadScore = () => {
   const { setAmounts, triggerRefresh: triggerScoreRefresh } =
     useTotalScoreStore();
   const { calculator } = useCalculatorStore();
-  const { theme } = useThemeStore();
   const { uploadTrigger } = useUploadStore();
   const { isMobile } = useBreakpoint();
 
