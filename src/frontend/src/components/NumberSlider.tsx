@@ -19,6 +19,9 @@ interface DeathAmountState {
   setAmount: (value: number) => void;
 }
 
+/**
+ * Represents a store which keeps track of the amount of deaths the user has
+ */
 export const useDeathAmountStore = create<DeathAmountState>((set) => ({
   amount: 0, // initial state
   setAmount: (value: number) => set({ amount: value }),
