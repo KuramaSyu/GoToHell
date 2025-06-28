@@ -21,6 +21,8 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { UserApi } from '../utils/api/Api';
 import useUploadStore from '../zustand/UploadStore';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { UploadBuilder } from '../utils/api/UploadBuilder';
+import { UploadError } from '../utils/errors/UploadError';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -43,60 +45,34 @@ export const UploadScore = () => {
   }, [uploadTrigger]);
 
   const OnUploadClick = async () => {
-    if (!user) {
-      return setErrorMessage('Please Login with Discord');
-    }
-    if (amount == 0) {
-      return setErrorMessage('Yeah, just upload nothing. Good idea indeed');
-    }
-
-    if (useSportStore.getState().currentSport.sport == null) {
-      return setErrorMessage(
-        `What? Should I upload ${amount} apples? Perhaps oranges?`
-      );
-    }
-    const startTime = new Date().getTime();
-    setSnackbarState('uploading');
     try {
-      const sport = new SportRow(
-        currentSport.sport!,
-        currentSport.game!,
-        computedValue
-      );
-      console.timeLog(`Upload Sport: ${sport.toJson()}`);
-      const fut = await sport.upload();
-      const data = await fut.json();
+      const startTime = new Date().getTime();
+      const uploadBuilder = UploadBuilder.default().setStoreUpdate(false);
 
-      // wait artificially 1s, for upload animation
-      // Calculate elapsed time in milliseconds.
-      const elapsedTime = new Date().getTime() - startTime;
+      setSnackbarState('uploading');
+
+      // set timer to wait arteficially 1s, for upload animation
       const minimumDuration = 1000;
+      const parsed_data = await uploadBuilder.upload();
+      const elapsedTime = new Date().getTime() - startTime;
 
       // Wait for the rest of the minimum duration if necessary.
       if (elapsedTime < minimumDuration) {
         const remainingTime = minimumDuration - elapsedTime;
         await new Promise((resolve) => setTimeout(resolve, remainingTime));
       }
-      if (fut.ok) {
-        setSnackbarState('uploaded');
-        const parsed_data: { message?: string; results?: SportScore[] } = data;
+      setSnackbarState('uploaded');
 
-        if (parsed_data.results) {
-          // data.results is now an array of SportAmount
-          console.log(data.results);
-          setAmounts(parsed_data.results);
-          // TODO: this also triggers timeline to update
-          // recent activities. make better with websocket
-          triggerScoreRefresh();
-          setDeathAmount(0);
-        }
-      } else {
-        setSnackbarState('failed');
+      if (parsed_data.results) {
+        // data.results is now an array of SportAmount
+        uploadBuilder.updateStores(parsed_data.results);
       }
-    } catch (error) {
+    } catch (e) {
+      // handle uplaod error - description is in error included
       setSnackbarState('failed');
-      //setErrorMessage("Any Error")
+      setErrorMessage(String(e));
     }
+
     setTimeout(() => setSnackbarState(null), 2000);
   };
   if (
