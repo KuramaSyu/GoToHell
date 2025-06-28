@@ -20,6 +20,7 @@ export class UploadBuilder {
   private error: UploadError | null;
   sport: DefaultSportsDefinition | null;
   private snackbarUpdatesEnabled: boolean;
+  private triggerRefresh: boolean;
 
   constructor() {
     this.user = useUserStore.getState().user;
@@ -28,6 +29,7 @@ export class UploadBuilder {
     this.sport = null;
     this.exerciseAmount = null;
     this.snackbarUpdatesEnabled = false;
+    this.triggerRefresh = false;
   }
 
   /**
@@ -40,6 +42,17 @@ export class UploadBuilder {
       .setSport(null)
       .setExerciseAmount(null);
   }
+
+  /**
+   * if enabled, the `TotalScoreStore` triggers a refresh and `DeathAmountStore` will be updated to 0
+   * @param enabled whether or not the zustand refresh should be triggered
+   * @returns
+   */
+  setStoreUpdate(enabled: boolean): this {
+    this.triggerRefresh = enabled;
+    return this;
+  }
+
   /**
    * sets the amount or get's it from the `useDeathAmountStore` if null
    */
@@ -134,11 +147,10 @@ export class UploadBuilder {
         if (parsed_data.results) {
           // data.results is now an array of SportAmount
           console.log(data.results);
-          useTotalScoreStore.getState().setAmounts(parsed_data.results);
-          // TODO: this also triggers timeline to update
-          // recent activities. make better with websocket
-          useTotalScoreStore.getState().triggerRefresh(); // update total scores
-          useDeathAmountStore.getState().setAmount(0);
+
+          if (this.triggerRefresh) {
+            this.updateStores(parsed_data.results); // update total scores and death amount
+          }
         }
         return parsed_data;
       } else {
@@ -147,5 +159,20 @@ export class UploadBuilder {
     } catch (error) {
       throw new UploadError(String(error));
     }
+  }
+
+  /**
+   * updates the zustand stores:
+   * - `TotalScoreStore` to refresh the total scores `results`
+   * - `DeathAmountStore` to reset the death amount to 0
+   */
+  updateStores(results: SportScore[] | null): void {
+    // TODO: this also triggers timeline to update
+    // recent activities. make better with websocket
+    if (results !== null) {
+      useTotalScoreStore.getState().setAmounts(results);
+      useTotalScoreStore.getState().triggerRefresh(); // update total scores
+    }
+    useDeathAmountStore.getState().setAmount(0);
   }
 }
