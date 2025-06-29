@@ -24,19 +24,19 @@ func NewFriendsController(database *gorm.DB) *FriendsController {
 
 // FriendRequest is the expected payload when creating a friendship.
 type FriendRequest struct {
-	FriendID Snowflake           `json:"friend_id" binding:"required"`
-	Status   db.FriendshipStatus `json:"status"`
+	FriendID Snowflake        `json:"friend_id" binding:"required"`
+	Status   FriendshipStatus `json:"status"`
 }
 
 // UpdateFriendshipRequest is the payload for updating a friendship.
 type UpdateFriendshipRequest struct {
-	FriendshipID Snowflake           `json:"friendship_id" binding:"required"`
-	Status       db.FriendshipStatus `json:"status" binding:"required"`
+	FriendshipID Snowflake        `json:"friendship_id" binding:"required"`
+	Status       FriendshipStatus `json:"status" binding:"required"`
 }
 
 type FriendshipReply struct {
-	Friendships []db.Friendships `json:"friendships"`
-	Users       []User           `json:"users"`
+	Friendships []Friendships `json:"friendships"`
+	Users       []User        `json:"users"`
 }
 
 // GetFriends returns all friendships for the logged-in user along with friend details.
@@ -93,11 +93,11 @@ func (fc *FriendsController) PostFriendship(c *gin.Context) {
 
 	// Default status is pending if not provided.
 	if req.Status == "" {
-		req.Status = db.Pending
+		req.Status = Pending
 	}
 
 	// Decline Accepted as status
-	if req.Status == db.Accepted {
+	if req.Status == Accepted {
 		c.JSON(http.StatusForbidden, gin.H{"error": "You can't establish a friendship by just saying, you accept it"})
 		return
 	}
