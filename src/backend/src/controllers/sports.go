@@ -15,7 +15,7 @@ import (
 )
 
 type SportsController struct {
-	repo db.Repository
+	repo db.SportRepository
 }
 
 type SportCsvContent struct {

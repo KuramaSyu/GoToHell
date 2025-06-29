@@ -26,8 +26,8 @@ type DayStreak struct {
 	Days   int       `json:"days"`
 }
 
-// Updated Repository interface to include full CRUD operations using the Sport struct.
-type Repository interface {
+// Updated SportRepository interface to include full CRUD operations using the Sport struct.
+type SportRepository interface {
 	InsertSport(sport Sport) error
 	GetSports(userIDs []Snowflake, limit int) ([]Sport, error)
 	UpdateSport(sport Sport) error
