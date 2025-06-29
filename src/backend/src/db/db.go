@@ -21,13 +21,13 @@ type SportRepository interface {
 	GetDayStreak(userID Snowflake) (DayStreak, error)
 }
 
-// Define ORMRepository using GORM.
-type ORMRepository struct {
+// Define OrmSportRepository using GORM.
+type OrmSportRepository struct {
 	DB *gorm.DB
 }
 
 // InitORMRepository initializes GORM DB connection and auto-migrates the Sport model.
-func InitORMRepository() (*ORMRepository, *gorm.DB) {
+func InitORMRepository() (*OrmSportRepository, *gorm.DB) {
 	db, err := gorm.Open(sqlite.Open("./db/go-to-hell.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
@@ -37,18 +37,18 @@ func InitORMRepository() (*ORMRepository, *gorm.DB) {
 		log.Fatal("failed to migrate:", err)
 	}
 	fmt.Println("ORM Database initialized and migrated.")
-	return &ORMRepository{DB: db}, db
+	return &OrmSportRepository{DB: db}, db
 }
 
 // InsertSport adds a new Sport entry using ORM.
-func (r *ORMRepository) InsertSport(sport Sport) error {
+func (r *OrmSportRepository) InsertSport(sport Sport) error {
 	result := r.DB.Create(&sport)
 	return result.Error
 }
 
 // GetSports retrieves Sport entries for any of the provided userIDs.
 // Now checks that user_id is any of the slice values and limits the result to 50.
-func (r *ORMRepository) GetSports(userIDs []Snowflake, limit int) ([]Sport, error) {
+func (r *OrmSportRepository) GetSports(userIDs []Snowflake, limit int) ([]Sport, error) {
 	var sports []Sport
 	result := r.DB.
 		Where("user_id IN (?)", userIDs).
@@ -59,7 +59,7 @@ func (r *ORMRepository) GetSports(userIDs []Snowflake, limit int) ([]Sport, erro
 }
 
 // Sum all amounts from a given user and group it by sport kind
-func (r *ORMRepository) GetTotalAmounts(userID Snowflake) ([]SportAmount, error) {
+func (r *OrmSportRepository) GetTotalAmounts(userID Snowflake) ([]SportAmount, error) {
 	var results []SportAmount
 	result := r.DB.Model(&Sport{}).Select("kind, sum(amount) as amount").Where("user_id = ?", userID).Group("kind").Scan(&results)
 	if result.Error != nil {
@@ -70,19 +70,19 @@ func (r *ORMRepository) GetTotalAmounts(userID Snowflake) ([]SportAmount, error)
 }
 
 // UpdateSport updates a Sport entry using ORM.
-func (r *ORMRepository) UpdateSport(sport Sport) error {
+func (r *OrmSportRepository) UpdateSport(sport Sport) error {
 	result := r.DB.Save(&sport)
 	return result.Error
 }
 
 // DeleteSport removes a Sport entry by ID using ORM.
-func (r *ORMRepository) DeleteSport(id Snowflake) error {
+func (r *OrmSportRepository) DeleteSport(id Snowflake) error {
 	result := r.DB.Delete(&Sport{}, id)
 	return result.Error
 }
 
 // GetDayStreak retrieves the amount of days a user has been active back to back.
-func (r *ORMRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
+func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 	var dayStreak DayStreak
 	var activityDates []string
 
