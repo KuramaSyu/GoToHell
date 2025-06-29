@@ -18,22 +18,6 @@ type SportsController struct {
 	repo db.SportRepository
 }
 
-type SportCsvContent struct {
-	Sport          string  `json:"sport"`
-	BaseMultiplier float64 `json:"base_multiplier"`
-}
-
-type GameCsvContent struct {
-	Game           string  `json:"game"`
-	BaseMultiplier float64 `json:"base_multiplier"`
-}
-
-type Sport struct {
-	Kind   string `json:"kind" binding:"required"`
-	Game   string `json:"game" binding:"required"`
-	Amount int    `json:"amount" binding:"required"`
-}
-
 // NewSportsController creates a new auth controller
 // and initializes the gorm repository.
 func NewSportsController() (*SportsController, *gorm.DB) {
@@ -153,7 +137,7 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 
 	// Determine if the payload is an array or a single object.
 	trimmed := strings.TrimSpace(string(body))
-	var inputs []Sport
+	var inputs []models.PartialSport
 	if strings.HasPrefix(trimmed, "[") {
 		// Payload is an array of SportInput
 		if err := json.Unmarshal(body, &inputs); err != nil {
@@ -162,7 +146,7 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 		}
 	} else {
 		// Payload is a single SportInput
-		var input Sport
+		var input models.PartialSport
 		if err := json.Unmarshal(body, &input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -171,8 +155,9 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 	}
 
 	// Override UserID from the session for each sport
+	// TODO: check, if timedate is allowed in overdue request table
 	for _, input := range inputs {
-		sport := db.Sport{
+		sport := models.Sport{
 			Kind:     input.Kind,
 			Game:     input.Game,
 			Amount:   input.Amount,
