@@ -5,26 +5,11 @@ import (
 	"log"
 	"time"
 
-	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
-
-type Sport struct {
-	ID       Snowflake `gorm:"primaryKey" json:"id"`
-	Kind     string    `json:"kind"`
-	Amount   int       `json:"amount"`
-	Timedate time.Time `json:"timedate"`
-	UserID   Snowflake `json:"user_id"`
-	Game     string    `json:"game"`
-}
-
-type DayStreak struct {
-	UserID Snowflake `json:"user_id"`
-	Days   int       `json:"days"`
-}
 
 // Updated SportRepository interface to include full CRUD operations using the Sport struct.
 type SportRepository interface {
@@ -32,7 +17,7 @@ type SportRepository interface {
 	GetSports(userIDs []Snowflake, limit int) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	DeleteSport(id Snowflake) error
-	GetTotalAmounts(userID Snowflake) ([]models.SportAmount, error)
+	GetTotalAmounts(userID Snowflake) ([]SportAmount, error)
 	GetDayStreak(userID Snowflake) (DayStreak, error)
 }
 
@@ -74,8 +59,8 @@ func (r *ORMRepository) GetSports(userIDs []Snowflake, limit int) ([]Sport, erro
 }
 
 // Sum all amounts from a given user and group it by sport kind
-func (r *ORMRepository) GetTotalAmounts(userID Snowflake) ([]models.SportAmount, error) {
-	var results []models.SportAmount
+func (r *ORMRepository) GetTotalAmounts(userID Snowflake) ([]SportAmount, error) {
+	var results []SportAmount
 	result := r.DB.Model(&Sport{}).Select("kind, sum(amount) as amount").Where("user_id = ?", userID).Group("kind").Scan(&results)
 	if result.Error != nil {
 		return nil, result.Error
