@@ -47,7 +47,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 #### Fixes
 
 - [ ] Workaround: add state for when modal was opend, and keep mind .2s open. When pressing upload, play also an animation in the modal, to prevent broken modal when quickly pressing enter twice
-- [ ] UI: vertically center game selection
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
 
 #### QoL

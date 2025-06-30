@@ -1,6 +1,6 @@
 import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
 
 import { DynamicGameGrid } from './DynamicGrid';
@@ -47,13 +47,22 @@ export const GameSelector = () => {
     return null;
   }
   return (
-    <DynamicGameGrid
-      items={validGames}
-      capacity={{ xs: 20, sm: 25, md: 11, lg: 14, xl: 17 }}
-      selectedItem={theme.custom.themeName}
-      onSelect={async (item) => {
-        await setTheme(item);
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        height: '100%',
       }}
-    ></DynamicGameGrid>
+    >
+      <DynamicGameGrid
+        items={validGames}
+        capacity={{ xs: 20, sm: 25, md: 11, lg: 14, xl: 17 }}
+        selectedItem={theme.custom.themeName}
+        onSelect={async (item) => {
+          await setTheme(item);
+        }}
+      ></DynamicGameGrid>
+    </Box>
   );
 };

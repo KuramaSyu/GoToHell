@@ -156,7 +156,7 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
   const rows = computeRows(game_items, currentCapacity);
 
   return (
-    <Box width="100%" height="100%" sx={{ p: 0 }}>
+    <Box width="100%" height="auto">
       {rows.map((row, rowIndex) => {
         // Calculate the sum of sizes for the current row.
         const totalSize = row.reduce((sum, item) => sum + item.size, 0);
