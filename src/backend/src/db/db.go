@@ -101,25 +101,25 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 	streak := 0
 	dayOffset := 0
 	for i, date_str := range activityDates {
-		// parse date to time.Time
-		date, err := time.Parse("2006-01-02", date_str)
+		// parse recordDate to time.Time
+		recordDate, err := time.Parse("2006-01-02", date_str)
 		if err != nil {
 			return dayStreak, err
 		}
 
 		if i == 0 {
 			// check if date is today
-			if date.Year() == time.Now().Year() && date.YearDay() == time.Now().YearDay() {
+			if recordDate.Year() == time.Now().Year() && recordDate.YearDay() == time.Now().YearDay() {
 				streak++
 				dayOffset++
 				continue
 			}
 			dayOffset++
 		}
-		day := getDateByOffset(dayOffset)
+		offsetDate := getDateByOffset(dayOffset)
 
 		// check all other days and break when the streak is broken
-		if date.Year() == day.Year() && date.YearDay() == day.YearDay() {
+		if isEqualDate(recordDate, offsetDate) {
 			streak++
 			dayOffset++
 			continue
@@ -133,7 +133,11 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 	return dayStreak, nil
 }
 
+// Get the date by offset from today
 func getDateByOffset(offset int) time.Time {
-	// Get the date by offset from today
 	return time.Now().AddDate(0, 0, -offset)
+}
+
+func isEqualDate(a time.Time, b time.Time) bool {
+	a.Year() == b.Year() && a.YearDay() == b.YearDay()
 }
