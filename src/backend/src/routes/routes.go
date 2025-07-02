@@ -11,6 +11,7 @@ func SetupRouter(
 	authController *controllers.AuthController,
 	sportsController *controllers.SportsController,
 	friendController *controllers.FriendsController,
+	overdueDeathsController *controllers.OverdueDeathsController,
 ) {
 
 	// API routes
@@ -37,6 +38,12 @@ func SetupRouter(
 		friends.POST("", friendController.PostFriendship)
 		friends.DELETE("/:id", friendController.DeleteFriendship)
 		friends.PUT("", friendController.UpdateFriendship)
+
+		// route for overdue deaths
+		overdueDeaths := api.Group("/overdueDeaths")
+		overdueDeaths.POST("", overdueDeathsController.Post)
+		overdueDeaths.GET("", overdueDeathsController.Get)
+
 	}
 
 	// Auth routes
