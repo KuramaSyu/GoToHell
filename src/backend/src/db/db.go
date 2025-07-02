@@ -139,5 +139,5 @@ func getDateByOffset(offset int) time.Time {
 }
 
 func isEqualDate(a time.Time, b time.Time) bool {
-	a.Year() == b.Year() && a.YearDay() == b.YearDay()
+	return a.Year() == b.Year() && a.YearDay() == b.YearDay()
 }
