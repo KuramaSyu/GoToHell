@@ -32,8 +32,11 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] move API calls to utils/API
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
-- [ ] add functions to these APIs, which only fetch, if zustand store has nothing stored in it
 - [ ] separate repository for background pictures
+- [ ] OverdueDeaths:
+  - Add to utils/api
+  - Add zustand
+  - Add to ApiRequirements
 
 #### Features
 
