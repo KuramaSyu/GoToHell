@@ -1,4 +1,4 @@
-// interface for GET /overdueDeaths
+// interface for GET /overdue-deaths
 export interface GetOverdueDeathsReply {
   data: OverdueDeaths[];
 }

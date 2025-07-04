@@ -40,7 +40,7 @@ func SetupRouter(
 		friends.PUT("", friendController.UpdateFriendship)
 
 		// route for overdue deaths
-		overdueDeaths := api.Group("/overdueDeaths")
+		overdueDeaths := api.Group("/overdue-deaths")
 		overdueDeaths.POST("", overdueDeathsController.Post)
 		overdueDeaths.GET("", overdueDeathsController.Get)
 
