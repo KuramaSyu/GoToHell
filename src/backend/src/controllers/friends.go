@@ -9,6 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// represents a gin response with has a string message field
+// swagger:model MessageResponse
+type MessageResponse struct {
+	// the response message
+	Message string `json:"message"`
+}
+
 // FriendsController manages friendship endpoints.
 type FriendsController struct {
 	repo     db.FriendshipRepository
@@ -23,6 +30,7 @@ func NewFriendsController(database *gorm.DB) *FriendsController {
 }
 
 // FriendRequest is the expected payload when creating a friendship.
+// swagger:model FriendRequest
 type FriendRequest struct {
 	FriendID Snowflake        `json:"friend_id" binding:"required"`
 	Status   FriendshipStatus `json:"status"`
@@ -77,7 +85,16 @@ func (fc *FriendsController) GetFriends(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": reply})
 }
 
-// PostFriendship creates a new friendship.
+// Format:
+// @Param  <name>  body  <Type>  <required?>  "<description>"
+
+// PostFriendship handles POST /friends
+// @Summary Creates a request for a friend request
+// @Accept json
+// @Produce json
+// @Param payload body FriendRequest true "Friend request payload"
+// @Success 200 {object} MessageResponse
+// @Router /friends [post]
 func (fc *FriendsController) PostFriendship(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
