@@ -22,6 +22,45 @@ export const defaultTheme = createTheme({
   },
 }) as CustomTheme;
 
+export const brightNordTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#A3BE8C', // Nord14 – bright green :contentReference[oaicite:1]{index=1}
+      light: '#ECEFF4', // Nord6 – off-white :contentReference[oaicite:2]{index=2}
+      dark: '#8FBCBB', // Nord7 – teal :contentReference[oaicite:3]{index=3}
+    },
+    secondary: {
+      main: '#EBCB8B', // Nord13 – warm yellow :contentReference[oaicite:4]{index=4}
+      light: '#E5E9F0', // Nord5 – very light grey :contentReference[oaicite:5]{index=5}
+      dark: '#D08770', // Nord12 – muted orange :contentReference[oaicite:6]{index=6}
+    },
+    vibrant: {
+      main: '#88C0D0', // Nord8 – sky blue :contentReference[oaicite:7]{index=7}
+      light: '#ECEFF4', // Nord6 – off-white :contentReference[oaicite:8]{index=8}
+      dark: '#5E81AC', // Nord10 – bay blue :contentReference[oaicite:9]{index=9}
+    },
+    muted: {
+      main: '#ECEFF4', // Nord6 – off-white :contentReference[oaicite:10]{index=10}
+      light: '#E5E9F0', // Nord5 – very light grey :contentReference[oaicite:11]{index=11}
+      dark: '#D8DEE9', // Nord4 – light grey :contentReference[oaicite:12]{index=12}
+    },
+    background: {
+      default: '#ECEFF4', // Nord6 – off-white :contentReference[oaicite:13]{index=13}
+      paper: '#E5E9F0', // Nord5 – very light grey :contentReference[oaicite:14]{index=14}
+    },
+    text: {
+      primary: '#2E3440', // Nord0 – dark slate :contentReference[oaicite:15]{index=15}
+      secondary: '#4C566A', // Nord3 – greyish blue :contentReference[oaicite:16]{index=16}
+    },
+  },
+  custom: {
+    backgroundImage: 'https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg',
+    themeName: 'brightNord',
+    longName: 'Nord Bright Theme',
+  },
+} as CustomTheme);
+
 // Define our available custom themes.
 export const customThemes: CustomThemeConfig[] = customThemeData;
 
