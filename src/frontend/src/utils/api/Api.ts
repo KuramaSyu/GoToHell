@@ -17,6 +17,8 @@ import {
   useYourRecentSportsStore,
 } from '../../zustand/RecentSportsState';
 import { useSportStore } from '../../useSportStore';
+import { GetOverdueDeathsReply } from './replies/OverdueDeaths';
+import { useOverdueDeathStore } from '../../zustand/overdueDeathsStore';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
@@ -33,9 +35,7 @@ export interface UserApiInterface {
   fetchAllRecentSports(): Promise<SportsApiResponse | null>;
   deleteRecord(id: number);
 }
-export interface SportApiInterface {
-  fetchDefault(): Promise<GetSportsResponse | null>;
-}
+
 // Class, to fetch resources from the backend. Responses will be
 // set with the Zustand setters
 export class DefaultBackendApi implements BackendApiInterface {}
@@ -247,5 +247,55 @@ export class UserApi implements UserApiInterface {
       this.logError(API_ENDPOINT, result);
     }
     return null;
+  }
+
+  /**
+   * fetches OverdueDeaths for logged in user
+   * from /api/overdue-deaths GET
+   *
+   * @Note
+   * sets the useOverdueDeathsStore Zustand
+   *
+   * @throws Error: if the fetch fails
+   *
+   * @returns
+   * GetOverdueDeathsReply | null: the Response or null if failed
+   */
+  async fetchOverdueDeaths(): Promise<GetOverdueDeathsReply | null> {
+    const API_ENDPOINT = '/api/overdue-deaths';
+    // get user
+    const user = useUserStore.getState().user;
+    if (user === null) {
+      return null;
+    }
+    const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
+
+    try {
+      const response = await fetch(url, {
+        credentials: 'include',
+        method: 'GET',
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        // get zustand setter
+        const setOverdueDeaths =
+          useOverdueDeathStore.getState().setOverdueDeaths;
+
+        // cast result
+        var reply = result as GetOverdueDeathsReply;
+
+        // set zustand
+        setOverdueDeaths(reply.data);
+
+        return reply;
+      } else {
+        this.logError(API_ENDPOINT, result);
+      }
+      return null;
+    } catch (error) {
+      this.logError(API_ENDPOINT, error);
+      throw error;
+    }
   }
 }
