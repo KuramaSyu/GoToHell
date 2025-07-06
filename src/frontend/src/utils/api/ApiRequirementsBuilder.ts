@@ -1,5 +1,5 @@
 import { useUsersStore, useUserStore } from '../../userStore';
-import { useOverdueDeathStore } from '../../zustand/overdueDeathsStore';
+import { useOverdueDeathsStore } from '../../zustand/overdueDeathsStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useStreakStore } from '../../zustand/StreakStore';
@@ -148,7 +148,7 @@ export class YourRecentSportsRequirement extends ApiRequirementABC {
 export class OverdueDeathsRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
     console.log(`DEBUG: Checking for overdueDeaths`);
-    return useOverdueDeathStore.getState().loaded === false;
+    return useOverdueDeathsStore.getState().loaded === false;
   }
 
   async fetch(): Promise<void> {

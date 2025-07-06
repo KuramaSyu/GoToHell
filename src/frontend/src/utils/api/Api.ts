@@ -18,7 +18,7 @@ import {
 } from '../../zustand/RecentSportsState';
 import { useSportStore } from '../../useSportStore';
 import { GetOverdueDeathsReply } from './replies/OverdueDeaths';
-import { useOverdueDeathStore } from '../../zustand/overdueDeathsStore';
+import { useOverdueDeathsStore } from '../../zustand/overdueDeathsStore';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
@@ -280,7 +280,7 @@ export class UserApi implements UserApiInterface {
       if (response.ok) {
         // get zustand setter
         const setOverdueDeaths =
-          useOverdueDeathStore.getState().setOverdueDeaths;
+          useOverdueDeathsStore.getState().setOverdueDeaths;
 
         // cast result
         var reply = result as GetOverdueDeathsReply;

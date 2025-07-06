@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { OverdueDeaths } from '../utils/api/replies/OverdueDeaths';
+import { OverdueDeaths } from '../models/OverdueDeaths';
 
 interface OverdueDeathsState {
   overdueDeathsList: OverdueDeaths[];
@@ -7,7 +7,7 @@ interface OverdueDeathsState {
   setOverdueDeaths: (overdueDeathsList: OverdueDeaths[]) => void;
 }
 
-export const useStreakStore = create<OverdueDeathsState>((set) => ({
+export const useOverdueDeathsStore = create<OverdueDeathsState>((set) => ({
   overdueDeathsList: [],
   loaded: false,
   setOverdueDeaths: (overdueDeathsList: OverdueDeaths[]) =>
