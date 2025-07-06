@@ -1,4 +1,5 @@
 import { useUsersStore, useUserStore } from '../../userStore';
+import { useOverdueDeathStore } from '../../zustand/overdueDeathsStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useStreakStore } from '../../zustand/StreakStore';
@@ -139,6 +140,24 @@ export class YourRecentSportsRequirement extends ApiRequirementABC {
 }
 
 /**
+ * fetches the users OverdueDeaths
+ *
+ * @Note
+ * sets the useOverdueDeathsStore Zustand
+ */
+export class OverdueDeathsRequirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    console.log(`DEBUG: Checking for overdueDeaths`);
+    return useOverdueDeathStore.getState().loaded === false;
+  }
+
+  async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching OverdueDeaths`);
+    await new UserApi().fetchOverdueDeaths();
+  }
+}
+
+/**
  * reads the preferences out of the cookie
  *
  * @Note
@@ -161,13 +180,14 @@ export class PreferencesRequirement extends ApiRequirementABC {
 }
 
 export enum ApiRequirement {
-  User = 0,
-  TotalScore = 1,
-  Friends = 2,
-  Streak = 3,
-  AllRecentSports = 4,
-  YourRecentSports = 5,
-  Preferences = 6,
+  User,
+  TotalScore,
+  Friends,
+  Streak,
+  AllRecentSports,
+  YourRecentSports,
+  Preferences,
+  OverdueDeaths,
 }
 
 export namespace ApiRequirement {
@@ -187,6 +207,8 @@ export namespace ApiRequirement {
         return new YourRecentSportsRequirement();
       case ApiRequirement.Preferences:
         return new PreferencesRequirement();
+      case ApiRequirement.OverdueDeaths:
+        return new OverdueDeathsRequirement();
       default:
         throw new Error('Unknown ApiRequirement');
     }
