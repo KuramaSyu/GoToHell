@@ -1,9 +1,4 @@
-import { J } from 'framer-motion/dist/types.d-6pKw1mTI';
-import {
-  GetSportsResponse,
-  SportsApiResponse,
-  SportScore,
-} from '../../models/Sport';
+import { SportsApiResponse, SportScore } from '../../models/Sport';
 import { BACKEND_BASE } from '../../statics';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { DiscordUser, DiscordUserImpl } from '../../components/DiscordLogin';
@@ -16,7 +11,6 @@ import {
   useRecentSportsStore,
   useYourRecentSportsStore,
 } from '../../zustand/RecentSportsState';
-import { useSportStore } from '../../useSportStore';
 import { GetOverdueDeathsReply } from './replies/OverdueDeaths';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 
