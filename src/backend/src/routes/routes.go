@@ -2,7 +2,10 @@ package routes
 
 import (
 	"github.com/KuramaSyu/GoToHell/src/backend/src/controllers"
+	_ "github.com/KuramaSyu/GoToHell/src/backend/src/docs" // load docs
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // SetupRouter configures all application routes
@@ -44,6 +47,8 @@ func SetupRouter(
 		overdueDeaths.POST("", overdueDeathsController.Post)
 		overdueDeaths.GET("", overdueDeathsController.Get)
 
+		// route for swagger API docs
+		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
 	// Auth routes

@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
 import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
 import {
+  brightNordTheme,
   customThemes,
   defaultTheme,
   useThemeStore,
@@ -104,6 +105,9 @@ export class ThemeManager {
    */
   public async generateTheme(themeName: string): Promise<CustomTheme | null> {
     const background = useThemeStore.getState().theme.custom.backgroundImage;
+    if (themeName === 'brightNord') {
+      return brightNordTheme;
+    }
     const themeConfig = this.themes.get(themeName);
     if (!themeConfig) {
       console.warn(`Theme "${themeName}" not found.`);

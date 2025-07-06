@@ -10,6 +10,7 @@ import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
 import { useThemeStore } from './zustand/useThemeStore';
 import ErrorDisplay from './components/ErrorDisplay';
 import { Settings } from './pages/Settings/Main';
+import { SwaggerDocs } from './pages/docs/Main';
 // Import other components as needed
 
 const App: React.FC = () => {
@@ -46,6 +47,7 @@ const App: React.FC = () => {
               <Route path="/login-success" element={<HomePage />} />
               <Route path="/friends" element={<FriendOverview />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="/docs/*" element={<SwaggerDocs />} />
             </Routes>
           </Box>
 

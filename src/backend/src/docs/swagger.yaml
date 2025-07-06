@@ -1,0 +1,49 @@
+definitions:
+  controllers.FriendRequest:
+    properties:
+      friend_id:
+        type: integer
+      status:
+        $ref: '#/definitions/models.FriendshipStatus'
+    required:
+    - friend_id
+    type: object
+  controllers.MessageResponse:
+    properties:
+      message:
+        description: the response message
+        type: string
+    type: object
+  models.FriendshipStatus:
+    enum:
+    - pending
+    - accepted
+    - blocked
+    type: string
+    x-enum-varnames:
+    - Pending
+    - Accepted
+    - blocked
+info:
+  contact: {}
+paths:
+  /friends:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Friend request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.FriendRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.MessageResponse'
+      summary: Creates a request for a friend request
+swagger: "2.0"
