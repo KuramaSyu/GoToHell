@@ -12,6 +12,10 @@ to think about storing passwords, and I also have access to their Avatars, which
 **Is it somewhere running?**
 Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.inu-the-bot.com)
 
+### Api Documentation
+
+Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.com/docs)
+
 ### TODO:
 
 #### Done
@@ -49,7 +53,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 #### Fixes
 
-- [ ] Workaround: add state for when modal was opend, and keep mind .2s open. When pressing upload, play also an animation in the modal, to prevent broken modal when quickly pressing enter twice
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
 
 #### QoL
@@ -57,7 +60,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 - [ ] Show all multipliers in the settings
 - [ ] better animate TimeDisplay
 - [ ] add time (seconds) parameter to setErrorMessage. Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
-- [ ] add a function to theme, to return primary/secondary color, but brightend up if it's too dark (for better contrast in app bar)
 
 #### Perf
 
@@ -138,3 +140,17 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
   cd src/backend/src
   go run main.go
   ```
+
+### Building swagger docs out of Go comments:
+
+```
+cd src/backend/src
+swag init
+```
+
+### Backend naming conventions:
+
+- For Get/Post/Put/Delete Requests/Replies: `[Method][ModelName][Reply|Request]`
+- For Controllers: `[ModelName]Controller`
+- For Controller methods: pain `Get()`, `Post()`, `Put()`, `Delete()`
+- For API routes: `kebab-case`
