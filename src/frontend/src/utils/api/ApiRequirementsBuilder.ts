@@ -1,5 +1,5 @@
 import { useUsersStore, useUserStore } from '../../userStore';
-import { useOverdueDeathsStore } from '../../zustand/overdueDeathsStore';
+import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useStreakStore } from '../../zustand/StreakStore';

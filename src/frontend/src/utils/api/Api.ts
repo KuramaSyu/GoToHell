@@ -18,7 +18,7 @@ import {
 } from '../../zustand/RecentSportsState';
 import { useSportStore } from '../../useSportStore';
 import { GetOverdueDeathsReply } from './replies/OverdueDeaths';
-import { useOverdueDeathsStore } from '../../zustand/overdueDeathsStore';
+import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
