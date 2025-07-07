@@ -197,28 +197,8 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 		return
 	}
 
-	// Check if sport exists and belongs to the user
-	user_ids := append(make([]models.Snowflake, 0, 5), user.ID)
-	// TODO: just check in DeleteSport, in where for userid
-	sports, err := sc.repo.GetSports(user_ids, 20)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	var sportExists bool
-	for _, sport := range sports {
-		if sport.ID == id {
-			sportExists = true
-			break
-		}
-	}
-	if !sportExists {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found"})
-		return
-	}
-
 	// Delete sport
-	if err := sc.repo.DeleteSport(id); err != nil {
+	if err := sc.repo.DeleteSport(id, user.ID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
