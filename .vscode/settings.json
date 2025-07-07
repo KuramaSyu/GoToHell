@@ -11,12 +11,12 @@
   },
   "ltex.language": "en-US",
   "github.copilot.enable": {
-    "*": false,
+    "*": true,
     "plaintext": false,
     "markdown": false,
     "scminput": false,
-    "java": false,
     "python": true,
-    "typescriptreact": true
+    "typescriptreact": true,
+    "java": false
   }
 }

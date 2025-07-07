@@ -1,4 +1,9 @@
 definitions:
+  controllers.ErrorReply:
+    properties:
+      error:
+        type: string
+    type: object
   controllers.FriendRequest:
     properties:
       friend_id:
@@ -14,6 +19,15 @@ definitions:
         description: the response message
         type: string
     type: object
+  controllers.PostSportReply:
+    properties:
+      message:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/models.PostSportRequest'
+        type: array
+    type: object
   models.FriendshipStatus:
     enum:
     - pending
@@ -24,9 +38,69 @@ definitions:
     - Pending
     - Accepted
     - blocked
+  models.PostSportRequest:
+    properties:
+      amount:
+        description: The amount of Exercises done
+        example: 42
+        type: integer
+      game:
+        description: |-
+          The Game, this sport-record belongs to
+          example: leauge
+        example: overwatch
+        type: string
+      id:
+        description: ID of the user, who did the sport - currently set by the API
+        type: integer
+      kind:
+        description: Kind of the sport
+        example: push-up
+        type: string
+      timedate:
+        description: when the sport was done as UTC time - currently set by the API
+        type: string
+    required:
+    - amount
+    - game
+    - kind
+    type: object
 info:
   contact: {}
+  description: Provides all methods to persist data for GoToHell
+  title: GoToHell Gin REST API
 paths:
+  /api/sports:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Sport Payload(s)
+        in: body
+        name: sport
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.PostSportRequest'
+          type: array
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.PostSportReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Create a sport entry
+      tags:
+      - sport
   /friends:
     post:
       consumes:
@@ -46,4 +120,9 @@ paths:
           schema:
             $ref: '#/definitions/controllers.MessageResponse'
       summary: Creates a request for a friend request
+securityDefinitions:
+  CookieAuth:
+    in: cookie
+    name: session
+    type: apiKey
 swagger: "2.0"

@@ -15,6 +15,56 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/sports": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sport"
+                ],
+                "summary": "Create a sport entry",
+                "parameters": [
+                    {
+                        "description": "Sport Payload(s)",
+                        "name": "sport",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PostSportRequest"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostSportReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
         "/friends": {
             "post": {
                 "consumes": [
@@ -47,6 +97,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.ErrorReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.FriendRequest": {
             "type": "object",
             "required": [
@@ -70,6 +128,20 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.PostSportReply": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PostSportRequest"
+                    }
+                }
+            }
+        },
         "models.FriendshipStatus": {
             "type": "string",
             "enum": [
@@ -82,6 +154,46 @@ const docTemplate = `{
                 "Accepted",
                 "blocked"
             ]
+        },
+        "models.PostSportRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "game",
+                "kind"
+            ],
+            "properties": {
+                "amount": {
+                    "description": "The amount of Exercises done",
+                    "type": "integer",
+                    "example": 42
+                },
+                "game": {
+                    "description": "The Game, this sport-record belongs to\nexample: leauge",
+                    "type": "string",
+                    "example": "overwatch"
+                },
+                "id": {
+                    "description": "ID of the user, who did the sport - currently set by the API",
+                    "type": "integer"
+                },
+                "kind": {
+                    "description": "Kind of the sport",
+                    "type": "string",
+                    "example": "push-up"
+                },
+                "timedate": {
+                    "description": "when the sport was done as UTC time - currently set by the API",
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "CookieAuth": {
+            "type": "apiKey",
+            "name": "session",
+            "in": "cookie"
         }
     }
 }`
@@ -92,8 +204,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "GoToHell Gin REST API",
+	Description:      "Provides all methods to persist data for GoToHell",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
