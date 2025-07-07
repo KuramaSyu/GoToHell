@@ -27,6 +27,7 @@ const App: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden', // Prevents content from growing beyond 100vh
+            backgroundColor: theme.palette.muted.main,
           }}
         >
           {/* Fixed TopBar with auto height */}
