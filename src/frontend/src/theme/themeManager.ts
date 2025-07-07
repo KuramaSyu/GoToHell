@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
 import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
 import {
-  brightNordTheme,
+  docsTheme,
   customThemes,
   defaultTheme,
   useThemeStore,
@@ -106,8 +106,8 @@ export class ThemeManager {
   public async generateTheme(themeName: string): Promise<CustomTheme | null> {
     const background = useThemeStore.getState().theme.custom.backgroundImage;
     switch (themeName) {
-      case 'brightNord':
-        return brightNordTheme;
+      case 'docsTheme':
+        return docsTheme;
       case 'default':
         return defaultTheme;
     }

@@ -14,7 +14,7 @@ export const SwaggerDocs: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
   useEffect(() => {
     async function init() {
-      await setTheme('brightNord');
+      await setTheme('docsTheme');
     }
     init();
   }, [theme]);
