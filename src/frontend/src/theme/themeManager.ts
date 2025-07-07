@@ -105,8 +105,11 @@ export class ThemeManager {
    */
   public async generateTheme(themeName: string): Promise<CustomTheme | null> {
     const background = useThemeStore.getState().theme.custom.backgroundImage;
-    if (themeName === 'brightNord') {
-      return brightNordTheme;
+    switch (themeName) {
+      case 'brightNord':
+        return brightNordTheme;
+      case 'default':
+        return defaultTheme;
     }
     const themeConfig = this.themes.get(themeName);
     if (!themeConfig) {
