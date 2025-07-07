@@ -143,6 +143,12 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 ### Building swagger docs out of Go comments:
 
+install `swag`:
+
+```
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
 ```
 cd src/backend/src
 swag init
