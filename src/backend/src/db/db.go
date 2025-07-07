@@ -86,7 +86,8 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 	var dayStreak DayStreak
 	var activityDates []string
 
-	// Query to get all distinct activity dates for the user, ordered by date descending
+	// SQL query, which filters out the dates (without time, only date)
+	// where the user has done sports. These will be loaded into `activityDates`
 	result := r.DB.Model(&Sport{}).
 		Select("DISTINCT DATE(timedate) as date").
 		Where("user_id = ? AND timedate IS NOT NULL AND timedate > ?", userID, "2000-01-01").
@@ -100,16 +101,17 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 	// count the days from now
 	streak := 0
 	dayOffset := 0
-	for i, date_str := range activityDates {
-		// parse recordDate to time.Time
-		recordDate, err := time.Parse("2006-01-02", date_str)
+	for i, dateStr := range activityDates {
+		// parse `dateStr` from format `YYYY-MM-DD` to time.Time
+		recordDate, err := time.Parse("2006-01-02", dateStr)
 		if err != nil {
 			return dayStreak, err
 		}
 
 		if i == 0 {
-			// check if date is today
-			if recordDate.Year() == time.Now().Year() && recordDate.YearDay() == time.Now().YearDay() {
+			// check if date is today, since a streak is considered
+			// active, even if the user haven't done sport yet
+			if isEqualDate(recordDate, time.Now()) {
 				streak++
 				dayOffset++
 				continue
@@ -124,10 +126,12 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 			dayOffset++
 			continue
 		} else {
+			// recordDate is out of sync with offsetDate
+			// -> break of streak
 			break
 		}
-
 	}
+
 	dayStreak.UserID = userID
 	dayStreak.Days = streak
 	return dayStreak, nil
@@ -138,6 +142,7 @@ func getDateByOffset(offset int) time.Time {
 	return time.Now().AddDate(0, 0, -offset)
 }
 
+// Whether or not the Year and YearDay of `a` and `b` are similar
 func isEqualDate(a time.Time, b time.Time) bool {
 	return a.Year() == b.Year() && a.YearDay() == b.YearDay()
 }
