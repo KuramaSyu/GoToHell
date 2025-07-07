@@ -1,3 +1,10 @@
+// @title GoToHell Gin REST API
+// @oversion 1.0
+// @description Provides all methods to persist data for GoToHell
+// @securityDefinitions.apikey CookieAuth
+// @in cookie
+// @name session
+
 package main
 
 import (
