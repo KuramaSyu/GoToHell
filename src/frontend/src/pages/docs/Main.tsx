@@ -5,9 +5,9 @@ import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 
 // override with one of swagger-ui-themes
-import 'swagger-ui-themes/themes/3.x/theme-material.css';
+import 'swagger-ui-themes/themes/3.x/theme-outline.css';
 import { BACKEND_BASE } from '../../statics';
-import { Box } from '@mui/material';
+import { Box, GlobalStyles, styled } from '@mui/material';
 import { useThemeStore } from '../../zustand/useThemeStore';
 
 export const SwaggerDocs: React.FC = () => {
@@ -21,10 +21,7 @@ export const SwaggerDocs: React.FC = () => {
   return (
     <Box
       sx={{
-        position: 'absolute',
-        backgroundColor: theme.palette.background.default,
-        height: '100vh',
-        width: '100vw',
+        position: 'relative',
         zIndex: 1,
       }}
     >
