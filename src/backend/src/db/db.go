@@ -16,7 +16,7 @@ type SportRepository interface {
 	InsertSport(sport Sport) error
 	GetSports(userIDs []Snowflake, limit int) ([]Sport, error)
 	UpdateSport(sport Sport) error
-	DeleteSport(id Snowflake) error
+	DeleteSport(id Snowflake, userID Snowflake) error
 	GetTotalAmounts(userID Snowflake) ([]SportAmount, error)
 	GetDayStreak(userID Snowflake) (DayStreak, error)
 }
@@ -75,9 +75,10 @@ func (r *OrmSportRepository) UpdateSport(sport Sport) error {
 	return result.Error
 }
 
-// DeleteSport removes a Sport entry by ID using ORM.
-func (r *OrmSportRepository) DeleteSport(id Snowflake) error {
-	result := r.DB.Delete(&Sport{}, id)
+// DeleteSport removes a Sport entry by ID using ORM. Record needs to match both `userID` AND `id`
+// to be deleted
+func (r *OrmSportRepository) DeleteSport(id Snowflake, userID Snowflake) error {
+	result := r.DB.Where(&Sport{UserID: userID, ID: id}).Delete(&Sport{})
 	return result.Error
 }
 
