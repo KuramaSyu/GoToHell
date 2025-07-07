@@ -14,6 +14,18 @@ import (
 	"gorm.io/gorm"
 )
 
+// swagger:response PostSportReply
+type PostSportReply struct {
+	Message string                    `json:"message"`
+	Results []models.PostSportRequest `json:"results"`
+}
+
+// swagger:response ErrorReply
+// ErrorReply is the response structure for errors.
+type ErrorReply struct {
+	Error string `json:"error"`
+}
+
 type SportsController struct {
 	repo db.SportRepository
 }
@@ -117,9 +129,17 @@ func (sc *SportsController) GetTotalResults(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"results": amount})
 }
 
-// PostSport accepts a JSON payload for one or multiple sports and stores them using the repo.
-// since the app will directly after this, ask for the total amount, this will
-// be returned as well in "result" or an error message in "error"
+// PostSport godoc
+// @Summary Create a sport entry
+// @Tags 	sport
+// @Accept	json
+// @Producte json
+// @Security CookieAuth
+// @Param sport body []models.PostSportRequest true "Sport Payload(s)"
+// @Success 201 {object} PostSportReply
+// @Failure 400 {object} ErrorReply
+// @Failure 500 {object} ErrorReply
+// @Router /api/sports [post]
 func (sc *SportsController) PostSport(c *gin.Context) {
 	// Check if user is logged in via Discord
 	user, status, err := UserFromSession(c)
@@ -137,7 +157,7 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 
 	// Determine if the payload is an array or a single object.
 	trimmed := strings.TrimSpace(string(body))
-	var inputs []models.PartialSport
+	var inputs []models.PostSportRequest
 	if strings.HasPrefix(trimmed, "[") {
 		// Payload is an array of SportInput
 		if err := json.Unmarshal(body, &inputs); err != nil {
@@ -146,7 +166,7 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 		}
 	} else {
 		// Payload is a single SportInput
-		var input models.PartialSport
+		var input models.PostSportRequest
 		if err := json.Unmarshal(body, &input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -174,7 +194,7 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 	// fetch amount
 	amount, err := sc.repo.GetTotalAmounts(user.ID)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"message": "Sport(s) added successfully", "error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Sport(s) added successfully", "results": amount})
