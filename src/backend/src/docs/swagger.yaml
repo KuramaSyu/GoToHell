@@ -13,11 +13,37 @@ definitions:
     required:
     - friend_id
     type: object
+  controllers.GetOverdueDeathsReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.OverdueDeaths'
+        type: array
+    type: object
   controllers.MessageResponse:
     properties:
       message:
         description: the response message
         type: string
+    type: object
+  controllers.PostOverdueDeathsReply:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/models.OverdueDeaths'
+        description: Data structure containing a user's overdue deaths
+    type: object
+  controllers.PostOverdueDeathsRequest:
+    properties:
+      count:
+        example: 42
+        type: integer
+      game:
+        example: overwatch
+        type: string
+    required:
+    - count
+    - game
     type: object
   controllers.PostSportReply:
     properties:
@@ -38,6 +64,18 @@ definitions:
     - Pending
     - Accepted
     - blocked
+  models.OverdueDeaths:
+    properties:
+      count:
+        example: 69
+        type: integer
+      game:
+        example: overwatch
+        type: string
+      user_id:
+        example: 348922315062044675
+        type: integer
+    type: object
   models.PostSportRequest:
     properties:
       amount:
@@ -45,9 +83,7 @@ definitions:
         example: 42
         type: integer
       game:
-        description: |-
-          The Game, this sport-record belongs to
-          example: leauge
+        description: The Game, this sport-record belongs to
         example: overwatch
         type: string
       id:
@@ -59,6 +95,7 @@ definitions:
         type: string
       timedate:
         description: when the sport was done as UTC time - currently set by the API
+        example: "1751897680.372402"
         type: string
     required:
     - amount
@@ -70,6 +107,53 @@ info:
   description: Provides all methods to persist data for GoToHell
   title: GoToHell Gin REST API
 paths:
+  /api/overdue_deaths:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetOverdueDeathsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CoockieAuth: []
+      summary: Get all OverdueDeaths records for the logged in user
+      tags:
+      - OverdueDeaths
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the game and count
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PostOverdueDeathsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.PostOverdueDeathsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Creates or updates the death <count> for the given <game> of the logged
+        in user
+      tags:
+      - OverdueDeaths
   /api/sports:
     post:
       consumes:

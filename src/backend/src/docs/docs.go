@@ -15,6 +15,81 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/overdue_deaths": {
+            "get": {
+                "security": [
+                    {
+                        "CoockieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OverdueDeaths"
+                ],
+                "summary": "Get all OverdueDeaths records for the logged in user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetOverdueDeathsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OverdueDeaths"
+                ],
+                "summary": "Creates or updates the death \u003ccount\u003e for the given \u003cgame\u003e of the logged in user",
+                "parameters": [
+                    {
+                        "description": "Payload containing the game and count",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostOverdueDeathsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostOverdueDeathsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
         "/api/sports": {
             "post": {
                 "security": [
@@ -119,12 +194,53 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetOverdueDeathsReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OverdueDeaths"
+                    }
+                }
+            }
+        },
         "controllers.MessageResponse": {
             "type": "object",
             "properties": {
                 "message": {
                     "description": "the response message",
                     "type": "string"
+                }
+            }
+        },
+        "controllers.PostOverdueDeathsReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "Data structure containing a user's overdue deaths",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.OverdueDeaths"
+                        }
+                    ]
+                }
+            }
+        },
+        "controllers.PostOverdueDeathsRequest": {
+            "type": "object",
+            "required": [
+                "count",
+                "game"
+            ],
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 42
+                },
+                "game": {
+                    "type": "string",
+                    "example": "overwatch"
                 }
             }
         },
@@ -155,6 +271,23 @@ const docTemplate = `{
                 "blocked"
             ]
         },
+        "models.OverdueDeaths": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 69
+                },
+                "game": {
+                    "type": "string",
+                    "example": "overwatch"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 348922315062044675
+                }
+            }
+        },
         "models.PostSportRequest": {
             "type": "object",
             "required": [
@@ -169,7 +302,7 @@ const docTemplate = `{
                     "example": 42
                 },
                 "game": {
-                    "description": "The Game, this sport-record belongs to\nexample: leauge",
+                    "description": "The Game, this sport-record belongs to",
                     "type": "string",
                     "example": "overwatch"
                 },
@@ -184,7 +317,8 @@ const docTemplate = `{
                 },
                 "timedate": {
                     "description": "when the sport was done as UTC time - currently set by the API",
-                    "type": "string"
+                    "type": "string",
+                    "example": "1751897680.372402"
                 }
             }
         }
