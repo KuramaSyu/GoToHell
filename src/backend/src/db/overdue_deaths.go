@@ -29,6 +29,34 @@ func (r *GormOverdueDeathsRepository) SetCount(userID Snowflake, game string, co
 	return &overdueDeaths, err
 }
 
+// Updates a OverdueDeaths record in the DB.
+func (r *GormOverdueDeathsRepository) UpdateCount(userID Snowflake, game string, count int64) (*OverdueDeaths, error) {
+	var overdueDeaths = OverdueDeaths{
+		UserID: userID,
+		Game:   game,
+		Count:  count,
+	}
+	err := r.DB.Where(OverdueDeaths{}, &OverdueDeaths{UserID: userID, Game: game}).Updates(&overdueDeaths).Error
+	if err != nil {
+		return nil, err
+	}
+	return &overdueDeaths, err
+}
+
+// Creates a new OverdueDeaths record in the DB.
+func (r *GormOverdueDeathsRepository) CreateCount(userID Snowflake, game string, count int64) (*OverdueDeaths, error) {
+	var overdueDeaths = OverdueDeaths{
+		UserID: userID,
+		Game:   game,
+		Count:  count,
+	}
+	err := r.DB.Create(&overdueDeaths).Error
+	if err != nil {
+		return nil, err
+	}
+	return &overdueDeaths, nil
+}
+
 // Returns a list with all OverdueDeaths records for the given user
 func (r *GormOverdueDeathsRepository) FetchAll(userID Snowflake) ([]OverdueDeaths, error) {
 	var overdueDeaths []OverdueDeaths
