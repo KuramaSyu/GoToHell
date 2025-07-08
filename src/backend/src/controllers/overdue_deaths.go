@@ -71,7 +71,7 @@ func (oc *OverdueDeathsController) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, reply)
 }
 
-// @Summary Creates or updates the death <count> for the given <game> of the logged in user
+// @Summary Creates (only) the death <count> for the given <game> of the logged in user
 // @Tags OverdueDeaths
 // @Accept json
 // @Produce json
@@ -81,6 +81,44 @@ func (oc *OverdueDeathsController) Get(c *gin.Context) {
 // @Failure 400 {object} ErrorReply
 // @Router /api/overdue_deaths [post]
 func (oc *OverdueDeathsController) Post(c *gin.Context) {
+	HandleCreation(c, oc.repo.SetCount)
+}
+
+// @Summary Creates or updates the death <count> for the given <game> of the logged in user
+// @Tags OverdueDeaths
+// @Accept json
+// @Produce json
+// @Security CookieAuth
+// @Param request body PostOverdueDeathsRequest true "Payload containing the game and count"
+// @Success 200 {object} PostOverdueDeathsReply
+// @Failure 400 {object} ErrorReply
+// @Router /api/overdue_deaths [put]
+func (oc *OverdueDeathsController) Put(c *gin.Context) {
+	HandleCreation(c, oc.repo.CreateCount)
+}
+
+// @Summary Updates (only) the death <count> for the given <game> of the logged in user
+// @Tags OverdueDeaths
+// @Accept json
+// @Produce json
+// @Security CookieAuth
+// @Param request body PostOverdueDeathsRequest true "Payload containing the game and count"
+// @Success 200 {object} PostOverdueDeathsReply
+// @Failure 400 {object} ErrorReply
+// @Router /api/overdue_deaths [patch]
+func (oc *OverdueDeathsController) Patch(c *gin.Context) {
+	HandleCreation(c, oc.repo.UpdateCount)
+}
+
+// Define a function type matching the signature of the repo methods
+type OverdueDeathCountFunc func(userID Snowflake, game string, count int64) (*OverdueDeaths, error)
+
+// Since Post/Put/Patch share the same logic, we can create a generic handler
+// which takes a repo method as an argument.
+func HandleCreation(
+	c *gin.Context,
+	method OverdueDeathCountFunc,
+) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
 		SetGinError(c, status, err)
@@ -93,7 +131,7 @@ func (oc *OverdueDeathsController) Post(c *gin.Context) {
 		return
 	}
 
-	data, err := oc.repo.SetCount(user.ID, req.Game, req.Count)
+	data, err := method(user.ID, req.Game, req.Count)
 	if err != nil {
 		SetGinError(c, http.StatusInternalServerError, err)
 		return
