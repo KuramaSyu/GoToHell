@@ -1,4 +1,12 @@
 definitions:
+  controllers.DeleteOverdueDeathsRequest:
+    properties:
+      game:
+        example: overwatch
+        type: string
+    required:
+    - game
+    type: object
   controllers.ErrorReply:
     properties:
       error:
@@ -108,6 +116,36 @@ info:
   title: GoToHell Gin REST API
 paths:
   /api/overdue_deaths:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the game to delete the overdue deaths for
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.DeleteOverdueDeathsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.DeleteOverdueDeathsRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Deletes a user's overdue deaths record for a specific game
+      tags:
+      - OverdueDeaths
     get:
       consumes:
       - application/json
@@ -127,7 +165,61 @@ paths:
       summary: Get all OverdueDeaths records for the logged in user
       tags:
       - OverdueDeaths
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the game and count
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PostOverdueDeathsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.PostOverdueDeathsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Updates (only) the death <count> for the given <game> of the logged
+        in user
+      tags:
+      - OverdueDeaths
     post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the game and count
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PostOverdueDeathsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.PostOverdueDeathsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Creates (only) the death <count> for the given <game> of the logged
+        in user
+      tags:
+      - OverdueDeaths
+    put:
       consumes:
       - application/json
       parameters:

@@ -47,7 +47,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
+            "put": {
                 "security": [
                     {
                         "CookieAuth": []
@@ -63,6 +63,138 @@ const docTemplate = `{
                     "OverdueDeaths"
                 ],
                 "summary": "Creates or updates the death \u003ccount\u003e for the given \u003cgame\u003e of the logged in user",
+                "parameters": [
+                    {
+                        "description": "Payload containing the game and count",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostOverdueDeathsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostOverdueDeathsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OverdueDeaths"
+                ],
+                "summary": "Creates (only) the death \u003ccount\u003e for the given \u003cgame\u003e of the logged in user",
+                "parameters": [
+                    {
+                        "description": "Payload containing the game and count",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostOverdueDeathsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostOverdueDeathsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OverdueDeaths"
+                ],
+                "summary": "Deletes a user's overdue deaths record for a specific game",
+                "parameters": [
+                    {
+                        "description": "Payload containing the game to delete the overdue deaths for",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeleteOverdueDeathsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeleteOverdueDeathsRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OverdueDeaths"
+                ],
+                "summary": "Updates (only) the death \u003ccount\u003e for the given \u003cgame\u003e of the logged in user",
                 "parameters": [
                     {
                         "description": "Payload containing the game and count",
@@ -172,6 +304,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.DeleteOverdueDeathsRequest": {
+            "type": "object",
+            "required": [
+                "game"
+            ],
+            "properties": {
+                "game": {
+                    "type": "string",
+                    "example": "overwatch"
+                }
+            }
+        },
         "controllers.ErrorReply": {
             "type": "object",
             "properties": {
