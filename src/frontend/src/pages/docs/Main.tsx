@@ -9,12 +9,20 @@ import 'swagger-ui-themes/themes/3.x/theme-outline.css';
 import { BACKEND_BASE } from '../../statics';
 import { Box, GlobalStyles, styled } from '@mui/material';
 import { useThemeStore } from '../../zustand/useThemeStore';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
 
 export const SwaggerDocs: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
+
   useEffect(() => {
     async function init() {
       await setTheme('docsTheme');
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .fetchIfNeeded();
     }
     init();
   }, [theme]);
@@ -23,9 +31,13 @@ export const SwaggerDocs: React.FC = () => {
       sx={{
         position: 'relative',
         zIndex: 1,
+        overflow: 'scroll',
+        height: '100%',
       }}
     >
-      <SwaggerUI url={`${BACKEND_BASE}/api/swagger/doc.json`} />
+      <Box sx={{ mb: 1 }}>
+        <SwaggerUI url={`${BACKEND_BASE}/api/swagger/doc.json`} />
+      </Box>
     </Box>
   );
 };
