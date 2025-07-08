@@ -10,15 +10,20 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetOverdueDeathsReply is the reply sent when doing [get] /overdue_deaths
+// swagger:model GetOverdueDeathsReply
 type GetOverdueDeathsReply struct {
 	Data []OverdueDeaths `json:"data"`
 }
 
+// swagger:model PostOverdueDeathsRequest
 type PostOverdueDeathsRequest struct {
-	Game  string `json:"game" binding:"required"`
-	Count int64  `json:"count" binding:"required"`
+	Game  string `json:"game" binding:"required" example:"overwatch"`
+	Count int64  `json:"count" binding:"required" example:"42"`
 }
 
+// PostOverdueDeathsReply is the reply sent when doing [post] /overdue_deaths
+// swagger:model PostOverdueDeathsReply
 type PostOverdueDeathsReply struct {
 	Data OverdueDeaths `json:"data"`
 }
@@ -33,6 +38,14 @@ func NewOverdueDeathsController(database *gorm.DB) *OverdueDeathsController {
 }
 
 // returns all OverdueDeaths records for the user
+// @Summary Get all OverdueDeaths records for the logged in user
+// @Tags OverdueDeaths
+// @Produce json
+// @Accept json
+// @Security CoockieAuth
+// @Success 200 {object} GetOverdueDeathsReply
+// @Failure 400 {object} ErrorReply
+// @Router /api/overdue_deaths [get]
 func (oc *OverdueDeathsController) Get(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
@@ -51,7 +64,15 @@ func (oc *OverdueDeathsController) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, reply)
 }
 
-// inserts/updates a OverdueDeaths record
+// @Summary Creates or updates the death <count> for the given <game> of the logged in user
+// @Tags OverdueDeaths
+// @Accept json
+// @Produce json
+// @Security CookieAuth
+// @Param request body PostOverdueDeathsRequest true "Payload containing the game and count"
+// @Success 200 {object} PostOverdueDeathsReply
+// @Failure 400 {object} ErrorReply
+// @Router /api/overdue_deaths [post]
 func (oc *OverdueDeathsController) Post(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
