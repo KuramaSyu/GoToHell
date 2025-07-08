@@ -35,3 +35,8 @@ func (r *GormOverdueDeathsRepository) FetchAll(userID Snowflake) ([]OverdueDeath
 	err := r.DB.Where(&OverdueDeaths{UserID: userID}).Find(&overdueDeaths).Error
 	return overdueDeaths, err
 }
+
+// Deletes a user's overdue deaths record for a specific game.
+func (r *GormOverdueDeathsRepository) Delete(userID Snowflake, game string) error {
+	return r.DB.Where(&OverdueDeaths{UserID: userID, Game: game}).Delete(&OverdueDeaths{}).Error
+}
