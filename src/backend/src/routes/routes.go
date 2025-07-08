@@ -45,6 +45,9 @@ func SetupRouter(
 		// route for overdue deaths
 		overdueDeaths := api.Group("/overdue-deaths")
 		overdueDeaths.POST("", overdueDeathsController.Post)
+		overdueDeaths.PUT("", overdueDeathsController.Put)
+		overdueDeaths.DELETE("", overdueDeathsController.Delete)
+		overdueDeaths.PATCH("", overdueDeathsController.Patch)
 		overdueDeaths.GET("", overdueDeathsController.Get)
 
 		// route for swagger API docs
