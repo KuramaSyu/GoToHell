@@ -13,19 +13,34 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
+import { useUserStore } from '../../userStore';
 
 export const SwaggerDocs: React.FC = () => {
-  const { theme, setTheme } = useThemeStore();
+  const { theme, setTheme, initializeTheme } = useThemeStore();
+  const { user } = useUserStore();
 
   useEffect(() => {
     async function init() {
       await setTheme('docsTheme');
+    }
+    init();
+  }, [theme]);
+
+  useEffect(() => {
+    async function init() {
       await new ApiRequirementsBuilder()
         .add(ApiRequirement.User)
         .fetchIfNeeded();
     }
     init();
-  }, [theme]);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function to reset the theme when the component unmounts
+      initializeTheme();
+    };
+  }, []);
   return (
     <Box
       sx={{
