@@ -7,6 +7,11 @@ definitions:
     required:
     - game
     type: object
+  controllers.DeleteSportsReply:
+    properties:
+      message:
+        type: string
+    type: object
   controllers.ErrorReply:
     properties:
       error:
@@ -247,6 +252,33 @@ paths:
       tags:
       - OverdueDeaths
   /api/sports:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Sport ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.DeleteSportsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Delete a sport entry
+      tags:
+      - sport
     post:
       consumes:
       - application/json
