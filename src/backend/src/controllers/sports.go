@@ -20,6 +20,11 @@ type PostSportReply struct {
 	Results []models.PostSportRequest `json:"results"`
 }
 
+// swagger:response DelteSportReply
+type DeleteSportsReply struct {
+	Message string `json:"message"`
+}
+
 // swagger:response ErrorReply
 // ErrorReply is the response structure for errors.
 type ErrorReply struct {
@@ -207,7 +212,7 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 // @Producte json
 // @Security CookieAuth
 // @Param id path string true "Sport ID"
-// @Success 201 {object} gin.H{"message": "Sport deleted successfully"}
+// @Success 201 {object} DeleteSportsReply
 // @Failure 400 {object} ErrorReply
 // @Failure 500 {object} ErrorReply
 // @Router /api/sports [delete]
