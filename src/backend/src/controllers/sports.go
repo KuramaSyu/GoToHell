@@ -200,12 +200,22 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Sport(s) added successfully", "results": amount})
 }
 
-// DeleteSport removes a sport from the database.
+// PostSport godoc
+// @Summary Delete a sport entry
+// @Tags 	sport
+// @Accept	json
+// @Producte json
+// @Security CookieAuth
+// @Param id path string true "Sport ID"
+// @Success 201 {object} gin.H{"message": "Sport deleted successfully"}
+// @Failure 400 {object} ErrorReply
+// @Failure 500 {object} ErrorReply
+// @Router /api/sports [delete]
 func (sc *SportsController) DeleteSport(c *gin.Context) {
 	// Check if user is logged in via Discord
 	user, status, err := UserFromSession(c)
 	if err != nil {
-		c.JSON(status, gin.H{"error": err.Error()})
+		SetGinError(c, status, err)
 		return
 	}
 
@@ -213,13 +223,13 @@ func (sc *SportsController) DeleteSport(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := models.NewSnowflakeFromString(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid sport ID"})
+		SetGinError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	// Delete sport
 	if err := sc.repo.DeleteSport(id, user.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		SetGinError(c, http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Sport deleted successfully"})
