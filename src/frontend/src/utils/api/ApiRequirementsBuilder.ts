@@ -6,6 +6,7 @@ import { useStreakStore } from '../../zustand/StreakStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { loadPreferencesFromCookie } from '../cookiePreferences';
 import { UserApi } from './Api';
+import { OverdueDeathsApi } from './OverdueDeathsApi';
 
 interface IApiReuqirement {
   needsFetch(): Boolean;
@@ -153,7 +154,7 @@ export class OverdueDeathsRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     console.log(`DEBUG: Fetching OverdueDeaths`);
-    await new UserApi().getOverdueDeaths();
+    await new OverdueDeathsApi().get();
   }
 }
 
