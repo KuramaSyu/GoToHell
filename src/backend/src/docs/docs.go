@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/overdue_deaths": {
+        "/api/overdue-deaths": {
             "get": {
                 "security": [
                     {

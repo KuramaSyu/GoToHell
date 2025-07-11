@@ -120,7 +120,7 @@ info:
   description: Provides all methods to persist data for GoToHell
   title: GoToHell Gin REST API
 paths:
-  /api/overdue_deaths:
+  /api/overdue-deaths:
     delete:
       consumes:
       - application/json

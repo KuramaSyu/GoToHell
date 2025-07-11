@@ -6,7 +6,7 @@
         "contact": {}
     },
     "paths": {
-        "/api/overdue_deaths": {
+        "/api/overdue-deaths": {
             "get": {
                 "security": [
                     {
