@@ -153,7 +153,7 @@ export class OverdueDeathsRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     console.log(`DEBUG: Fetching OverdueDeaths`);
-    await new UserApi().fetchOverdueDeaths();
+    await new UserApi().getOverdueDeaths();
   }
 }
 

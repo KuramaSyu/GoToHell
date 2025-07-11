@@ -255,7 +255,7 @@ export class UserApi implements UserApiInterface {
    * @returns
    * GetOverdueDeathsReply | null: the Response or null if failed
    */
-  async fetchOverdueDeaths(): Promise<GetOverdueDeathsReply | null> {
+  async getOverdueDeaths(): Promise<GetOverdueDeathsReply | null> {
     const API_ENDPOINT = '/api/overdue-deaths';
     // get user
     const user = useUserStore.getState().user;
