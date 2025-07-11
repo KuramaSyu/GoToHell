@@ -1,4 +1,4 @@
-import { SportsApiResponse, SportScore } from '../../models/Sport';
+import SportRow, { SportsApiResponse, SportScore } from '../../models/Sport';
 import { BACKEND_BASE } from '../../statics';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { DiscordUser, DiscordUserImpl } from '../../components/DiscordLogin';
@@ -28,6 +28,7 @@ export interface UserApiInterface {
   fetchYourRecentSports(): Promise<SportsApiResponse | null>;
   fetchAllRecentSports(): Promise<SportsApiResponse | null>;
   deleteRecord(id: number);
+  postSports(sports: SportRow[]): Promise<PostSportsApiResponse | null>;
 }
 
 // Class, to fetch resources from the backend. Responses will be
