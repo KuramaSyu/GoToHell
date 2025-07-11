@@ -33,4 +33,7 @@ type PostSportRequest struct {
 
 	// ID of the user, who did the sport - currently set by the API
 	ID Snowflake `json:"id,omitempty"`
+
+	// UserID of the user, who did the sport - currently set by the API
+	UserID Snowflake `json:"user_id,omitempty" example:"362262726221349761"`
 }
