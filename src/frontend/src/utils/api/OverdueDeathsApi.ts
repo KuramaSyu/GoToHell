@@ -8,6 +8,7 @@ import {
 } from './replies/OverdueDeaths';
 import { PostOverdueDeathsRequest } from './requests/OverdueDeaths';
 
+// implements logError
 export abstract class BasicApi {
   // represents the backend methods, which are needed for user purposes
   logError(url_part: string, error: any): void {
