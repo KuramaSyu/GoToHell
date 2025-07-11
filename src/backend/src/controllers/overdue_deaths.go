@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetOverdueDeathsReply is the reply sent when doing [get] /overdue_deaths
+// GetOverdueDeathsReply is the reply sent when doing [get] /overdue-deaths
 // swagger:model GetOverdueDeathsReply
 type GetOverdueDeathsReply struct {
 	Data []OverdueDeaths `json:"data"`
@@ -22,7 +22,7 @@ type PostOverdueDeathsRequest struct {
 	Count int64  `json:"count" binding:"required" example:"42"`
 }
 
-// PostOverdueDeathsReply is the reply sent when doing [post] /overdue_deaths
+// PostOverdueDeathsReply is the reply sent when doing [post] /overdue-deaths
 // swagger:model PostOverdueDeathsReply
 type PostOverdueDeathsReply struct {
 	// Data structure containing a user's overdue deaths
@@ -52,7 +52,7 @@ func NewOverdueDeathsController(database *gorm.DB) *OverdueDeathsController {
 // @Security CoockieAuth
 // @Success 200 {object} GetOverdueDeathsReply
 // @Failure 400 {object} ErrorReply
-// @Router /api/overdue_deaths [get]
+// @Router /api/overdue-deaths [get]
 func (oc *OverdueDeathsController) Get(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
@@ -79,7 +79,7 @@ func (oc *OverdueDeathsController) Get(c *gin.Context) {
 // @Param request body PostOverdueDeathsRequest true "Payload containing the game and count"
 // @Success 200 {object} PostOverdueDeathsReply
 // @Failure 400 {object} ErrorReply
-// @Router /api/overdue_deaths [post]
+// @Router /api/overdue-deaths [post]
 func (oc *OverdueDeathsController) Post(c *gin.Context) {
 	HandleCreation(c, oc.repo.SetCount)
 }
@@ -92,7 +92,7 @@ func (oc *OverdueDeathsController) Post(c *gin.Context) {
 // @Param request body PostOverdueDeathsRequest true "Payload containing the game and count"
 // @Success 200 {object} PostOverdueDeathsReply
 // @Failure 400 {object} ErrorReply
-// @Router /api/overdue_deaths [put]
+// @Router /api/overdue-deaths [put]
 func (oc *OverdueDeathsController) Put(c *gin.Context) {
 	HandleCreation(c, oc.repo.CreateCount)
 }
@@ -105,7 +105,7 @@ func (oc *OverdueDeathsController) Put(c *gin.Context) {
 // @Param request body PostOverdueDeathsRequest true "Payload containing the game and count"
 // @Success 200 {object} PostOverdueDeathsReply
 // @Failure 400 {object} ErrorReply
-// @Router /api/overdue_deaths [patch]
+// @Router /api/overdue-deaths [patch]
 func (oc *OverdueDeathsController) Patch(c *gin.Context) {
 	HandleCreation(c, oc.repo.UpdateCount)
 }
@@ -148,7 +148,7 @@ func HandleCreation(
 // @Success 200 {object} DeleteOverdueDeathsRequest
 // @Failure 400 {object} ErrorReply
 // @Failure 500 {object} ErrorReply
-// @Router /api/overdue_deaths [delete]
+// @Router /api/overdue-deaths [delete]
 func (oc *OverdueDeathsController) Delete(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
