@@ -6,6 +6,7 @@ import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
+import { SecondaryTabView } from './SecondaryTabView';
 
 export const RecentSports = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -67,8 +68,8 @@ export const RecentSports = () => {
             position: 'relative',
             width: '100%',
             justifyContent: 'center',
-            minHeight: 129, // ← reserve space
-            overflow: 'hidden', // optional, to clip off‑screen anims
+            minHeight: 129,
+            overflow: 'hidden',
           }}
         >
           {activeTab === 0 && (
@@ -85,19 +86,7 @@ export const RecentSports = () => {
           )}
         </Box>
       </Box>
-
-      {BelowXL ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'end',
-            alignItems: 'end',
-            flexGrow: '1',
-          }}
-        >
-          {calculator.make_box(currentSport.sport!, currentSport.game!, amount)}
-        </Box>
-      ) : null}
+      <SecondaryTabView></SecondaryTabView>
     </Box>
   );
 };
