@@ -448,7 +448,7 @@ const docTemplate = `{
                 "results": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.PostSportRequest"
+                        "$ref": "#/definitions/models.SportAmount"
                     }
                 }
             }
@@ -514,6 +514,24 @@ const docTemplate = `{
                     "description": "when the sport was done as UTC time - currently set by the API",
                     "type": "string",
                     "example": "1751897680.372402"
+                },
+                "user_id": {
+                    "description": "UserID of the user, who did the sport - currently set by the API",
+                    "type": "integer",
+                    "example": 362262726221349761
+                }
+            }
+        },
+        "models.SportAmount": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 1238
+                },
+                "kind": {
+                    "type": "string",
+                    "example": "push-up"
                 }
             }
         }

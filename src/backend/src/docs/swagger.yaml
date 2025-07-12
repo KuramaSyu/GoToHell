@@ -64,7 +64,7 @@ definitions:
         type: string
       results:
         items:
-          $ref: '#/definitions/models.PostSportRequest'
+          $ref: '#/definitions/models.SportAmount'
         type: array
     type: object
   models.FriendshipStatus:
@@ -110,10 +110,24 @@ definitions:
         description: when the sport was done as UTC time - currently set by the API
         example: "1751897680.372402"
         type: string
+      user_id:
+        description: UserID of the user, who did the sport - currently set by the
+          API
+        example: 362262726221349761
+        type: integer
     required:
     - amount
     - game
     - kind
+    type: object
+  models.SportAmount:
+    properties:
+      amount:
+        example: 1238
+        type: integer
+      kind:
+        example: push-up
+        type: string
     type: object
 info:
   contact: {}
