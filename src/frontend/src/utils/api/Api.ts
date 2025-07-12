@@ -11,8 +11,9 @@ import {
   useRecentSportsStore,
   useYourRecentSportsStore,
 } from '../../zustand/RecentSportsState';
-import { GetOverdueDeathsReply } from './replies/OverdueDeaths';
+import { GetOverdueDeathsReply } from './responses/OverdueDeaths';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
+import { PostSportsResponse } from './responses/Sport';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
@@ -21,14 +22,14 @@ export interface UserApiInterface {
   fetchFriends(): Promise<FriendshipReply | null>;
   fetchStreak(): Promise<StreakData | null>;
   fetchRecentSports(
-    user_ids: string[],
+    userIds: string[],
     limit: number,
     zustand: RecentSportApi
   ): Promise<SportsApiResponse | null>;
   fetchYourRecentSports(): Promise<SportsApiResponse | null>;
   fetchAllRecentSports(): Promise<SportsApiResponse | null>;
-  deleteRecord(id: number);
-  postSports(sports: SportRow[]): Promise<PostSportsApiResponse | null>;
+  deleteRecord(id: number): Promise<SportsApiResponse | null>;
+  postSports(sports: SportRow[]): Promise<PostSportsResponse | null>;
 }
 
 // Class, to fetch resources from the backend. Responses will be
@@ -245,19 +246,20 @@ export class UserApi implements UserApiInterface {
   }
 
   /**
-   * fetches OverdueDeaths for logged in user
-   * from /api/overdue-deaths GET
+   * posts SportRow records to /api/sports
    *
    * @Note
-   * sets the useOverdueDeathsStore Zustand
+   * sets the useTotalScoreStore Zustand
    *
    * @throws Error: if the fetch fails
    *
+   * @param sports: SportRow[]: the sport records to post
+   *
    * @returns
-   * GetOverdueDeathsReply | null: the Response or null if failed
+   * PostSportResponse | null: the Response
    */
-  async getOverdueDeaths(): Promise<GetOverdueDeathsReply | null> {
-    const API_ENDPOINT = '/api/overdue-deaths';
+  async postSports(sports: SportRow[]): Promise<PostSportsResponse | null> {
+    const API_ENDPOINT = '/api/sports';
     // get user
     const user = useUserStore.getState().user;
     if (user === null) {
@@ -268,21 +270,23 @@ export class UserApi implements UserApiInterface {
     try {
       const response = await fetch(url, {
         credentials: 'include',
-        method: 'GET',
+        method: 'POST',
+        body: JSON.stringify(sports),
       });
 
       const result = await response.json();
       if (response.ok) {
         // get zustand setter
-        const setOverdueDeaths =
-          useOverdueDeathsStore.getState().setOverdueDeaths;
+        const { setAmounts, amounts } = useTotalScoreStore.getState();
 
-        // cast result
-        var reply = result as GetOverdueDeathsReply;
+        var reply = result as PostSportsResponse;
 
-        // set zustand
-        setOverdueDeaths(reply.data);
-
+        setAmounts([
+          ...amounts.filter((a) => {
+            return !reply.results.some((r) => r.kind === a.kind);
+          }),
+          ...reply.results,
+        ]);
         return reply;
       } else {
         this.logError(API_ENDPOINT, result);
