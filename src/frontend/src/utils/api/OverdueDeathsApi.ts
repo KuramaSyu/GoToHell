@@ -5,7 +5,7 @@ import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 import {
   GetOverdueDeathsReply,
   PostOverdueDeathsReply,
-} from './replies/OverdueDeaths';
+} from './responses/OverdueDeaths';
 import { PostOverdueDeathsRequest } from './requests/OverdueDeaths';
 
 // implements logError
