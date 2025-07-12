@@ -16,8 +16,8 @@ import (
 
 // swagger:response PostSportReply
 type PostSportReply struct {
-	Message string                    `json:"message"`
-	Results []models.PostSportRequest `json:"results"`
+	Message string               `json:"message"`
+	Results []models.SportAmount `json:"results"`
 }
 
 // swagger:response DelteSportReply
