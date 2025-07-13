@@ -41,7 +41,7 @@ type OverdueDeathsController struct {
 }
 
 func NewOverdueDeathsController(database *gorm.DB) *OverdueDeathsController {
-	return &OverdueDeathsController{repo: &db.GormOverdueDeathsRepository{DB: database}}
+	return &OverdueDeathsController{repo: db.NewGormOverdueDeathsRepository(database)}
 }
 
 // returns all OverdueDeaths records for the user
