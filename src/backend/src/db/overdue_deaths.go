@@ -5,6 +5,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// OverdueDeathRepository defines the interface for managing overdue deaths in the database.
+func NewGormOverdueDeathsRepository(database *gorm.DB) *GormOverdueDeathsRepository {
+	repo := &GormOverdueDeathsRepository{DB: database}
+	repo.InitRepo()
+	return repo
+}
+
 // Specific implementation of `OverdueDeathRepository` for GORM
 type GormOverdueDeathsRepository struct {
 	DB *gorm.DB
