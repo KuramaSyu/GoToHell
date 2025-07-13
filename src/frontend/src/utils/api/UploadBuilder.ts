@@ -1,3 +1,4 @@
+import { count } from 'console';
 import { DiscordUserImpl } from '../../components/DiscordLogin';
 import { useDeathAmountStore } from '../../components/NumberSlider';
 import { DefaultSportsDefinition } from '../../models/Preferences';
@@ -9,6 +10,7 @@ import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UploadError } from '../errors/UploadError';
 import { UserApi } from './Api';
+import { OverdueDeathsApi } from './OverdueDeathsApi';
 import { PostSportsResponse } from './responses/Sport';
 
 abstract class UploadStrategyABC {
@@ -17,17 +19,11 @@ abstract class UploadStrategyABC {
     this.uploadBuilder = uploadBuilder;
   }
 
-  abstract upload(): Promise<{
-    message?: string;
-    results?: SportScore[];
-  }>;
+  abstract upload(): Promise<null>;
 }
 
 class PostSportUploadStrategy extends UploadStrategyABC {
-  async upload(): Promise<{
-    message?: string;
-    results?: SportScore[];
-  }> {
+  async upload(): Promise<null> {
     const wrapped = this.uploadBuilder;
     if (!wrapped.user) {
       throw new UploadError('Please Login with Discord');
@@ -72,7 +68,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
             wrapped.updateStores(parsed_data.results); // update total scores and death amount
           }
         }
-        return parsed_data;
+        return null;
       } else {
         throw new UploadError(
           'Response was null, perhaps you are offline? This should not happen.'
@@ -85,11 +81,55 @@ class PostSportUploadStrategy extends UploadStrategyABC {
 }
 
 class OverdueDeathsUploadStrategy extends UploadStrategyABC {
-  async upload(): Promise<{
-    message?: string;
-    results?: SportScore[];
-  }> {
-    return this.uploadBuilder.upload();
+  async upload(): Promise<null> {
+    const wrapped = this.uploadBuilder;
+    if (!wrapped.user) {
+      throw new UploadError('Please Login with Discord');
+    }
+    if (wrapped.deathAmount === 0) {
+      throw new UploadError('Yeah, just upload nothing. Good idea indeed');
+    }
+
+    if (wrapped.sport === null || wrapped.sport.sport === null) {
+      throw new UploadError(
+        `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`
+      );
+    }
+
+    if (wrapped.deathAmount === null) {
+      throw new UploadError(
+        "You can't delay your exercises, if you don't have any deaths"
+      );
+    }
+
+    const startTime = new Date().getTime();
+    try {
+      const sport = new SportRow(
+        wrapped.sport.sport!,
+        wrapped.sport.game!,
+        wrapped.exerciseAmount!
+      );
+      console.timeLog(`Upload OverdueDeaths: ${sport.toJson()}`);
+      var data = await new OverdueDeathsApi().post(
+        sport.game,
+        wrapped.deathAmount
+      );
+
+      // wait artificially 1s, for upload animation
+      // Calculate elapsed time in milliseconds.
+      const elapsedTime = new Date().getTime() - startTime;
+      const minimumDuration = 1000;
+
+      // Wait for the rest of the minimum duration if necessary.
+      if (elapsedTime < minimumDuration) {
+        const remainingTime = minimumDuration - elapsedTime;
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
+
+      return null;
+    } catch (error) {
+      throw new UploadError(String(error));
+    }
   }
 }
 /**
@@ -104,6 +144,7 @@ export class UploadBuilder {
   sport: DefaultSportsDefinition | null;
   private snackbarUpdatesEnabled: boolean;
   triggerRefresh: boolean;
+  uploadStrategy: UploadStrategyABC;
 
   constructor() {
     this.user = useUserStore.getState().user;
@@ -113,6 +154,7 @@ export class UploadBuilder {
     this.exerciseAmount = null;
     this.snackbarUpdatesEnabled = false;
     this.triggerRefresh = false;
+    this.uploadStrategy = new PostSportUploadStrategy(this);
   }
 
   /**
@@ -133,6 +175,28 @@ export class UploadBuilder {
    */
   setStoreUpdate(enabled: boolean): this {
     this.triggerRefresh = enabled;
+    return this;
+  }
+
+  /**
+   * sets the upload strategy to either `postSport` or `overdueDeaths`
+   *
+   * @param uploadStrategy the upload strategy to use
+   * @returns the current UploadBuilder instance
+   */
+  setUploadStrategy(
+    uploadStrategy: 'postSport' | 'overdueDeaths'
+  ): UploadBuilder {
+    switch (uploadStrategy) {
+      case 'postSport':
+        this.uploadStrategy = new PostSportUploadStrategy(this);
+        break;
+      case 'overdueDeaths':
+        this.uploadStrategy = new OverdueDeathsUploadStrategy(this);
+        break;
+      default:
+        throw new UploadError('Unknown upload strategy');
+    }
     return this;
   }
 
