@@ -8,7 +8,90 @@ import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UploadError } from '../errors/UploadError';
+import { UserApi } from './Api';
+import { PostSportsResponse } from './responses/Sport';
 
+abstract class UploadStrategyABC {
+  uploadBuilder: UploadBuilder;
+  constructor(uploadBuilder: UploadBuilder) {
+    this.uploadBuilder = uploadBuilder;
+  }
+
+  abstract upload(): Promise<{
+    message?: string;
+    results?: SportScore[];
+  }>;
+}
+
+class PostSportUploadStrategy extends UploadStrategyABC {
+  async upload(): Promise<{
+    message?: string;
+    results?: SportScore[];
+  }> {
+    const wrapped = this.uploadBuilder;
+    if (!wrapped.user) {
+      throw new UploadError('Please Login with Discord');
+    }
+    if (wrapped.deathAmount === 0) {
+      throw new UploadError('Yeah, just upload nothing. Good idea indeed');
+    }
+
+    if (wrapped.sport === null || wrapped.sport.sport === null) {
+      throw new UploadError(
+        `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`
+      );
+    }
+    const startTime = new Date().getTime();
+    try {
+      const sport = new SportRow(
+        wrapped.sport.sport!,
+        wrapped.sport.game!,
+        wrapped.exerciseAmount!
+      );
+      console.timeLog(`Upload Sport: ${sport.toJson()}`);
+      var data = await new UserApi().postSports([sport]);
+
+      // wait artificially 1s, for upload animation
+      // Calculate elapsed time in milliseconds.
+      const elapsedTime = new Date().getTime() - startTime;
+      const minimumDuration = 1000;
+
+      // Wait for the rest of the minimum duration if necessary.
+      if (elapsedTime < minimumDuration) {
+        const remainingTime = minimumDuration - elapsedTime;
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
+      if (data !== null) {
+        const parsed_data = data;
+
+        if (parsed_data.results) {
+          // data.results is now an array of SportAmount
+          console.log(data.results);
+
+          if (wrapped.triggerRefresh) {
+            wrapped.updateStores(parsed_data.results); // update total scores and death amount
+          }
+        }
+        return parsed_data;
+      } else {
+        throw new UploadError(
+          'Response was null, perhaps you are offline? This should not happen.'
+        );
+      }
+    } catch (error) {
+      throw new UploadError(String(error));
+    }
+  }
+}
+
+class OverdueDeathsUploadStrategy extends UploadStrategyABC {
+  async upload(): Promise<{
+    message?: string;
+    results?: SportScore[];
+  }> {
+    return this.uploadBuilder.upload();
+  }
+}
 /**
  * Class for building upload step by step. `upload()` will return promise and can
  * throw errors if the payload is invalid or misses something.
@@ -20,7 +103,7 @@ export class UploadBuilder {
   private error: UploadError | null;
   sport: DefaultSportsDefinition | null;
   private snackbarUpdatesEnabled: boolean;
-  private triggerRefresh: boolean;
+  triggerRefresh: boolean;
 
   constructor() {
     this.user = useUserStore.getState().user;
@@ -128,8 +211,7 @@ export class UploadBuilder {
         this.exerciseAmount!
       );
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
-      const fut = await sport.upload();
-      const data = await fut.json();
+      var data = await new UserApi().postSports([sport]);
 
       // wait artificially 1s, for upload animation
       // Calculate elapsed time in milliseconds.
@@ -141,8 +223,8 @@ export class UploadBuilder {
         const remainingTime = minimumDuration - elapsedTime;
         await new Promise((resolve) => setTimeout(resolve, remainingTime));
       }
-      if (fut.ok) {
-        const parsed_data: { message?: string; results?: SportScore[] } = data;
+      if (data !== null) {
+        const parsed_data = data;
 
         if (parsed_data.results) {
           // data.results is now an array of SportAmount
@@ -154,7 +236,9 @@ export class UploadBuilder {
         }
         return parsed_data;
       } else {
-        throw new UploadError(await fut.text());
+        throw new UploadError(
+          'Response was null, perhaps you are offline? This should not happen.'
+        );
       }
     } catch (error) {
       throw new UploadError(String(error));
