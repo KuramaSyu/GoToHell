@@ -1,27 +1,83 @@
-import { alpha, Box, Typography } from '@mui/material';
+import { alpha, Box, darken, Typography } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
+import { PopNumber } from './PopNumber';
+import { NUMBER_FONT } from '../statics';
+import { blendWithContrast } from '../utils/blendWithContrast';
+import { useOverdueDeathsStore } from '../zustand/OverdueDeathsStore';
+import { useEffect } from 'react';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../utils/api/ApiRequirementsBuilder';
 
 export const OverdueDeaths: React.FC = () => {
   const { theme } = useThemeStore();
   const contrastColor = hexToRgb(theme.palette.secondary.contrastText);
+  const { overdueDeathsList } = useOverdueDeathsStore();
+  useEffect(() => {
+    async function init() {
+      new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .add(ApiRequirement.OverdueDeaths)
+        .fetchIfNeeded();
+    }
+    init();
+  });
   return (
     <Box
       sx={{
         display: 'flex',
-        flexShrink: 0, // Prevents shrinking
-        //alignSelf: 'flex-start', // Ensures it doesn't stretch in the parent flex container
-        borderRadius: '50%', // Makes the box a circle
-        width: '15vh',
-        height: '15vh',
-        background: `radial-gradient(circle, rgba(${contrastColor},0.5) 0%, rgba(${contrastColor},0.05) 85%, rgba(${contrastColor},0) 100%)`,
-        justifyContent: 'center', // Centers content horizontally
-        justifyItems: 'center',
-        alignItems: 'center', // Centers content vertically
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: '11vh',
         overflow: 'hidden',
-        mr: 2,
+        gap: 2,
       }}
     >
-      <Typography>129</Typography>
+      <Box
+        sx={{
+          px: 2,
+          pt: 2, // padding to align the PopNumber vertically
+
+          backgroundColor: darken(theme.palette.secondary.main, 0.4),
+          height: '11vh',
+          overflow: 'hidden',
+          borderRadius: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <PopNumber
+          value={129}
+          font={NUMBER_FONT}
+          stiffness={1000}
+          damping={300}
+          mass={1}
+          fontsize="10vh"
+          style={{
+            color: blendWithContrast(theme.palette.secondary.main, theme, 0.4),
+          }}
+        ></PopNumber>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography
+          sx={{
+            fontFamily: NUMBER_FONT,
+            fontSize: '2vh',
+          }}
+        >
+          Overdue
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: NUMBER_FONT,
+            fontSize: '2vh',
+          }}
+        >
+          deaths
+        </Typography>
+      </Box>
     </Box>
   );
 };
