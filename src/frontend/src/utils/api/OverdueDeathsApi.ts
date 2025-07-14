@@ -35,6 +35,33 @@ export class OverdueDeathsApi extends BasicApi {
     game: string,
     count: number
   ): Promise<PostOverdueDeathsReply | null> {
+    return this.postPutPatchOverdueDeaths(game, count, 'POST');
+  }
+
+  /**
+   * puts an record of OverdueDeaths for logged in user (which updates or creates it)
+   * to /api/overdue-deaths PUT
+   *
+   * @Note
+   * updates the useOverdueDeathsStore Zustand for the posted game
+   *
+   * @throws Error: if the fetch fails
+   *
+   * @returns
+   * PostOverdueDeathsReply | null: the Response or null if failed
+   */
+  async put(
+    game: string,
+    count: number
+  ): Promise<PostOverdueDeathsReply | null> {
+    return this.postPutPatchOverdueDeaths(game, count, 'PUT');
+  }
+
+  private async postPutPatchOverdueDeaths(
+    game: string,
+    count: number,
+    method: 'POST' | 'PUT' | 'PATCH'
+  ): Promise<PostOverdueDeathsReply | null> {
     const API_ENDPOINT = '/api/overdue-deaths';
     // get user
     const user = useUserStore.getState().user;
@@ -46,7 +73,7 @@ export class OverdueDeathsApi extends BasicApi {
     try {
       const response = await fetch(url, {
         credentials: 'include',
-        method: 'POST',
+        method: method,
         body: JSON.stringify({
           game: game,
           count: count,
