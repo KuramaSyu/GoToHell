@@ -9,6 +9,7 @@ import { RecentSports } from './RecentSports/TabView';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { AmountDisplay } from './AmountDisplay';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { UploadOverdueDeaths } from './UploadOverdueDeaths';
 
 interface MainContentProps {
   theme: any;
@@ -171,12 +172,24 @@ const MainContent: React.FC = () => {
           <NumberSlider withInput={theme.custom.themeName === 'custom'} />
           <Box
             sx={{
+              position: 'relative',
               display: 'flex',
               // flexDirection: 'row',
               justifyContent: 'center',
             }}
           >
             <UploadScore />
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: -35,
+                right: 25,
+
+                zIndex: 1,
+              }}
+            >
+              <UploadOverdueDeaths></UploadOverdueDeaths>
+            </Box>
           </Box>
         </Box>
         <Box
