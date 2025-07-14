@@ -49,7 +49,10 @@ export const OverdueDeaths: React.FC = () => {
         }}
       >
         <PopNumber
-          value={129}
+          value={
+            overdueDeathsList.find((x) => x.game === theme.custom.themeName)
+              ?.count ?? 0
+          }
           font={NUMBER_FONT}
           stiffness={1000}
           damping={300}
