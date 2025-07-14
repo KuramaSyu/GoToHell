@@ -63,10 +63,10 @@ export const UploadScore = () => {
       }
       setSnackbarState('uploaded');
 
-      if (parsed_data.results) {
-        // data.results is now an array of SportAmount
-        uploadBuilder.updateStores(parsed_data.results);
-      }
+      // if (parsed_data.results) {
+      //   // data.results is now an array of SportAmount
+      //   uploadBuilder.updateStores(parsed_data.results);
+      // }
     } catch (e) {
       // handle uplaod error - description is in error included
       setSnackbarState('failed');
