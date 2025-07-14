@@ -14,7 +14,7 @@ import SportRow, { SportScore } from '../models/Sport';
 import useErrorStore from '../zustand/Error';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
-import AnimatedButton from './AnimatedButton';
+import AnimatedButton, { AnimatedRoundBtn } from './AnimatedButton';
 import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import useCalculatorStore from '../zustand/CalculatorStore';
 import { useThemeStore } from '../zustand/useThemeStore';
@@ -44,7 +44,9 @@ export const UploadOverdueDeaths = () => {
   const OnUploadClick = async () => {
     try {
       const startTime = new Date().getTime();
-      const uploadBuilder = UploadBuilder.default().setStoreUpdate(false);
+      const uploadBuilder = UploadBuilder.default()
+        .setUploadStrategy('overdueDeaths')
+        .setStoreUpdate(false);
 
       setSnackbarState('uploading');
 
@@ -85,12 +87,21 @@ export const UploadOverdueDeaths = () => {
   const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
 
   return (
-    <Box>
-      <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
+    <Box
+      sx={{
+        width: '100px',
+        height: '100px',
+        borderRadius: '50%',
+        overflow: 'hidden',
+      }}
+    >
+      <AnimatedRoundBtn onClick={OnUploadClick} duration={DURATION} circular>
         <Box
           sx={{
             px: 1,
             py: 1,
+            width: '60px',
+            height: '60px',
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
@@ -99,7 +110,7 @@ export const UploadOverdueDeaths = () => {
         >
           <SnoozeIcon></SnoozeIcon>
         </Box>
-      </AnimatedButton>
+      </AnimatedRoundBtn>
       <Snackbar
         open={snackbarState != null}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
