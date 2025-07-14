@@ -125,7 +125,7 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
         wrapped.exerciseAmount!
       );
       console.timeLog(`Upload OverdueDeaths: ${sport.toJson()}`);
-      var data = await new OverdueDeathsApi().post(
+      var data = await new OverdueDeathsApi().put(
         sport.game,
         wrapped.deathAmount
       );
