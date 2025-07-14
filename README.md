@@ -38,9 +38,12 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - Sport.tsx: POST api/sports
 - [ ] separate repository for background pictures
 - [ ] OverdueDeaths:
-  - Add to utils/api
-  - Add zustand
-  - Add to ApiRequirements
+  - fix backend PUT:
+    ```
+    2025/07/14 21:26:05 C:/Users/paulz/OneDrive/Dokumente/GitHub/GoToHell/src/backend/src/db/overdue_deaths.go:60 UNIQUE constraint failed: overdue_deaths.user_id, overdue_deaths.game
+    [0.498ms] [rows:0] INSERT INTO `overdue_deaths` (`user_id`,`game`,`count`) VALUES (362262726191349761,"overwatch",12)
+    ```
+  - add option in frontend, to add to the existing number rather then replacing it
 
 #### Features
 
