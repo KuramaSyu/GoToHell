@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
@@ -19,7 +20,7 @@ type GetOverdueDeathsReply struct {
 // swagger:model PostOverdueDeathsRequest
 type PostOverdueDeathsRequest struct {
 	Game  string `json:"game" binding:"required" example:"overwatch"`
-	Count int64  `json:"count" binding:"required" example:"42"`
+	Count int64  `json:"count" binding:"gte=0" example:"42"`
 }
 
 // PostOverdueDeathsReply is the reply sent when doing [post] /overdue-deaths
@@ -127,7 +128,7 @@ func HandleCreation(
 
 	var req PostOverdueDeathsRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		SetGinError(c, http.StatusBadRequest, err)
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid JSON format: %w", err))
 		return
 	}
 
@@ -171,6 +172,6 @@ func (oc *OverdueDeathsController) Delete(c *gin.Context) {
 }
 
 func SetGinError(c *gin.Context, status int, err error) {
-	c.JSON(status, gin.H{"error": err})
+	c.JSON(status, gin.H{"error": err.Error()})
 
 }
