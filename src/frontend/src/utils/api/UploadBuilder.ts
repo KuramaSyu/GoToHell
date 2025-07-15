@@ -23,16 +23,20 @@ abstract class UploadStrategyABC {
 }
 
 class PostSportUploadStrategy extends UploadStrategyABC {
+  result: PostSportsResponse | null = null;
+
   /**
    * updates the zustand stores:
    * - `TotalScoreStore` to refresh the total scores `results`
    * - `DeathAmountStore` to reset the death amount to 0
+   *
+   * for updating it uses the private `result` variable which is set during the upload
    */
-  updateStores(results: SportScore[] | null): void {
+  updateStores() {
     // TODO: this also triggers timeline to update
     // recent activities. make better with websocket
-    if (results !== null) {
-      useTotalScoreStore.getState().setAmounts(results);
+    if (this.result !== null) {
+      useTotalScoreStore.getState().setAmounts(this.result.results);
       useTotalScoreStore.getState().triggerRefresh(); // update total scores
     }
     useDeathAmountStore.getState().setAmount(0);
@@ -72,18 +76,14 @@ class PostSportUploadStrategy extends UploadStrategyABC {
         const remainingTime = minimumDuration - elapsedTime;
         await new Promise((resolve) => setTimeout(resolve, remainingTime));
       }
+
+      // save result and maybe call updateStores
       if (data !== null) {
-        const parsed_data = data;
+        this.result = data;
 
-        if (parsed_data.results) {
-          // data.results is now an array of SportAmount
-          console.log(data.results);
-
-          if (wrapped.triggerRefresh) {
-            this.updateStores(parsed_data.results); // update total scores and death amount
-          }
+        if (this.result.results && wrapped.triggerRefresh) {
+          this.updateStores(); // update total scores and death amount
         }
-        return null;
       } else {
         throw new UploadError(
           'Response was null, perhaps you are offline? This should not happen.'
@@ -92,6 +92,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
     } catch (error) {
       throw new UploadError(String(error));
     }
+    return null;
   }
 }
 
