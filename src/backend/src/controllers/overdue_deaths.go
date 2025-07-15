@@ -81,7 +81,7 @@ func (oc *OverdueDeathsController) Get(c *gin.Context) {
 // @Failure 400 {object} ErrorReply
 // @Router /api/overdue-deaths [post]
 func (oc *OverdueDeathsController) Post(c *gin.Context) {
-	HandleCreation(c, oc.repo.SetCount)
+	HandleCreation(c, oc.repo.CreateCount)
 }
 
 // @Summary Creates or updates the death <count> for the given <game> of the logged in user
@@ -94,7 +94,7 @@ func (oc *OverdueDeathsController) Post(c *gin.Context) {
 // @Failure 400 {object} ErrorReply
 // @Router /api/overdue-deaths [put]
 func (oc *OverdueDeathsController) Put(c *gin.Context) {
-	HandleCreation(c, oc.repo.CreateCount)
+	HandleCreation(c, oc.repo.SetCount)
 }
 
 // @Summary Updates (only) the death <count> for the given <game> of the logged in user
