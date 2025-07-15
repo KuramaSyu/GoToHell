@@ -5,6 +5,7 @@ import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
 import { OverdueDeaths } from '../OverdueDeaths';
+import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 
 export const SecondaryTabView: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -12,23 +13,51 @@ export const SecondaryTabView: React.FC = () => {
   const { calculator } = useCalculatorStore();
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountStore();
+  const { overdueDeathsList } = useOverdueDeathsStore();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
+
+  const currentOverdueDeaths =
+    overdueDeathsList.find((x) => x.game === currentSport.game) || null;
+
+  var amountOfTabs = 0;
+  if (!isXL) amountOfTabs += 1;
+  if (currentOverdueDeaths) amountOfTabs += 1;
+
+  if (amountOfTabs === 0) {
+    return null;
+  }
+
+  if (amountOfTabs === 1) {
+  }
+
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        flexShrink: 1,
+        flexGrow: 0,
+        alignItems: 'center',
+      }}
+    >
       <Tabs
         onChange={handleChange}
         value={activeTab}
         textColor="primary"
         indicatorColor="primary"
+        centered
         sx={{
           backgroundColor: alpha('#000000', 0.2),
           borderRadius: '50px',
           padding: '5px',
           backdropFilter: 'blur(10px)',
           p: 1,
+          px: 3,
+          width: 'fit-content',
         }}
       >
         <Tab
