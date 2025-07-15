@@ -41,9 +41,16 @@ export class OverdueDeathsApi extends BasicApi {
     incrementLogic: (currentCount: number, count: number) => number = (
       currentCount,
       count
-    ) => currentCount + count
+    ) => currentCount + count,
+    updateStores: boolean = true
   ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(game, count, incrementLogic, 'POST');
+    return this.postPutPatchOverdueDeaths(
+      game,
+      count,
+      incrementLogic,
+      updateStores,
+      'POST'
+    );
   }
 
   /**
@@ -68,9 +75,16 @@ export class OverdueDeathsApi extends BasicApi {
     incrementLogic: (currentCount: number, count: number) => number = (
       currentCount,
       count
-    ) => currentCount + count
+    ) => currentCount + count,
+    updateStores: boolean = true
   ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(game, count, incrementLogic, 'PUT');
+    return this.postPutPatchOverdueDeaths(
+      game,
+      count,
+      incrementLogic,
+      updateStores,
+      'PUT'
+    );
   }
 
   private async postPutPatchOverdueDeaths(
@@ -80,6 +94,7 @@ export class OverdueDeathsApi extends BasicApi {
       currentCount,
       count
     ) => currentCount + count,
+    updateStores: boolean = true,
     method: 'POST' | 'PUT' | 'PATCH'
   ): Promise<PostOverdueDeathsReply | null> {
     const API_ENDPOINT = '/api/overdue-deaths';
@@ -116,12 +131,14 @@ export class OverdueDeathsApi extends BasicApi {
         // cast result
         var reply = result as PostOverdueDeathsReply;
 
-        // update zustand for the new game
-        const prev = useOverdueDeathsStore.getState().overdueDeathsList;
-        setOverdueDeaths([
-          ...prev.filter((p) => p.game !== reply.data.game),
-          reply.data,
-        ]);
+        if (updateStores) {
+          // update zustand for the new game
+          const prev = useOverdueDeathsStore.getState().overdueDeathsList;
+          setOverdueDeaths([
+            ...prev.filter((p) => p.game !== reply.data.game),
+            reply.data,
+          ]);
+        }
 
         return reply;
       } else {
