@@ -34,9 +34,12 @@ export class OverdueDeathsApi extends BasicApi {
   async post(
     game: string,
     count: number,
-    incrementCount: boolean = true
+    incrementLogic: (currentCount: number, count: number) => number = (
+      currentCount,
+      count
+    ) => currentCount + count
   ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(game, count, incrementCount, 'POST');
+    return this.postPutPatchOverdueDeaths(game, count, incrementLogic, 'POST');
   }
 
   /**
@@ -54,15 +57,21 @@ export class OverdueDeathsApi extends BasicApi {
   async put(
     game: string,
     count: number,
-    incrementCount: boolean = true
+    incrementLogic: (currentCount: number, count: number) => number = (
+      currentCount,
+      count
+    ) => currentCount + count
   ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(game, count, incrementCount, 'PUT');
+    return this.postPutPatchOverdueDeaths(game, count, incrementLogic, 'PUT');
   }
 
   private async postPutPatchOverdueDeaths(
     game: string,
     count: number,
-    incrementCount: boolean = true,
+    incrementLogic: (currentCount: number, count: number) => number = (
+      currentCount,
+      count
+    ) => currentCount + count,
     method: 'POST' | 'PUT' | 'PATCH'
   ): Promise<PostOverdueDeathsReply | null> {
     const API_ENDPOINT = '/api/overdue-deaths';
@@ -86,7 +95,7 @@ export class OverdueDeathsApi extends BasicApi {
         method: method,
         body: JSON.stringify({
           game: game,
-          count: incrementCount ? count + currentCount : count,
+          count: incrementLogic(currentCount, count),
         } as PostOverdueDeathsRequest),
       });
 
