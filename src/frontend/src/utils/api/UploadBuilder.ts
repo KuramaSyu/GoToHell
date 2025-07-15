@@ -59,6 +59,17 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       ]);
       useTotalScoreStore.getState().triggerRefresh(); // update total scores
     }
+    if (this.overdueDeathsResult !== null) {
+      // update overdue deaths
+      const overdueDeaths = this.overdueDeathsResult.data;
+      const setOverdueDeaths =
+        useOverdueDeathsStore.getState().setOverdueDeaths;
+      const prev = useOverdueDeathsStore.getState().overdueDeathsList;
+      setOverdueDeaths([
+        ...prev.filter((p) => p.game !== overdueDeaths.game),
+        overdueDeaths,
+      ]);
+    }
     useDeathAmountStore.getState().setAmount(0);
   }
 
@@ -100,7 +111,8 @@ class PostSportUploadStrategy extends UploadStrategyABC {
           wrapped.deathAmount!,
           (currentCount: number, count: number) => {
             return Math.max(currentCount - count, 0);
-          }
+          },
+          false
         );
       }
 
@@ -132,7 +144,21 @@ class PostSportUploadStrategy extends UploadStrategyABC {
 }
 
 class OverdueDeathsUploadStrategy extends UploadStrategyABC {
+  overdueDeathsResult: PostOverdueDeathsReply | null = null;
+
   updateStores(): void {
+    if (this.overdueDeathsResult !== null) {
+      // update overdue deaths
+      const overdueDeaths = this.overdueDeathsResult.data;
+      const setOverdueDeaths =
+        useOverdueDeathsStore.getState().setOverdueDeaths;
+      const prev = useOverdueDeathsStore.getState().overdueDeathsList;
+      setOverdueDeaths([
+        ...prev.filter((p) => p.game !== overdueDeaths.game),
+        overdueDeaths,
+      ]);
+    }
+
     useDeathAmountStore.getState().setAmount(0);
   }
 
@@ -164,9 +190,16 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
         wrapped.exerciseAmount!
       );
       console.timeLog(`Upload OverdueDeaths: ${sport.toJson()}`);
-      var data = await new OverdueDeathsApi().put(
+
+      // upload overdue deaths
+      this.overdueDeathsResult = await new OverdueDeathsApi().put(
         sport.game,
-        wrapped.deathAmount
+        wrapped.deathAmount,
+        (currentCount: number, count: number) => {
+          // lambda for increment logic
+          return currentCount + count;
+        },
+        false // do not update stores here, hence it will be done later
       );
 
       return null;
