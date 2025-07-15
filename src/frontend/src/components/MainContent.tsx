@@ -170,25 +170,28 @@ const MainContent: React.FC = () => {
           }}
         >
           <NumberSlider withInput={theme.custom.themeName === 'custom'} />
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              // flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
-            <UploadScore />
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
-                position: 'absolute',
-                bottom: -35,
-                right: 25,
-
-                zIndex: 1,
+                position: 'relative',
+                display: 'flex',
+                // flexDirection: 'row',
+                justifyContent: 'center',
+                width: 'fit-content',
               }}
             >
-              <UploadOverdueDeaths></UploadOverdueDeaths>
+              <UploadScore />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: '-30%',
+                  right: '-12%',
+
+                  zIndex: 1,
+                }}
+              >
+                <UploadOverdueDeaths></UploadOverdueDeaths>
+              </Box>
             </Box>
           </Box>
         </Box>
