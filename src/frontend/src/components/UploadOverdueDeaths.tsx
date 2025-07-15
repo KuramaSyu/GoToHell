@@ -24,6 +24,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import { UploadBuilder } from '../utils/api/UploadBuilder';
 import { UploadError } from '../utils/errors/UploadError';
 import SnoozeIcon from '@mui/icons-material/Snooze';
+import { clamp } from 'date-fns';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
@@ -48,22 +49,16 @@ export const UploadOverdueDeaths = () => {
         .setUploadStrategy('overdueDeaths')
         .setStoreUpdate(false);
 
-      setSnackbarState('uploading');
+      //setSnackbarState('uploading');
 
       // set timer to wait arteficially 1s, for upload animation
-      const minimumDuration = 1000;
-      const parsed_data = await uploadBuilder.upload();
-      const elapsedTime = new Date().getTime() - startTime;
+      await uploadBuilder.upload();
+      uploadBuilder.updateStores();
 
-      // Wait for the rest of the minimum duration if necessary.
-      if (elapsedTime < minimumDuration) {
-        const remainingTime = minimumDuration - elapsedTime;
-        await new Promise((resolve) => setTimeout(resolve, remainingTime));
-      }
-      setSnackbarState('uploaded');
+      //setSnackbarState('uploaded');
     } catch (e) {
       // handle uplaod error - description is in error included
-      setSnackbarState('failed');
+      //setSnackbarState('failed');
       setErrorMessage(String(e));
     }
 
@@ -87,31 +82,23 @@ export const UploadOverdueDeaths = () => {
   const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
 
   return (
-    <Box
-      sx={{
-        width: '100px',
-        height: '100px',
-        borderRadius: '50%',
-        overflow: 'hidden',
-      }}
-    >
-      <AnimatedRoundBtn onClick={OnUploadClick} duration={DURATION} circular>
-        <Box
-          sx={{
-            px: 1,
-            py: 1,
-            width: '60px',
-            height: '60px',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 2,
-          }}
-        >
-          <SnoozeIcon></SnoozeIcon>
-        </Box>
-      </AnimatedRoundBtn>
-      <Snackbar
+    <Box>
+      <Box
+        sx={{
+          width: '70px',
+          height: '70px',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          fontSize: '5rem',
+        }}
+      >
+        <AnimatedRoundBtn onClick={OnUploadClick} duration={DURATION} circular>
+          <Box sx={{ fontSize: 'clamp(2rem, 4vh, 6rem)' }}>
+            <SnoozeIcon fontSize="inherit"></SnoozeIcon>
+          </Box>
+        </AnimatedRoundBtn>
+      </Box>
+      {/* <Snackbar
         open={snackbarState != null}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         slotProps={{
@@ -137,7 +124,7 @@ export const UploadOverdueDeaths = () => {
             'Failed!'
           )
         }
-      />
+      /> */}
     </Box>
   );
 };
