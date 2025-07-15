@@ -38,7 +38,7 @@ export const RecentSports = () => {
         flexDirection="column"
         justifyContent="left"
         alignContent="left"
-        sx={{ width: 7 / 10 }}
+        sx={{ width: 2 / 3 }}
       >
         <Box display="flex" justifyContent="center">
           <Tabs
@@ -86,7 +86,9 @@ export const RecentSports = () => {
           )}
         </Box>
       </Box>
-      <SecondaryTabView></SecondaryTabView>
+      <Box sx={{ width: 1 / 3 }}>
+        <SecondaryTabView></SecondaryTabView>
+      </Box>
     </Box>
   );
 };
