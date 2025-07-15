@@ -1,6 +1,6 @@
 import { Button, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
-import { styled } from '@mui/system';
+import { darken, keyframes, styled } from '@mui/system';
 import { ReactNode } from 'react';
 
 interface AnimatedButtonProps {
@@ -28,17 +28,7 @@ const AnimatedButton = ({
     color: theme.palette.common.white,
     fontWeight: 'bold',
     background: isAnimationActive
-      ? circular
-        ? `conic-gradient(from 0deg, 
-            ${theme.palette.secondary.light}, 
-            ${theme.palette.secondary.main}, 
-            ${theme.palette.secondary.dark}, 
-            ${theme.palette.primary.light}, 
-            ${theme.palette.primary.main}, 
-            ${theme.palette.primary.dark}, 
-            ${theme.palette.secondary.light}
-            )`
-        : `linear-gradient(90deg, 
+      ? `linear-gradient(90deg, 
           ${theme.palette.secondary.light}, 
           ${theme.palette.secondary.main}, 
           ${theme.palette.secondary.dark}, 
@@ -64,6 +54,7 @@ const AnimatedButton = ({
         : {})}
       variant={isAnimationActive ? 'contained' : 'outlined'}
       onClick={onClick}
+      disabled={!isAnimationActive}
     >
       {children}
     </AnimatedBtn>
@@ -79,41 +70,67 @@ export const AnimatedRoundBtn = ({
 
   const isAnimationActive = duration !== 0;
 
+  const spin = keyframes`
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  `;
+
   const RoundBtn = styled(motion.create(Button))({
     position: 'relative',
     overflow: 'hidden',
     width: '100%',
     height: '100%',
     borderRadius: '50%',
-    borderWidth: '3px',
+    border: 'none',
     color: theme.palette.common.white,
     fontWeight: 'bold',
-    background: isAnimationActive
-      ? `conic-gradient(from 0deg, 
-          ${theme.palette.secondary.light}, 
-          ${theme.palette.secondary.main}, 
-          ${theme.palette.secondary.dark}, 
-          ${theme.palette.primary.light}, 
-          ${theme.palette.primary.main}, 
-          ${theme.palette.primary.dark}, 
-          ${theme.palette.secondary.light}
-          )`
-      : 'transparent',
+    background: 'transparent', // The button itself is transparent
+    // Ensure children are on top of pseudo-elements
+    '& > *': {
+      zIndex: 2,
+      position: 'relative', // Ensure children stay on top
+    },
+    // Spinning gradient ring
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: `conic-gradient(
+        ${theme.palette.primary.main},
+        ${theme.palette.secondary.main},
+        ${theme.palette.primary.dark},
+        ${theme.palette.secondary.dark},
+        ${theme.palette.primary.main}
+      )`,
+      zIndex: 0,
+      animation: isAnimationActive
+        ? `${spin} ${duration}s ease infinite`
+        : 'none',
+    },
+    // Solid black center circle
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      top: '0px',
+      left: '0px',
+      right: '0px',
+      bottom: '0px',
+      background:
+        'radial-gradient(circle, rgba(0,0,0,0.7) 0%,  rgba(0,0,0,0) 65%)',
+      borderRadius: '50%',
+      zIndex: 1,
+    },
   });
 
   return (
-    <RoundBtn
-      {...(isAnimationActive
-        ? {
-            animate: {
-              backgroundPosition: ['0% 50%', '100% 50%', '200% 50%', '0% 50%'],
-            },
-            transition: { duration, repeat: Infinity, ease: 'linear' },
-          }
-        : {})}
-      variant={isAnimationActive ? 'contained' : 'outlined'}
-      onClick={onClick}
-    >
+    <RoundBtn onClick={onClick} disabled={!isAnimationActive}>
       {children}
     </RoundBtn>
   );
