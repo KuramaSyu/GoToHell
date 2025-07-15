@@ -26,6 +26,10 @@ export class OverdueDeathsApi extends BasicApi {
    * @Note
    * updates the useOverdueDeathsStore Zustand for the posted game
    *
+   * @param game: the game name
+   * @param count: the count of overdue deaths to add
+   * @param incrementLogic: a callback function, for calculating the new count, using the current count and the passed count
+   *
    * @throws Error: if the fetch fails
    *
    * @returns
@@ -48,6 +52,10 @@ export class OverdueDeathsApi extends BasicApi {
    *
    * @Note
    * updates the useOverdueDeathsStore Zustand for the posted game
+   *
+   * @param game: the game name
+   * @param count: the count of overdue deaths to add
+   * @param incrementLogic: a callback function, for calculating the new count, using the current count and the passed count
    *
    * @throws Error: if the fetch fails
    *
