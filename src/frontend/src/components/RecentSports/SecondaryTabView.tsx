@@ -1,5 +1,5 @@
 import { alpha, Box, Tab, Tabs } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useSportStore } from '../../useSportStore';
@@ -19,8 +19,19 @@ export const SecondaryTabView: React.FC = () => {
     setActiveTab(newValue);
   };
 
+  useEffect(() => {
+    const currentOverdueDeaths =
+      overdueDeathsList.find((x) => x.game === currentSport.game) || null;
+    if (currentOverdueDeaths && currentOverdueDeaths.count > 0) {
+      setActiveTab(0);
+    } else if (!isXL) {
+      setActiveTab(1);
+    }
+  }, [currentSport, overdueDeathsList]);
   const currentOverdueDeaths =
-    overdueDeathsList.find((x) => x.game === currentSport.game) || null;
+    overdueDeathsList.find(
+      (x) => x.game === currentSport.game && x.count > 0
+    ) || null;
 
   var amountOfTabs = 0;
   if (!isXL) amountOfTabs += 1;
