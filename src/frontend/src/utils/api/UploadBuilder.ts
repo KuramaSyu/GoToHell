@@ -65,7 +65,6 @@ class PostSportUploadStrategy extends UploadStrategyABC {
         `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`
       );
     }
-    const startTime = new Date().getTime();
     try {
       const sport = new SportRow(
         wrapped.sport.sport!,
@@ -118,7 +117,6 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
       );
     }
 
-    const startTime = new Date().getTime();
     try {
       const sport = new SportRow(
         wrapped.sport.sport!,
