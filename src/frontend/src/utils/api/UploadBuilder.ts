@@ -75,17 +75,6 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
       var data = await new UserApi().postSports([sport]);
 
-      // wait artificially 1s, for upload animation
-      // Calculate elapsed time in milliseconds.
-      const elapsedTime = new Date().getTime() - startTime;
-      const minimumDuration = 1000;
-
-      // Wait for the rest of the minimum duration if necessary.
-      if (elapsedTime < minimumDuration) {
-        const remainingTime = minimumDuration - elapsedTime;
-        await new Promise((resolve) => setTimeout(resolve, remainingTime));
-      }
-
       // save result and maybe call updateStores
       if (data !== null) {
         this.result = data;
@@ -141,17 +130,6 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
         sport.game,
         wrapped.deathAmount
       );
-
-      // wait artificially 1s, for upload animation
-      // Calculate elapsed time in milliseconds.
-      const elapsedTime = new Date().getTime() - startTime;
-      const minimumDuration = 1000;
-
-      // Wait for the rest of the minimum duration if necessary.
-      if (elapsedTime < minimumDuration) {
-        const remainingTime = minimumDuration - elapsedTime;
-        await new Promise((resolve) => setTimeout(resolve, remainingTime));
-      }
 
       return null;
     } catch (error) {
