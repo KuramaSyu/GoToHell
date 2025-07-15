@@ -5,6 +5,7 @@ import {
   Snackbar,
   CircularProgress,
   useMediaQuery,
+  darken,
 } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
@@ -39,6 +40,7 @@ export const UploadOverdueDeaths = () => {
   const { calculator } = useCalculatorStore();
   const { uploadTrigger } = useUploadStore();
   const { isMobile } = useBreakpoint();
+  const { theme } = useThemeStore();
 
   // for triggers coming from outside (eg shortcut modal)
 
@@ -79,8 +81,8 @@ export const UploadOverdueDeaths = () => {
     currentSport.game!,
     amount
   );
-  const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
-
+  const duration = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
+  const isAnimationActive = duration !== 0;
   return (
     <Box>
       <Box
@@ -92,8 +94,15 @@ export const UploadOverdueDeaths = () => {
           fontSize: '5rem',
         }}
       >
-        <AnimatedRoundBtn onClick={OnUploadClick} duration={DURATION} circular>
-          <Box sx={{ fontSize: 'clamp(2rem, 4vh, 6rem)' }}>
+        <AnimatedRoundBtn onClick={OnUploadClick} duration={duration} circular>
+          <Box
+            sx={{
+              fontSize: 'clamp(2rem, 4vh, 6rem)',
+              color: isAnimationActive
+                ? darken(theme.palette.primary.main, 0.1)
+                : darken(theme.palette.primary.main, 0.3),
+            }}
+          >
             <SnoozeIcon fontSize="inherit"></SnoozeIcon>
           </Box>
         </AnimatedRoundBtn>
