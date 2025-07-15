@@ -5,6 +5,7 @@ import {
   Snackbar,
   CircularProgress,
   useMediaQuery,
+  darken,
 } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
@@ -37,6 +38,7 @@ export const UploadScore = () => {
   const { calculator } = useCalculatorStore();
   const { uploadTrigger } = useUploadStore();
   const { isMobile } = useBreakpoint();
+  const { theme } = useThemeStore();
 
   // for triggers coming from outside (eg shortcut modal)
   useEffect(() => {
@@ -99,6 +101,10 @@ export const UploadScore = () => {
 
           height: '60%',
           flexGrow: 1,
+          color:
+            DURATION !== 0
+              ? darken(theme.palette.primary.main, 0.1)
+              : darken(theme.palette.primary.main, 0.3),
         }}
       >
         <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
@@ -118,6 +124,10 @@ export const UploadScore = () => {
             flexDirection: 'row',
             alignItems: 'center',
             gap: 2,
+            color:
+              DURATION !== 0
+                ? 'inherit'
+                : darken(theme.palette.primary.main, 0.3),
           }}
         >
           <Typography sx={{ fontSize: '3vh' }} fontWeight="bold">
