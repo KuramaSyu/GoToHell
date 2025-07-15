@@ -19,6 +19,15 @@ abstract class UploadStrategyABC {
     this.uploadBuilder = uploadBuilder;
   }
 
+  /**
+   * updates the zustand stores after the upload is done.
+   */
+  abstract updateStores(): void;
+
+  /**
+   * uploads the data to the server and returns a promise.
+   * @throws UploadError if the upload fails
+   */
   abstract upload(): Promise<null>;
 }
 
@@ -97,6 +106,8 @@ class PostSportUploadStrategy extends UploadStrategyABC {
 }
 
 class OverdueDeathsUploadStrategy extends UploadStrategyABC {
+  updateStores(): void {}
+
   async upload(): Promise<null> {
     const wrapped = this.uploadBuilder;
     if (!wrapped.user) {
