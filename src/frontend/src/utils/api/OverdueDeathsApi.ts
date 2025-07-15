@@ -33,9 +33,10 @@ export class OverdueDeathsApi extends BasicApi {
    */
   async post(
     game: string,
-    count: number
+    count: number,
+    incrementCount: boolean = true
   ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(game, count, 'POST');
+    return this.postPutPatchOverdueDeaths(game, count, incrementCount, 'POST');
   }
 
   /**
@@ -52,23 +53,32 @@ export class OverdueDeathsApi extends BasicApi {
    */
   async put(
     game: string,
-    count: number
+    count: number,
+    incrementCount: boolean = true
   ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(game, count, 'PUT');
+    return this.postPutPatchOverdueDeaths(game, count, incrementCount, 'PUT');
   }
 
   private async postPutPatchOverdueDeaths(
     game: string,
     count: number,
+    incrementCount: boolean = true,
     method: 'POST' | 'PUT' | 'PATCH'
   ): Promise<PostOverdueDeathsReply | null> {
     const API_ENDPOINT = '/api/overdue-deaths';
     // get user
     const user = useUserStore.getState().user;
+
     if (user === null) {
       return null;
     }
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
+
+    // check current count or 0 if not found
+    const currentCount =
+      useOverdueDeathsStore
+        .getState()
+        .overdueDeathsList.find((x) => x.game === game)?.count || 0;
 
     try {
       const response = await fetch(url, {
@@ -76,7 +86,7 @@ export class OverdueDeathsApi extends BasicApi {
         method: method,
         body: JSON.stringify({
           game: game,
-          count: count,
+          count: incrementCount ? count + currentCount : count,
         } as PostOverdueDeathsRequest),
       });
 
