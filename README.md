@@ -57,6 +57,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [ ] Show all multipliers in the settings
 - [ ] better animate TimeDisplay
 - [ ] add time (seconds) parameter to setErrorMessage. Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
+- [ ] OverdueDeaths: open a modal when clicking on it, which shows all overdueDeaths for all games
 
 #### Perf
 
