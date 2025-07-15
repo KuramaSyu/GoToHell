@@ -6,6 +6,7 @@ import {
   CircularProgress,
   useMediaQuery,
   darken,
+  lighten,
 } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
@@ -82,7 +83,7 @@ export const UploadOverdueDeaths = () => {
             sx={{
               fontSize: 'clamp(2rem, 4vh, 6rem)',
               color: isAnimationActive
-                ? blendWithContrast(theme.palette.primary.main, theme, 0.3)
+                ? lighten(theme.palette.primary.main, 0.1)
                 : darken(theme.palette.primary.main, 0.2),
             }}
           >
