@@ -12,6 +12,8 @@ import { UploadError } from '../errors/UploadError';
 import { UserApi } from './Api';
 import { OverdueDeathsApi } from './OverdueDeathsApi';
 import { PostSportsResponse } from './responses/Sport';
+import { PostOverdueDeathsReply } from './responses/OverdueDeaths';
+import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 
 abstract class UploadStrategyABC {
   uploadBuilder: UploadBuilder;
@@ -33,6 +35,7 @@ abstract class UploadStrategyABC {
 
 class PostSportUploadStrategy extends UploadStrategyABC {
   result: PostSportsResponse | null = null;
+  overdueDeathsResult: null | PostOverdueDeathsReply = null;
 
   /**
    * updates the zustand stores:
@@ -73,6 +76,11 @@ class PostSportUploadStrategy extends UploadStrategyABC {
         `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`
       );
     }
+
+    const overdueDeaths =
+      useOverdueDeathsStore
+        .getState()
+        .overdueDeathsList.find((x) => x.game === wrapped.sport?.game) || null;
     try {
       const sport = new SportRow(
         wrapped.sport.sport!,
@@ -80,7 +88,29 @@ class PostSportUploadStrategy extends UploadStrategyABC {
         wrapped.exerciseAmount!
       );
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
-      var data = await new UserApi().postSports([sport], false);
+
+      // upload sport row
+      var uploadPromise = new UserApi().postSports([sport], false);
+
+      // upload updated overdue deaths
+      var overdueDeathsPromise = new Promise((resolve) => resolve(null));
+      if (overdueDeaths !== null) {
+        overdueDeathsPromise = new OverdueDeathsApi().put(
+          sport.game,
+          wrapped.deathAmount!,
+          (currentCount: number, count: number) => {
+            return Math.max(currentCount - count, 0);
+          }
+        );
+      }
+
+      // run both uploads in parallel
+      const [data, overdueDeathsData] = await Promise.all([
+        uploadPromise,
+        overdueDeathsPromise,
+      ]);
+
+      this.overdueDeathsResult = overdueDeathsData as PostOverdueDeathsReply;
 
       // save result and maybe call updateStores
       if (data !== null) {
@@ -102,7 +132,9 @@ class PostSportUploadStrategy extends UploadStrategyABC {
 }
 
 class OverdueDeathsUploadStrategy extends UploadStrategyABC {
-  updateStores(): void {}
+  updateStores(): void {
+    useDeathAmountStore.getState().setAmount(0);
+  }
 
   async upload(): Promise<null> {
     const wrapped = this.uploadBuilder;
@@ -277,5 +309,12 @@ export class UploadBuilder {
       throw this.error;
     }
     return null;
+  }
+
+  /**
+   * calls the `updateStores` method from the selected upload strategy.
+   */
+  updateStores(): void {
+    this.uploadStrategy.updateStores();
   }
 }
