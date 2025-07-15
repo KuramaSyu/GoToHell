@@ -53,7 +53,7 @@ export const UploadScore = () => {
 
       // set timer to wait arteficially 1s, for upload animation
       const minimumDuration = 1000;
-      const parsed_data = await uploadBuilder.upload();
+      await uploadBuilder.upload();
       const elapsedTime = new Date().getTime() - startTime;
 
       // Wait for the rest of the minimum duration if necessary.

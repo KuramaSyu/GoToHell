@@ -45,7 +45,15 @@ class PostSportUploadStrategy extends UploadStrategyABC {
     // TODO: this also triggers timeline to update
     // recent activities. make better with websocket
     if (this.result !== null) {
-      useTotalScoreStore.getState().setAmounts(this.result.results);
+      const reply = this.result;
+      const { amounts, setAmounts } = useTotalScoreStore.getState();
+      // update total scores
+      setAmounts([
+        ...amounts.filter((a) => {
+          return !reply.results.some((r) => r.kind === a.kind);
+        }),
+        ...reply.results,
+      ]);
       useTotalScoreStore.getState().triggerRefresh(); // update total scores
     }
     useDeathAmountStore.getState().setAmount(0);
@@ -72,7 +80,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
         wrapped.exerciseAmount!
       );
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
-      var data = await new UserApi().postSports([sport]);
+      var data = await new UserApi().postSports([sport], false);
 
       // save result and maybe call updateStores
       if (data !== null) {

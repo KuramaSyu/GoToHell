@@ -29,7 +29,10 @@ export interface UserApiInterface {
   fetchYourRecentSports(): Promise<SportsApiResponse | null>;
   fetchAllRecentSports(): Promise<SportsApiResponse | null>;
   deleteRecord(id: number): Promise<SportsApiResponse | null>;
-  postSports(sports: SportRow[]): Promise<PostSportsResponse | null>;
+  postSports(
+    sports: SportRow[],
+    updateStores: boolean
+  ): Promise<PostSportsResponse | null>;
 }
 
 // Class, to fetch resources from the backend. Responses will be
@@ -258,7 +261,10 @@ export class UserApi implements UserApiInterface {
    * @returns
    * PostSportResponse | null: the Response
    */
-  async postSports(sports: SportRow[]): Promise<PostSportsResponse | null> {
+  async postSports(
+    sports: SportRow[],
+    updateStores: boolean = false
+  ): Promise<PostSportsResponse | null> {
     const API_ENDPOINT = '/api/sports';
     // get user
     const user = useUserStore.getState().user;
@@ -281,12 +287,14 @@ export class UserApi implements UserApiInterface {
 
         var reply = result as PostSportsResponse;
 
-        setAmounts([
-          ...amounts.filter((a) => {
-            return !reply.results.some((r) => r.kind === a.kind);
-          }),
-          ...reply.results,
-        ]);
+        if (updateStores) {
+          setAmounts([
+            ...amounts.filter((a) => {
+              return !reply.results.some((r) => r.kind === a.kind);
+            }),
+            ...reply.results,
+          ]);
+        }
         return reply;
       } else {
         this.logError(API_ENDPOINT, result);
