@@ -34,7 +34,7 @@ type GetSportReply struct {
 // swagger:parameters GetSportsRequest
 type GetSportsRequest struct {
 	// UserIDs is a comma-separated list of user IDs to filter sports by.
-	UserIDs SnowflakeArray `form:"user_ids" binding:"required"`
+	UserIDs models.SnowflakeArray `form:"user_ids" binding:"required"`
 	// Limit is the maximum number of sports to return.
 	Limit int `form:"limit" binding:"omitempty,gte=0"`
 }
