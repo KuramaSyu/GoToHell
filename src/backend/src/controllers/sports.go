@@ -20,9 +20,14 @@ type PostSportReply struct {
 	Results []models.SportAmount `json:"results"`
 }
 
-// swagger:response DelteSportReply
+// swagger:response DeleteSportReply
 type DeleteSportsReply struct {
 	Message string `json:"message"`
+}
+
+// swagger:parameters GetSport
+type GetSportReply struct {
+	Data []models.Sport `json:"data"`
 }
 
 // swagger:response ErrorReply
@@ -75,6 +80,19 @@ func csvToMap(csv [][]string) map[string]float64 {
 // Query parameters:
 //   - user_id: (optional) if provided, filters sports for that user (default 0)
 //   - limit: (optional) limits the number of returned sports (default all)
+//
+// GetSport godoc
+// @Summary Get sports for all users provided in the query parameter
+// @Tags 	sport
+// @Accept json
+// @Producte json
+// @Security CookieAuth
+// @Param user_ids query string true "Comma-separated list of user IDs without whitespace"
+// @Param limit query int false "Limit the number of results returned, default is 50"
+// @Success 200 {object} GetSportReply
+// @Failure 400 {object} ErrorReply
+// @Failure 500 {object} ErrorReply
+// @Router /api/sports [get]
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
 	userIdList := c.Query("user_ids")
@@ -115,7 +133,7 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": sports})
+	c.JSON(http.StatusOK, GetSportReply{Data: sports})
 }
 
 func (sc *SportsController) GetTotalResults(c *gin.Context) {
