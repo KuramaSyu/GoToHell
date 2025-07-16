@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -28,6 +29,38 @@ type DeleteSportsReply struct {
 // swagger:parameters GetSport
 type GetSportReply struct {
 	Data []models.Sport `json:"data"`
+}
+
+// SnowflakeArray is a custom type to handle comma-separated snowflake IDs in query parameters.
+type SnowflakeArray []models.Snowflake
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface,
+// allowing Gin to bind comma-separated strings to a slice of Snowflakes.
+func (a *SnowflakeArray) UnmarshalText(text []byte) error {
+	str := string(text)
+	if str == "" {
+		*a = []models.Snowflake{}
+		return nil
+	}
+	parts := strings.Split(str, ",")
+	snowflakes := make([]models.Snowflake, len(parts))
+	for i, part := range parts {
+		id, err := models.NewSnowflakeFromString(part)
+		if err != nil {
+			return fmt.Errorf("invalid snowflake ID: %s", part)
+		}
+		snowflakes[i] = id
+	}
+	*a = snowflakes
+	return nil
+}
+
+// swagger:parameters GetSportsRequest
+type GetSportsRequest struct {
+	// UserIDs is a comma-separated list of user IDs to filter sports by.
+	UserIDs SnowflakeArray `form:"user_ids" binding:"required"`
+	// Limit is the maximum number of sports to return.
+	Limit int `form:"limit" binding:"omitempty,gte=0"`
 }
 
 // swagger:response ErrorReply
@@ -95,40 +128,24 @@ func csvToMap(csv [][]string) map[string]float64 {
 // @Router /api/sports [get]
 func (sc *SportsController) GetSports(c *gin.Context) {
 	// Read user_id from query, defaulting to 0 if not provided.
-	userIdList := c.Query("user_ids")
 	_, status, err := UserFromSession(c)
 	if err != nil {
 		c.JSON(status, gin.H{"error": err})
 		return
 	}
-	user_ids := make([]models.Snowflake, 0)
-	if userIdList != "" {
-		userIdStrs := strings.Split(userIdList, ",")
-		for _, userIdStr := range userIdStrs {
-			userId, err := models.NewSnowflakeFromString(userIdStr)
-			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-				return
-			}
-			user_ids = append(user_ids, userId)
-		}
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No user ID provided"})
+
+	var req GetSportsRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid JSON format: %w", err))
 		return
 	}
 
-	// Limit result if "limit" query parameter is provided.
-	limitStr := c.Query("limit")
-	limit := 50
-	if limitStr != "" {
-		amount, err := strconv.Atoi(limitStr)
-		if err != nil || amount < 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid amount parameter"})
-			return
-		}
-		limit = amount
+	// Update Limit parameter if not provided
+	if req.Limit == 0 {
+		req.Limit = 50
 	}
-	sports, err := sc.repo.GetSports(user_ids, limit)
+
+	sports, err := sc.repo.GetSports(req.UserIDs, req.Limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
