@@ -15,6 +15,7 @@ func SetupRouter(
 	sportsController *controllers.SportsController,
 	friendController *controllers.FriendsController,
 	overdueDeathsController *controllers.OverdueDeathsController,
+	streakController *controllers.StreakController,
 ) {
 
 	// API routes
@@ -33,7 +34,9 @@ func SetupRouter(
 		sports.GET("/total", sportsController.GetTotalResults)
 		sports.POST("", sportsController.PostSport)
 		sports.DELETE("/:id", sportsController.DeleteSport)
-		sports.GET("/streak/:id", sportsController.GetDayStreak)
+
+		streak := sports.Group("/streak")
+		streak.GET("/:id", streakController.Get)
 
 		// route for friendships
 		friends := api.Group("/friends")
