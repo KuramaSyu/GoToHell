@@ -80,7 +80,7 @@ export const AnimatedRoundBtn = ({
     }
   `;
   const primaryColorRgb = hexToRgbString(
-    darken(theme.palette.primary.main, 0.5)
+    darken(theme.palette.primary.main, 1 / 3)
   );
 
   const RoundBtn = styled(motion.create(Button))({
@@ -130,7 +130,7 @@ export const AnimatedRoundBtn = ({
       right: '0px',
       bottom: '0px',
       background: isAnimationActive
-        ? `radial-gradient(circle, rgba(${primaryColorRgb},1) 0%,  rgba(${primaryColorRgb},1) 40%, rgba(${primaryColorRgb},0) 50%)`
+        ? `radial-gradient(circle, rgba(${primaryColorRgb},1) 0%,  rgba(${primaryColorRgb},1) 55%, rgba(${primaryColorRgb},0) 60%)`
         : 'transparent',
       borderRadius: '50%',
       zIndex: 1,
