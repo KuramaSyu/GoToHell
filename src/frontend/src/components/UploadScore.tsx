@@ -6,6 +6,7 @@ import {
   CircularProgress,
   useMediaQuery,
   darken,
+  lighten,
 } from '@mui/material';
 import { useSportStore } from '../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
@@ -126,8 +127,8 @@ export const UploadScore = () => {
             gap: 2,
             color:
               DURATION !== 0
-                ? 'inherit'
-                : darken(theme.palette.primary.main, 0.3),
+                ? lighten(theme.palette.primary.main, 2 / 3)
+                : darken(theme.palette.primary.main, 1 / 3),
           }}
         >
           <Typography sx={{ fontSize: '3vh' }} fontWeight="bold">

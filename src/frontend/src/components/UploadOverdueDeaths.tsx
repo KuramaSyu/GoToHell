@@ -83,8 +83,8 @@ export const UploadOverdueDeaths = () => {
             sx={{
               fontSize: 'clamp(2rem, 4vh, 6rem)',
               color: isAnimationActive
-                ? lighten(theme.palette.primary.main, 0.1)
-                : darken(theme.palette.primary.main, 0.2),
+                ? lighten(theme.palette.primary.main, 2 / 3)
+                : darken(theme.palette.primary.main, 1 / 3),
             }}
           >
             <SnoozeIcon fontSize="inherit"></SnoozeIcon>
