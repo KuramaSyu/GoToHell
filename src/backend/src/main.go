@@ -51,6 +51,7 @@ func main() {
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, db)
 	friendsController := controllers.NewFriendsController(db)
 	overdueDeathController := controllers.NewOverdueDeathsController(db)
+	streakController := controllers.NewStreakController(db)
 	// Setup routes
 	routes.SetupRouter(
 		r,
@@ -58,6 +59,7 @@ func main() {
 		sportsController,
 		friendsController,
 		overdueDeathController,
+		streakController,
 	)
 
 	// Start the server
