@@ -31,30 +31,6 @@ type GetSportReply struct {
 	Data []models.Sport `json:"data"`
 }
 
-// SnowflakeArray is a custom type to handle comma-separated snowflake IDs in query parameters.
-type SnowflakeArray []models.Snowflake
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface,
-// allowing Gin to bind comma-separated strings to a slice of Snowflakes.
-func (a *SnowflakeArray) UnmarshalText(text []byte) error {
-	str := string(text)
-	if str == "" {
-		*a = []models.Snowflake{}
-		return nil
-	}
-	parts := strings.Split(str, ",")
-	snowflakes := make([]models.Snowflake, len(parts))
-	for i, part := range parts {
-		id, err := models.NewSnowflakeFromString(part)
-		if err != nil {
-			return fmt.Errorf("invalid snowflake ID: %s", part)
-		}
-		snowflakes[i] = id
-	}
-	*a = snowflakes
-	return nil
-}
-
 // swagger:parameters GetSportsRequest
 type GetSportsRequest struct {
 	// UserIDs is a comma-separated list of user IDs to filter sports by.
