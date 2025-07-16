@@ -9,10 +9,11 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
+import { hexToRgbString } from '../utils/colors/hexToRgb';
 
 export const OverdueDeaths: React.FC = () => {
   const { theme } = useThemeStore();
-  const contrastColor = hexToRgb(theme.palette.secondary.contrastText);
+  const contrastColor = hexToRgbString(theme.palette.secondary.contrastText);
   const { overdueDeathsList } = useOverdueDeathsStore();
   useEffect(() => {
     async function init() {
@@ -84,16 +85,3 @@ export const OverdueDeaths: React.FC = () => {
     </Box>
   );
 };
-
-// Add this helper function above your component
-function hexToRgb(hex: string): string {
-  hex = hex.replace(/^#/, '');
-  if (hex.length === 3) {
-    hex = hex
-      .split('')
-      .map((x) => x + x)
-      .join('');
-  }
-  const num = parseInt(hex, 16);
-  return `${(num >> 16) & 255},${(num >> 8) & 255},${num & 255}`;
-}
