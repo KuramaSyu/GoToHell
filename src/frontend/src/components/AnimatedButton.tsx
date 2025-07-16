@@ -1,7 +1,8 @@
 import { Button, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
-import { darken, keyframes, styled } from '@mui/system';
+import { darken, keyframes, lighten, styled } from '@mui/system';
 import { ReactNode } from 'react';
+import { hexToRgbString } from '../utils/colors/hexToRgb';
 
 interface AnimatedButtonProps {
   children: ReactNode;
@@ -78,6 +79,9 @@ export const AnimatedRoundBtn = ({
       transform: rotate(360deg);
     }
   `;
+  const primaryColorRgb = hexToRgbString(
+    darken(theme.palette.primary.main, 0.5)
+  );
 
   const RoundBtn = styled(motion.create(Button))({
     position: 'relative',
@@ -89,6 +93,7 @@ export const AnimatedRoundBtn = ({
     color: theme.palette.common.white,
     fontWeight: 'bold',
     background: 'transparent', // The button itself is transparent
+
     // Ensure children are on top of pseudo-elements
     '& > *': {
       zIndex: 2,
@@ -102,13 +107,15 @@ export const AnimatedRoundBtn = ({
       left: 0,
       width: '100%',
       height: '100%',
-      background: `conic-gradient(
+      background: isAnimationActive
+        ? `conic-gradient(
         ${theme.palette.primary.main},
         ${theme.palette.secondary.main},
         ${theme.palette.primary.dark},
         ${theme.palette.secondary.dark},
         ${theme.palette.primary.main}
-      )`,
+      )`
+        : 'transparent',
       zIndex: 0,
       animation: isAnimationActive
         ? `${spin} ${duration}s ease infinite`
@@ -122,15 +129,20 @@ export const AnimatedRoundBtn = ({
       left: '0px',
       right: '0px',
       bottom: '0px',
-      background:
-        'radial-gradient(circle, rgba(0,0,0,0.7) 0%,  rgba(0,0,0,0) 65%)',
+      background: isAnimationActive
+        ? `radial-gradient(circle, rgba(${primaryColorRgb},1) 0%,  rgba(${primaryColorRgb},1) 40%, rgba(${primaryColorRgb},0) 50%)`
+        : 'transparent',
       borderRadius: '50%',
       zIndex: 1,
     },
   });
 
   return (
-    <RoundBtn onClick={onClick} disabled={!isAnimationActive}>
+    <RoundBtn
+      onClick={onClick}
+      disabled={!isAnimationActive}
+      variant={isAnimationActive ? 'contained' : 'outlined'}
+    >
       {children}
     </RoundBtn>
   );
