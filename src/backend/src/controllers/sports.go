@@ -31,8 +31,8 @@ type GetSportReply struct {
 	Data []models.Sport `json:"data"`
 }
 
-// swagger:parameters GetSportsRequest
-type GetSportsRequest struct {
+// swagger:parameters GetSportsRequestQuery
+type GetSportsRequestQuery struct {
 	// UserIDs is a comma-separated list of user IDs to filter sports by.
 	UserIDs models.SnowflakeArray `form:"user_ids" binding:"required"`
 	// Limit is the maximum number of sports to return.
@@ -110,20 +110,31 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 		return
 	}
 
-	var req GetSportsRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid JSON format: %w", err))
+	var req GetSportsRequestQuery
+
+	userIDsStr := c.Query("user_ids")
+	if userIDsStr == "" {
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("user_ids query parameter is required"))
+		return
+	}
+	if err := req.UserIDs.UnmarshalText([]byte(userIDsStr)); err != nil {
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid user_ids format: %w", err))
 		return
 	}
 
-	// Update Limit parameter if not provided
-	if req.Limit == 0 {
-		req.Limit = 50
+	// Manually parse limit from query string
+	limitStr := c.DefaultQuery("limit", "50") // Default to 50 if not present
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid limit value: %w", err))
+		return
 	}
+	req.Limit = limit
 
-	sports, err := sc.repo.GetSports(req.UserIDs, req.Limit)
+	sports, err := sc.repo.GetSports(req.UserIDs.IDs, req.Limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
 	}
 
 	c.JSON(http.StatusOK, GetSportReply{Data: sports})

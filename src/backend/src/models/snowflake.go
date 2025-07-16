@@ -42,14 +42,17 @@ func NewSnowflakeFromString(s string) (Snowflake, error) {
 }
 
 // SnowflakeArray is a custom type to handle comma-separated snowflake IDs in query parameters.
-type SnowflakeArray []Snowflake
+type SnowflakeArray struct {
+	IDs []Snowflake
+}
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface,
 // allowing Gin to bind comma-separated strings to a slice of Snowflakes.
 func (a *SnowflakeArray) UnmarshalText(text []byte) error {
+	fmt.Printf("Unmarshalling SnowflakeArray from text: %s\n", text)
 	str := string(text)
 	if str == "" {
-		*a = []Snowflake{}
+		*a = SnowflakeArray{}
 		return nil
 	}
 	parts := strings.Split(str, ",")
@@ -61,6 +64,6 @@ func (a *SnowflakeArray) UnmarshalText(text []byte) error {
 		}
 		snowflakes[i] = id
 	}
-	*a = snowflakes
+	a.IDs = snowflakes
 	return nil
 }
