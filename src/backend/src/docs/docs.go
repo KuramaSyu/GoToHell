@@ -223,6 +223,55 @@ const docTemplate = `{
             }
         },
         "/api/sports": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sport"
+                ],
+                "summary": "Get sports for all users provided in the query parameter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Comma-separated list of user IDs without whitespace",
+                        "name": "user_ids",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit the number of results returned, default is 50",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetSportReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -400,6 +449,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetSportReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Sport"
+                    }
+                }
+            }
+        },
         "controllers.MessageResponse": {
             "type": "object",
             "properties": {
@@ -425,12 +485,12 @@ const docTemplate = `{
         "controllers.PostOverdueDeathsRequest": {
             "type": "object",
             "required": [
-                "count",
                 "game"
             ],
             "properties": {
                 "count": {
                     "type": "integer",
+                    "minimum": 0,
                     "example": 42
                 },
                 "game": {
@@ -519,6 +579,29 @@ const docTemplate = `{
                     "description": "UserID of the user, who did the sport - currently set by the API",
                     "type": "integer",
                     "example": 362262726221349761
+                }
+            }
+        },
+        "models.Sport": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "game": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "timedate": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

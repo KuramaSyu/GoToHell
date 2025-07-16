@@ -33,6 +33,13 @@ definitions:
           $ref: '#/definitions/models.OverdueDeaths'
         type: array
     type: object
+  controllers.GetSportReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Sport'
+        type: array
+    type: object
   controllers.MessageResponse:
     properties:
       message:
@@ -50,12 +57,12 @@ definitions:
     properties:
       count:
         example: 42
+        minimum: 0
         type: integer
       game:
         example: overwatch
         type: string
     required:
-    - count
     - game
     type: object
   controllers.PostSportReply:
@@ -119,6 +126,21 @@ definitions:
     - amount
     - game
     - kind
+    type: object
+  models.Sport:
+    properties:
+      amount:
+        type: integer
+      game:
+        type: string
+      id:
+        type: integer
+      kind:
+        type: string
+      timedate:
+        type: string
+      user_id:
+        type: integer
     type: object
   models.SportAmount:
     properties:
@@ -291,6 +313,37 @@ paths:
       security:
       - CookieAuth: []
       summary: Delete a sport entry
+      tags:
+      - sport
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comma-separated list of user IDs without whitespace
+        in: query
+        name: user_ids
+        required: true
+        type: string
+      - description: Limit the number of results returned, default is 50
+        in: query
+        name: limit
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetSportReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Get sports for all users provided in the query parameter
       tags:
       - sport
     post:
