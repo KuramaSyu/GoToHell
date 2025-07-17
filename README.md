@@ -37,7 +37,11 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [ ] move API calls to utils/API
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
-- [ ] separate repository for background pictures
+- [ ] REST documentation:
+  - [x] Sports
+  - [ ] Friends
+  - [x] Streak
+  - [x] OverdueDeaths
 
 #### Features
 
