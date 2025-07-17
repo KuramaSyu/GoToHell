@@ -3,7 +3,7 @@
 // @description Provides all methods to persist data for GoToHell
 // @securityDefinitions.apikey CookieAuth
 // @in cookie
-// @name session
+// @name discord_auth
 
 package main
 
