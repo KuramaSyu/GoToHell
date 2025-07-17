@@ -23,7 +23,7 @@ export interface UsersState {
   addUser: (user: DiscordUserImpl) => void;
 
   /**
-   * extends a dict of users
+   * extends a dict of users where existing users will be overridden with new ones
    * @param users - the users to add
    * @returns
    */
