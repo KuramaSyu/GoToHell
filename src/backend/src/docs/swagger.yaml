@@ -393,26 +393,7 @@ paths:
       summary: Create a sport entry
       tags:
       - sport
-  /friends:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Friend request payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/controllers.FriendRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.MessageResponse'
-      summary: Creates a request for a friend request
-  /streak:
+  /api/streak:
     get:
       parameters:
       - description: Comma-separated list of user IDs without spaces
@@ -440,6 +421,25 @@ paths:
       summary: retrieves the number of days a user has been active back to back
       tags:
       - Streak
+  /friends:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Friend request payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.FriendRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.MessageResponse'
+      summary: Creates a request for a friend request
 securityDefinitions:
   CookieAuth:
     in: cookie
