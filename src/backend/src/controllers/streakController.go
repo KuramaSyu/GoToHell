@@ -41,7 +41,7 @@ func NewStreakController(DB *gorm.DB) *StreakController {
 // @Success 200 {object} GetStreakReply
 // @Failure 400 {object} ErrorReply
 // @Failure 500 {object} ErrorReply
-// @Router /streak [get]
+// @Router /api/streak [get]
 func (sc *StreakController) Get(c *gin.Context) {
 	// Check if user is logged in via Discord
 	_, status, err := UserFromSession(c)
