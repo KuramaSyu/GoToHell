@@ -54,7 +54,7 @@ func (sc *StreakController) Get(c *gin.Context) {
 	req := GetStreakQuery{}
 
 	// Read user ID from URL
-	idStr := c.Param("user_ids")
+	idStr := c.Query("user_ids")
 
 	// bind IDs to the request
 	if err = req.UserIDs.UnmarshalText([]byte(idStr)); err != nil {
