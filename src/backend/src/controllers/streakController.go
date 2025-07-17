@@ -40,6 +40,7 @@ func NewStreakController(DB *gorm.DB) *StreakController {
 // @Param user_ids query string true "Comma-separated list of user IDs without spaces"
 // @Success 200 {object} GetStreakReply
 // @Failure 400 {object} ErrorReply
+// @Failure 401 {object} ErrorReply
 // @Failure 500 {object} ErrorReply
 // @Router /api/streak [get]
 func (sc *StreakController) Get(c *gin.Context) {
