@@ -7,6 +7,7 @@ import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { loadPreferencesFromCookie } from '../cookiePreferences';
 import { UserApi } from './Api';
 import { OverdueDeathsApi } from './OverdueDeathsApi';
+import { StreakApi } from './StreakApi';
 
 interface IApiReuqirement {
   needsFetch(): Boolean;
@@ -81,6 +82,14 @@ export class FriendsRquirement extends ApiRequirementABC {
     console.log(`DEBUG: Fetching friends data`);
     await new UserApi().fetchFriends();
   }
+
+  /**
+   * is set to 1, since it needs to be fetched before AllStreaksRequirement
+   * @returns 1
+   */
+  getPriority(): number {
+    return 1;
+  }
 }
 
 /**
@@ -89,7 +98,7 @@ export class FriendsRquirement extends ApiRequirementABC {
  * @Note
  * sets the useStreakStore Zustand
  */
-export class StreakRequirement extends ApiRequirementABC {
+export class YourStreakRequirement extends ApiRequirementABC {
   needsFetch(): Boolean {
     const needsFetch = useStreakStore.getState().streak === null;
     console.log(`DEBUG: Checking if streak needs fetch:  ${needsFetch}`);
@@ -98,7 +107,42 @@ export class StreakRequirement extends ApiRequirementABC {
 
   async fetch(): Promise<void> {
     console.log(`DEBUG: Fetching streak data`);
-    await new UserApi().fetchStreak();
+    await new StreakApi().get([useUserStore.getState().user!.id]);
+  }
+}
+
+/**
+ * fetches Streak from the user who is logged in.
+ *
+ * @Note
+ * sets the useStreakStore Zustand, useUserStore and useUsersStore
+ */
+export class AllStreaksRequirement extends ApiRequirementABC {
+  needsFetch(): Boolean {
+    const isUserStreakNull = useUserStore.getState().user?.streak === null;
+    const isAnyFriendStreakNull = Object.values(
+      useUsersStore.getState().users
+    ).some((u) => u.streak === null);
+    const needsFetch = isUserStreakNull || isAnyFriendStreakNull;
+    console.log(`DEBUG: Checking if any streak needs fetch:  ${needsFetch}`);
+    return needsFetch;
+  }
+
+  async fetch(): Promise<void> {
+    console.log(`DEBUG: Fetching all streaks data`);
+    const userId = useUserStore.getState().user!.id;
+    const friendIds = Object.values(useUsersStore.getState().users).map(
+      (u) => u.id
+    );
+    await new StreakApi().get([userId, ...friendIds]);
+  }
+
+  /**
+   * is set to 2, so that Friends and user fetched before it.
+   * @returns 2
+   */
+  getPriority(): number {
+    return 2;
   }
 }
 
@@ -185,6 +229,7 @@ export enum ApiRequirement {
   TotalScore,
   Friends,
   Streak,
+  AllStreaks,
   AllRecentSports,
   YourRecentSports,
   Preferences,
@@ -201,7 +246,7 @@ export namespace ApiRequirement {
       case ApiRequirement.Friends:
         return new FriendsRquirement();
       case ApiRequirement.Streak:
-        return new StreakRequirement();
+        return new YourStreakRequirement();
       case ApiRequirement.AllRecentSports:
         return new AllRecentSportsRequirement();
       case ApiRequirement.YourRecentSports:
@@ -210,6 +255,8 @@ export namespace ApiRequirement {
         return new PreferencesRequirement();
       case ApiRequirement.OverdueDeaths:
         return new OverdueDeathsRequirement();
+      case ApiRequirement.AllStreaks:
+        return new AllStreaksRequirement();
       default:
         throw new Error('Unknown ApiRequirement');
     }
