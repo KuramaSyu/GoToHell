@@ -412,11 +412,11 @@ paths:
           schema:
             $ref: '#/definitions/controllers.MessageResponse'
       summary: Creates a request for a friend request
-  /streak/{user_ids}:
+  /streak:
     get:
       parameters:
       - description: Comma-separated list of user IDs without spaces
-        in: path
+        in: query
         name: user_ids
         required: true
         type: string
@@ -439,7 +439,7 @@ paths:
       - CookieAuth: []
       summary: retrieves the number of days a user has been active back to back
       tags:
-      - streak
+      - Streak
 securityDefinitions:
   CookieAuth:
     in: cookie

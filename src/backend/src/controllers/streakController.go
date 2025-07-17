@@ -34,14 +34,14 @@ func NewStreakController(DB *gorm.DB) *StreakController {
 }
 
 // @Summary retrieves the number of days a user has been active back to back
-// @Tags streak
+// @Tags Streak
 // @Security CookieAuth
 // @Produce json
-// @Param user_ids path string true "Comma-separated list of user IDs without spaces"
+// @Param user_ids query string true "Comma-separated list of user IDs without spaces"
 // @Success 200 {object} GetStreakReply
 // @Failure 400 {object} ErrorReply
 // @Failure 500 {object} ErrorReply
-// @Router /streak/{user_ids} [get]
+// @Router /streak [get]
 func (sc *StreakController) Get(c *gin.Context) {
 	// Check if user is logged in via Discord
 	_, status, err := UserFromSession(c)

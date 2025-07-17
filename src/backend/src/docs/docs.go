@@ -394,7 +394,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/streak/{user_ids}": {
+        "/streak": {
             "get": {
                 "security": [
                     {
@@ -405,7 +405,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "streak"
+                    "Streak"
                 ],
                 "summary": "retrieves the number of days a user has been active back to back",
                 "parameters": [
@@ -413,7 +413,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Comma-separated list of user IDs without spaces",
                         "name": "user_ids",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
