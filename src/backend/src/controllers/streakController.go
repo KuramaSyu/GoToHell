@@ -34,7 +34,8 @@ func NewStreakController(DB *gorm.DB) *StreakController {
 }
 
 // @Summary retrieves the number of days a user has been active back to back
-// Tags Streak
+// @Tags streak
+// @Security CookieAuth
 // @Produce json
 // @Param user_ids path string true "Comma-separated list of user IDs without spaces"
 // @Success 200 {object} GetStreakReply
