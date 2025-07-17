@@ -17,7 +17,7 @@ export class StreakApi extends BasicApi {
    * @param forUser: whether or not this request is just for the logged in user
    */
   async get(user_ids: string[]): Promise<GetStreakResponse | null> {
-    const API_ENDPOINT = '/api/streak/';
+    const API_ENDPOINT = '/api/streak';
 
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
     url.searchParams.append('user_ids', user_ids.join(','));
