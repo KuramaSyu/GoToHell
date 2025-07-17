@@ -49,7 +49,6 @@ type SnowflakeArray struct {
 // UnmarshalText implements the encoding.TextUnmarshaler interface,
 // allowing Gin to bind comma-separated strings to a slice of Snowflakes.
 func (a *SnowflakeArray) UnmarshalText(text []byte) error {
-	fmt.Printf("Unmarshalling SnowflakeArray from text: %s\n", text)
 	str := string(text)
 	if str == "" {
 		*a = SnowflakeArray{}
