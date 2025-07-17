@@ -39,6 +39,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - Sport.tsx: POST api/sports
 - [ ] REST documentation:
   - [x] Sports
+  - [ ] sports/total
   - [ ] Friends
   - [x] Streak
   - [x] OverdueDeaths
@@ -65,7 +66,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 #### Perf
 
-- [ ] Backend Delete Sport: add userid to db request, instead of making multiple requests
+- [ ] multiple requests (3) sent to /api/sports/total -> decrease
 
 #### Ideas
 
