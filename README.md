@@ -68,7 +68,9 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [ ] Go Loading icon
 - [ ] Linking, who invited who, displaying a tree of all users, showing you, how you probably get here
 - [ ] Websocket connection, saying when timeline got an update (api request -> Observer -> listener for ongoing connections (maybe even directly send data?))
-- [ ] How to document Rest APIs
+- [ ] CI/CD:
+  - Setup branch dev which gets auto-updated when CI is positive
+  - Make backend redeploy when dev changes
 
 ### Things required to add a game:
 
