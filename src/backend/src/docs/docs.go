@@ -393,6 +393,43 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/streak/{user_ids}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "retrieves the number of days a user has been active back to back",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Comma-separated list of user IDs without spaces",
+                        "name": "user_ids",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetStreakReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -460,6 +497,18 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetStreakReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "Data contains the streak information for the user",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DayStreak"
+                    }
+                }
+            }
+        },
         "controllers.MessageResponse": {
             "type": "object",
             "properties": {
@@ -510,6 +559,19 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.SportAmount"
                     }
+                }
+            }
+        },
+        "models.DayStreak": {
+            "type": "object",
+            "properties": {
+                "days": {
+                    "type": "integer",
+                    "example": 54
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 123456789012345678
                 }
             }
         },

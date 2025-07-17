@@ -40,6 +40,14 @@ definitions:
           $ref: '#/definitions/models.Sport'
         type: array
     type: object
+  controllers.GetStreakReply:
+    properties:
+      data:
+        description: Data contains the streak information for the user
+        items:
+          $ref: '#/definitions/models.DayStreak'
+        type: array
+    type: object
   controllers.MessageResponse:
     properties:
       message:
@@ -73,6 +81,15 @@ definitions:
         items:
           $ref: '#/definitions/models.SportAmount'
         type: array
+    type: object
+  models.DayStreak:
+    properties:
+      days:
+        example: 54
+        type: integer
+      user_id:
+        example: 123456789012345678
+        type: integer
     type: object
   models.FriendshipStatus:
     enum:
@@ -395,6 +412,30 @@ paths:
           schema:
             $ref: '#/definitions/controllers.MessageResponse'
       summary: Creates a request for a friend request
+  /streak/{user_ids}:
+    get:
+      parameters:
+      - description: Comma-separated list of user IDs without spaces
+        in: path
+        name: user_ids
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetStreakReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: retrieves the number of days a user has been active back to back
 securityDefinitions:
   CookieAuth:
     in: cookie
