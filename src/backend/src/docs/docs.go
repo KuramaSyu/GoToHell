@@ -400,6 +400,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/controllers.ErrorReply"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
