@@ -20,7 +20,6 @@ export interface UserApiInterface {
   fetchTotalScore(): Promise<Response>;
   fetchUser(): Promise<Response>;
   fetchFriends(): Promise<FriendshipReply | null>;
-  fetchStreak(): Promise<StreakData | null>;
   fetchRecentSports(
     userIds: string[],
     limit: number,
@@ -108,38 +107,6 @@ export class UserApi implements UserApiInterface {
     } else {
       // log error and return null
       this.logError(API_ENDPOINT, await result.json());
-    }
-    return null;
-  }
-
-  /**
-   * fetches Streak from the user who is logged in.
-   *
-   * @Note
-   * sets the useStreakStore Zustand
-   */
-  async fetchStreak(): Promise<StreakData | null> {
-    const API_ENDPOINT = '/api/sports/streak/';
-    // get user
-    const user = useUserStore.getState().user;
-    if (user === null) {
-      return null;
-    }
-    const response = await fetch(`${BACKEND_BASE}${API_ENDPOINT}${user.id}`, {
-      credentials: 'include',
-      method: 'GET',
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      // get zustand setter
-      const setStreak = useStreakStore.getState().setStreak;
-
-      const reply = result['data'] as StreakData;
-      setStreak(reply.days);
-      return reply;
-    } else {
-      this.logError(API_ENDPOINT, result);
     }
     return null;
   }
