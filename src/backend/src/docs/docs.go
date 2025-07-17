@@ -396,8 +396,16 @@ const docTemplate = `{
         },
         "/streak/{user_ids}": {
             "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "streak"
                 ],
                 "summary": "retrieves the number of days a user has been active back to back",
                 "parameters": [
@@ -684,7 +692,7 @@ const docTemplate = `{
     "securityDefinitions": {
         "CookieAuth": {
             "type": "apiKey",
-            "name": "session",
+            "name": "discord_auth",
             "in": "cookie"
         }
     }
