@@ -36,6 +36,9 @@ class DiscordUserImpl implements DiscordUser {
   avatar: string;
   email: string;
 
+  // the users streak - this is not part of the DiscordUser interface
+  streak: number | null;
+
   constructor(data: {
     id: string;
     username: string;
@@ -48,6 +51,7 @@ class DiscordUserImpl implements DiscordUser {
     this.discriminator = data.discriminator;
     this.avatar = data.avatar;
     this.email = data.email;
+    this.streak = null;
   }
 
   getAvatarUrl(): string {
