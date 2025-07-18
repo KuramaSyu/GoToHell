@@ -72,19 +72,26 @@ export const StreakTimeline: React.FC = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
       }}
     >
       <Box
         sx={{
-          p: 5,
+          height: 1 / 8,
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
           textTransform: 'uppercase',
         }}
       >
-        <Typography fontSize={20}>Current Streaks</Typography>
+        <Box>
+          <Typography variant={'h6'}>Current Streaks</Typography>
+        </Box>
+        <Box sx={{ width: '100%' }}>
+          <Divider></Divider>
+        </Box>
       </Box>
-      <Divider sx={{ mb: 5 }}></Divider>
 
       {timelineItems}
     </Box>
