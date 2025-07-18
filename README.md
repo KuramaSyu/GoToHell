@@ -78,6 +78,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [ ] CI/CD:
   - Setup branch dev which gets auto-updated when CI is positive
   - Make backend redeploy when dev changes
+- [ ] separate login screen if user is not logged in
 
 ### Things required to add a game:
 
