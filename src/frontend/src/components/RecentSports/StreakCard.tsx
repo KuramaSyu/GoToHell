@@ -1,52 +1,88 @@
 import { useState, useEffect, ReactElement } from 'react';
 import { alpha, Box, Card, Typography } from '@mui/material';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+
 import TimelineDot from '@mui/lab/TimelineDot';
-import { formatDistanceToNow } from 'date-fns';
-import { useUserStore, useUsersStore } from '../../userStore';
+
 import { BACKEND_BASE, NUMBER_FONT } from '../../statics';
 import { useThemeStore } from '../../zustand/useThemeStore';
-import { useRecentSportsStore } from '../../zustand/RecentSportsState';
-import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
-import { TransitionGroup } from 'react-transition-group';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sport } from './Timeline';
+
 import { DiscordUserImpl } from '../DiscordLogin';
+import { animated, SpringValue } from 'react-spring';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 interface StreakCardProps {
   user: DiscordUserImpl;
+  style?: {
+    opacity?: SpringValue<number>;
+    y?: SpringValue<number>;
+    scale?: SpringValue<number>;
+  };
 }
 
+const AnimatedBox = animated(Box);
+
+export const StreakCard: React.FC<StreakCardProps> = ({ user, style }) => {
+  return (
+    <AnimatedBox
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+      style={style}
+    >
+      <StreakCardNumber user={user} style={style}></StreakCardNumber>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
+        <TimelineDot
+          color="primary"
+          key={user.id}
+          sx={{
+            width: 60,
+            height: 60,
+            borderRadius: '50%',
+            overflow: 'hidden',
+            position: 'relative',
+            margin: 'auto',
+          }}
+        >
+          <img
+            src={user.getAvatarUrl()}
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '50%',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              objectFit: 'cover',
+            }}
+          />
+        </TimelineDot>
+        <Box sx={{ alignContent: 'center', fontSize: 18 }}>{user.username}</Box>
+      </Box>
+    </AnimatedBox>
+  );
+};
 export const StreakCardNumber: React.FC<StreakCardProps> = ({ user }) => {
+  const { theme } = useThemeStore();
   return (
     <Box
       sx={{
-        display: 'flex', // Enables Flexbox
-        flexShrink: 0, // Prevents shrinking
-        alignSelf: 'flex-start', // Ensures it doesn't stretch in the parent flex container
-        borderRadius: '50%', // Makes the box a circle
-        width: 65, // Set a fixed width
-        height: 65, // Set the same height as the width
-        background:
-          'radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.05) 85%, rgba(0,0,0,0) 100%)',
-        justifyContent: 'center', // Centers content horizontally
-        alignItems: 'center', // Centers content vertically
-        overflow: 'hidden',
-        mr: 2,
+        filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
+
+        fontFamily: NUMBER_FONT,
+        color: theme.palette.primary.main,
+        height: '100%',
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
       }}
     >
+      <LocalFireDepartmentIcon sx={{ fontSize: '3rem', mr: 1 }} />
       <Typography
-        sx={{
-          fontFamily: NUMBER_FONT,
-          fontSize: '1.5rem', // Adjust font size as needed
-          color: 'white', // Optional: text color for better visibility
-        }}
-        variant="h6"
+        fontSize={'2.5rem'}
+        fontFamily={NUMBER_FONT}
+        sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
       >
         {user.streak ?? 0}
       </Typography>
