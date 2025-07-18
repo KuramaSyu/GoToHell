@@ -23,7 +23,7 @@ export const OverdueDeaths: React.FC = () => {
         .fetchIfNeeded();
     }
     init();
-  });
+  }, []);
   return (
     <Box
       sx={{
