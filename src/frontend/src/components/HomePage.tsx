@@ -15,6 +15,8 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
+import { StreakTimeline } from './RecentSports/StreakTimeline';
+import { TimelineWrapper } from './RecentSports/TimelineWrapper';
 
 const HomePage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -63,7 +65,7 @@ const HomePage: React.FC = () => {
         backdropFilter: 'blur(15px)',
       }}
     >
-      <SportsTimeline />
+      <TimelineWrapper />
     </Box>
   );
 
