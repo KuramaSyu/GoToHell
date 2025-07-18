@@ -9,7 +9,7 @@ import {
   timelineOppositeContentClasses,
   TimelineSeparator,
 } from '@mui/lab';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { animated, config, useTransition } from 'react-spring';
 import { useUsersStore, useUserStore } from '../../userStore';
@@ -19,15 +19,18 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { DiscordUserImpl } from '../DiscordLogin';
 import { StreakCardNumber } from './StreakCard';
+import { blendWithContrast } from '../../utils/blendWithContrast';
+import { useThemeStore } from '../../zustand/useThemeStore';
 
 const AnimatedBox = animated(Box);
 
 export const StreakTimeline: React.FC = () => {
   const { users } = useUsersStore();
   const { user } = useUserStore();
+  const { theme } = useThemeStore();
   const [isLoading, setIsLoading] = useState(true);
   const usersSorted: DiscordUserImpl[] = useMemo(() => {
-    if (isLoading) return [];
+    if (isLoading || user === null) return [];
     var allUsers = [
       user,
       ...Object.values(users).filter((u) => u.id !== user.id),
@@ -101,7 +104,7 @@ export const StreakTimeline: React.FC = () => {
                 }}
               />
             </TimelineDot>
-            <TimelineConnector />
+            {/* <TimelineConnector /> */}
           </TimelineSeparator>
           <TimelineContent>{user.username}</TimelineContent>
         </TimelineItem>
@@ -110,23 +113,40 @@ export const StreakTimeline: React.FC = () => {
   });
 
   return (
-    <Timeline
-      sx={{
-        // weird CSS hack, to align the timeline dots left
-        [`& .${timelineOppositeContentClasses.root}`]: {
-          flex: '0 1 auto',
-          //flex: 0,
-          padding: 0,
-          height: '100%',
-          overflowY: 'auto',
-        },
-        [`& .${timelineItemClasses.root}:before`]: {
-          padding: 0,
-          margin: 0,
-        },
-      }}
-    >
-      {timelineItems}
-    </Timeline>
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          py: 3,
+          textTransform: 'uppercase',
+          // backgroundColor: blendWithContrast(
+          //   theme.palette.primary.main,
+          //   theme,
+          //   1
+          // ),
+        }}
+      >
+        <Typography>Current Streaks</Typography>
+      </Box>
+      <Timeline
+        sx={{
+          // weird CSS hack, to align the timeline dots left
+          [`& .${timelineOppositeContentClasses.root}`]: {
+            flex: '0 1 auto',
+            //flex: 0,
+            padding: 0,
+            height: '100%',
+            overflowY: 'auto',
+          },
+          [`& .${timelineItemClasses.root}:before`]: {
+            padding: 0,
+            margin: 0,
+          },
+        }}
+      >
+        {timelineItems}
+      </Timeline>
+    </Box>
   );
 };
