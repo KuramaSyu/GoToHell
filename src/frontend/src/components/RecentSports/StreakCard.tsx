@@ -80,10 +80,10 @@ export const StreakCardNumber: React.FC<StreakCardProps> = ({ user }) => {
         flexDirection: 'row',
       }}
     >
-      <LocalFireDepartmentIcon sx={{ fontSize: '3.5rem', mr: 1 }} />
+      <LocalFireDepartmentIcon sx={{ fontSize: '3.2rem', mr: 1 }} />
       <Typography
-        fontSize={'2.8rem'}
         fontFamily={NUMBER_FONT}
+        fontSize={'1.5rem'}
         sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
       >
         {user.streak ?? 0}
