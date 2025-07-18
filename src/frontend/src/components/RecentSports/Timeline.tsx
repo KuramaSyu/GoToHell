@@ -1,5 +1,5 @@
-import { useState, useEffect, ReactElement, useRef } from 'react';
-import { alpha, Box, Typography } from '@mui/material';
+import { useState, useEffect, ReactElement } from 'react';
+import { Box } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -9,17 +9,11 @@ import TimelineOppositeContent, {
   timelineOppositeContentClasses,
 } from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-import { formatDistanceToNow } from 'date-fns';
 import { useUserStore, useUsersStore } from '../../userStore';
-import { BACKEND_BASE } from '../../statics';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
-import { TransitionGroup } from 'react-transition-group';
-import { motion, AnimatePresence } from 'framer-motion';
 import { SportCard, SportCardNumber } from './SportCard';
-import { before } from 'node:test';
-import { UserApi } from '../../utils/api/Api';
 import { animated, config, useTransition } from 'react-spring';
 import useErrorStore from '../../zustand/Error';
 import {
