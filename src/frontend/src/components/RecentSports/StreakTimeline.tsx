@@ -9,7 +9,7 @@ import {
   timelineOppositeContentClasses,
   TimelineSeparator,
 } from '@mui/lab';
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { animated, config, useTransition } from 'react-spring';
 import { useUsersStore, useUserStore } from '../../userStore';
@@ -18,9 +18,10 @@ import {
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
 import { DiscordUserImpl } from '../DiscordLogin';
-import { StreakCardNumber } from './StreakCard';
+import { StreakCard, StreakCardNumber } from './StreakCard';
 import { blendWithContrast } from '../../utils/blendWithContrast';
 import { useThemeStore } from '../../zustand/useThemeStore';
+import { DisplaySettings } from '@mui/icons-material';
 
 const AnimatedBox = animated(Box);
 
@@ -59,94 +60,30 @@ export const StreakTimeline: React.FC = () => {
   });
 
   const timelineItems: ReactElement[] = transition((style, user) => {
-    return (
-      <AnimatedBox
-        key={user.id}
-        style={style}
-        sx={{
-          width: '100%',
-          padding: 0,
-          margin: 0,
-        }}
-      >
-        <TimelineItem
-          sx={{
-            width: '100%',
-            padding: 0,
-            margin: 0,
-          }}
-        >
-          <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
-            <StreakCardNumber user={user}></StreakCardNumber>
-          </TimelineOppositeContent>
-          <TimelineSeparator>
-            <TimelineDot
-              color="primary"
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: '50%',
-                overflow: 'hidden',
-                position: 'relative',
-                margin: 'auto',
-              }}
-            >
-              <img
-                src={user.getAvatarUrl()}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  objectFit: 'cover',
-                }}
-              />
-            </TimelineDot>
-            {/* <TimelineConnector /> */}
-          </TimelineSeparator>
-          <TimelineContent>{user.username}</TimelineContent>
-        </TimelineItem>
-      </AnimatedBox>
-    );
+    return <StreakCard style={style} user={user} />;
   });
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 5,
+      }}
+    >
       <Box
         sx={{
+          pt: 5,
           display: 'flex',
           justifyContent: 'center',
-          py: 3,
           textTransform: 'uppercase',
-          // backgroundColor: blendWithContrast(
-          //   theme.palette.primary.main,
-          //   theme,
-          //   1
-          // ),
         }}
       >
-        <Typography>Current Streaks</Typography>
+        <Typography fontSize={20}>Current Streaks</Typography>
       </Box>
-      <Timeline
-        sx={{
-          // weird CSS hack, to align the timeline dots left
-          [`& .${timelineOppositeContentClasses.root}`]: {
-            flex: '0 1 auto',
-            //flex: 0,
-            padding: 0,
-            height: '100%',
-            overflowY: 'auto',
-          },
-          [`& .${timelineItemClasses.root}:before`]: {
-            padding: 0,
-            margin: 0,
-          },
-        }}
-      >
-        {timelineItems}
-      </Timeline>
+      <Divider></Divider>
+
+      {timelineItems}
     </Box>
   );
 };
