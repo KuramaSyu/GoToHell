@@ -31,7 +31,9 @@ export const StreakCard: React.FC<StreakCardProps> = ({ user, style }) => {
       }}
       style={style}
     >
-      <StreakCardNumber user={user} style={style}></StreakCardNumber>
+      <Box width={1 / 3}>
+        <StreakCardNumber user={user} style={style}></StreakCardNumber>
+      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
         <TimelineDot
           color="primary"
@@ -78,9 +80,9 @@ export const StreakCardNumber: React.FC<StreakCardProps> = ({ user }) => {
         flexDirection: 'row',
       }}
     >
-      <LocalFireDepartmentIcon sx={{ fontSize: '3rem', mr: 1 }} />
+      <LocalFireDepartmentIcon sx={{ fontSize: '3.5rem', mr: 1 }} />
       <Typography
-        fontSize={'2.5rem'}
+        fontSize={'2.8rem'}
         fontFamily={NUMBER_FONT}
         sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
       >
