@@ -56,6 +56,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 #### Fixes
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
+- [ ] recent activities don't show recent first and are a bit broken
 
 #### QoL
 
@@ -63,6 +64,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [ ] better animate TimeDisplay
 - [ ] add time (seconds) parameter to setErrorMessage. Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
 - [ ] OverdueDeaths: open a modal when clicking on it, which shows all overdueDeaths for all games
+- [ ] Edit and remove via timeline instead of own menu
 
 #### Perf
 
