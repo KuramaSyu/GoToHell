@@ -60,7 +60,11 @@ export const StreakTimeline: React.FC = () => {
   });
 
   const timelineItems: ReactElement[] = transition((style, user) => {
-    return <StreakCard style={style} user={user} />;
+    return (
+      <Box sx={{ ml: 1, mb: 2 }}>
+        <StreakCard style={style} user={user} />
+      </Box>
+    );
   });
 
   return (
@@ -68,12 +72,11 @@ export const StreakTimeline: React.FC = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 5,
       }}
     >
       <Box
         sx={{
-          pt: 5,
+          p: 5,
           display: 'flex',
           justifyContent: 'center',
           textTransform: 'uppercase',
@@ -81,7 +84,7 @@ export const StreakTimeline: React.FC = () => {
       >
         <Typography fontSize={20}>Current Streaks</Typography>
       </Box>
-      <Divider></Divider>
+      <Divider sx={{ mb: 5 }}></Divider>
 
       {timelineItems}
     </Box>
