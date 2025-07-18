@@ -6,6 +6,7 @@ import { SportsTimeline } from './Timeline';
 export const TimelineWrapper: React.FC = () => {
   // progress from 0 to 100
   const [progress, setProgress] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     const duration = 5000;
