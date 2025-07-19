@@ -1,5 +1,6 @@
 import {
   alpha,
+  Avatar,
   Box,
   Button,
   Dialog,
@@ -30,7 +31,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
 
   return (
     <>
-      {selectedSport !== null && (
+      {selectedSport !== null && user !== null && (
         <Dialog
           open={selectedSport !== null}
           onClose={() => setSelectedSport(null)}
@@ -38,9 +39,6 @@ export const SportDialog: React.FC<SportDialogProps> = ({
           fullWidth
           maxWidth="sm"
           slotProps={{
-            // backdrop: {
-            //   color: alpha(theme.palette.primary.dark, 0.6),
-            // },
             paper: {
               sx: {
                 backdropFilter: 'blur(5px)',
@@ -50,8 +48,27 @@ export const SportDialog: React.FC<SportDialogProps> = ({
           }}
         >
           <DialogTitle>
-            Details to {selectedSport!.kind} from{' '}
-            {users[selectedSport!.user_id]?.username}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 4,
+                alignItems: 'center',
+              }}
+            >
+              <Avatar
+                src={user.getAvatarUrl()}
+                alt={user.username}
+                sx={{
+                  width: 60,
+                  height: 60,
+                  filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))',
+                }}
+                // onClick={handleLogout} show details on click
+              />
+              Details to {selectedSport!.kind} from{' '}
+              {users[selectedSport!.user_id]?.username}
+            </Box>
           </DialogTitle>
           <DialogContent dividers>test</DialogContent>
           <DialogActions>
