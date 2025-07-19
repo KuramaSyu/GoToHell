@@ -32,6 +32,7 @@ import {
 import { blendWithContrast } from '../../utils/blendWithContrast';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { UserApi } from '../../utils/api/Api';
+import { SportDialog } from './SportDialog';
 
 export interface UserSport {
   id: number;
@@ -207,44 +208,10 @@ export const SportsTimeline = () => {
       >
         {timelineItems}
       </Timeline>
-      {selectedSport && (
-        <Dialog
-          open={selectedSport !== null}
-          onClose={() => setSelectedSport(null)}
-          fullScreen={isMobile}
-          fullWidth
-          maxWidth="sm"
-          slotProps={{
-            // backdrop: {
-            //   color: alpha(theme.palette.primary.dark, 0.6),
-            // },
-            paper: {
-              sx: {
-                backdropFilter: 'blur(5px)',
-                backgroundColor: alpha(theme.palette.secondary.dark, 0.6),
-              },
-            },
-          }}
-        >
-          <DialogTitle>
-            Details to {selectedSport!.kind} from{' '}
-            {users[selectedSport!.user_id]?.username}
-          </DialogTitle>
-          <DialogContent dividers>test</DialogContent>
-          <DialogActions>
-            {selectedSport.user_id === user.id && (
-              <Button
-                onClick={() => {
-                  new UserApi().deleteRecord(selectedSport.id);
-                }}
-              >
-                Delete Sport
-              </Button>
-            )}
-            <Button onClick={() => setSelectedSport(null)}>Close</Button>
-          </DialogActions>
-        </Dialog>
-      )}
+      <SportDialog
+        selectedSport={selectedSport}
+        setSelectedSport={setSelectedSport}
+      ></SportDialog>
     </Box>
   );
 };
