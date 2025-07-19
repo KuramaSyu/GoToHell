@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  Fade,
   Input,
   Slide,
 } from '@mui/material';
@@ -42,7 +43,7 @@ const Transition = React.forwardRef(function Transition(
   },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Fade timeout={1000} ref={ref} {...props} />;
 });
 
 export interface SportDialogProps {
@@ -57,9 +58,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { user } = useUserStore();
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
-  const [amountValueString, setAmountValueString] = useState<string | null>(
-    null
-  );
+
   const [amountValue, setAmountValue] = useState<number | null>(
     selectedSport?.amount ?? null
   );
@@ -78,14 +77,6 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   };
 
   const updateRecord = async (record: UserSport) => {};
-
-  const defaultPropsForNumberChange: StringNumberProps = {
-    number: amountValue,
-    setNumber: setAmountValue,
-    stringNumber: amountValueString,
-    setStringNumber: setAmountValueString,
-    overrideStringNumber: false,
-  };
 
   return (
     <>
