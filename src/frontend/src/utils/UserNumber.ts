@@ -1,5 +1,5 @@
 export interface StringNumberProps {
-  number: number | null;
+  number: number | null | undefined;
   setNumber: React.Dispatch<React.SetStateAction<number | null>>;
   stringNumber: string | null;
   setStringNumber: React.Dispatch<React.SetStateAction<string | null>>;
@@ -29,8 +29,8 @@ export function handleStringNumber(props: StringNumberProps): number | null {
   } = props;
   if (overrideStringNumber === true) {
     setStringNumber(String(number));
-    setNumber(number);
-    return number;
+    setNumber(number ?? null);
+    return number ?? null;
   }
   if (isNumeric(stringNumber) === true) {
     const n = Number(stringNumber?.trim());
