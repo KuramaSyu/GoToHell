@@ -9,6 +9,7 @@ import {
   DialogTitle,
   Divider,
   Input,
+  Slide,
 } from '@mui/material';
 import Sport from '../../models/Sport';
 import { UserSport } from './Timeline';
@@ -25,6 +26,24 @@ import GamepadIcon from '@mui/icons-material/Gamepad';
 import { GameEntry } from '../QuickActions/SearchModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useState } from 'react';
+import {
+  handleStringNumber,
+  isNumeric,
+  StringNumberProps,
+} from '../../utils/UserNumber';
+import SyncIcon from '@mui/icons-material/Sync';
+import React from 'react';
+import { TransitionProps } from '@mui/material/transitions';
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export interface SportDialogProps {
   selectedSport: UserSport | null;
@@ -38,6 +57,12 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { user } = useUserStore();
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
+  const [amountValueString, setAmountValueString] = useState<string | null>(
+    null
+  );
+  const [amountValue, setAmountValue] = useState<number | null>(
+    selectedSport?.amount ?? null
+  );
 
   const deleteRecord = async (id: number) => {
     try {
@@ -50,6 +75,16 @@ export const SportDialog: React.FC<SportDialogProps> = ({
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const updateRecord = async (record: UserSport) => {};
+
+  const defaultPropsForNumberChange: StringNumberProps = {
+    number: amountValue,
+    setNumber: setAmountValue,
+    stringNumber: amountValueString,
+    setStringNumber: setAmountValueString,
+    overrideStringNumber: false,
   };
 
   return (
@@ -146,8 +181,18 @@ export const SportDialog: React.FC<SportDialogProps> = ({
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
               <NumbersIcon></NumbersIcon>
               <Input
-                value={selectedSport.amount}
+                value={amountValue}
+                type="number"
+                onChange={(e) => {
+                  setAmountValue(Number(e.target.value));
+                }}
                 disabled={user.id !== selectedSport.user_id}
+                sx={{
+                  // Change color of the underline on focus when not in error state
+                  '&:not(.Mui-error):after': {
+                    borderBottomColor: theme.palette.success.main,
+                  },
+                }}
               ></Input>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -156,12 +201,27 @@ export const SportDialog: React.FC<SportDialogProps> = ({
             </Box>
           </DialogContent>
           <DialogActions>
+            <Button
+              sx={{
+                color: blendWithContrast(
+                  theme.palette.primary.main,
+                  theme,
+                  2 / 3
+                ),
+              }}
+              startIcon={<SyncIcon></SyncIcon>}
+              onClick={() => {
+                updateRecord(selectedSport);
+              }}
+            >
+              Apply Changes
+            </Button>
             {selectedSport.user_id === user!.id && (
               <Button
                 color="error"
                 startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
                 onClick={() => {
-                  deleteRecord(selectedSport.id).finally(() =>
+                  deleteRecord(selectedSport.id).then(() =>
                     setSelectedSport(null)
                   );
                 }}
