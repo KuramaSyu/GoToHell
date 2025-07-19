@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactElement } from 'react';
-import { Box } from '@mui/material';
+import { alpha, Box } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -20,6 +20,7 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
+import { blendWithContrast } from '../../utils/blendWithContrast';
 
 export interface Sport {
   id: number;
@@ -113,6 +114,17 @@ export const SportsTimeline = () => {
           width: '100%',
           padding: 0,
           margin: 0,
+          borderRadius: 5,
+          transition: (theme) =>
+            theme.transitions.create('background-color', {
+              duration: theme.transitions.duration.short,
+            }),
+          '&:hover': {
+            bgcolor: alpha(
+              blendWithContrast(theme.palette.primary.main, theme, 0.5),
+              0.5
+            ),
+          },
         }}
       >
         <TimelineItem
