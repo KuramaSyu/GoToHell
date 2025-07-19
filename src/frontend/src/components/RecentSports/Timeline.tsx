@@ -121,6 +121,9 @@ export const SportsTimeline = () => {
   const timelineItems: ReactElement[] = transition((style, sport) => {
     if (sport === undefined) return null;
     const sportUser = users[sport.user_id];
+    const isSelected = selectedSport?.id === sport.id;
+    const isFaded = selectedSport !== null && !isSelected;
+
     return (
       <AnimatedBox
         key={sport.id}
@@ -131,15 +134,19 @@ export const SportsTimeline = () => {
           padding: 0,
           margin: 0,
           borderRadius: 5,
-          transition: (theme) =>
-            theme.transitions.create('background-color', {
-              duration: theme.transitions.duration.standard,
-            }),
+          cursor: 'pointer',
+          // ease out: starts fast ands slow
+          transition: 'opacity 0.7s ease-out, background-color 0.7s ease-out',
+          opacity: isFaded ? 0.3 : 1,
           '&:hover': {
-            bgcolor: alpha(
-              blendWithContrast(theme.palette.primary.main, theme, 0.5),
-              0.5
-            ),
+            transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
+            bgcolor:
+              !selectedSport || selectedSport.id === sport.id
+                ? alpha(
+                    blendWithContrast(theme.palette.primary.main, theme, 1 / 3),
+                    1 / 4
+                  )
+                : undefined,
           },
         }}
       >
