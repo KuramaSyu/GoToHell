@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
 } from '@mui/material';
 import Sport from '../../models/Sport';
 import { UserSport } from './Timeline';
@@ -15,6 +16,10 @@ import { useUsersStore, useUserStore } from '../../userStore';
 import { useTheme } from '@emotion/react';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { UserApi } from '../../utils/api/Api';
+import { blendWithContrast } from '../../utils/blendWithContrast';
+import { sportIconMap } from '../../utils/data/Sports';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import NumbersIcon from '@mui/icons-material/Numbers';
 
 export interface SportDialogProps {
   selectedSport: UserSport | null;
@@ -41,8 +46,9 @@ export const SportDialog: React.FC<SportDialogProps> = ({
           slotProps={{
             paper: {
               sx: {
-                backdropFilter: 'blur(5px)',
-                backgroundColor: alpha(theme.palette.secondary.dark, 0.6),
+                backdropFilter: 'blur(8px)',
+                backgroundColor: alpha(theme.palette.primary.dark, 0.7),
+                borderRadius: 8,
               },
             },
           }}
@@ -56,21 +62,68 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                 alignItems: 'center',
               }}
             >
-              <Avatar
-                src={user.getAvatarUrl()}
-                alt={user.username}
+              <Box
                 sx={{
-                  width: 60,
-                  height: 60,
-                  filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                  width: 1 / 2,
+                  fontWeight: 300,
                 }}
-                // onClick={handleLogout} show details on click
-              />
-              Details to {selectedSport!.kind} from{' '}
-              {users[selectedSport!.user_id]?.username}
+              >
+                <Avatar
+                  src={user.getAvatarUrl()}
+                  alt={user.username}
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))',
+                  }}
+                  // onClick={handleLogout} show details on click
+                />
+
+                {users[selectedSport!.user_id]?.username}
+              </Box>
+              <Divider orientation="vertical" flexItem></Divider>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontWeight: 300,
+                  width: 1 / 2,
+                }}
+              >
+                <img
+                  src={sportIconMap[String(selectedSport.kind)]}
+                  alt={String(selectedSport.kind)}
+                  style={{
+                    width: 60,
+                    height: 60,
+                    filter: 'brightness(0) invert(1)',
+                    marginRight: 1,
+                  }}
+                />
+                {selectedSport.kind.toUpperCase()}
+              </Box>
             </Box>
           </DialogTitle>
-          <DialogContent dividers>test</DialogContent>
+          <DialogContent dividers>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+              <CalendarMonthIcon></CalendarMonthIcon>
+              {new Date(selectedSport.timedate).toLocaleString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              })}
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}></Box>
+          </DialogContent>
           <DialogActions>
             {selectedSport.user_id === user!.id && (
               <Button
