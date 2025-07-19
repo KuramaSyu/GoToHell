@@ -153,7 +153,7 @@ export const SportsTimeline = () => {
             bgcolor:
               !selectedSport || selectedSport.id === sport.id
                 ? alpha(
-                    blendWithContrast(theme.palette.primary.main, theme, 1 / 3),
+                    blendWithContrast(theme.palette.primary.main, theme, 2 / 3),
                     1 / 4
                   )
                 : undefined,
