@@ -27,7 +27,7 @@ import GamepadIcon from '@mui/icons-material/Gamepad';
 import { GameEntry } from '../QuickActions/SearchModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   handleStringNumber,
   isNumeric,
@@ -62,6 +62,12 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const [amountValue, setAmountValue] = useState<number | null>(
     selectedSport?.amount ?? null
   );
+
+  useEffect(() => {
+    if (selectedSport) {
+      setAmountValue(selectedSport.amount);
+    }
+  }, [selectedSport]);
 
   const deleteRecord = async (id: number) => {
     try {
@@ -173,7 +179,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
               <NumbersIcon></NumbersIcon>
               <Input
                 value={amountValue}
-                type="number"
+                // type="number"
                 onChange={(e) => {
                   setAmountValue(Number(e.target.value));
                 }}
@@ -192,33 +198,35 @@ export const SportDialog: React.FC<SportDialogProps> = ({
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button
-              sx={{
-                color: blendWithContrast(
-                  theme.palette.primary.main,
-                  theme,
-                  2 / 3
-                ),
-              }}
-              startIcon={<SyncIcon></SyncIcon>}
-              onClick={() => {
-                updateRecord(selectedSport);
-              }}
-            >
-              Apply Changes
-            </Button>
             {selectedSport.user_id === user!.id && (
-              <Button
-                color="error"
-                startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
-                onClick={() => {
-                  deleteRecord(selectedSport.id).then(() =>
-                    setSelectedSport(null)
-                  );
-                }}
-              >
-                Delete Sport
-              </Button>
+              <>
+                <Button
+                  sx={{
+                    color: blendWithContrast(
+                      theme.palette.primary.main,
+                      theme,
+                      2 / 3
+                    ),
+                  }}
+                  startIcon={<SyncIcon></SyncIcon>}
+                  onClick={() => {
+                    updateRecord(selectedSport);
+                  }}
+                >
+                  Apply Changes
+                </Button>
+                <Button
+                  color="error"
+                  startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
+                  onClick={() => {
+                    deleteRecord(selectedSport.id).then(() =>
+                      setSelectedSport(null)
+                    );
+                  }}
+                >
+                  Delete Sport
+                </Button>
+              </>
             )}
             <Button
               sx={{
