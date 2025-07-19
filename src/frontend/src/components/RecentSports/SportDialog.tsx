@@ -123,8 +123,8 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                 }}
               >
                 <Avatar
-                  src={user.getAvatarUrl()}
-                  alt={user.username}
+                  src={users[selectedSport!.user_id]?.getAvatarUrl()}
+                  alt={users[selectedSport!.user_id]?.username}
                   sx={{
                     width: 60,
                     height: 60,
