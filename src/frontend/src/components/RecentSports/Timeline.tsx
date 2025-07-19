@@ -1,5 +1,13 @@
 import { useState, useEffect, ReactElement } from 'react';
-import { alpha, Box } from '@mui/material';
+import {
+  alpha,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -21,6 +29,7 @@ import {
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
 import { blendWithContrast } from '../../utils/blendWithContrast';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 export interface Sport {
   id: number;
@@ -45,6 +54,9 @@ export const SportsTimeline = () => {
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
   const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
+  const [modelOpen, setModelOpen] = useState(false);
+  const { isMobile } = useBreakpoint();
+  const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
 
   // hook for fetching sports
   useEffect(() => {
@@ -110,6 +122,7 @@ export const SportsTimeline = () => {
       <AnimatedBox
         key={sport.id}
         style={style}
+        onClick={() => setSelectedSport(sport)}
         sx={{
           width: '100%',
           padding: 0,
@@ -117,7 +130,7 @@ export const SportsTimeline = () => {
           borderRadius: 5,
           transition: (theme) =>
             theme.transitions.create('background-color', {
-              duration: theme.transitions.duration.short,
+              duration: theme.transitions.duration.standard,
             }),
           '&:hover': {
             bgcolor: alpha(
@@ -173,23 +186,43 @@ export const SportsTimeline = () => {
   });
 
   return (
-    <Timeline
-      sx={{
-        // weird CSS hack, to align the timeline dots left
-        [`& .${timelineOppositeContentClasses.root}`]: {
-          flex: '0 1 auto',
-          //flex: 0,
-          padding: 0,
-          height: '100%',
-          overflowY: 'auto',
-        },
-        [`& .${timelineItemClasses.root}:before`]: {
-          padding: 0,
-          margin: 0,
-        },
-      }}
-    >
-      {timelineItems}
-    </Timeline>
+    <Box>
+      <Timeline
+        sx={{
+          // weird CSS hack, to align the timeline dots left
+          [`& .${timelineOppositeContentClasses.root}`]: {
+            flex: '0 1 auto',
+            //flex: 0,
+            padding: 0,
+            height: '100%',
+            overflowY: 'auto',
+          },
+          [`& .${timelineItemClasses.root}:before`]: {
+            padding: 0,
+            margin: 0,
+          },
+        }}
+      >
+        {timelineItems}
+      </Timeline>
+      {selectedSport && (
+        <Dialog
+          open={selectedSport !== null}
+          onClose={() => setSelectedSport(null)}
+          fullScreen={isMobile}
+          fullWidth
+          maxWidth="sm"
+        >
+          <DialogTitle>
+            Details to {selectedSport!.kind} from{' '}
+            {users[selectedSport!.user_id]?.username}
+          </DialogTitle>
+          <DialogContent dividers>test</DialogContent>
+          <DialogActions>
+            <Button onClick={() => setSelectedSport(null)}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </Box>
   );
 };
