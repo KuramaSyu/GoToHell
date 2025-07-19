@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  Input,
 } from '@mui/material';
 import Sport from '../../models/Sport';
 import { UserSport } from './Timeline';
@@ -110,7 +111,10 @@ export const SportDialog: React.FC<SportDialogProps> = ({
               </Box>
             </Box>
           </DialogTitle>
-          <DialogContent dividers>
+          <DialogContent
+            dividers
+            sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+          >
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
               <CalendarMonthIcon></CalendarMonthIcon>
               {new Date(selectedSport.timedate).toLocaleString('en-GB', {
@@ -122,7 +126,13 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                 hour12: false,
               })}
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}></Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+              <NumbersIcon></NumbersIcon>
+              <Input
+                value={selectedSport.amount}
+                disabled={user.id !== selectedSport.user_id}
+              ></Input>
+            </Box>
           </DialogContent>
           <DialogActions>
             {selectedSport.user_id === user!.id && (
