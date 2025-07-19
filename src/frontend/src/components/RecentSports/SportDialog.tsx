@@ -21,6 +21,8 @@ import { blendWithContrast } from '../../utils/blendWithContrast';
 import { sportIconMap } from '../../utils/data/Sports';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NumbersIcon from '@mui/icons-material/Numbers';
+import GamepadIcon from '@mui/icons-material/Gamepad';
+import { GameEntry } from '../QuickActions/SearchModal';
 
 export interface SportDialogProps {
   selectedSport: UserSport | null;
@@ -132,6 +134,10 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                 value={selectedSport.amount}
                 disabled={user.id !== selectedSport.user_id}
               ></Input>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+              <GamepadIcon></GamepadIcon>
+              {new GameEntry(selectedSport.game).displayName()}
             </Box>
           </DialogContent>
           <DialogActions>
