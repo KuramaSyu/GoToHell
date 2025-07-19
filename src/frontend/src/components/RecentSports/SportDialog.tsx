@@ -23,6 +23,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import GamepadIcon from '@mui/icons-material/Gamepad';
 import { GameEntry } from '../QuickActions/SearchModal';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 
 export interface SportDialogProps {
   selectedSport: UserSport | null;
@@ -36,6 +38,19 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { user } = useUserStore();
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
+
+  const deleteRecord = async (id: number) => {
+    try {
+      const response = await new UserApi().deleteRecord(id);
+      if (response === null) {
+        throw new Error('Failed to delete record');
+      }
+      // Trigger total score refresh.
+      useTotalScoreStore.getState().triggerRefresh();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -143,14 +158,29 @@ export const SportDialog: React.FC<SportDialogProps> = ({
           <DialogActions>
             {selectedSport.user_id === user!.id && (
               <Button
+                color="error"
+                startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
                 onClick={() => {
-                  new UserApi().deleteRecord(selectedSport.id);
+                  deleteRecord(selectedSport.id).finally(() =>
+                    setSelectedSport(null)
+                  );
                 }}
               >
                 Delete Sport
               </Button>
             )}
-            <Button onClick={() => setSelectedSport(null)}>Close</Button>
+            <Button
+              sx={{
+                color: blendWithContrast(
+                  theme.palette.primary.main,
+                  theme,
+                  2 / 3
+                ),
+              }}
+              onClick={() => setSelectedSport(null)}
+            >
+              Close
+            </Button>
           </DialogActions>
         </Dialog>
       )}
