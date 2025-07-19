@@ -57,9 +57,8 @@ export const SportsTimeline = () => {
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
   const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
-  const [modelOpen, setModelOpen] = useState(false);
-  const { isMobile } = useBreakpoint();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   // hook for fetching sports
   useEffect(() => {
@@ -113,6 +112,15 @@ export const SportsTimeline = () => {
     leave: { opacity: 0, y: 20, scale: 0.3 },
     config: config.default,
     trail: 80,
+
+    onRest: (_result, _ctrl, item) => {
+      // after rendering the 15nth element, set
+      // mount to true, that animation
+      const index = Math.min(15, itemsToAnimate.length);
+      if (item.id === itemsToAnimate[index]?.id) {
+        setIsMounted(true);
+      }
+    },
   });
 
   if (!user || !usersLoaded) return <Box />;
@@ -136,7 +144,9 @@ export const SportsTimeline = () => {
           borderRadius: 5,
           cursor: 'pointer',
           // ease out: starts fast ands slow
-          transition: 'opacity 0.7s ease-out, background-color 0.7s ease-out',
+          transition: isMounted
+            ? 'opacity 0.7s ease-out, background-color 0.7s ease-out'
+            : undefined,
           opacity: isFaded ? 0.3 : 1,
           '&:hover': {
             transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
