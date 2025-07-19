@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactElement } from 'react';
 import {
   alpha,
+  Backdrop,
   Box,
   Button,
   Dialog,
@@ -30,8 +31,9 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { blendWithContrast } from '../../utils/blendWithContrast';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { UserApi } from '../../utils/api/Api';
 
-export interface Sport {
+export interface UserSport {
   id: number;
   kind: string;
   amount: number;
@@ -41,7 +43,7 @@ export interface Sport {
 }
 
 interface SportsApiResponse {
-  data: Sport[];
+  data: UserSport[];
 }
 
 const AnimatedBox = animated(Box);
@@ -56,7 +58,7 @@ export const SportsTimeline = () => {
   const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
   const [modelOpen, setModelOpen] = useState(false);
   const { isMobile } = useBreakpoint();
-  const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
+  const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
 
   // hook for fetching sports
   useEffect(() => {
@@ -212,6 +214,17 @@ export const SportsTimeline = () => {
           fullScreen={isMobile}
           fullWidth
           maxWidth="sm"
+          slotProps={{
+            // backdrop: {
+            //   color: alpha(theme.palette.primary.dark, 0.6),
+            // },
+            paper: {
+              sx: {
+                backdropFilter: 'blur(5px)',
+                backgroundColor: alpha(theme.palette.secondary.dark, 0.6),
+              },
+            },
+          }}
         >
           <DialogTitle>
             Details to {selectedSport!.kind} from{' '}
@@ -219,6 +232,15 @@ export const SportsTimeline = () => {
           </DialogTitle>
           <DialogContent dividers>test</DialogContent>
           <DialogActions>
+            {selectedSport.user_id === user.id && (
+              <Button
+                onClick={() => {
+                  new UserApi().deleteRecord(selectedSport.id);
+                }}
+              >
+                Delete Sport
+              </Button>
+            )}
             <Button onClick={() => setSelectedSport(null)}>Close</Button>
           </DialogActions>
         </Dialog>

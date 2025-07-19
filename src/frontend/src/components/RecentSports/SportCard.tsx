@@ -15,10 +15,10 @@ import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { TransitionGroup } from 'react-transition-group';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sport } from './Timeline';
+import { UserSport } from './Timeline';
 
 interface SportCardProps {
-  data: Sport;
+  data: UserSport;
 }
 
 export const SportCard: React.FC<SportCardProps> = ({ data }) => {
