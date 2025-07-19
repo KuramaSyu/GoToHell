@@ -88,7 +88,7 @@ class SportEntry extends DefaultSearchEntry {
 /**
  * Represents any of the available games
  */
-class GameEntry extends DefaultSearchEntry {
+export class GameEntry extends DefaultSearchEntry {
   name: string;
   constructor(game: string) {
     super();
