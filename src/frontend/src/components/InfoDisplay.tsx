@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Snackbar, Alert, Typography } from '@mui/material';
-import useErrorStore from '../zustand/Error';
+import useInfoStore from '../zustand/InfoStore';
 
-const ErrorDisplay: React.FC = () => {
-  const { errorMessage, setErrorMessage } = useErrorStore();
+const InfoDisplay: React.FC = () => {
+  const { Message, setMessage: setErrorMessage } = useInfoStore();
   const [open, setOpen] = useState(false);
 
   // Monitor error message changes
   useEffect(() => {
-    if (errorMessage && errorMessage !== '') {
+    if (Message && Message.message !== '') {
       setOpen(true);
     } else {
       setOpen(false);
     }
-  }, [errorMessage]);
+  }, [Message]);
 
   // Auto hide timer
   useEffect(() => {
@@ -40,7 +40,10 @@ const ErrorDisplay: React.FC = () => {
 
   // Handle cleanup after animation
   const handleExited = () => {
-    setErrorMessage('');
+    setErrorMessage({
+      message: '',
+      severity: 'info',
+    });
   };
 
   return (
@@ -49,14 +52,14 @@ const ErrorDisplay: React.FC = () => {
       autoHideDuration={5000}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      key={errorMessage} // This key is important for re-triggering with the same message
+      key={Message.message} // This key is important for re-triggering with the same message
       slotProps={{ transition: { onExited: handleExited } }}
     >
       <Typography variant="h4" component="div">
-        <Alert severity="error">{errorMessage}</Alert>
+        <Alert severity={Message.severity}>{Message.message}</Alert>
       </Typography>
     </Snackbar>
   );
 };
 
-export default ErrorDisplay;
+export default InfoDisplay;
