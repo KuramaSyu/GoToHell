@@ -56,6 +56,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 #### Fixes
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
+- [ ] Timeline focus: always lighten up instead of dynamically lighten or darken
 
 #### QoL
 
