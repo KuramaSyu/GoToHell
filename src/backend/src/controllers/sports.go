@@ -21,6 +21,19 @@ type PostSportReply struct {
 	Results []models.SportAmount `json:"results"`
 }
 
+// swagger:response PatchSportRequest
+type PatchSportRequest struct {
+	ID     models.Snowflake `json:"id" binding:"required" example:"42"`
+	Kind   string           `json:"kind,omitempty" example:"push-ups"`
+	Game   string           `json:"game,omitempty" example:"league"`
+	Amount int              `json:"amount,omitempty" example:"21"`
+}
+
+// swagger:response PatchSportReply
+type PatchSportReply struct {
+	Message string `json:"message"`
+}
+
 // swagger:response DeleteSportReply
 type DeleteSportsReply struct {
 	Message string `json:"message"`
@@ -154,6 +167,47 @@ func (sc *SportsController) GetTotalResults(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"results": amount})
+}
+
+// PostSport godoc
+// @Summary Update a sport entry by ID
+// @Tags 	sport
+// @Accept	json
+// @Producte json
+// @Security CookieAuth
+// @Param sport body PatchSportRequest true "Paylaod of the sport to change"
+// @Success 201 {object} PatchSportReply
+// @Failure 400 {object} ErrorReply
+// @Failure 500 {object} ErrorReply
+// @Router /api/sports [patch]
+func (sc *SportsController) Patch(c *gin.Context) {
+	// Check if user is logged in via Discord
+	user, status, err := UserFromSession(c)
+	if err != nil {
+		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	// read body
+	var req PatchSportRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid JSON format: %w", err))
+	}
+
+	err = sc.repo.PatchSport(models.Sport{
+		ID:     req.ID,
+		Kind:   req.Kind,
+		Game:   req.Game,
+		Amount: req.Amount,
+		UserID: user.ID, // use the id from the session
+	})
+
+	if err != nil {
+		SetGinError(c, http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, fmt.Sprintf("Sport entry %d updated successfully", req.ID))
+
 }
 
 // PostSport godoc
