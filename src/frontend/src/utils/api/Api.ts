@@ -13,7 +13,7 @@ import {
 } from '../../zustand/RecentSportsState';
 import { GetOverdueDeathsReply } from './responses/OverdueDeaths';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
-import { PostSportsResponse } from './responses/Sport';
+import { PatchSportResponse, PostSportsResponse } from './responses/Sport';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
@@ -32,6 +32,13 @@ export interface UserApiInterface {
     sports: SportRow[],
     updateStores: boolean
   ): Promise<PostSportsResponse | null>;
+  patchSport(
+    id: number,
+    kind: string,
+    game: string,
+    amount: number,
+    updateStores?: boolean
+  ): Promise<PatchSportResponse | null>;
 }
 
 // Class, to fetch resources from the backend. Responses will be
@@ -261,6 +268,74 @@ export class UserApi implements UserApiInterface {
             }),
             ...reply.results,
           ]);
+        }
+        return reply;
+      } else {
+        this.logError(API_ENDPOINT, result);
+      }
+      return null;
+    } catch (error) {
+      this.logError(API_ENDPOINT, error);
+      throw error;
+    }
+  }
+    /**
+   * patches a sport-record to /api/sports
+   *
+   * @Note
+   * sets the useTotalScoreStore Zustand
+   *
+   * @throws Error: if the fetch fails
+   *
+   * @param sports: SportRow[]: the sport records to post
+   *
+   * @returns
+   * PostSportResponse | null: the Response
+   */
+  async patchSport(
+    id: number,
+    kind: string | null,
+    game: string | null,
+    amount: number | null,
+    updateStores?: boolean
+  ): Promise<PatchSportResponse | null> {
+    const API_ENDPOINT = '/api/sports';
+    // get user
+    const user = useUserStore.getState().user;
+    if (user === null) {
+      return null;
+    }
+    const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
+
+    try {
+      const response = await fetch(url, {
+        credentials: 'include',
+        method: 'PATCH',
+        body: JSON.stringify({
+          id: id,
+          kind: kind,
+          game: game,
+          amount: amount,
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        // get zustand setter
+        const { setRecentSports, recentSports } = useRecentSportsStore.getState();
+
+        var reply = result as PatchSportResponse;
+
+        if (updateStores && recentSports !== null) {
+          setRecentSports({data: [...recentSports.data.map(s => {
+            if (s.id !== id) return s;
+            return {
+              ...s,
+              ...(kind !== null && { kind }),
+              ...(game !== null && { game }),
+              ...(amount !== null && { amount }),
+            };
+          })]})
         }
         return reply;
       } else {
