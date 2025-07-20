@@ -130,7 +130,10 @@ export const RecentSportsStandard: React.FC<RecentSportStandardProps> = ({
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
-      setErrorMessage(`Failed to delete record: ${error}`);
+      setErrorMessage({
+        message: `Failed to delete record: ${error}`,
+        severity: 'error',
+      });
       console.error(error);
     }
   };

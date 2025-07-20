@@ -70,7 +70,7 @@ export const UploadScore = () => {
     } catch (e) {
       // handle uplaod error - description is in error included
       setSnackbarState('failed');
-      setErrorMessage(String(e));
+      setErrorMessage({ message: String(e), severity: 'error' });
     }
 
     setTimeout(() => setSnackbarState(null), 2000);

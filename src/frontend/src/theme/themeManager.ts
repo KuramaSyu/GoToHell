@@ -134,11 +134,10 @@ export class ThemeManager {
 
       // display timer after too much loading time
       const warningTimer = setTimeout(() => {
-        useInfoStore
-          .getState()
-          .setMessage(
-            `Loading image for theme ${themeName} takes longer then expected`
-          );
+        useInfoStore.getState().setMessage({
+          message: `Loading image for theme ${themeName} takes longer then expected`,
+          severity: 'warning',
+        });
       }, 1200);
       // Create a promise to wait for the image to load
       const imageLoaded = new Promise((resolve, reject) => {
@@ -149,11 +148,10 @@ export class ThemeManager {
         img.onerror = (e) => {
           clearTimeout(warningTimer);
           reject(e);
-          useInfoStore
-            .getState()
-            .setMessage(
-              `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`
-            );
+          useInfoStore.getState().setMessage({
+            message: `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`,
+            severity: 'error',
+          });
         };
         img.src = chosenBackground!;
       });

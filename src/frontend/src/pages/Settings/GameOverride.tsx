@@ -34,7 +34,7 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
   sport,
   amount,
 }) => {
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const { setMessage } = useInfoStore();
   const { preferences, setPreferences } = usePreferenceStore();
 
   const removeItem = (game: string, sport: string, amount: number) => {
@@ -47,9 +47,11 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
       setCookie('preferences', JSON.stringify(preferences), 999);
       setPreferences(preferences);
     } else {
-      setErrorMessage(
-        'Could not find the game override to remove. Please try again.'
-      );
+      setMessage({
+        message:
+          'Could not find the game override to remove. Please try again.',
+        severity: 'error',
+      });
     }
   };
 
@@ -142,19 +144,28 @@ export const GameOverrideSettings: React.FC = () => {
   const [sport, setSport] = useState<string | null>(null);
   const [exerciseAmount, setExerciseAmount] = useState<number>(0);
   const menuItems = getThemeNames();
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const { setMessage } = useInfoStore();
 
   const add = () => {
     if (game === null) {
-      return setErrorMessage('You need to select a game');
+      return setMessage({
+        message: 'You need to select a game',
+        severity: 'error',
+      });
     }
 
     if (sport === null) {
-      return setErrorMessage('You need to select a sport');
+      return setMessage({
+        message: 'You need to select a sport',
+        severity: 'error',
+      });
     }
 
     if (exerciseAmount === null) {
-      return setErrorMessage('Well, how many exerpices per death?');
+      return setMessage({
+        message: 'Well, how many exerpices per death?',
+        severity: 'error',
+      });
     }
     preferences.game_overrides.push({
       game: game,

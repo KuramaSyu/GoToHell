@@ -35,7 +35,7 @@ export const UploadOverdueDeaths = () => {
   const { currentSport } = useSportStore();
   const { amount, setAmount: setDeathAmount } = useDeathAmountStore();
   const { user } = useUserStore();
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const { setMessage } = useInfoStore();
   useTotalScoreStore();
   const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
@@ -51,7 +51,7 @@ export const UploadOverdueDeaths = () => {
       await uploadBuilder.upload();
       uploadBuilder.updateStores();
     } catch (e) {
-      setErrorMessage(String(e));
+      setMessage({ message: String(e), severity: 'error' });
     }
   };
   if (
