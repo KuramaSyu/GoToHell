@@ -50,15 +50,19 @@ interface SportsApiResponse {
 const AnimatedBox = animated(Box);
 
 export const SportsTimeline = () => {
-  const [data, setData] = useState<SportsApiResponse | null>(null);
   const { user } = useUserStore();
   const { users, friendsLoaded: usersLoaded } = useUsersStore();
   const { setErrorMessage } = useErrorStore();
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
-  const { refreshTrigger: RecentSportsRefreshTrigger } = useRecentSportsStore();
+  const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } = useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    if (!selectedSport || !recentSports) return;
+    setSelectedSport(recentSports.data.find((sport) => sport.id === selectedSport.id) || null);
+  }, [recentSports])
 
   // hook for fetching sports
   useEffect(() => {
@@ -80,7 +84,6 @@ export const SportsTimeline = () => {
           .forceFetch();
         const fetchedData = useRecentSportsStore.getState().recentSports;
         if (fetchedData === null) return;
-        setData(fetchedData);
       } catch (error) {
         console.error(
           `Error fetching recent sports: ${error}`,
@@ -104,7 +107,7 @@ export const SportsTimeline = () => {
     return () => clearInterval(interval);
   }, [users, ScoreRefreshTrigger, RecentSportsRefreshTrigger, user]);
 
-  const itemsToAnimate = data?.data.toReversed() || [];
+  const itemsToAnimate = recentSports?.data.toReversed() || [];
   const transition = useTransition(itemsToAnimate, {
     key: (sport) => sport.id,
     from: { opacity: 0, y: 20, scale: 0.3 },
@@ -124,7 +127,7 @@ export const SportsTimeline = () => {
   });
 
   if (!user || !usersLoaded) return <Box />;
-  if (!data || !data.data) return <Box />;
+  if (!recentSports || !recentSports.data) return <Box />;
 
   const timelineItems: ReactElement[] = transition((style, sport) => {
     if (sport === undefined) return null;
