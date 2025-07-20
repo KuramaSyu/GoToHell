@@ -54,6 +54,28 @@ definitions:
         description: the response message
         type: string
     type: object
+  controllers.PatchSportReply:
+    properties:
+      message:
+        type: string
+    type: object
+  controllers.PatchSportRequest:
+    properties:
+      amount:
+        example: 21
+        type: integer
+      game:
+        example: league
+        type: string
+      id:
+        example: 42
+        type: integer
+      kind:
+        example: push-ups
+        type: string
+    required:
+    - id
+    type: object
   controllers.PostOverdueDeathsReply:
     properties:
       data:
@@ -361,6 +383,34 @@ paths:
       security:
       - CookieAuth: []
       summary: Get sports for all users provided in the query parameter
+      tags:
+      - sport
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Paylaod of the sport to change
+        in: body
+        name: sport
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PatchSportRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.PatchSportReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Update a sport entry by ID
       tags:
       - sport
     post:

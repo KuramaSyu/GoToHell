@@ -353,6 +353,51 @@
                         }
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sport"
+                ],
+                "summary": "Update a sport entry by ID",
+                "parameters": [
+                    {
+                        "description": "Paylaod of the sport to change",
+                        "name": "sport",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PatchSportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PatchSportReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
             }
         },
         "/api/streak": {
@@ -520,6 +565,38 @@
                 "message": {
                     "description": "the response message",
                     "type": "string"
+                }
+            }
+        },
+        "controllers.PatchSportReply": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.PatchSportRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 21
+                },
+                "game": {
+                    "type": "string",
+                    "example": "league"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 42
+                },
+                "kind": {
+                    "type": "string",
+                    "example": "push-ups"
                 }
             }
         },
