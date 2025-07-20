@@ -13,7 +13,7 @@ import { useDeathAmountStore } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from '../userStore';
 import SportRow, { SportScore } from '../models/Sport';
-import useErrorStore from '../zustand/Error';
+import useInfoStore from '../zustand/InfoStore';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
@@ -32,7 +32,7 @@ export const UploadScore = () => {
   const { currentSport } = useSportStore();
   const { amount, setAmount: setDeathAmount } = useDeathAmountStore();
   const { user } = useUserStore();
-  const { setErrorMessage } = useErrorStore();
+  const { setMessage: setErrorMessage } = useInfoStore();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts, triggerRefresh: triggerScoreRefresh } =
     useTotalScoreStore();

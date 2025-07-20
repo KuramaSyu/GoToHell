@@ -29,7 +29,7 @@ import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
 import { Multiplier, UserPreferences } from '../models/Preferences';
 import { animated, useSpring, useTransition } from 'react-spring';
-import useErrorStore from '../zustand/Error';
+import useInfoStore from '../zustand/InfoStore';
 import { GameSelectionMap, sportIconMap } from '../utils/data/Sports';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
@@ -89,7 +89,7 @@ export const SportSelector = () => {
   const { setCalculator } = useCalculatorStore();
   const { preferences, preferencesLoaded } = usePreferenceStore();
   const { usedMultiplier } = useUsedMultiplierStore();
-  const { setErrorMessage } = useErrorStore();
+  const { setMessage: setErrorMessage } = useInfoStore();
   const { isMobile } = useBreakpoint();
 
   function isInPreferences(value: string): Boolean {

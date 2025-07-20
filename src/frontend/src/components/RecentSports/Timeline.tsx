@@ -24,7 +24,7 @@ import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { SportCard, SportCardNumber } from './SportCard';
 import { animated, config, useTransition } from 'react-spring';
-import useErrorStore from '../../zustand/Error';
+import useInfoStore from '../../zustand/InfoStore';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
@@ -52,17 +52,20 @@ const AnimatedBox = animated(Box);
 export const SportsTimeline = () => {
   const { user } = useUserStore();
   const { users, friendsLoaded: usersLoaded } = useUsersStore();
-  const { setErrorMessage } = useErrorStore();
+  const { setMessage: setErrorMessage } = useInfoStore();
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
-  const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } = useRecentSportsStore();
+  const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } =
+    useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (!selectedSport || !recentSports) return;
-    setSelectedSport(recentSports.data.find((sport) => sport.id === selectedSport.id) || null);
-  }, [recentSports])
+    setSelectedSport(
+      recentSports.data.find((sport) => sport.id === selectedSport.id) || null
+    );
+  }, [recentSports]);
 
   // hook for fetching sports
   useEffect(() => {
@@ -89,11 +92,12 @@ export const SportsTimeline = () => {
           `Error fetching recent sports: ${error}`,
           error instanceof Error ? error.message : ''
         );
-        setErrorMessage(
-          `Error fetching recent sports: ${
+        setErrorMessage({
+          message: `Error fetching recent sports: ${
             error instanceof Error ? error.message : 'Unknown error'
-          }`
-        );
+          }`,
+          severity: 'error',
+        });
       }
     };
 

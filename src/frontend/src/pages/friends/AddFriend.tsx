@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { Box, TextField, Button, Typography } from '@mui/material';
 import { BACKEND_BASE } from '../../statics';
-import useErrorStore from '../../zustand/Error';
+import useInfoStore from '../../zustand/InfoStore';
 
 const AddFriend: React.FC = () => {
   const [friendId, setFriendId] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const { setErrorMessage } = useErrorStore();
+  const { setMessage: setErrorMessage } = useInfoStore();
 
   const update = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,19 +16,28 @@ const AddFriend: React.FC = () => {
       setError('');
 
       if (!friendId) {
-        setErrorMessage('Friend ID is required');
+        setErrorMessage({
+          message: 'Friend ID is required',
+          severity: 'error',
+        });
         return;
       }
 
       const id = BigInt(friendId);
       console.log(`ID as string: ${friendId}, as num: ${id}`);
       if (id === null || id <= 0) {
-        setErrorMessage('Please enter a valid numeric Friend ID');
+        setErrorMessage({
+          message: 'Please enter a valid numeric Friend ID',
+          severity: 'error',
+        });
         return;
       }
 
       if (friendId.length !== 18) {
-        setErrorMessage("Discord ID's usually contain 18 numbers");
+        setErrorMessage({
+          message: "Discord ID's usually contain 18 numbers",
+          severity: 'error',
+        });
         return;
       }
 

@@ -16,7 +16,7 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import { BACKEND_BASE } from '../../statics';
 import AddFriend from './AddFriend';
 import IdDisplay from './IdDisplay';
-import useErrorStore from '../../zustand/Error';
+import useInfoStore from '../../zustand/InfoStore';
 import { useUserStore, useUsersStore } from '../../userStore';
 import {
   DiscordUser,
@@ -54,7 +54,7 @@ export const FriendOverview: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabIndex>(TabIndex.Overview);
   const [loading, setLoading] = useState(false);
 
-  const { setErrorMessage } = useErrorStore();
+  const { setMessage: setErrorMessage } = useInfoStore();
   const { user } = useUserStore();
   const { users } = useUsersStore();
 

@@ -37,7 +37,7 @@ import SyncIcon from '@mui/icons-material/Sync';
 import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import { update } from 'react-spring';
-import useErrorStore from '../../zustand/Error';
+import useInfoStore from '../../zustand/InfoStore';
 import { json } from 'stream/consumers';
 
 const Transition = React.forwardRef(function Transition(
@@ -61,7 +61,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { user } = useUserStore();
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
-  const { setErrorMessage } = useErrorStore();
+  const { setMessage } = useInfoStore();
   const [prevSportId, setPrevSportId] = useState<number | null>(
     selectedSport?.id ?? null
   );
@@ -92,7 +92,10 @@ export const SportDialog: React.FC<SportDialogProps> = ({
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
-      setErrorMessage('Failed to delete sport record');
+      setMessage({
+        message: 'Failed to delete sport record',
+        severity: 'error',
+      });
       console.error(error);
     }
   };

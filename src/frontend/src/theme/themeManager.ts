@@ -8,7 +8,7 @@ import {
   useThemeStore,
 } from '../zustand/useThemeStore';
 import { error } from 'console';
-import useErrorStore from '../zustand/Error';
+import useInfoStore from '../zustand/InfoStore';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -134,9 +134,9 @@ export class ThemeManager {
 
       // display timer after too much loading time
       const warningTimer = setTimeout(() => {
-        useErrorStore
+        useInfoStore
           .getState()
-          .setErrorMessage(
+          .setMessage(
             `Loading image for theme ${themeName} takes longer then expected`
           );
       }, 1200);
@@ -149,9 +149,9 @@ export class ThemeManager {
         img.onerror = (e) => {
           clearTimeout(warningTimer);
           reject(e);
-          useErrorStore
+          useInfoStore
             .getState()
-            .setErrorMessage(
+            .setMessage(
               `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`
             );
         };
