@@ -57,6 +57,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
 - [ ] recent activities don't show recent first and are a bit broken
+- [ ] SportDialog updates changed amount after 30s update
 
 #### QoL
 
@@ -139,7 +140,8 @@ npm install
 ```
 
 ### Set frontend config:
-Either use the arg `BACKEND_URL` in the docker container or set a `.env` in the `src/frontend` directory with 
+
+Either use the arg `BACKEND_URL` in the docker container or set a `.env` in the `src/frontend` directory with
 contents like in `src/frontend/.example-env`. It's important to add a `VITE_` to the ENV vars, if not set
 via docker
 
@@ -157,6 +159,7 @@ via docker
   ```
 
 ### Set backend `.env` file
+
 use the `.example-env` as template and fill out
 
 ### Building swagger docs out of Go comments:
