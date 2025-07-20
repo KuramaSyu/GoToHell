@@ -62,6 +62,9 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
   const { setErrorMessage } = useErrorStore();
+  const [prevSportId, setPrevSportId] = useState<number | null>(
+    selectedSport?.id ?? null
+  );
   const [amountValue, setAmountValue] = useState<number | null>(
     selectedSport?.amount ?? null
   );
@@ -72,9 +75,11 @@ export const SportDialog: React.FC<SportDialogProps> = ({
     return now.getTime() - date.getTime() > 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
   };
 
+  // update amountValue when selectedSport (ID) changes
   useEffect(() => {
-    if (selectedSport) {
+    if (selectedSport && selectedSport.id !== prevSportId) {
       setAmountValue(selectedSport.amount);
+      setPrevSportId(selectedSport.id);
     }
   }, [selectedSport]);
 
