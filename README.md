@@ -134,7 +134,14 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 ### Install Dependencies
 
-...
+```
+npm install
+```
+
+### Set frontend config:
+Either use the arg `BACKEND_URL` in the docker container or set a `.env` in the `src/frontend` directory with 
+contents like in `src/frontend/.example-env`. It's important to add a `VITE_` to the ENV vars, if not set
+via docker
 
 ### Starting Website:
 
@@ -148,6 +155,9 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   cd src/backend/src
   go run main.go
   ```
+
+### Set backend `.env` file
+use the `.example-env` as template and fill out
 
 ### Building swagger docs out of Go comments:
 
