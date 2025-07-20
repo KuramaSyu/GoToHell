@@ -56,7 +56,6 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 #### Fixes
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
-- [ ] recent activities don't show recent first and are a bit broken
 
 #### QoL
 

@@ -9,7 +9,7 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import { SecondaryTabView } from './SecondaryTabView';
 
 export const RecentSports = () => {
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountStore();
   const { calculator } = useCalculatorStore();
@@ -54,10 +54,10 @@ export const RecentSports = () => {
               p: 1,
             }}
           >
-            <Tab
+            {/* <Tab
               label="Recent Activities"
               sx={{ minWidth: 150, width: 'auto' }}
-            />
+            /> */}
             <Tab label="Multiplier" sx={{ minWidth: 150, width: 'auto' }} />
           </Tabs>
         </Box>
@@ -72,14 +72,14 @@ export const RecentSports = () => {
             overflow: 'hidden',
           }}
         >
-          {activeTab === 0 && (
+          {/* {activeTab === 0 && (
             <RecentSportsStandard
               key={`recent-${activeTab}`}
               this_tab={0}
               current_tab={activeTab}
             />
-          )}
-          {activeTab === 1 && (
+          )} */}
+          {activeTab === 0 && (
             <Box sx={{ width: '100%' }}>
               <MultiplierSettings />
             </Box>
