@@ -33,6 +33,7 @@ func SetupRouter(
 		sports.GET("", sportsController.GetSports)
 		sports.GET("/total", sportsController.GetTotalResults)
 		sports.POST("", sportsController.PostSport)
+		sports.PATCH("", sportsController.Patch)
 		sports.DELETE("/:id", sportsController.DeleteSport)
 
 		streak := api.Group("/streak")
