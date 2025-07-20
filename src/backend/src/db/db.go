@@ -16,6 +16,7 @@ type SportRepository interface {
 	InsertSport(sport Sport) error
 	GetSports(userIDs []Snowflake, limit int) ([]Sport, error)
 	UpdateSport(sport Sport) error
+	PatchSport(sport Sport) error
 	DeleteSport(id Snowflake, userID Snowflake) error
 	GetTotalAmounts(userID Snowflake) ([]SportAmount, error)
 	GetDayStreak(userID Snowflake) (DayStreak, error)
@@ -72,6 +73,15 @@ func (r *OrmSportRepository) GetTotalAmounts(userID Snowflake) ([]SportAmount, e
 // UpdateSport updates a Sport entry using ORM.
 func (r *OrmSportRepository) UpdateSport(sport Sport) error {
 	result := r.DB.Save(&sport)
+	return result.Error
+}
+
+// PatchSport updates a Sport entry using ORM. Patch does not CREATE if it does not exist
+func (r *OrmSportRepository) PatchSport(sport Sport) error {
+	result := r.DB.Model(&sport).Where(&Sport{ID: sport.ID, UserID: sport.UserID}).Updates(sport)
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("no record found for ID %d and UserID %d", sport.ID, sport.UserID)
+	}
 	return result.Error
 }
 
