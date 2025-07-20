@@ -307,24 +307,29 @@ export class UserApi implements UserApiInterface {
     }
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
+    var body = JSON.stringify({
+      id: id,
+      kind: kind,
+      game: game,
+      amount: amount,
+    });
+
+    console.log(`patch with ${body}`);
+
     try {
       const response = await fetch(url, {
         credentials: 'include',
         method: 'PATCH',
-        body: JSON.stringify({
-          id: id,
-          kind: kind,
-          game: game,
-          amount: amount,
-        }),
+        body: body,
       });
 
       const result = await response.json();
       if (response.ok) {
         // get zustand setter
-        const { setRecentSports, recentSports } = useRecentSportsStore.getState();
+        const { setRecentSports, recentSports, triggerRefresh } = useRecentSportsStore.getState();
 
         var reply = result as PatchSportResponse;
+        console.log(`reply: ${JSON.stringify(reply)}`)
 
         if (updateStores && recentSports !== null) {
           setRecentSports({data: [...recentSports.data.map(s => {
@@ -336,6 +341,8 @@ export class UserApi implements UserApiInterface {
               ...(amount !== null && { amount }),
             };
           })]})
+          //triggerRefresh();
+
         }
         return reply;
       } else {
