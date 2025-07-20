@@ -36,6 +36,9 @@ import {
 import SyncIcon from '@mui/icons-material/Sync';
 import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
+import { update } from 'react-spring';
+import useErrorStore from '../../zustand/Error';
+import { json } from 'stream/consumers';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -58,10 +61,16 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { user } = useUserStore();
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
-
+  const { setErrorMessage } = useErrorStore();
   const [amountValue, setAmountValue] = useState<number | null>(
     selectedSport?.amount ?? null
   );
+  // Check if the sport is too old to be edited (>2d)
+  const isTooOld = (time: string): boolean => {
+    const date = new Date(time);
+    const now = new Date();
+    return now.getTime() - date.getTime() > 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
+  };
 
   useEffect(() => {
     if (selectedSport) {
@@ -78,11 +87,25 @@ export const SportDialog: React.FC<SportDialogProps> = ({
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
+      setErrorMessage('Failed to delete sport record');
       console.error(error);
     }
   };
 
-  const updateRecord = async (record: UserSport) => {};
+  const updateRecord = async (record: UserSport) => {
+    try {
+      const response = await new UserApi().patchSport(
+        record.id,
+        null, // kind is not being changed, so we pass null
+        null, // game is not being changed, so we pass null
+        amountValue,
+        true
+      );
+      selectedSport!.amount = amountValue!;
+    } catch (error) {
+      console.error('Failed to update record:', error);
+    }
+  };
 
   return (
     <>
@@ -200,21 +223,24 @@ export const SportDialog: React.FC<SportDialogProps> = ({
           <DialogActions>
             {selectedSport.user_id === user!.id && (
               <>
-                <Button
-                  sx={{
-                    color: blendWithContrast(
-                      theme.palette.primary.main,
-                      theme,
-                      2 / 3
-                    ),
-                  }}
-                  startIcon={<SyncIcon></SyncIcon>}
-                  onClick={() => {
-                    updateRecord(selectedSport);
-                  }}
-                >
-                  Apply Changes
-                </Button>
+                {!isTooOld(selectedSport.timedate) && (
+                  <Button
+                    sx={{
+                      color: blendWithContrast(
+                        theme.palette.primary.main,
+                        theme,
+                        2 / 3
+                      ),
+                    }}
+                    startIcon={<SyncIcon></SyncIcon>}
+                    onClick={() => {
+                      updateRecord(selectedSport);
+                    }}
+                    disabled={amountValue === selectedSport.amount}
+                  >
+                    Apply Changes
+                  </Button>
+                )}
                 <Button
                   color="error"
                   startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
