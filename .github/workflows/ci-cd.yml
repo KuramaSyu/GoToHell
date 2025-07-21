@@ -79,7 +79,8 @@ jobs:
       - name: Deploy via SSH & Docker Compose
         if: github.ref == 'refs/heads/dev'
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
+              set -e
               cd /home/kurama/ds/gotohell/GoToHell
               git fetch origin dev
               git reset --hard origin/dev
