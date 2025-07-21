@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  lighten,
 } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -123,7 +124,7 @@ export const SportsTimeline = () => {
     onRest: (_result, _ctrl, item) => {
       // after rendering the 15nth element, set
       // mount to true, that animation
-      const index = Math.min(15, itemsToAnimate.length);
+      const index = Math.min(15, itemsToAnimate.length - 1);
       if (item.id === itemsToAnimate[index]?.id) {
         setIsMounted(true);
       }
@@ -159,10 +160,7 @@ export const SportsTimeline = () => {
             transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
             bgcolor:
               !selectedSport || selectedSport.id === sport.id
-                ? alpha(
-                    blendWithContrast(theme.palette.primary.main, theme, 2 / 3),
-                    1 / 4
-                  )
+                ? alpha(lighten(theme.palette.primary.light, 1 / 2), 1 / 4)
                 : undefined,
           },
         }}
