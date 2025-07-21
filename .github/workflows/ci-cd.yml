@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   build:
@@ -47,3 +49,26 @@ jobs:
       - name: Build backend
         working-directory: src/backend/src
         run: go build -o server
+
+      # --- DEPLOYMENT ON DEV BRANCH ONLY ---
+      - name: Setup SSH
+      if: github.ref == 'refs/heads/dev'
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH & Docker Compose
+      if: github.ref == 'refs/heads/dev'
+      run: |
+        ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd /home/kurama/ds/gotohell/GoToHell
+            git fetch origin dev
+            git reset --hard origin/dev
+            docker compose down
+            docker compose up --build -d
+          EOF
+        
+
+    
