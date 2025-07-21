@@ -39,11 +39,19 @@ def main():
     # Stage 2: Clone the repository
     print_stage("Stage 2: Cloning repository")
     try:
-        subprocess.run(["git", "clone", REPO_URL], check=True)
-        print_info("Repository cloned successfully.")
+        subprocess.run([
+            "git", "clone",
+            "--branch", "dev",       # ← pull down dev
+            "--single-branch",       # ← only dev, not whole history
+            REPO_URL
+        ], check=True)
+        print_info("Repository (branch dev) cloned successfully.")
     except subprocess.CalledProcessError:
         print_error("Failed to clone repository.")
         sys.exit(1)
+    os.chdir(REPO_DIR)
+    subprocess.run(["git", "checkout", "dev"], check=True)
+    os.chdir(original_dir)
 
     # Stage 3: Copy .env file from the parent directory into the cloned repository
     print_stage("Stage 3: Copying .env file")
