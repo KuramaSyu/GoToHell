@@ -56,7 +56,12 @@ jobs:
         run: |
           # Check required secrets
           if [ -z "${{ secrets.VPS_HOST }}" ]; then
-            echo "VPS_HOST is not set! (Repo -> Settings -> Secrets and variables -> actions)"
+            echo "VPS_HOST is not set! "
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.VPS_USER }}" ]; then
+            echo "VPS_USER is not set! (Repo -> Settings -> Secrets and variables -> actions)"
             exit 1
           fi
 
