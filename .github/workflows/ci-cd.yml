@@ -79,7 +79,7 @@ jobs:
       - name: Deploy via SSH & Docker Compose
         if: github.ref == 'refs/heads/dev'
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash -s <<EOF
               set -e
               cd /home/kurama/ds/gotohell/GoToHell
               git fetch origin dev
@@ -88,4 +88,4 @@ jobs:
               cp ../.env .
               docker compose down
               docker compose up --build -d
-            EOF
+          EOF
