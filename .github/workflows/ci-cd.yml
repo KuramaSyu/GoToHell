@@ -83,6 +83,8 @@ jobs:
               cd /home/kurama/ds/gotohell/GoToHell
               git fetch origin dev
               git reset --hard origin/dev
+              cp ../docker-compose.yaml .
+              cp ../.env .
               docker compose down
               docker compose up --build -d
             EOF
