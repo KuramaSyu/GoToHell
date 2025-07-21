@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    breanches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # --- FRONTEND BUILD ---
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
+    - name: Install dependencies
+      working-directory: src/frontend
+      run: npm install
+
+    - name: Build frontend
+      run: npm run build
+      working-directory: src/frontend
+
+    # --- BACKEND BUILD ---
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24'
+
+    - name: Cache Go modules
+      working-directory: src/backend/src
+      run: go mod tidy
+
+    - name: Test backend
+      working-directory: src/backend/src
+      run: go test ./...
+
+    - name: Build backend
+      working-directory: src/backend/src
+      run: go build -o server
