@@ -23,11 +23,61 @@ import { ToolTip } from '../components/ToolTip';
  * Calculator, depening on the needs
  */
 export interface SportsCalculator {
+  /**
+   * Returns the base value for a given sport and game combination.
+   * This value is typically used as the multiplier for calculating exercises.
+   *
+   * @param sport - The name of the sport.
+   * @param game - The name of the game.
+   * @returns The base value for the sport and game.
+   */
   get(sport: string, game: string): number;
+
+  /**
+   * Calculates the total amount of exercises required, factoring in sport, game,
+   * and the number of user deaths.
+   *
+   * @param sport - The name of the sport.
+   * @param game - The name of the game.
+   * @param deaths - The number of deaths to multiply the base value by.
+   * @returns The calculated amount of exercises.
+   */
   calculate_amount(sport: string, game: string, deaths: number): number;
+
+  /**
+   * Generates a ReactNode containing a LaTeX box that visually represents the calculation
+   * performed by `calculate_amount()`.
+   *
+   * @param sport - The name of the sport.
+   * @param game - The name of the game.
+   * @param deaths - The number of deaths.
+   * @returns A ReactNode with the LaTeX representation of the calculation.
+   */
   make_box(sport: string, game: string, deaths: number): ReactNode;
+
+  /**
+   * Gets the base value associated with a specific game.
+   *
+   * @param game - The name of the game.
+   * @returns The base value for the game.
+   */
   get_game_base(game: string): number;
+
+  /**
+   * Gets the base value associated with a specific sport.
+   *
+   * @param sport - The name of the sport.
+   * @returns The base value for the sport.
+   */
   get_sport_base(sport: string): number;
+
+  /**
+   * Retrieves the multiplier for a given sport and game combination, if any.
+   *
+   * @param sport - The name of the sport.
+   * @param game - The name of the game.
+   * @returns The multiplier object or null if none is set.
+   */
   get_multiplier(sport: string, game: string): Multiplier | null;
 }
 
