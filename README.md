@@ -43,6 +43,8 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - [ ] Friends
   - [x] Streak
   - [x] OverdueDeaths
+- [ ] Loading Page:
+  - [ ] display in MainContent inside a `<Fade>` Box while loading state is true
 
 #### Features
 
