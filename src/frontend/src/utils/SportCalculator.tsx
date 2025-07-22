@@ -513,9 +513,9 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     const safeDeaths =
       typeof deaths === 'number' && !isNaN(deaths) ? deaths : 0;
     if (sport == 'plank') {
-      return (
+      return Math.round(
         this.strength_factor(safeDeaths, game, sport) *
-        this.log_formula(safeDeaths, game, sport, null, null)
+          this.log_formula(safeDeaths, game, sport, null, null)
       );
     }
     return this.decorated.calculate_amount(sport, game, safeDeaths);
