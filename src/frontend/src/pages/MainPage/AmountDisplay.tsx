@@ -11,7 +11,7 @@ import {
   SportsCalculator,
 } from '../../utils/SportCalculator';
 import useCalculatorStore from '../../zustand/CalculatorStore';
-import Star from './Shapes';
+import Star from '../../components/Shapes';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../../zustand/PreferenceStore';
