@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-import { useThemeStore } from '../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import AppBackground from './AppBackground';
 import MainContent from './MainContent';
 import { SportsTimeline } from './RecentSports/Timeline';
-import { useUsersStore, useUserStore } from '../userStore';
-import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
-import { UserApi } from '../utils/api/Api';
+import { useUsersStore, useUserStore } from '../../userStore';
+import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
+import { UserApi } from '../../utils/api/Api';
 import { ThemeProvider } from '@emotion/react';
 import { QuickActionMenu } from './QuickActions/Main';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../utils/api/ApiRequirementsBuilder';
+} from '../../utils/api/ApiRequirementsBuilder';
 import { StreakTimeline } from './RecentSports/StreakTimeline';
 import { TimelineWrapper } from './RecentSports/TimelineWrapper';
 

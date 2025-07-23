@@ -1,26 +1,8 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  InputAdornment,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import { animated, useSpring, useSprings, useTransition } from 'react-spring';
-import { useSportStore } from '../../useSportStore';
-import {
-  KeyboardReturn,
-  KeyboardReturnOutlined,
-  KeyboardReturnTwoTone,
-} from '@mui/icons-material';
-import { useDeathAmountStore } from '../NumberSlider';
-import { isNumeric } from '../../utils/UserNumber';
-import { isValid } from 'date-fns';
+import { Box, CircularProgress, Typography } from '@mui/material';
+
+import { animated, useSpring } from 'react-spring';
+
 import { SearchModalProps } from './SearchModal';
-import { NumberCardButton } from './QuickActionEntries';
 
 const AnimatedDiv = animated('div');
 

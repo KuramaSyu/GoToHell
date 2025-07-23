@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Snackbar, Alert, Typography } from '@mui/material';
-import useInfoStore from '../zustand/InfoStore';
+import useInfoStore from '../../zustand/InfoStore';
 
 const InfoDisplay: React.FC = () => {
   const { Message, setMessage: setErrorMessage } = useInfoStore();

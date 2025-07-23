@@ -6,9 +6,9 @@ import { UploadScore } from './UploadScore';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
 import { RecentSports } from './RecentSports/TabView';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import { AmountDisplay } from './AmountDisplay';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { UploadOverdueDeaths } from './UploadOverdueDeaths';
 
 interface MainContentProps {

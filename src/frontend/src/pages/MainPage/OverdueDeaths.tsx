@@ -1,15 +1,15 @@
 import { alpha, Box, darken, Typography } from '@mui/material';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import { PopNumber } from './PopNumber';
-import { NUMBER_FONT } from '../statics';
-import { blendWithContrast } from '../utils/blendWithContrast';
-import { useOverdueDeathsStore } from '../zustand/OverdueDeathsStore';
+import { NUMBER_FONT } from '../../statics';
+import { blendWithContrast } from '../../utils/blendWithContrast';
+import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 import { useEffect } from 'react';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../utils/api/ApiRequirementsBuilder';
-import { hexToRgbString } from '../utils/colors/hexToRgb';
+} from '../../utils/api/ApiRequirementsBuilder';
+import { hexToRgbString } from '../../utils/colors/hexToRgb';
 
 export const OverdueDeaths: React.FC = () => {
   const { theme } = useThemeStore();

@@ -1,15 +1,10 @@
 import { Box } from '@mui/material';
-import AbcIcon from '@mui/icons-material/Abc';
-import PinIcon from '@mui/icons-material/Pin';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import DialpadIcon from '@mui/icons-material/Dialpad';
 import {
   NumberCardButton,
   SearchCardButton,
   UploadCardButton,
   CardButtonProps,
 } from './QuickActionEntries';
-import { ICON_QICK_ACTION_SX, QuickActionEntry } from './QuickActionEntry';
 
 export enum ModalPages {
   OVERVIEW = 'overview',

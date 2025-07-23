@@ -1,34 +1,15 @@
-import {
-  alpha,
-  Box,
-  Button,
-  duration,
-  Icon,
-  Modal,
-  Typography,
-} from '@mui/material';
+import { alpha, Box, Button, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import SearchIcon from '@mui/icons-material/Search';
-import {
-  Backspace,
-  Height,
-  SvgIconComponent,
-  Title,
-} from '@mui/icons-material';
+import { useThemeStore } from '../../../zustand/useThemeStore';
+
 import { animated, useTransition } from 'react-spring';
-import { transform } from 'framer-motion';
-import AbcIcon from '@mui/icons-material/Abc';
-import PinIcon from '@mui/icons-material/Pin';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import DialpadIcon from '@mui/icons-material/Dialpad';
 import React from 'react';
 import { ModalOverview, ModalPages } from './ModalOverviewCards';
 import { SearchModal } from './SearchModal';
-import { isNumeric } from '../../utils/UserNumber';
+import { isNumeric } from '../../../utils/UserNumber';
 import { AmountModal } from './AmountModal';
-import useUploadStore from '../../zustand/UploadStore';
-import usePreferenceStore from '../../zustand/PreferenceStore';
+import useUploadStore from '../../../zustand/UploadStore';
+import usePreferenceStore from '../../../zustand/PreferenceStore';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
 import { UploadModal } from './UploadModal';

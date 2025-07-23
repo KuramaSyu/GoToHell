@@ -1,11 +1,11 @@
 import { alpha, Box, Fade, Tab, Tabs } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import useCalculatorStore from '../../zustand/CalculatorStore';
-import { useSportStore } from '../../useSportStore';
+import { useBreakpoint } from '../../../hooks/useBreakpoint';
+import useCalculatorStore from '../../../zustand/CalculatorStore';
+import { useSportStore } from '../../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
 import { OverdueDeaths } from '../OverdueDeaths';
-import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
+import { useOverdueDeathsStore } from '../../../zustand/OverdueDeathsStore';
 
 export const SecondaryTabView: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);

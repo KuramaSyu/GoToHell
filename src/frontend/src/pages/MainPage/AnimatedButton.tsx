@@ -2,7 +2,7 @@ import { Button, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { darken, keyframes, lighten, styled } from '@mui/system';
 import { ReactNode } from 'react';
-import { hexToRgbString } from '../utils/colors/hexToRgb';
+import { hexToRgbString } from '../../utils/colors/hexToRgb';
 
 interface AnimatedButtonProps {
   children: ReactNode;

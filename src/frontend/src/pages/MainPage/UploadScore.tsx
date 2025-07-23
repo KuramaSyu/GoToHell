@@ -4,27 +4,22 @@ import {
   Typography,
   Snackbar,
   CircularProgress,
-  useMediaQuery,
   darken,
   lighten,
 } from '@mui/material';
-import { useSportStore } from '../useSportStore';
+import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
-import { useUserStore } from '../userStore';
-import SportRow, { SportScore } from '../models/Sport';
-import useInfoStore from '../zustand/InfoStore';
+import { useUserStore } from '../../userStore';
+import useInfoStore from '../../zustand/InfoStore';
 import { alpha } from '@mui/material/styles';
-import { useTotalScoreStore } from '../zustand/TotalScoreStore';
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
-import { useRecentSportsStore } from '../zustand/RecentSportsState';
-import useCalculatorStore from '../zustand/CalculatorStore';
-import { useThemeStore } from '../zustand/useThemeStore';
-import { UserApi } from '../utils/api/Api';
-import useUploadStore from '../zustand/UploadStore';
-import { useBreakpoint } from '../hooks/useBreakpoint';
-import { UploadBuilder } from '../utils/api/UploadBuilder';
-import { UploadError } from '../utils/errors/UploadError';
+import useCalculatorStore from '../../zustand/CalculatorStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import useUploadStore from '../../zustand/UploadStore';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { UploadBuilder } from '../../utils/api/UploadBuilder';
 
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 

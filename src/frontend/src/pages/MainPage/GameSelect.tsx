@@ -1,11 +1,10 @@
-import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
-import { getThemeNames, useThemeStore } from '../zustand/useThemeStore';
+import { Box } from '@mui/material';
+import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
 
 import { DynamicGameGrid } from './DynamicGrid';
-import usePreferenceStore from '../zustand/PreferenceStore';
-import { CustomTheme } from '../theme/customTheme';
+import usePreferenceStore from '../../zustand/PreferenceStore';
+import { CustomTheme } from '../../theme/customTheme';
 
 /**
  *

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import { darken } from '@mui/material/styles';
-import { animated, AnimatedProps, useSpring } from '@react-spring/web';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { animated, useSpring } from '@react-spring/web';
+import { useThemeStore } from '../../zustand/useThemeStore';
 
 export interface GameItem {
   text: string;

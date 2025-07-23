@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
-import { GenerateMarks } from '../utils/Marks';
-import usePreferenceStore from '../zustand/PreferenceStore';
-import { useThemeStore } from '../zustand/useThemeStore';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import { GenerateMarks } from '../../utils/Marks';
+import usePreferenceStore from '../../zustand/PreferenceStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface DeathAmountState {
   amount: number;

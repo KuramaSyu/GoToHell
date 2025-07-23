@@ -1,5 +1,5 @@
 import { alpha, Box, Button } from '@mui/material';
-import { useThemeStore } from '../../zustand/useThemeStore';
+import { useThemeStore } from '../../../zustand/useThemeStore';
 import React from 'react';
 
 export interface QuickActionEntryProps {

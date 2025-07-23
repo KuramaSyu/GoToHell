@@ -7,10 +7,9 @@ import {
   alpha,
   useMediaQuery,
 } from '@mui/material';
-import { useThemeStore } from '../zustand/useThemeStore';
-import { useSportStore } from '../useSportStore';
-import { BACKEND_BASE } from '../statics';
-import { GetSportsResponse, SportsApiResponse } from '../models/Sport';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import { useSportStore } from '../../useSportStore';
+import { GetSportsResponse } from '../../models/Sport';
 
 import {
   DeathDecorator,
@@ -21,17 +20,17 @@ import {
   OverrideSportDecorator,
   PreferenceRespectingDefaultSportsCalculator,
   SportsCalculator,
-} from '../utils/SportCalculator';
+} from '../../utils/SportCalculator';
 
-import useCalculatorStore from '../zustand/CalculatorStore';
-import { useSportResponseStore } from '../zustand/sportResponseStore';
-import usePreferenceStore from '../zustand/PreferenceStore';
-import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
-import { Multiplier, UserPreferences } from '../models/Preferences';
+import useCalculatorStore from '../../zustand/CalculatorStore';
+import { useSportResponseStore } from '../../zustand/sportResponseStore';
+import usePreferenceStore from '../../zustand/PreferenceStore';
+import { useUsedMultiplierStore } from '../../zustand/usedMultiplierStore';
+import { Multiplier, UserPreferences } from '../../models/Preferences';
 import { animated, useSpring, useTransition } from 'react-spring';
-import useInfoStore from '../zustand/InfoStore';
-import { GameSelectionMap, sportIconMap } from '../utils/data/Sports';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import useInfoStore from '../../zustand/InfoStore';
+import { GameSelectionMap, sportIconMap } from '../../utils/data/Sports';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const AnimatedButton = animated(Button);
 

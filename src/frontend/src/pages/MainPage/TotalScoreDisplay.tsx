@@ -1,28 +1,25 @@
 import { useEffect } from 'react';
 
-import { useUserStore } from '../userStore';
-import { SportScore } from '../models/Sport';
+import { useUserStore } from '../../userStore';
+import { SportScore } from '../../models/Sport';
 
-import { useTotalScoreStore } from '../zustand/TotalScoreStore';
-import { useSportStore } from '../useSportStore';
-import { Box, Typography, useMediaQuery } from '@mui/material';
-import { NUMBER_FONT } from '../statics';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useSportStore } from '../../useSportStore';
+import { Box, Typography } from '@mui/material';
+import { NUMBER_FONT } from '../../statics';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import {
   AMOUNT_DISPLAY_CONENT_SX,
   AMOUNT_DISPLAY_CONTENT_BOX_SX,
   AMOUNT_DISPLAY_TITLE_SX,
-  BIG_NUMBER_SIZE_DESKTOP,
-  BIG_NUMBER_SIZE_MOBILE,
   getDisplayComponent,
   getSportDescription,
 } from './AmountDisplay';
-import { GameSelectionMap } from '../utils/data/Sports';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../utils/api/ApiRequirementsBuilder';
+} from '../../utils/api/ApiRequirementsBuilder';
 
 // returns the score of the kind
 // game does not matter, since it's summed up

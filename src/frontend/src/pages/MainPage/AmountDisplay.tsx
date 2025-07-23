@@ -1,7 +1,7 @@
 import { Box, lighten, Typography, useMediaQuery } from '@mui/material';
-import { useSportStore } from '../useSportStore';
+import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
-import { NUMBER_FONT } from '../statics';
+import { NUMBER_FONT } from '../../statics';
 import React, { ReactElement, useMemo, useState } from 'react';
 import {
   DefaultSportsCalculator,
@@ -9,15 +9,15 @@ import {
   MultiplierDecorator,
   OverrideSportDecorator,
   SportsCalculator,
-} from '../utils/SportCalculator';
-import useCalculatorStore from '../zustand/CalculatorStore';
+} from '../../utils/SportCalculator';
+import useCalculatorStore from '../../zustand/CalculatorStore';
 import Star from './Shapes';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
-import usePreferenceStore from '../zustand/PreferenceStore';
-import { Timedelta, Unit, unitToString } from '../utils/Timedelta';
-import { GameSelectionMap } from '../utils/data/Sports';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import usePreferenceStore from '../../zustand/PreferenceStore';
+import { Timedelta, Unit, unitToString } from '../../utils/Timedelta';
+import { GameSelectionMap } from '../../utils/data/Sports';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { PopNumber } from './PopNumber';
 import { styled } from '@mui/material';
 import { motion } from 'framer-motion';

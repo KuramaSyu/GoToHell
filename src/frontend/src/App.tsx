@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/DiscordLogin.css';
 import '@mui/material/styles';
 //import './App.css';
-import MainPage from './components/Main';
+import MainPage from './pages/MainPage/Main';
 import FriendOverview from './pages/friends/FriendOverview';
 import TopBar from './components/TopBar';
 import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
 import { useThemeStore } from './zustand/useThemeStore';
-import InfoDisplay from './components/InfoDisplay';
+import InfoDisplay from './pages/MainPage/InfoDisplay';
 import { Settings } from './pages/Settings/Main';
 import { SwaggerDocs } from './pages/docs/Main';
 // Import other components as needed

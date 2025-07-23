@@ -5,21 +5,17 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import { animated, useSprings, useTransition } from 'react-spring';
-import { useSportStore } from '../../useSportStore';
-import {
-  KeyboardReturn,
-  KeyboardReturnOutlined,
-  KeyboardReturnTwoTone,
-} from '@mui/icons-material';
+import { useSportResponseStore } from '../../../zustand/sportResponseStore';
+import { animated, useSprings } from 'react-spring';
+import { useSportStore } from '../../../useSportStore';
+import { KeyboardReturnTwoTone } from '@mui/icons-material';
 import {
   customThemes,
   getThemeNames,
   useThemeStore,
-} from '../../zustand/useThemeStore';
+} from '../../../zustand/useThemeStore';
 import { SearchCardButton } from './QuickActionEntries';
 import Fuse from 'fuse.js';
 
