@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Box, useMediaQuery, alpha } from '@mui/material';
-import { RecentSportsStandard } from './Standard';
-import { MultiplierSettings } from '../../pages/Settings/Multiplier';
-import { useSportStore } from '../../useSportStore';
+import { MultiplierSettings } from '../../../pages/Settings/Multiplier';
+import { useSportStore } from '../../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
-import useCalculatorStore from '../../zustand/CalculatorStore';
-import { useThemeStore } from '../../zustand/useThemeStore';
+import useCalculatorStore from '../../../zustand/CalculatorStore';
+import { useThemeStore } from '../../../zustand/useThemeStore';
 import { SecondaryTabView } from './SecondaryTabView';
 
 export const RecentSports = () => {

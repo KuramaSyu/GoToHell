@@ -1,12 +1,11 @@
-import { useState, useEffect, ReactElement } from 'react';
-import { alpha, Box, Card, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import TimelineDot from '@mui/lab/TimelineDot';
 
-import { BACKEND_BASE, NUMBER_FONT } from '../../statics';
-import { useThemeStore } from '../../zustand/useThemeStore';
+import { NUMBER_FONT } from '../../../statics';
+import { useThemeStore } from '../../../zustand/useThemeStore';
 
-import { DiscordUserImpl } from '../DiscordLogin';
+import { DiscordUserImpl } from '../../../components/DiscordLogin';
 import { animated, SpringValue } from 'react-spring';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 

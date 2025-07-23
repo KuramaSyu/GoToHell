@@ -1,27 +1,14 @@
-import {
-  Timeline,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
-  TimelineItem,
-  timelineItemClasses,
-  TimelineOppositeContent,
-  timelineOppositeContentClasses,
-  TimelineSeparator,
-} from '@mui/lab';
 import { Box, Divider, Typography } from '@mui/material';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { animated, config, useTransition } from 'react-spring';
-import { useUsersStore, useUserStore } from '../../userStore';
+import { useUsersStore, useUserStore } from '../../../userStore';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../../utils/api/ApiRequirementsBuilder';
-import { DiscordUserImpl } from '../DiscordLogin';
-import { StreakCard, StreakCardNumber } from './StreakCard';
-import { blendWithContrast } from '../../utils/blendWithContrast';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { DisplaySettings } from '@mui/icons-material';
+} from '../../../utils/api/ApiRequirementsBuilder';
+import { DiscordUserImpl } from '../../../components/DiscordLogin';
+import { StreakCard } from './StreakCard';
+import { useThemeStore } from '../../../zustand/useThemeStore';
 
 const AnimatedBox = animated(Box);
 

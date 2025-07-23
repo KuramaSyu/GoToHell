@@ -1,20 +1,7 @@
-import { useState, useEffect, ReactElement } from 'react';
-import { alpha, Box, Card, Typography } from '@mui/material';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import TimelineDot from '@mui/lab/TimelineDot';
+import { Box, Typography } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
-import { useUserStore, useUsersStore } from '../../userStore';
-import { BACKEND_BASE, NUMBER_FONT } from '../../statics';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { useRecentSportsStore } from '../../zustand/RecentSportsState';
-import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
-import { TransitionGroup } from 'react-transition-group';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useUsersStore } from '../../../userStore';
+import { NUMBER_FONT } from '../../../statics';
 import { UserSport } from './Timeline';
 
 interface SportCardProps {

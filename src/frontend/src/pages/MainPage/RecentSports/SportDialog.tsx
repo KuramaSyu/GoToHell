@@ -12,33 +12,25 @@ import {
   Input,
   Slide,
 } from '@mui/material';
-import Sport from '../../models/Sport';
 import { UserSport } from './Timeline';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { useUsersStore, useUserStore } from '../../userStore';
-import { useTheme } from '@emotion/react';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { UserApi } from '../../utils/api/Api';
-import { blendWithContrast } from '../../utils/blendWithContrast';
-import { sportIconMap } from '../../utils/data/Sports';
+import { useBreakpoint } from '../../../hooks/useBreakpoint';
+import { useUsersStore, useUserStore } from '../../../userStore';
+import { useThemeStore } from '../../../zustand/useThemeStore';
+import { UserApi } from '../../../utils/api/Api';
+import { blendWithContrast } from '../../../utils/blendWithContrast';
+import { sportIconMap } from '../../../utils/data/Sports';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import GamepadIcon from '@mui/icons-material/Gamepad';
 import { GameEntry } from '../QuickActions/SearchModal';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
 import { useEffect, useState } from 'react';
-import {
-  handleStringNumber,
-  isNumeric,
-  StringNumberProps,
-} from '../../utils/UserNumber';
+
 import SyncIcon from '@mui/icons-material/Sync';
 import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
-import { update } from 'react-spring';
-import useInfoStore from '../../zustand/InfoStore';
-import { json } from 'stream/consumers';
+import useInfoStore from '../../../zustand/InfoStore';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

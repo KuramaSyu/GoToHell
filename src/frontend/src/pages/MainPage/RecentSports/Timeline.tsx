@@ -1,15 +1,5 @@
 import { useState, useEffect, ReactElement } from 'react';
-import {
-  alpha,
-  Backdrop,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  lighten,
-} from '@mui/material';
+import { alpha, Box, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -19,20 +9,17 @@ import TimelineOppositeContent, {
   timelineOppositeContentClasses,
 } from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-import { useUserStore, useUsersStore } from '../../userStore';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { useRecentSportsStore } from '../../zustand/RecentSportsState';
-import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useUserStore, useUsersStore } from '../../../userStore';
+import { useThemeStore } from '../../../zustand/useThemeStore';
+import { useRecentSportsStore } from '../../../zustand/RecentSportsState';
+import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
 import { SportCard, SportCardNumber } from './SportCard';
 import { animated, config, useTransition } from 'react-spring';
-import useInfoStore from '../../zustand/InfoStore';
+import useInfoStore from '../../../zustand/InfoStore';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../../utils/api/ApiRequirementsBuilder';
-import { blendWithContrast } from '../../utils/blendWithContrast';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { UserApi } from '../../utils/api/Api';
+} from '../../../utils/api/ApiRequirementsBuilder';
 import { SportDialog } from './SportDialog';
 
 export interface UserSport {

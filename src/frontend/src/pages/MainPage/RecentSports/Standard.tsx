@@ -3,24 +3,21 @@ import { Box, IconButton, Typography, useMediaQuery } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSpring, useTransition, animated } from 'react-spring';
-import { BACKEND_BASE } from '../../statics';
-import { useUsersStore, useUserStore } from '../../userStore';
+import { useUsersStore, useUserStore } from '../../../userStore';
 import { formatDistanceToNow } from 'date-fns';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import useInfoStore from '../../zustand/InfoStore';
-import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useThemeStore } from '../../../zustand/useThemeStore';
+import useInfoStore from '../../../zustand/InfoStore';
+import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
 import {
   useRecentSportsStore,
   useYourRecentSportsStore,
-} from '../../zustand/RecentSportsState';
-import { Sport, SportsApiResponse } from '../../models/Sport';
-import { flushSync } from 'react-dom';
-import { UserApi } from '../../utils/api/Api';
-import { Api } from '@mui/icons-material';
+} from '../../../zustand/RecentSportsState';
+import { Sport, SportsApiResponse } from '../../../models/Sport';
+import { UserApi } from '../../../utils/api/Api';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../../utils/api/ApiRequirementsBuilder';
+} from '../../../utils/api/ApiRequirementsBuilder';
 
 const AnimatedBox = animated(Box);
 
