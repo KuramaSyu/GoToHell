@@ -1,6 +1,6 @@
 import { count } from 'console';
 import { DiscordUserImpl } from '../../components/DiscordLogin';
-import { useDeathAmountStore } from '../../components/NumberSlider';
+import { useDeathAmountStore } from '../../pages/MainPage/NumberSlider';
 import { DefaultSportsDefinition } from '../../models/Preferences';
 import SportRow, { SportScore } from '../../models/Sport';
 import { useUserStore } from '../../userStore';

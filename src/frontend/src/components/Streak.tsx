@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { useUserStore } from '../../userStore';
+import { useUserStore } from '../userStore';
 import { Box, Typography } from '@mui/material';
-import { NUMBER_FONT } from '../../statics';
+import { NUMBER_FONT } from '../statics';
 
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { useStreakStore } from '../../zustand/StreakStore';
-import { useRecentSportsStore } from '../../zustand/RecentSportsState';
-import { Sport } from '../../models/Sport';
+import { useThemeStore } from '../zustand/useThemeStore';
+import { useStreakStore } from '../zustand/StreakStore';
+import { useRecentSportsStore } from '../zustand/RecentSportsState';
+import { Sport } from '../models/Sport';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../../utils/api/ApiRequirementsBuilder';
-import { PopNumber } from './PopNumber';
+} from '../utils/api/ApiRequirementsBuilder';
+import { PopNumber } from '../pages/MainPage/PopNumber';
 
 export const Streak = () => {
   const [lastUpdated, setLastUpdated] = useState<String | null>(null);

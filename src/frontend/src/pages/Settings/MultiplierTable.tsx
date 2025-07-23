@@ -21,7 +21,7 @@ import useCalculatorStore from '../../zustand/CalculatorStore';
 import Latex from 'react-latex-next';
 import { Multiplier, UserPreferences } from '../../models/Preferences';
 import { PreferenceRespectingDefaultSportsCalculator } from '../../utils/SportCalculator';
-import { buildDecoratorStack } from '../../components/SportSelect';
+import { buildDecoratorStack } from '../../pages/MainPage/SportSelect';
 import { useThemeStore } from '../../zustand/useThemeStore';
 
 const getBaseColumns = (): EditableTableColumn[] => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 import { useThemeStore } from '../../zustand/useThemeStore';
-import AppBackground from './AppBackground';
+import AppBackground from '../../components/AppBackground';
 import MainContent from './MainContent';
 import { SportsTimeline } from './RecentSports/Timeline';
 import { useUsersStore, useUserStore } from '../../userStore';

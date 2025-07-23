@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
-import { useThemeStore } from '../../zustand/useThemeStore';
+import { useThemeStore } from '../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
 
 interface AppBackgroundProps {
