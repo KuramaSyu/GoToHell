@@ -44,7 +44,9 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - [x] Streak
   - [x] OverdueDeaths
 - [ ] Loading Page:
-  - [ ] display in MainContent inside a `<Fade>` Box while loading state is true
+  - [x] display in MainContent inside a `<Fade>` Box while loading state is true
+  - [ ] use full screen space
+  - [ ] use in duration of 1s
 
 #### Features
 
