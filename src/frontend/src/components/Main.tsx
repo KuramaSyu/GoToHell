@@ -18,7 +18,7 @@ import {
 import { StreakTimeline } from './RecentSports/StreakTimeline';
 import { TimelineWrapper } from './RecentSports/TimelineWrapper';
 
-const HomePage: React.FC = () => {
+const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
   const [loaded, setLoaded] = useState(false);
   const { addUser } = useUsersStore();
@@ -91,4 +91,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default MainPage;

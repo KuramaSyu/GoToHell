@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/DiscordLogin.css';
 import '@mui/material/styles';
 //import './App.css';
-import HomePage from './components/HomePage';
+import MainPage from './components/Main';
 import FriendOverview from './pages/friends/FriendOverview';
 import TopBar from './components/TopBar';
 import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
@@ -44,8 +44,8 @@ const App: React.FC = () => {
             }}
           >
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login-success" element={<HomePage />} />
+              <Route path="/" element={<MainPage />} />
+              <Route path="/login-success" element={<MainPage />} />
               <Route path="/friends" element={<FriendOverview />} />
               <Route path="settings" element={<Settings />} />
               <Route path="/docs/*" element={<SwaggerDocs />} />
