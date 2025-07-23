@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Fade, useMediaQuery, useTheme } from '@mui/material';
 
 import { useThemeStore } from '../../zustand/useThemeStore';
 import AppBackground from '../../components/AppBackground';
@@ -17,10 +17,12 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { StreakTimeline } from './RecentSports/StreakTimeline';
 import { TimelineWrapper } from './RecentSports/TimelineWrapper';
+import { LoadingPage } from '../LoadingPage/Main';
+import { useLoadingStore } from '../../zustand/loadingStore';
 
 const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
-  const [loaded, setLoaded] = useState(false);
+  const { isLoading } = useLoadingStore();
   const { addUser } = useUsersStore();
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
@@ -41,18 +43,6 @@ const MainPage: React.FC = () => {
     }
   }, [user]);
 
-  // Check if background image is set, and trigger fade-in effect
-  useEffect(() => {
-    if (
-      theme.custom.backgroundImage == undefined ||
-      theme.custom.backgroundImage == ''
-    ) {
-      setLoaded(false);
-    } else {
-      setLoaded(true); // Trigger fade-in after component mounts
-    }
-  }, [theme]);
-
   const TimelineBox = isMobile ? null : (
     <Box
       sx={{
@@ -71,6 +61,24 @@ const MainPage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Fade in={isLoading} timeout={{ enter: 0, exit: 1500 }} unmountOnExit>
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0,0,0,0.5)', // Optional: semi-transparent background
+          }}
+        >
+          <LoadingPage></LoadingPage>
+        </Box>
+      </Fade>
       <QuickActionMenu></QuickActionMenu>
       <Box
         sx={{
@@ -82,6 +90,7 @@ const MainPage: React.FC = () => {
         }}
       >
         <AppBackground></AppBackground>
+
         {TimelineBox}
         <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
           <MainContent />
