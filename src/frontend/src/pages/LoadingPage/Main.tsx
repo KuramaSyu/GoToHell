@@ -71,15 +71,16 @@ export const LoadingPage: React.FC = () => {
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
         width: '100%',
         padding: 2,
+        backgroundColor: 'background.default',
       }}
     >
-      <Box sx={{ mb: 3, fontSize: '1.5rem', fontWeight: 'bold' }}>
+      <Box sx={{ mb: 3, fontSize: '1.5rem', fontWeight: 'bold', width: 2 / 3 }}>
         Loading Application Data
       </Box>
 
