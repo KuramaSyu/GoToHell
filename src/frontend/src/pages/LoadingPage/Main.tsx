@@ -161,7 +161,7 @@ export const LoadingPage: React.FC = () => {
             display: 'flex',
           }}
         >
-          <Box sx={{ width: 4 / 5, display: 'flex' }}>
+          <Box sx={{ width: 4 / 5, height: 2 / 3, display: 'flex' }}>
             <LogoSvgComponent />
           </Box>
         </Box>
