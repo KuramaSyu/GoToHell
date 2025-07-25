@@ -107,11 +107,6 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     } else {
       console.error('No theme available to initialize.');
     }
+    console.log('Theme initialized:', get().themeName, get().themeLongName);
   },
 }));
-
-// Immediately trigger initialization so that the default theme is replaced.
-useThemeStore
-  .getState()
-  .initializeTheme()
-  .catch((err) => console.error(err));
