@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, SvgIcon, SvgIconProps } from '@mui/material';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import React, { useEffect } from 'react';
 import {
@@ -17,6 +17,25 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LogoSvg from '../../assets/GoToHell-Icon.svg';
+
+interface LogoSvgComponentProps {
+  style?: React.CSSProperties;
+}
+
+const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({ style }) => {
+  return (
+    <img
+      src={LogoSvg}
+      alt={'GoToHell Logo'}
+      style={{
+        width: '100%',
+        height: '100%',
+        ...style,
+      }}
+    />
+  );
+};
 
 export const LoadingPage: React.FC = () => {
   const { isLoading, setLoading } = useLoadingStore();
@@ -80,8 +99,20 @@ export const LoadingPage: React.FC = () => {
         backgroundColor: 'background.default',
       }}
     >
-      <Box sx={{ mb: 3, fontSize: '1.5rem', fontWeight: 'bold', width: 2 / 3 }}>
-        Loading Application Data
+      <Box
+        sx={{
+          mb: 3,
+          fontSize: '1.5rem',
+          fontWeight: 'bold',
+          width: 2 / 3,
+          textAlign: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+        }}
+      >
+        <Box sx={{ width: 4 / 5, display: 'flex' }}>
+          <LogoSvgComponent />
+        </Box>
       </Box>
 
       <TableContainer component={Paper} sx={{ maxWidth: 600, width: '100%' }}>
