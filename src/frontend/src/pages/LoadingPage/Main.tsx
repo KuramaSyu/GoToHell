@@ -201,9 +201,11 @@ export const LoadingPage: React.FC = () => {
         <TableContainer
           // component={Paper}
           sx={{
+            borderRadius: 5,
             display: 'flex',
             width: 1 / 4,
             backgroundColor: darken(defaultTheme.palette.muted.main, 0.1),
+            padding: 2,
           }}
         >
           <Table>
