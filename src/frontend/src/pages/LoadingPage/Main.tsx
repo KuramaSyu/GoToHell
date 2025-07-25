@@ -77,16 +77,9 @@ export const LoadingPage: React.FC = () => {
       .every((loaded) => loaded === true);
     if (allLoaded) {
       const elapsedTime = Date.now() - startTime;
-      if (elapsedTime < minStartUpTime) {
-        setTimeout(() => {
-          setLoading(false);
-        }, minStartUpTime + 300 - elapsedTime);
-      } else {
-        // wait another 300ms to show results
-        setTimeout(() => {
-          setLoading(false);
-        }, 300);
-      }
+      setTimeout(() => {
+        setLoading(false);
+      }, Math.max(minStartUpTime - elapsedTime, 250));
     }
   }, [loadingMap]);
 
