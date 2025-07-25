@@ -42,9 +42,32 @@ interface LoadingMapValue {
   loaded: boolean;
   time: number;
 }
+
+const useMinSquareSize = (ref: React.RefObject<HTMLElement | null>) => {
+  const [size, setSize] = React.useState(0);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { width, height } = entry!.contentRect;
+      setSize(Math.min(width, height));
+    });
+
+    resizeObserver.observe(ref.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [ref]);
+  return size;
+};
+
 export const LoadingPage: React.FC = () => {
   const [startTime, setStartTime] = React.useState(Date.now());
   const { isLoading, setLoading } = useLoadingStore();
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const size = useMinSquareSize(containerRef);
   const initialLoadingMap = new Map<string, LoadingMapValue>([
     ['You', { loaded: false, time: 0 }],
     ['Your Friends', { loaded: false, time: 0 }],
@@ -56,7 +79,7 @@ export const LoadingPage: React.FC = () => {
     ['Theme', { loaded: false, time: 0 }],
   ]);
   const [loadingMap, setLoadingMap] = React.useState(initialLoadingMap);
-
+  console.log(`Size: ${size}`);
   useEffect(() => {
     const startTime = Date.now();
 
@@ -151,17 +174,26 @@ export const LoadingPage: React.FC = () => {
         }}
       >
         <Box
+          ref={containerRef}
           sx={{
             mb: 3,
             fontSize: '1.5rem',
             fontWeight: 'bold',
             width: 2 / 3,
-            textAlign: 'center',
+            height: '100%',
+            // textAlign: 'center',
             justifyContent: 'center',
+            alignItems: 'center',
             display: 'flex',
           }}
         >
-          <Box sx={{ width: 4 / 5, height: 2 / 3, display: 'flex' }}>
+          <Box
+            sx={{
+              width: (size * 2) / 3,
+              height: (size * 2) / 3,
+              display: 'flex',
+            }}
+          >
             <LogoSvgComponent />
           </Box>
         </Box>
