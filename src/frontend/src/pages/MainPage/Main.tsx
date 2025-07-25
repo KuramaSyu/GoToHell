@@ -61,7 +61,7 @@ const MainPage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Fade in={isLoading} timeout={{ enter: 0, exit: 1500 }} unmountOnExit>
+      <Fade in={isLoading} timeout={{ enter: 0, exit: 500 }} unmountOnExit>
         <Box
           sx={{
             position: 'fixed',
