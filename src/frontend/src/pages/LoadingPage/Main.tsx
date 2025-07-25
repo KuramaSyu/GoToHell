@@ -1,4 +1,4 @@
-import { Box, SvgIcon, SvgIconProps } from '@mui/material';
+import { Box, darken, SvgIcon, SvgIconProps } from '@mui/material';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import React, { useEffect } from 'react';
 import {
@@ -18,6 +18,9 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LogoSvg from '../../assets/GoToHell-Icon.svg';
+import { start } from 'repl';
+import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
+import { ThemeProvider } from '@emotion/react';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -37,28 +40,76 @@ const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({ style }) => {
   );
 };
 
+interface LoadingMapValue {
+  loaded: boolean;
+  time: number;
+}
 export const LoadingPage: React.FC = () => {
+  const [startTime, setStartTime] = React.useState(Date.now());
   const { isLoading, setLoading } = useLoadingStore();
-  const [loadingMap, setLoadingMap] = React.useState<Map<string, boolean>>(
-    new Map()
-  );
+  const initialLoadingMap = new Map<string, LoadingMapValue>([
+    ['user', { loaded: false, time: 0 }],
+    ['friends', { loaded: false, time: 0 }],
+    ['Streaks', { loaded: false, time: 0 }],
+    ['History', { loaded: false, time: 0 }],
+    ['Big Numbers', { loaded: false, time: 0 }],
+    ['Your Settings', { loaded: false, time: 0 }],
+    ['Overdue Deaths', { loaded: false, time: 0 }],
+    ['Theme', { loaded: false, time: 0 }],
+  ]);
+  const [loadingMap, setLoadingMap] = React.useState(initialLoadingMap);
+
+  useEffect(() => {
+    const startTime = Date.now();
+
+    // timeout, to make sure, that at least the svg loads
+    setTimeout(() => {
+      useThemeStore.getState().initializeTheme();
+      setLoadingMap((prev) => {
+        prev.set('Theme', { loaded: true, time: Date.now() - startTime });
+        return new Map(prev);
+      });
+    }, 0);
+  }, []);
+
+  useEffect(() => {
+    const minStartUpTime = 750; // Minimum time to show loading screen
+    const allLoaded = Object.values(loadingMap)
+      .map((v) => v.loaded)
+      .every((loaded) => loaded === true);
+    if (allLoaded) {
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < minStartUpTime) {
+        setTimeout(() => {
+          setLoading(false);
+        }, minStartUpTime - elapsedTime);
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [loadingMap]);
 
   useEffect(() => {
     const init = async () => {
+      var startTime = Date.now();
       const user = await new ApiRequirementsBuilder()
         .add(ApiRequirement.User)
         .fetchIfNeeded();
       setLoadingMap((prev) => {
-        prev.set('user', true);
+        prev.set('user', { loaded: true, time: Date.now() - startTime });
         return new Map(prev);
       });
+
+      startTime = Date.now();
       const friends = await new ApiRequirementsBuilder()
         .add(ApiRequirement.Friends)
         .fetchIfNeeded();
       setLoadingMap((prev) => {
-        prev.set('friends', true);
+        prev.set('friends', { loaded: true, time: Date.now() - startTime });
         return new Map(prev);
       });
+
+      startTime = Date.now();
       const data = await new ApiRequirementsBuilder()
         .add(ApiRequirement.AllStreaks)
         .add(ApiRequirement.AllRecentSports)
@@ -67,78 +118,88 @@ export const LoadingPage: React.FC = () => {
         .add(ApiRequirement.OverdueDeaths)
         .fetchIfNeeded();
 
+      const value = {
+        loaded: true,
+        time: Math.round((Date.now() - startTime) / 5), // /5 because 5 Things are fetched
+      };
       setLoadingMap((prev) => {
-        prev.set('Streaks', true);
-        prev.set('History', true);
-        prev.set('Big Numbers', true);
-        prev.set('Your Settings', true);
+        prev.set('Streaks', value);
+        prev.set('History', value);
+        prev.set('Big Numbers', value);
+        prev.set('Your Settings', value);
+        prev.set('Overdue Deaths', value);
         return new Map(prev);
       });
     };
-    setLoading(true);
-    init()
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error during initialization:', error);
-        setLoading(false);
-      });
+    init();
   }, []);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        width: '100%',
-        padding: 2,
-        backgroundColor: 'background.default',
-      }}
-    >
+    <ThemeProvider theme={defaultTheme}>
       <Box
         sx={{
-          mb: 3,
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          width: 2 / 3,
-          textAlign: 'center',
-          justifyContent: 'center',
           display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
+          padding: 2,
+          backgroundColor: defaultTheme.palette.muted.dark,
         }}
       >
-        <Box sx={{ width: 4 / 5, display: 'flex' }}>
-          <LogoSvgComponent />
+        <Box
+          sx={{
+            mb: 3,
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            width: 2 / 3,
+            textAlign: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+          }}
+        >
+          <Box sx={{ width: 4 / 5, display: 'flex' }}>
+            <LogoSvgComponent />
+          </Box>
         </Box>
-      </Box>
 
-      <TableContainer component={Paper} sx={{ maxWidth: 600, width: '100%' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Component</TableCell>
-              <TableCell align="center">Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Array.from(loadingMap.keys()).map((key) => (
-              <TableRow key={key}>
-                <TableCell>{key}</TableCell>
-                <TableCell align="center">
-                  {loadingMap.get(key) ? (
-                    <CheckCircleIcon color="success" />
-                  ) : (
-                    <CircularProgress size={20} />
-                  )}
-                </TableCell>
+        <TableContainer
+          // component={Paper}
+          sx={{
+            display: 'flex',
+            width: 1 / 4,
+            backgroundColor: darken(defaultTheme.palette.muted.main, 0.1),
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Component</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Load Time</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+            </TableHead>
+            <TableBody>
+              {Array.from(loadingMap.keys()).map((key) => (
+                <TableRow key={key}>
+                  <TableCell>{key}</TableCell>
+                  <TableCell align="center">
+                    {loadingMap.get(key)?.loaded ? (
+                      <CheckCircleIcon color="success" />
+                    ) : (
+                      <CircularProgress size={20} />
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    {loadingMap.get(key)?.time || '---'} ms
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    </ThemeProvider>
   );
 };
