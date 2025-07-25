@@ -17,8 +17,6 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import LogoSvg from '../../assets/GoToHell-Icon.svg';
-import { start } from 'repl';
 import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
 
@@ -29,8 +27,8 @@ interface LogoSvgComponentProps {
 const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({ style }) => {
   return (
     <img
-      src={LogoSvg}
-      alt={'GoToHell Logo'}
+      src="/assets/GoToHell-Icon.svg"
+      alt="GoToHell Logo"
       style={{
         width: '100%',
         height: '100%',
@@ -82,9 +80,12 @@ export const LoadingPage: React.FC = () => {
       if (elapsedTime < minStartUpTime) {
         setTimeout(() => {
           setLoading(false);
-        }, minStartUpTime - elapsedTime);
+        }, minStartUpTime + 300 - elapsedTime);
       } else {
-        setLoading(false);
+        // wait another 300ms to show results
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
       }
     }
   }, [loadingMap]);
