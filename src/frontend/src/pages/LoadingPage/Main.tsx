@@ -46,8 +46,8 @@ export const LoadingPage: React.FC = () => {
   const [startTime, setStartTime] = React.useState(Date.now());
   const { isLoading, setLoading } = useLoadingStore();
   const initialLoadingMap = new Map<string, LoadingMapValue>([
-    ['user', { loaded: false, time: 0 }],
-    ['friends', { loaded: false, time: 0 }],
+    ['You', { loaded: false, time: 0 }],
+    ['Your Friends', { loaded: false, time: 0 }],
     ['Streaks', { loaded: false, time: 0 }],
     ['History', { loaded: false, time: 0 }],
     ['Big Numbers', { loaded: false, time: 0 }],
@@ -62,24 +62,29 @@ export const LoadingPage: React.FC = () => {
 
     // timeout, to make sure, that at least the svg loads
     setTimeout(() => {
-      useThemeStore.getState().initializeTheme();
-      setLoadingMap((prev) => {
-        prev.set('Theme', { loaded: true, time: Date.now() - startTime });
-        return new Map(prev);
-      });
+      useThemeStore
+        .getState()
+        .initializeTheme()
+        .then(() => {
+          setLoadingMap((prev) => {
+            prev.set('Theme', { loaded: true, time: Date.now() - startTime });
+            return new Map(prev);
+          });
+        });
     }, 0);
   }, []);
 
   useEffect(() => {
-    const minStartUpTime = 750; // Minimum time to show loading screen
-    const allLoaded = Object.values(loadingMap)
+    const minStartUpTime = 100; // Minimum time to show loading screen
+    const allLoaded = loadingMap
+      .values()
       .map((v) => v.loaded)
       .every((loaded) => loaded === true);
     if (allLoaded) {
       const elapsedTime = Date.now() - startTime;
       setTimeout(() => {
         setLoading(false);
-      }, Math.max(minStartUpTime - elapsedTime, 250));
+      }, Math.max(minStartUpTime - elapsedTime, 125));
     }
   }, [loadingMap]);
 
@@ -90,7 +95,7 @@ export const LoadingPage: React.FC = () => {
         .add(ApiRequirement.User)
         .fetchIfNeeded();
       setLoadingMap((prev) => {
-        prev.set('user', { loaded: true, time: Date.now() - startTime });
+        prev.set('You', { loaded: true, time: Date.now() - startTime });
         return new Map(prev);
       });
 
@@ -99,7 +104,10 @@ export const LoadingPage: React.FC = () => {
         .add(ApiRequirement.Friends)
         .fetchIfNeeded();
       setLoadingMap((prev) => {
-        prev.set('friends', { loaded: true, time: Date.now() - startTime });
+        prev.set('Your Friends', {
+          loaded: true,
+          time: Date.now() - startTime,
+        });
         return new Map(prev);
       });
 
