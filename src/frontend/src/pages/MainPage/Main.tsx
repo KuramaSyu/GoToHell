@@ -19,6 +19,8 @@ import { StreakTimeline } from './RecentSports/StreakTimeline';
 import { TimelineWrapper } from './RecentSports/TimelineWrapper';
 import { LoadingPage } from '../LoadingPage/Main';
 import { useLoadingStore } from '../../zustand/loadingStore';
+import { AnimatePresence, motion } from 'framer-motion';
+import { s } from 'framer-motion/dist/types.d-6pKw1mTI';
 
 const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -26,6 +28,15 @@ const MainPage: React.FC = () => {
   const { addUser } = useUsersStore();
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
+  const [exitPercentage, setExitPercentage] = useState(
+    Math.round(Math.random() * 100)
+  );
+  const oneOrZero = Math.round(exitPercentage / 100) * 100;
+  const spring = {
+    type: 'spring',
+    damping: 8,
+    stiffness: 30,
+  };
 
   useEffect(() => {
     (async () => {
@@ -61,24 +72,31 @@ const MainPage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Fade in={isLoading} timeout={{ enter: 0, exit: 500 }} unmountOnExit>
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)', // Optional: semi-transparent background
-          }}
-        >
-          <LoadingPage></LoadingPage>
-        </Box>
-      </Fade>
+      <AnimatePresence initial={false}>
+        {isLoading && (
+          <motion.div
+            initial={false}
+            animate={{ clipPath: 'circle(100% at 50% 50%)' }}
+            exit={{
+              clipPath: oneOrZero
+                ? `circle(0% at 100% ${exitPercentage}%)`
+                : `circle(0% at ${exitPercentage}% 100%)`,
+              opacity: 0.2,
+            }}
+            transition={spring}
+            style={{
+              position: 'fixed',
+              zIndex: 9999,
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+            }}
+          >
+            <LoadingPage></LoadingPage>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <QuickActionMenu></QuickActionMenu>
       <Box
         sx={{
