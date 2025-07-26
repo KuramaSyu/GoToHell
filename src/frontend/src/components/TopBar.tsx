@@ -106,6 +106,7 @@ const TopBar: React.FC = () => {
                 borderRadius: 6,
                 color: theme.palette.vibrant.main,
                 fontFamily: '"Architects Daughter", cursive',
+                filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
                 textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
                 fontSize: theme.typography.h2.fontSize, // Maintain h2 size
                 fontWeight: theme.typography.h2.fontWeight, // Maintain h2 weight
