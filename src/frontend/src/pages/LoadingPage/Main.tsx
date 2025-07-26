@@ -25,7 +25,9 @@ interface LogoSvgComponentProps {
   style?: React.CSSProperties;
 }
 
-const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({ style }) => {
+export const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({
+  style,
+}) => {
   return (
     <img
       src="/assets/GoToHell-Icon.svg"
