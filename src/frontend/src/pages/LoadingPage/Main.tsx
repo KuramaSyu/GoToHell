@@ -19,6 +19,7 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
+import { useUserStore } from '../../userStore';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -121,7 +122,18 @@ export const LoadingPage: React.FC = () => {
         prev.set('You', { loaded: true, time: Date.now() - startTime });
         return new Map(prev);
       });
-
+      if (useUserStore.getState().user === null) {
+        console.error('User not found, redirecting to login');
+        setLoadingMap((prev) => {
+          prev.forEach((value, key) => {
+            value.loaded = true;
+            value.time = 0;
+            prev.set(key, value);
+          });
+          return new Map(prev);
+        });
+        return;
+      }
       startTime = Date.now();
       const friends = await new ApiRequirementsBuilder()
         .add(ApiRequirement.Friends)
