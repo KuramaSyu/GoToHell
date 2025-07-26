@@ -14,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { LogoSvgComponent } from '../pages/LoadingPage/Main';
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
@@ -97,25 +98,28 @@ const TopBar: React.FC = () => {
           }}
         >
           {/* Title */}
-          <Button
-            onClick={() => navigate('/')}
-            sx={{
-              borderRadius: 6,
-              color: theme.palette.vibrant.main,
-              fontFamily: '"Architects Daughter", cursive',
-              textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
-              fontSize: theme.typography.h2.fontSize, // Maintain h2 size
-              fontWeight: theme.typography.h2.fontWeight, // Maintain h2 weight
-              lineHeight: theme.typography.h2.lineHeight, // Maintain h2 line height
-              padding: '0px 8px',
-              textTransform: 'none', // Prevent uppercase transformation
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
-              },
-            }}
-          >
-            Go To Hell
-          </Button>
+          <Box>
+            <Button
+              startIcon={<LogoSvgComponent style={{ width: 60, height: 60 }} />}
+              onClick={() => navigate('/')}
+              sx={{
+                borderRadius: 6,
+                color: theme.palette.vibrant.main,
+                fontFamily: '"Architects Daughter", cursive',
+                textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
+                fontSize: theme.typography.h2.fontSize, // Maintain h2 size
+                fontWeight: theme.typography.h2.fontWeight, // Maintain h2 weight
+                lineHeight: theme.typography.h2.lineHeight, // Maintain h2 line height
+                padding: '0px 8px',
+                textTransform: 'none', // Prevent uppercase transformation
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
+                },
+              }}
+            >
+              Go To Hell
+            </Button>
+          </Box>
 
           {/* Streak */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
