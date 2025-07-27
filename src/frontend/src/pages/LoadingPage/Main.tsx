@@ -24,6 +24,7 @@ import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../../userStore';
 import { ExpandingCircleBackground } from './CircleBackground';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -116,6 +117,7 @@ export const LoadingPage: React.FC = () => {
     ['Theme', new LoadingComponent(false, 0)],
   ]);
   const [loadingMap, setLoadingMap] = React.useState(initialLoadingMap);
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     const startTime = Date.now();
@@ -309,7 +311,7 @@ export const LoadingPage: React.FC = () => {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'center',
           alignItems: 'center',
           height: '100%',
@@ -364,7 +366,7 @@ export const LoadingPage: React.FC = () => {
             mb: 3,
             fontSize: '1.5rem',
             fontWeight: 'bold',
-            width: 2 / 3,
+            width: isMobile ? '100%' : 2 / 3,
             height: '100%',
             // textAlign: 'center',
             justifyContent: 'center',
@@ -389,9 +391,10 @@ export const LoadingPage: React.FC = () => {
           sx={{
             borderRadius: 5,
             display: 'flex',
-            width: 1 / 4,
+            width: isMobile ? '100%' : '33.33%',
+            maxHeight: isMobile ? '50%' : undefined,
 
-            padding: 2,
+            padding: isMobile ? 1 : 2,
             zIndex: 5,
             border: `2px solid ${defaultTheme.palette.muted.light}`,
           }}
