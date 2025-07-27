@@ -1,4 +1,4 @@
-import { Box, darken, SvgIcon, SvgIconProps } from '@mui/material';
+import { alpha, Box, darken, SvgIcon, SvgIconProps } from '@mui/material';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import React, { useEffect } from 'react';
 import {
@@ -20,6 +20,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../../userStore';
+import { ExpandingCircleBackground } from './CircleBackground';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -71,6 +72,8 @@ export const LoadingPage: React.FC = () => {
   const { isLoading, setLoading } = useLoadingStore();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const size = useMinSquareSize(containerRef);
+  const MIN_STARTUP_TIME = 750;
+  const MIN_STARTUP_TIME_S = MIN_STARTUP_TIME / 1000;
   const initialLoadingMap = new Map<string, LoadingMapValue>([
     ['You', { loaded: false, time: 0 }],
     ['Your Friends', { loaded: false, time: 0 }],
@@ -82,7 +85,7 @@ export const LoadingPage: React.FC = () => {
     ['Theme', { loaded: false, time: 0 }],
   ]);
   const [loadingMap, setLoadingMap] = React.useState(initialLoadingMap);
-  console.log(`Size: ${size}`);
+
   useEffect(() => {
     const startTime = Date.now();
 
@@ -101,7 +104,6 @@ export const LoadingPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const minStartUpTime = 750; // Minimum time to show loading screen
     const allLoaded = loadingMap
       .values()
       .map((v) => v.loaded)
@@ -110,7 +112,7 @@ export const LoadingPage: React.FC = () => {
       const elapsedTime = Date.now() - startTime;
       setTimeout(() => {
         setLoading(false);
-      }, Math.max(minStartUpTime - elapsedTime, 125));
+      }, Math.max(MIN_STARTUP_TIME - elapsedTime, 125));
     }
   }, [loadingMap]);
 
@@ -185,8 +187,48 @@ export const LoadingPage: React.FC = () => {
           width: '100%',
           padding: 2,
           backgroundColor: defaultTheme.palette.muted.dark,
+          zIndex: 5,
         }}
       >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 4,
+            width: '100vw',
+            height: '100vh',
+          }}
+        >
+          <ExpandingCircleBackground
+            color={defaultTheme.palette.primary.main}
+            duration={MIN_STARTUP_TIME_S}
+            initialOpacity={0.2}
+            animateOpacity={0}
+          />
+          <ExpandingCircleBackground
+            color={defaultTheme.palette.secondary.main}
+            duration={MIN_STARTUP_TIME_S * 0.8}
+            delay={MIN_STARTUP_TIME_S * 0.2}
+            initialOpacity={0.2}
+            animateOpacity={0}
+          />
+          <ExpandingCircleBackground
+            color={defaultTheme.palette.primary.main}
+            duration={MIN_STARTUP_TIME_S}
+            delay={MIN_STARTUP_TIME_S * 0.4}
+            initialOpacity={0.2}
+            animateOpacity={0}
+          />
+
+          <ExpandingCircleBackground
+            color={defaultTheme.palette.muted.dark}
+            duration={MIN_STARTUP_TIME_S * 0.4}
+            delay={MIN_STARTUP_TIME_S * 0.8}
+            initialOpacity={0}
+            animateOpacity={0.5}
+          />
+        </Box>
         <Box
           ref={containerRef}
           sx={{
@@ -206,6 +248,7 @@ export const LoadingPage: React.FC = () => {
               width: (size * 2) / 3,
               height: (size * 2) / 3,
               display: 'flex',
+              zIndex: 5,
             }}
           >
             <LogoSvgComponent />
@@ -218,8 +261,12 @@ export const LoadingPage: React.FC = () => {
             borderRadius: 5,
             display: 'flex',
             width: 1 / 4,
-            backgroundColor: darken(defaultTheme.palette.muted.main, 0.1),
+            backgroundColor: alpha(
+              darken(defaultTheme.palette.muted.main, 0.3),
+              0.5
+            ),
             padding: 2,
+            zIndex: 5,
           }}
         >
           <Table>
