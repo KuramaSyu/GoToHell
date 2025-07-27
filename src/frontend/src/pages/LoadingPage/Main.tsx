@@ -101,7 +101,7 @@ export const LoadingPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const minStartUpTime = 100; // Minimum time to show loading screen
+    const minStartUpTime = 750; // Minimum time to show loading screen
     const allLoaded = loadingMap
       .values()
       .map((v) => v.loaded)
