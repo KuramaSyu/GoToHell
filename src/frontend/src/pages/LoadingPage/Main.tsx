@@ -393,8 +393,7 @@ export const LoadingPage: React.FC = () => {
 
             padding: 2,
             zIndex: 5,
-            border: `2px solid ${defaultTheme.palette.muted.main}`,
-            color: defaultTheme.palette.muted.light,
+            border: `2px solid ${defaultTheme.palette.muted.light}`,
           }}
         >
           <Table>
@@ -421,7 +420,7 @@ export const LoadingPage: React.FC = () => {
                       </span>
                     </TableCell>
                     <TableCell align="center">
-                      {comp ? comp.time : '---'} ms
+                      {comp && comp.time > 0 ? comp.time + ' ms' : '---'}
                     </TableCell>
                   </TableRow>
                 );
