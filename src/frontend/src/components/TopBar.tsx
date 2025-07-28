@@ -15,6 +15,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { LogoSvgComponent } from '../pages/LoadingPage/Main';
+import { Title } from '../pages/LoadingPage/Title';
 
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const TopBar: React.FC = () => {
                 textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
               }}
             >
-              Go To Hell
+              <Title theme={theme} />
             </Typography>
             {/* Discord Login and Settings */}
             <Box
@@ -104,10 +105,10 @@ const TopBar: React.FC = () => {
               onClick={() => navigate('/')}
               sx={{
                 borderRadius: 6,
-                color: theme.palette.vibrant.main,
-                fontFamily: '"Architects Daughter", cursive',
+                color: theme.palette.vibrant.light,
+                // fontFamily: '"Architects Daughter", cursive',
                 filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
-                textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
+                //textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
                 fontSize: theme.typography.h2.fontSize, // Maintain h2 size
                 fontWeight: theme.typography.h2.fontWeight, // Maintain h2 weight
                 lineHeight: theme.typography.h2.lineHeight, // Maintain h2 line height
@@ -118,7 +119,7 @@ const TopBar: React.FC = () => {
                 },
               }}
             >
-              Go To Hell
+              <Title theme={theme} />
             </Button>
           </Box>
 
@@ -134,14 +135,23 @@ const TopBar: React.FC = () => {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
+              color: theme.palette.primary.light,
             }}
           >
-            <Button variant="outlined" onClick={() => navigate('/settings')}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/settings')}
+              color="inherit"
+            >
               <SettingsIcon
                 sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
               />
             </Button>
-            <Button variant="outlined" onClick={() => navigate('/friends')}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/friends')}
+              color="inherit"
+            >
               <PeopleIcon
                 sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
               />
