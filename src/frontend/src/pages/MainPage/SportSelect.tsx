@@ -249,12 +249,13 @@ export const SportSelector = () => {
               key={sport}
               sx={{
                 gap: 3,
+                color: isSelected ? null : theme.palette.primary.light,
                 backgroundColor: isSelected
                   ? null
-                  : alpha(theme.palette.muted.dark, 0.2),
-                textShadow: isSelected
-                  ? null
-                  : `2px 2px 2px ${theme.palette.muted.dark}`,
+                  : alpha(theme.palette.primary.dark, 0.25),
+                // textShadow: isSelected
+                //   ? null
+                //   : `2px 2px 2px ${theme.palette.muted.dark}`,
               }}
             >
               <img
