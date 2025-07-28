@@ -1,4 +1,4 @@
-import { Box, darken, lighten } from '@mui/material';
+import { Box, darken, Fade, lighten } from '@mui/material';
 import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import { useUserStore } from '../../userStore';
@@ -49,29 +49,35 @@ export const UploadOverdueDeaths = () => {
   const duration = amount !== 0 ? Math.max(20 - amount ** 1.5, 1) : 0;
   const isAnimationActive = duration !== 0;
   return (
-    <Box>
-      <Box
-        sx={{
-          width: '70px',
-          height: '70px',
-          borderRadius: '50%',
-          overflow: 'hidden',
-          fontSize: '5rem',
-        }}
-      >
-        <AnimatedRoundBtn onClick={OnUploadClick} duration={duration} circular>
-          <Box
-            sx={{
-              fontSize: 'clamp(2rem, 4vh, 6rem)',
-              color: isAnimationActive
-                ? lighten(theme.palette.primary.main, 2 / 3)
-                : darken(theme.palette.primary.main, 1 / 3),
-            }}
+    <Fade in={isAnimationActive} timeout={500}>
+      <Box>
+        <Box
+          sx={{
+            width: '70px',
+            height: '70px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            fontSize: '5rem',
+          }}
+        >
+          <AnimatedRoundBtn
+            onClick={OnUploadClick}
+            duration={duration}
+            circular
           >
-            <SnoozeIcon fontSize="inherit"></SnoozeIcon>
-          </Box>
-        </AnimatedRoundBtn>
+            <Box
+              sx={{
+                fontSize: 'clamp(2rem, 4vh, 6rem)',
+                color: isAnimationActive
+                  ? lighten(theme.palette.primary.main, 2 / 3)
+                  : darken(theme.palette.primary.main, 1 / 3),
+              }}
+            >
+              <SnoozeIcon fontSize="inherit"></SnoozeIcon>
+            </Box>
+          </AnimatedRoundBtn>
+        </Box>
       </Box>
-    </Box>
+    </Fade>
   );
 };

@@ -6,6 +6,7 @@ import {
   CircularProgress,
   darken,
   lighten,
+  Fade,
 } from '@mui/material';
 import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
@@ -110,55 +111,57 @@ export const UploadScore = () => {
     );
   }
   return (
-    <Box>
-      <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
-        <Box
-          sx={{
-            px: 5,
-            py: 2,
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 2,
-            color:
-              DURATION !== 0
-                ? lighten(theme.palette.primary.main, 2 / 3)
-                : darken(theme.palette.primary.main, 1 / 3),
-          }}
-        >
-          <Typography sx={{ fontSize: '3vh' }} fontWeight="bold">
-            Upload
-          </Typography>
-          <SendIcon></SendIcon>
-        </Box>
-      </AnimatedButton>
-      <Snackbar
-        open={snackbarState != null}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        slotProps={{
-          content: {
-            sx: {
-              backgroundColor: (theme: any) =>
-                alpha(theme.palette.secondary.main, 0.6),
-              color: (theme: any) => theme.palette.primary.contrastText,
+    <Fade in={DURATION !== 0} timeout={500}>
+      <Box>
+        <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
+          <Box
+            sx={{
+              px: 5,
+              py: 2,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 2,
+              color:
+                DURATION !== 0
+                  ? lighten(theme.palette.primary.main, 2 / 3)
+                  : darken(theme.palette.primary.main, 1 / 3),
+            }}
+          >
+            <Typography sx={{ fontSize: '3vh' }} fontWeight="bold">
+              Upload
+            </Typography>
+            <SendIcon></SendIcon>
+          </Box>
+        </AnimatedButton>
+        <Snackbar
+          open={snackbarState != null}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          slotProps={{
+            content: {
+              sx: {
+                backgroundColor: (theme: any) =>
+                  alpha(theme.palette.secondary.main, 0.6),
+                color: (theme: any) => theme.palette.primary.contrastText,
+              },
             },
-          },
-        }}
-        message={
-          snackbarState === 'uploading' ? (
-            <Box display="flex" alignItems="center">
-              <CircularProgress size={30} sx={{ mr: 1 }} />
-              Uploading...
-            </Box>
-          ) : snackbarState === 'uploaded' ? (
-            'Uploaded!'
-          ) : snackbarState === null ? (
-            ''
-          ) : (
-            'Failed!'
-          )
-        }
-      />
-    </Box>
+          }}
+          message={
+            snackbarState === 'uploading' ? (
+              <Box display="flex" alignItems="center">
+                <CircularProgress size={30} sx={{ mr: 1 }} />
+                Uploading...
+              </Box>
+            ) : snackbarState === 'uploaded' ? (
+              'Uploaded!'
+            ) : snackbarState === null ? (
+              ''
+            ) : (
+              'Failed!'
+            )
+          }
+        />
+      </Box>
+    </Fade>
   );
 };
