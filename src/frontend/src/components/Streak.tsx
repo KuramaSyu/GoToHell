@@ -89,7 +89,7 @@ export const Streak = () => {
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'row',
-        fontSize: '3.5rem',
+        fontSize: '3rem',
       }}
     >
       <LocalFireDepartmentIcon fontSize="inherit" sx={{ mr: 1 }} />
@@ -102,7 +102,7 @@ export const Streak = () => {
           mass={20}
           stiffness={40}
           value={streak ?? 0}
-          fontsize={'3.5rem'}
+          fontsize={'3rem'}
           style={{
             fontWeight: 200,
           }}

@@ -109,9 +109,9 @@ const TopBar: React.FC = () => {
                 // fontFamily: '"Architects Daughter", cursive',
                 filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
                 //textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
-                fontSize: theme.typography.h2.fontSize, // Maintain h2 size
-                fontWeight: theme.typography.h2.fontWeight, // Maintain h2 weight
-                lineHeight: theme.typography.h2.lineHeight, // Maintain h2 line height
+                fontSize: theme.typography.h3.fontSize, // Maintain h2 size
+                fontWeight: theme.typography.h3.fontWeight, // Maintain h2 weight
+                lineHeight: theme.typography.h3.lineHeight, // Maintain h2 line height
                 padding: '0px 8px',
                 textTransform: 'none', // Prevent uppercase transformation
                 '&:hover': {
