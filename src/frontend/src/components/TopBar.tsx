@@ -27,7 +27,7 @@ const TopBar: React.FC = () => {
     return (
       <AppBar
         position="fixed"
-        sx={{ backgroundColor: theme.palette.secondary.dark }}
+        sx={{ backgroundColor: theme.palette.muted.dark }}
       >
         <CssBaseline></CssBaseline>
         <Toolbar>
@@ -85,10 +85,7 @@ const TopBar: React.FC = () => {
 
   // Desktop view
   return (
-    <AppBar
-      position="fixed"
-      sx={{ backgroundColor: theme.palette.secondary.dark }}
-    >
+    <AppBar position="fixed" sx={{ backgroundColor: theme.palette.muted.dark }}>
       <CssBaseline></CssBaseline>
       <Toolbar>
         <Box
