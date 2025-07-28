@@ -418,7 +418,9 @@ export const LoadingPage: React.FC = () => {
             pb: isMobile ? 2 : 0,
           }}
         >
-          <Title theme={defaultTheme} />
+          <Box sx={{ fontSize: isMobile ? '4rem' : '10vh' }}>
+            <Title theme={defaultTheme} />
+          </Box>
           <Box
             sx={{
               width: (size * 2) / 3,
