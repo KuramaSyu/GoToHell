@@ -112,7 +112,7 @@ const MainPage: React.FC = () => {
 
         {TimelineBox}
         <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
-          {isLoading && <MainContent />}
+          {!isLoading && <MainContent />}
         </Box>
       </Box>
     </ThemeProvider>
