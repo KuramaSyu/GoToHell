@@ -6,6 +6,7 @@ import { useDeathAmountStore } from '../NumberSlider';
 import useCalculatorStore from '../../../zustand/CalculatorStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import { SecondaryTabView } from './SecondaryTabView';
+import { hexToRgbString } from '../../../utils/colors/hexToRgb';
 
 export const RecentSports = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -46,17 +47,15 @@ export const RecentSports = () => {
             textColor="primary"
             indicatorColor="primary"
             sx={{
-              backgroundColor: alpha('#000000', 0.2),
+              backgroundColor: `rgba(${hexToRgbString(
+                theme.palette.muted.dark
+              )}, 0.33)`,
               borderRadius: '50px',
               padding: '5px',
               backdropFilter: 'blur(10px)',
               p: 1,
             }}
           >
-            {/* <Tab
-              label="Recent Activities"
-              sx={{ minWidth: 150, width: 'auto' }}
-            /> */}
             <Tab label="Multiplier" sx={{ minWidth: 150, width: 'auto' }} />
           </Tabs>
         </Box>
@@ -71,15 +70,12 @@ export const RecentSports = () => {
             overflow: 'hidden',
           }}
         >
-          {/* {activeTab === 0 && (
-            <RecentSportsStandard
-              key={`recent-${activeTab}`}
-              this_tab={0}
-              current_tab={activeTab}
-            />
-          )} */}
           {activeTab === 0 && (
-            <Box sx={{ width: '100%' }}>
+            <Box
+              sx={{
+                width: '100%',
+              }}
+            >
               <MultiplierSettings />
             </Box>
           )}

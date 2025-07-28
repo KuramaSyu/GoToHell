@@ -20,6 +20,7 @@ import usePreferenceStore from '../../zustand/PreferenceStore';
 import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
 import { blendWithContrast } from '../../utils/blendWithContrast';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { hexToRgbString } from '../../utils/colors/hexToRgb';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -244,7 +245,9 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         backdropFilter: 'blur(25px)',
         padding: 3,
         borderRadius: 5,
-        backgroundColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: `rgba(${hexToRgbString(
+          theme.palette.muted.dark
+        )}, 0.33)`,
       }}
     >
       <OutlinedInput
