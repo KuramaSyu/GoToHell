@@ -367,11 +367,12 @@ export const LoadingPage: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyItems: 'center',
-            justifyContent: 'center',
+            justifyContent: isMobile ? 'space-between' : 'center',
             alignItems: 'center',
             width: isMobile ? '100%' : 2 / 3,
             height: '100%',
             zIndex: 5,
+            pb: isMobile ? 2 : 0,
           }}
         >
           <Title theme={defaultTheme} />
