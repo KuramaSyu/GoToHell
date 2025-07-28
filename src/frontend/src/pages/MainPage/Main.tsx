@@ -21,6 +21,7 @@ import { LoadingPage } from '../LoadingPage/Main';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { s } from 'framer-motion/dist/types.d-6pKw1mTI';
+import { hexToRgbString } from '../../utils/colors/hexToRgb';
 
 const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -61,15 +62,25 @@ const MainPage: React.FC = () => {
           width: 'clamp(300px, 25%, 420px)',
           height: '100%',
           flex: '0 1 auto',
-          overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
-          backgroundColor: 'rgba(0, 0, 0, 0.15)',
+          backgroundColor: `rgba(${hexToRgbString(
+            theme.palette.muted.dark
+          )}, 0.33)`,
           borderTopRightRadius: 32,
           borderBottomRightRadius: 32,
           backdropFilter: 'blur(15px)',
-          overflow: 'hidden',
+          overflow: 'hidden', // Hide overflow on parent
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <TimelineWrapper />
+        <Box
+          sx={{
+            height: '100%',
+            overflowY: 'auto', // Scrollbar only on inner box
+          }}
+        >
+          <TimelineWrapper />
+        </Box>
       </Box>
     );
 
