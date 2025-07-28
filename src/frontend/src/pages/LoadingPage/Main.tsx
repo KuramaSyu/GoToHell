@@ -25,6 +25,7 @@ import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../../userStore';
 import { ExpandingCircleBackground } from './CircleBackground';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { Title } from './Title';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -363,17 +364,17 @@ export const LoadingPage: React.FC = () => {
         <Box
           ref={containerRef}
           sx={{
-            mb: 3,
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            width: isMobile ? '100%' : 2 / 3,
-            height: '100%',
-            // textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyItems: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            display: 'flex',
+            width: isMobile ? '100%' : 2 / 3,
+            height: '100%',
+            zIndex: 5,
           }}
         >
+          <Title theme={defaultTheme} />
           <Box
             sx={{
               width: (size * 2) / 3,
