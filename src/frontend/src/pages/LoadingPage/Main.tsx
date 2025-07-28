@@ -297,11 +297,15 @@ export const LoadingPage: React.FC = () => {
   const getStatusIcon = (status: LoadingStatus) => {
     switch (status) {
       case LoadingStatus.Success:
-        return <CheckCircleIcon color="success" />;
+        return (
+          <CheckCircleIcon sx={{ color: defaultTheme.palette.success.main }} />
+        );
       case LoadingStatus.Error:
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon sx={{ color: defaultTheme.palette.error.main }} />;
       case LoadingStatus.Skipped:
-        return <BlockIcon color="disabled" />;
+        return (
+          <BlockIcon sx={{ color: defaultTheme.palette.secondary.main }} />
+        );
       default:
         return <CircularProgress size={24} />;
     }
