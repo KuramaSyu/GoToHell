@@ -5,9 +5,11 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 export interface TitleProps {
   theme: CustomTheme;
+  color1?: string;
+  color2?: string;
 }
 
-export const Title: React.FC<TitleProps> = ({ theme }) => {
+export const Title: React.FC<TitleProps> = ({ theme, color1, color2 }) => {
   const { isMobile } = useBreakpoint();
   return (
     <Box
@@ -16,32 +18,37 @@ export const Title: React.FC<TitleProps> = ({ theme }) => {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 1,
-        fontFamily: NUMBER_FONT,
+        // fontFamily: NUMBER_FONT,
+        fontWeight: 200,
+        fontSize: 'inherit',
       }}
     >
       <Typography
         style={{
-          color: theme.palette.primary.main,
+          color: color1 || theme.palette.primary.light,
           fontFamily: 'inherit',
-          fontSize: isMobile ? '5rem' : '10vh',
+          fontSize: 'inherit',
+          fontWeight: 'inherit',
         }}
       >
         Go{' '}
       </Typography>
       <Typography
         style={{
-          color: theme.palette.secondary.main,
+          color: color2 || theme.palette.secondary.light,
           fontFamily: 'inherit',
-          fontSize: isMobile ? '5rem' : '10vh',
+          fontSize: 'inherit',
+          fontWeight: 'inherit',
         }}
       >
         To{' '}
       </Typography>
       <Typography
         style={{
-          color: theme.palette.primary.main,
+          color: color1 || theme.palette.primary.light,
           fontFamily: 'inherit',
-          fontSize: isMobile ? '5rem' : '10vh',
+          fontSize: 'inherit',
+          fontWeight: 'inherit',
         }}
       >
         Hell
