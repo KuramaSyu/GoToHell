@@ -29,11 +29,22 @@ import { Title } from './Title';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
+  monochrome?: boolean; // add monochrome flag
 }
 
 export const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({
   style,
+  monochrome = false, // default to false
 }) => {
+  const { theme } = useThemeStore(); // get current theme
+
+  // If monochrome, apply greyscale and color filter
+  const filterStyle = monochrome
+    ? {
+        filter: `grayscale(1) brightness(1.1) drop-shadow(0 0 0 ${theme.palette.primary.main})`,
+      }
+    : {};
+
   return (
     <img
       src="/assets/GoToHell-Icon.svg"
@@ -41,7 +52,35 @@ export const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({
       style={{
         width: '100%',
         height: '100%',
-        ...style,
+        ...(style || {}),
+        ...filterStyle,
+      }}
+    />
+  );
+};
+
+export const SmallLogoSvgComponent: React.FC<LogoSvgComponentProps> = ({
+  style,
+  monochrome = false, // default to false
+}) => {
+  const { theme } = useThemeStore(); // get current theme
+
+  // If monochrome, apply greyscale and color filter
+  const filterStyle = monochrome
+    ? {
+        filter: `grayscale(1) brightness(1.1) drop-shadow(0 0 0 ${theme.palette.primary.main})`,
+      }
+    : {};
+
+  return (
+    <img
+      src="/assets/GoToHell-Icon-small.svg"
+      alt="GoToHell Logo"
+      style={{
+        width: '100%',
+        height: '100%',
+        ...(style || {}),
+        ...filterStyle,
       }}
     />
   );
