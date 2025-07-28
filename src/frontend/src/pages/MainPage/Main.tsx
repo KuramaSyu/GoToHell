@@ -63,8 +63,10 @@ const MainPage: React.FC = () => {
           flex: '0 1 auto',
           overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
           backgroundColor: 'rgba(0, 0, 0, 0.15)',
-          borderRadius: '32px',
+          borderTopRightRadius: 32,
+          borderBottomRightRadius: 32,
           backdropFilter: 'blur(15px)',
+          overflow: 'hidden',
         }}
       >
         <TimelineWrapper />
