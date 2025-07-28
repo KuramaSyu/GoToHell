@@ -333,10 +333,10 @@ export const LoadingPage: React.FC = () => {
           }}
         >
           <ExpandingCircleBackground
-            color={defaultTheme.palette.primary.main}
+            color={defaultTheme.palette.text.primary}
             duration={MIN_STARTUP_TIME_S}
             initialOpacity={0.2}
-            animateOpacity={0}
+            animateOpacity={0.05}
           />
           <ExpandingCircleBackground
             color={defaultTheme.palette.secondary.main}
@@ -346,20 +346,20 @@ export const LoadingPage: React.FC = () => {
             animateOpacity={0}
           />
           <ExpandingCircleBackground
-            color={defaultTheme.palette.primary.main}
+            color={defaultTheme.palette.text.primary}
             duration={MIN_STARTUP_TIME_S}
             delay={MIN_STARTUP_TIME_S * 0.4}
             initialOpacity={0.2}
             animateOpacity={0}
           />
 
-          <ExpandingCircleBackground
+          {/* <ExpandingCircleBackground
             color={defaultTheme.palette.muted.dark}
             duration={MIN_STARTUP_TIME_S * 0.4}
             delay={MIN_STARTUP_TIME_S * 0.8}
             initialOpacity={0}
             animateOpacity={0.5}
-          />
+          /> */}
         </Box>
         <Box
           ref={containerRef}
