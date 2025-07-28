@@ -80,30 +80,32 @@ export const Streak = () => {
   return (
     <Box
       sx={{
-        filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
+        //filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
 
         fontFamily: NUMBER_FONT,
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.light,
         width: '100%',
         height: '100%',
-        transform: 'scale(2)',
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'row',
+        fontSize: '3.5rem',
       }}
     >
-      <LocalFireDepartmentIcon sx={{ mr: 1 }} />
+      <LocalFireDepartmentIcon fontSize="inherit" sx={{ mr: 1 }} />
       <Typography
-        fontSize={'1.2rem'}
+        fontSize={'2.2rem'}
         sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
       >
         <PopNumber
           damping={50}
-          font={NUMBER_FONT}
           mass={20}
           stiffness={40}
           value={streak ?? 0}
-          fontsize="1.5rem"
+          fontsize={'3.5rem'}
+          style={{
+            fontWeight: 200,
+          }}
         ></PopNumber>
         {/* {streak} */}
       </Typography>
