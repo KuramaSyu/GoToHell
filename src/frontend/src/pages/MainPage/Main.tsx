@@ -54,21 +54,22 @@ const MainPage: React.FC = () => {
     }
   }, [user]);
 
-  const TimelineBox = isMobile ? null : (
-    <Box
-      sx={{
-        width: 'clamp(300px, 25%, 420px)',
-        height: '100%',
-        flex: '0 1 auto',
-        overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
-        borderRadius: '32px',
-        backdropFilter: 'blur(15px)',
-      }}
-    >
-      <TimelineWrapper />
-    </Box>
-  );
+  const TimelineBox =
+    isMobile || isLoading ? null : (
+      <Box
+        sx={{
+          width: 'clamp(300px, 25%, 420px)',
+          height: '100%',
+          flex: '0 1 auto',
+          overflowY: 'auto', // Ensures the timeline scrolls instead of overflowing
+          backgroundColor: 'rgba(0, 0, 0, 0.15)',
+          borderRadius: '32px',
+          backdropFilter: 'blur(15px)',
+        }}
+      >
+        <TimelineWrapper />
+      </Box>
+    );
 
   return (
     <ThemeProvider theme={theme}>
@@ -111,7 +112,7 @@ const MainPage: React.FC = () => {
 
         {TimelineBox}
         <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
-          <MainContent />
+          {isLoading && <MainContent />}
         </Box>
       </Box>
     </ThemeProvider>
