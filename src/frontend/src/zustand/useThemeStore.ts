@@ -19,6 +19,9 @@ export const defaultTheme = createTheme({
       default: '#2E3440', // Nord0
       paper: '#3B4252', // Nord1
     },
+    warning: { main: '#d08770', light: '#ebcb8b', dark: '#bf616a' }, // Nord14, Nord7, Nord13
+    error: { main: '#bf616a', light: '#d08770', dark: '#a54242' }, // Nord13, Nord14, custom dark
+    success: { main: '#5e81ac', light: '#8fbcbb', dark: '#4c688a' }, // Nord10, Nord7, Nord9
   },
   custom: {
     backgroundImage: 'https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg',
@@ -38,6 +41,9 @@ export const docsTheme = createTheme({
       default: '#eceff4', // Nord0
       paper: '#3B4252', // Nord1
     },
+    warning: { main: '#d08770', light: '#ebcb8b', dark: '#bf616a' }, // Nord14, Nord7, Nord13
+    error: { main: '#bf616a', light: '#d08770', dark: '#a54242' }, // Nord13, Nord14, custom dark
+    success: { main: '#5e81ac', light: '#8fbcbb', dark: '#4c688a' }, // Nord10, Nord7, Nord9
   },
   custom: {
     backgroundImage: 'https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg',
