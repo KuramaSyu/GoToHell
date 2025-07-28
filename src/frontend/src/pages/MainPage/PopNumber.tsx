@@ -32,13 +32,15 @@ export const PopNumber = ({
   fontsize,
   zeroPadding,
   style,
+  fontweight,
 }: {
   value: number;
-  font: string;
+  font?: string;
   damping: number;
   stiffness: number;
   mass: number;
   fontsize?: string;
+  fontweight?: number;
   zeroPadding?: number;
   style?: React.CSSProperties;
 }) => {
@@ -72,7 +74,7 @@ export const PopNumber = ({
     <Typography
       component="span"
       style={{
-        fontFamily: `'${font}', cursive`,
+        fontFamily: font,
         display: 'inline-block',
       }}
     >
@@ -81,6 +83,7 @@ export const PopNumber = ({
           key={index}
           style={{
             fontSize: fontsize ?? '12vh',
+            fontWeight: fontweight ?? undefined,
             ...style,
           }}
         >
