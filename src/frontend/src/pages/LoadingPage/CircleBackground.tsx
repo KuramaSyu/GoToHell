@@ -56,7 +56,10 @@ export const ExpandingCircleBackground: React.FC<
         }}
         transition={{
           duration: duration,
-          ease: 'easeInOut',
+          // ease: [x1, y1, x2, y2] - cubic-bezier control points for animation timing curve
+          // x1, y1: start control point; x2, y2: end control point
+          // Higher y1 = faster start, higher y2 = faster end
+          ease: [0.4, 0, 0.2, 1], // cubic-bezier for a smoother, more natural feel
         }}
         sx={{
           position: 'absolute',
