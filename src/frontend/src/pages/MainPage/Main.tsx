@@ -22,6 +22,7 @@ import { useLoadingStore } from '../../zustand/loadingStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { s } from 'framer-motion/dist/types.d-6pKw1mTI';
 import { hexToRgbString } from '../../utils/colors/hexToRgb';
+import { LoginPage } from '../LoginPage/Main';
 
 const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -118,15 +119,21 @@ const MainPage: React.FC = () => {
           flexDirection: 'row',
           height: '100%', // Instead of 100vh, it now respects its parent’s height
           overflow: 'hidden', // Prevents overflow
-          paddingTop: '6px',
+          paddingTop: user !== null ? '6px' : undefined,
         }}
       >
-        <AppBackground></AppBackground>
+        {user !== null ? (
+          <>
+            <AppBackground></AppBackground>
 
-        {TimelineBox}
-        <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
-          {!isLoading && <MainContent />}
-        </Box>
+            {TimelineBox}
+            <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
+              {!isLoading && <MainContent />}
+            </Box>
+          </>
+        ) : (
+          <LoginPage></LoginPage>
+        )}
       </Box>
     </ThemeProvider>
   );
