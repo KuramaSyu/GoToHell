@@ -11,10 +11,14 @@ import { useThemeStore } from './zustand/useThemeStore';
 import InfoDisplay from './pages/MainPage/InfoDisplay';
 import { Settings } from './pages/Settings/Main';
 import { SwaggerDocs } from './pages/docs/Main';
+import { useLoadingStore } from './zustand/loadingStore';
+import { useUserStore } from './userStore';
 // Import other components as needed
 
 const App: React.FC = () => {
   const { theme } = useThemeStore();
+  const { isLoading } = useLoadingStore();
+  const { user } = useUserStore();
 
   return (
     <Router>
@@ -31,10 +35,12 @@ const App: React.FC = () => {
           }}
         >
           {/* Fixed TopBar with auto height */}
-          <Box sx={{ flexShrink: 0 }}>
-            <TopBar />
-            <Toolbar></Toolbar>
-          </Box>
+          {!isLoading && user !== null && (
+            <Box sx={{ flexShrink: 0 }}>
+              <TopBar />
+              <Toolbar></Toolbar>
+            </Box>
+          )}
 
           {/* Main Content Area - MUST use flex: 1 to ensure correct height */}
           <Box
