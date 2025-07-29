@@ -31,6 +31,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { Title } from './Title';
 import { useSportStore } from '../../useSportStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
+import { useMinSquareSize } from './minSquareSize';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -96,26 +97,6 @@ interface LoadingMapValue {
   time: number;
 }
 
-const useMinSquareSize = (ref: React.RefObject<HTMLElement | null>) => {
-  const [size, setSize] = React.useState(0);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const resizeObserver = new ResizeObserver(([entry]) => {
-      const { width, height } = entry!.contentRect;
-      setSize(Math.min(width, height));
-    });
-
-    resizeObserver.observe(ref.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [ref]);
-  return size;
-};
-
 enum LoadingStatus {
   Loading,
   Success,
@@ -164,10 +145,11 @@ export const LoadingPage: React.FC = () => {
   const [loadingMap, setLoadingMap] = React.useState(initialLoadingMap);
   const { isMobile } = useBreakpoint();
 
+  // Initialize theme
   useEffect(() => {
     const startTime = Date.now();
 
-    // timeout, to make sure, that at least the svg loads
+    // setTimeout to make sure, that svg loads first
     setTimeout(() => {
       useThemeStore
         .getState()
@@ -197,6 +179,7 @@ export const LoadingPage: React.FC = () => {
     }, 0);
   }, []);
 
+  // set isLoading to true, when everthing is initialized
   useEffect(() => {
     const allLoaded = Array.from(loadingMap.values())
       .map(
@@ -214,6 +197,7 @@ export const LoadingPage: React.FC = () => {
     }
   }, [loadingMap]);
 
+  // load Api requirements
   useEffect(() => {
     const init = async () => {
       // load user
