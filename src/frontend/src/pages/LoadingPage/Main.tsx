@@ -23,7 +23,10 @@ import Fade from '@mui/material/Fade';
 import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../../userStore';
-import { ExpandingCircleBackground } from './CircleBackground';
+import {
+  ExpandingCircleBackground,
+  StaticCircleBackground,
+} from './CircleBackground';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { Title } from './Title';
 import { useSportStore } from '../../useSportStore';
@@ -371,25 +374,30 @@ export const LoadingPage: React.FC = () => {
             height: '100vh',
           }}
         >
-          <ExpandingCircleBackground
-            color={defaultTheme.palette.text.primary}
+          {/* <ExpandingCircleBackground
+            color={defaultTheme.palette.muted.main}
             duration={MIN_STARTUP_TIME_S}
-            initialOpacity={0.2}
-            animateOpacity={0.05}
-          />
+            initialOpacity={1}
+            animateOpacity={1}
+            expansionScale={120}
+          /> */}
           <ExpandingCircleBackground
-            color={defaultTheme.palette.secondary.main}
-            duration={MIN_STARTUP_TIME_S * 0.8}
-            delay={MIN_STARTUP_TIME_S * 0.2}
-            initialOpacity={0.2}
-            animateOpacity={0}
+            color={defaultTheme.palette.background.default}
+            duration={MIN_STARTUP_TIME_S * 1.2}
+            expansionScale={100}
+            initialOpacity={1}
+            animateOpacity={1}
+            initialAtXPercent={0}
+            initialAtYPercent={0}
+            animateAtXPercent={0}
+            animateAtYPercent={50}
           />
-          <ExpandingCircleBackground
-            color={defaultTheme.palette.text.primary}
-            duration={MIN_STARTUP_TIME_S}
-            delay={MIN_STARTUP_TIME_S * 0.4}
-            initialOpacity={0.2}
-            animateOpacity={0}
+          <StaticCircleBackground
+            color={defaultTheme.palette.muted.dark}
+            sizePercent={50}
+            atXPercent={100}
+            atYPercent={50}
+            opacity={1}
           />
 
           {/* <ExpandingCircleBackground
