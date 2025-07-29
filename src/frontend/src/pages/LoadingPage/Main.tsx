@@ -383,7 +383,7 @@ export const LoadingPage: React.FC = () => {
           /> */}
           <ExpandingCircleBackground
             color={defaultTheme.palette.background.default}
-            duration={MIN_STARTUP_TIME_S * 1.2}
+            duration={MIN_STARTUP_TIME_S * 1.4}
             expansionScale={100}
             initialOpacity={1}
             animateOpacity={1}
