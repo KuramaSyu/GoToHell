@@ -8,12 +8,13 @@ import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 
 // Define a Nord-themed default theme as a fallback.
 export const defaultTheme = createTheme({
+  // https://www.nordtheme.com/
   palette: {
     mode: 'dark',
     primary: { main: '#5E81AC', light: '#81A1C1', dark: '#4C688A' }, // Nord10, Nord9
     secondary: { main: '#b48ead', light: '#D8DEE9', dark: '#3B4252' }, // Nord15
     vibrant: { main: '#b48ead', light: '#ebcb8b', dark: '#bf616a' }, // Nord8, Nord7
-    muted: { main: '#4C566A', light: '#616E88', dark: '#3B4252' }, // Nord3, Nord1
+    muted: { main: '#434c5e', light: '#4c566a', dark: '#3B4252' }, // Nord1, 2, 3
     text: { primary: '#d8dee9', secondary: '#e5e9f0' },
     background: {
       default: '#2E3440', // Nord0
