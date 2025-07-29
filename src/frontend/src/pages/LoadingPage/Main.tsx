@@ -26,6 +26,8 @@ import { useUserStore } from '../../userStore';
 import { ExpandingCircleBackground } from './CircleBackground';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { Title } from './Title';
+import { useSportStore } from '../../useSportStore';
+import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
@@ -211,51 +213,42 @@ export const LoadingPage: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
+      // load user
       var startTime = Date.now();
-      try {
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.User)
-          .fetchIfNeeded();
-        const user = useUserStore.getState().user;
-        setLoadingMap((prev) => {
-          const comp = prev.get('You');
-          if (comp) {
-            comp.loaded = true;
-            comp.time = Date.now() - startTime;
-            comp.setStatus(
-              user === null ? LoadingStatus.Error : LoadingStatus.Success
-            );
-            prev.set('You', comp);
-          }
-          return new Map(prev);
-        });
-
-        if (user === null) {
-          console.error('User not found, redirecting to login');
-          setLoadingMap((prev) => {
-            prev.forEach((comp, key) => {
-              if (key !== 'You' && key !== 'Theme') {
-                comp.setStatus(LoadingStatus.Skipped);
-                comp.time = 0;
-                prev.set(key, comp);
-              }
-            });
-            return new Map(prev);
-          });
-          return;
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .fetchIfNeeded();
+      const user = useUserStore.getState().user;
+      setLoadingMap((prev) => {
+        const comp = prev.get('You');
+        if (comp) {
+          comp.loaded = true;
+          comp.time = Date.now() - startTime;
+          comp.setStatus(
+            user === null ? LoadingStatus.Error : LoadingStatus.Success
+          );
+          prev.set('You', comp);
         }
-      } catch {
+        return new Map(prev);
+      });
+
+      if (user === null) {
+        // user failed to load -> skip all other components
+        console.error('User not found, redirecting to login');
         setLoadingMap((prev) => {
-          const comp = prev.get('You');
-          if (comp) {
-            comp.setStatus(LoadingStatus.Error);
-            prev.set('You', comp);
-          }
+          prev.forEach((comp, key) => {
+            if (key !== 'You' && key !== 'Theme') {
+              comp.setStatus(LoadingStatus.Skipped);
+              comp.time = 0;
+              prev.set(key, comp);
+            }
+          });
           return new Map(prev);
         });
         return;
       }
 
+      // load friends
       startTime = Date.now();
       try {
         const friends = await new ApiRequirementsBuilder()
@@ -282,36 +275,39 @@ export const LoadingPage: React.FC = () => {
         });
       }
 
+      // load streaks, history, big numbers, settings, overdue deaths
       startTime = Date.now();
-      try {
-        const data = await new ApiRequirementsBuilder()
-          .add(ApiRequirement.AllStreaks)
-          .add(ApiRequirement.AllRecentSports)
-          .add(ApiRequirement.TotalScore)
-          .add(ApiRequirement.Preferences)
-          .add(ApiRequirement.OverdueDeaths)
-          .fetchIfNeeded();
+      const data = await new ApiRequirementsBuilder()
+        .add(ApiRequirement.AllStreaks)
+        .add(ApiRequirement.AllRecentSports)
+        .add(ApiRequirement.TotalScore)
+        .add(ApiRequirement.Preferences)
+        .add(ApiRequirement.OverdueDeaths)
+        .fetchIfNeeded();
 
-        const value = Math.round((Date.now() - startTime) / 5);
-        setLoadingMap((prev) => {
-          [
-            'Streaks',
-            'History',
-            'Big Numbers',
-            'Your Settings',
-            'Overdue Deaths',
-          ].forEach((key) => {
-            const comp = prev.get(key);
-            if (comp) {
-              comp.loaded = true;
-              comp.time = value;
-              comp.setStatus(LoadingStatus.Success);
-              prev.set(key, comp);
-            }
-          });
-          return new Map(prev);
+      const value = Math.round((Date.now() - startTime) / 5);
+      setLoadingMap((prev) => {
+        [
+          'Streaks',
+          'History',
+          'Big Numbers',
+          'Your Settings',
+          'Overdue Deaths',
+        ].forEach((key) => {
+          const comp = prev.get(key);
+          if (comp) {
+            comp.loaded = true;
+            comp.time = value;
+            comp.setStatus(LoadingStatus.Success);
+            prev.set(key, comp);
+          }
         });
-      } catch {
+        return new Map(prev);
+      });
+
+      if (useRecentSportsStore.getState().recentSports === null) {
+        // check if one failed to load -> set all other to failed too
+        // TODO: fetch Streak, History and so on, separately
         setLoadingMap((prev) => {
           [
             'Streaks',
