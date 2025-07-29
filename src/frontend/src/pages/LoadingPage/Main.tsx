@@ -374,13 +374,6 @@ export const LoadingPage: React.FC = () => {
             height: '100vh',
           }}
         >
-          {/* <ExpandingCircleBackground
-            color={defaultTheme.palette.muted.main}
-            duration={MIN_STARTUP_TIME_S}
-            initialOpacity={1}
-            animateOpacity={1}
-            expansionScale={120}
-          /> */}
           <ExpandingCircleBackground
             color={defaultTheme.palette.background.default}
             duration={MIN_STARTUP_TIME_S * 1.4}
@@ -399,14 +392,6 @@ export const LoadingPage: React.FC = () => {
             atYPercent={50}
             opacity={1}
           />
-
-          {/* <ExpandingCircleBackground
-            color={defaultTheme.palette.muted.dark}
-            duration={MIN_STARTUP_TIME_S * 0.4}
-            delay={MIN_STARTUP_TIME_S * 0.8}
-            initialOpacity={0}
-            animateOpacity={0.5}
-          /> */}
         </Box>
         <Box
           ref={containerRef}
