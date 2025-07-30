@@ -27,7 +27,7 @@ const gameFuse = new Fuse(customThemes, {
 /**
  * Represents an Abstract Element, which can be selected
  */
-interface SearchEntry {
+export interface SearchEntry {
   name: string;
   /**
    * This "selects" the current Search Entry in sense of, that is is now the used Game/Sport
@@ -49,7 +49,7 @@ abstract class DefaultSearchEntry implements SearchEntry {
 /**
  * Represents any of the available Sport Kinds
  */
-class SportEntry extends DefaultSearchEntry {
+export class SportEntry extends DefaultSearchEntry {
   name: string;
   constructor(sport: string) {
     super();
