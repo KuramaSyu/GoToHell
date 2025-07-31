@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, lighten, Typography } from '@mui/material';
 
 import TimelineDot from '@mui/lab/TimelineDot';
 
@@ -72,7 +72,7 @@ export const StreakCardNumber: React.FC<StreakCardProps> = ({ user }) => {
         filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
 
         fontFamily: NUMBER_FONT,
-        color: theme.palette.primary.light,
+        color: lighten(theme.palette.primary.main, 1 / 2),
         height: '100%',
         alignItems: 'center',
         display: 'flex',
