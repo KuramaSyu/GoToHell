@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
         width: '100%',
         height: '100%',
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: isMobile ? 'column-reverse' : 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: theme.palette.background.paper,
@@ -49,8 +49,8 @@ export const LoginPage: React.FC = () => {
       >
         <StaticCircleBackground
           color={theme.palette.background.default}
-          atXPercent={-40}
-          atYPercent={50}
+          atXPercent={isMobile ? 50 : -40}
+          atYPercent={isMobile ? 140 : 50}
           sizePercent={100}
         />
       </Box>
@@ -59,8 +59,8 @@ export const LoginPage: React.FC = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 2 / 5,
-          height: '100%',
+          width: isMobile ? '100%' : 2 / 5,
+          height: isMobile ? 2 / 5 : '100%',
           zIndex: 'inherit',
           justifyContent: 'center',
           alignItems: 'center',
@@ -73,9 +73,10 @@ export const LoginPage: React.FC = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: 3 / 5,
-          height: '100%',
-          justifyContent: 'center',
+          width: isMobile ? '100%' : 3 / 5,
+          height: isMobile ? 3 / 5 : '100%',
+          justifyContent: isMobile ? 'space-between' : 'center',
+          pb: isMobile ? 6 : 0,
           alignItems: 'center',
           zIndex: 0,
         }}
