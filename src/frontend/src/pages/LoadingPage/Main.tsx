@@ -366,14 +366,14 @@ export const LoadingPage: React.FC = () => {
             animateOpacity={1}
             initialAtXPercent={0}
             initialAtYPercent={0}
-            animateAtXPercent={0}
-            animateAtYPercent={50}
+            animateAtXPercent={isMobile ? 50 : 0}
+            animateAtYPercent={isMobile ? 0 : 50}
           />
           <StaticCircleBackground
             color={defaultTheme.palette.muted.dark}
-            sizePercent={50}
-            atXPercent={100}
-            atYPercent={50}
+            sizePercent={isMobile ? 60 : 50}
+            atXPercent={isMobile ? 50 : 100}
+            atYPercent={isMobile ? 100 : 50}
             opacity={1}
           />
         </Box>
@@ -388,7 +388,7 @@ export const LoadingPage: React.FC = () => {
             width: isMobile ? '100%' : 2 / 3,
             height: '100%',
             zIndex: 5,
-            pb: isMobile ? 2 : 0,
+            pb: isMobile ? 10 : 0, // to keep the icon away from the table
           }}
         >
           <Box sx={{ fontSize: isMobile ? '4rem' : '10vh' }}>
