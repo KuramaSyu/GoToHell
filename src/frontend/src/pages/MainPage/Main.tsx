@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Fade, useMediaQuery, useTheme } from '@mui/material';
+import { Box, duration, Fade, useMediaQuery, useTheme } from '@mui/material';
 
 import { useThemeStore } from '../../zustand/useThemeStore';
 import AppBackground from '../../components/AppBackground';
@@ -42,11 +42,17 @@ const MainPage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      await new ApiRequirementsBuilder()
-        .add(ApiRequirement.User)
-        .add(ApiRequirement.Friends)
-        .add(ApiRequirement.Preferences)
-        .fetchIfNeeded();
+      try {
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.User)
+          .add(ApiRequirement.Friends)
+          .add(ApiRequirement.Preferences)
+          .fetchIfNeeded();
+      } catch (e) {
+        console.info(
+          'Failed to fetch either user, friends or preferences. User probably not logged in.'
+        );
+      }
     })();
   }, []);
   // add current user to user array
@@ -98,7 +104,10 @@ const MainPage: React.FC = () => {
                 : `circle(0% at ${exitPercentage}% 100%)`,
               opacity: 0.2,
             }}
-            transition={spring}
+            transition={{
+              duration: 1,
+              ease: [0.4, 0, 0.2, 1],
+            }}
             style={{
               position: 'fixed',
               zIndex: 9999,
