@@ -72,7 +72,7 @@ export const StreakCardNumber: React.FC<StreakCardProps> = ({ user }) => {
         filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
 
         fontFamily: NUMBER_FONT,
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.light,
         height: '100%',
         alignItems: 'center',
         display: 'flex',
