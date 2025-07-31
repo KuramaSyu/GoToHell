@@ -17,7 +17,7 @@ export interface ExpandingCircleBackgroundProps {
   animateAtYPercent?: number; // new: Y position for animate "at"
 }
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 export const ExpandingCircleBackground: React.FC<
   ExpandingCircleBackgroundProps
