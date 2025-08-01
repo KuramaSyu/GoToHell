@@ -35,9 +35,22 @@ import { SportDialog } from './RecentSports/SportDialog';
 import { SportSelectionDialog } from './Dialogs/SportSelectionDialog';
 import { set } from 'date-fns';
 import AppsIcon from '@mui/icons-material/Apps';
+import { CustomTheme } from '../../theme/customTheme';
+import { get } from 'http';
 
 const AnimatedButton = animated(Button);
 
+const getImageProps = (isSelected: boolean, theme: CustomTheme) => {
+  return {
+    width: 50,
+    height: 50,
+    filter: isSelected
+      ? 'brightness(0) invert(1)'
+      : theme.palette.mode === 'dark'
+      ? 'brightness(0) invert(0.8)'
+      : 'none',
+  };
+};
 /**
  * builds up the Decorator Stack, which is used to calculate the amount of exercies
  * and display it's latex.
@@ -230,15 +243,7 @@ export const SportSelector = () => {
               <img
                 src={sportIconMap[String(sport)]}
                 alt={String(sport)}
-                style={{
-                  width: 50,
-                  height: 50,
-                  filter: isSelected
-                    ? 'brightness(0) invert(1)'
-                    : theme.palette.mode === 'dark'
-                    ? 'brightness(0) invert(0.8)'
-                    : 'none',
-                }}
+                style={getImageProps(isSelected, theme)}
               />
             </Button>
           );
@@ -283,28 +288,12 @@ export const SportSelector = () => {
                   src={sportIconMap[String(sport)]}
                   alt={String(sport)}
                   style={{
-                    width: 50,
-                    height: 50,
-                    filter: isSelected
-                      ? 'brightness(0) invert(1)'
-                      : theme.palette.mode === 'dark'
-                      ? 'brightness(0) invert(0.8)'
-                      : 'none',
+                    ...getImageProps(isSelected, theme),
                     marginRight: 1,
                   }}
                 />
               ) : (
-                <AppsIcon
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    filter: isSelected
-                      ? 'brightness(0) invert(1)'
-                      : theme.palette.mode === 'dark'
-                      ? 'brightness(0) invert(0.8)'
-                      : 'none',
-                  }}
-                />
+                <AppsIcon sx={getImageProps(isSelected, theme)} />
               )}
               <Typography>{String(sport).replace('_', ' ')}</Typography>
             </AnimatedButton>
