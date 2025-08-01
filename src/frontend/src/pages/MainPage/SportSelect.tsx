@@ -31,6 +31,10 @@ import { animated, useSpring, useTransition } from 'react-spring';
 import useInfoStore from '../../zustand/InfoStore';
 import { GameSelectionMap, sportIconMap } from '../../utils/data/Sports';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { SportDialog } from './RecentSports/SportDialog';
+import { SportSelectionDialog } from './Dialogs/SportSelectionDialog';
+import { set } from 'date-fns';
+import AppsIcon from '@mui/icons-material/Apps';
 
 const AnimatedButton = animated(Button);
 
@@ -90,6 +94,7 @@ export const SportSelector = () => {
   const { usedMultiplier } = useUsedMultiplierStore();
   const { setMessage: setErrorMessage } = useInfoStore();
   const { isMobile } = useBreakpoint();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   function isInPreferences(value: string): Boolean {
     if (preferences.ui.displayedSports === null) return true;
@@ -101,7 +106,9 @@ export const SportSelector = () => {
       return [];
     }
     const sports = sportResponse!.sports!;
-    const sportPerferences = (
+
+    // make a list with the users preferences or the defaults
+    var sportPerferences = (
       preferences.ui.displayedSports ?? Object.keys(sports)
     ).map((sport) => {
       const multiplier: Multiplier = {
@@ -116,13 +123,22 @@ export const SportSelector = () => {
       currentSport.sport !== null &&
       sportPerferences.filter((s) => s.sport === currentSport.sport).length <= 0
     ) {
+      // a sport was selected via modal -> append it at the beginning
       const multiplier: Multiplier = {
         game: null,
         multiplier: currentSport?.sport_multiplier ?? 1,
         sport: currentSport?.sport,
       };
-      return [multiplier, ...sportPerferences];
+      sportPerferences = [multiplier, ...sportPerferences];
     }
+
+    // add a "show all" option at the end
+    sportPerferences.push({
+      game: null,
+      multiplier: 1,
+      sport: 'show_all',
+    });
+
     return sportPerferences;
   }, [preferences, sportResponse, currentSport]);
 
@@ -241,9 +257,13 @@ export const SportSelector = () => {
             <AnimatedButton
               style={style}
               onClick={() => {
-                currentSport.sport = sport;
-                currentSport.sport_multiplier = multiplier;
-                setSport(currentSport);
+                if (sport === 'show_all') {
+                  setDialogOpen(true);
+                } else {
+                  currentSport.sport = sport;
+                  currentSport.sport_multiplier = multiplier;
+                  setSport(currentSport);
+                }
               }}
               variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
               key={sport}
@@ -258,25 +278,55 @@ export const SportSelector = () => {
                 //   : `2px 2px 2px ${theme.palette.muted.dark}`,
               }}
             >
-              <img
-                src={sportIconMap[String(sport)]}
-                alt={String(sport)}
-                style={{
-                  width: 50,
-                  height: 50,
-                  filter: isSelected
-                    ? 'brightness(0) invert(1)'
-                    : theme.palette.mode === 'dark'
-                    ? 'brightness(0) invert(0.8)'
-                    : 'none',
-                  marginRight: 1,
-                }}
-              />
+              {sport !== 'show_all' ? (
+                <img
+                  src={sportIconMap[String(sport)]}
+                  alt={String(sport)}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    filter: isSelected
+                      ? 'brightness(0) invert(1)'
+                      : theme.palette.mode === 'dark'
+                      ? 'brightness(0) invert(0.8)'
+                      : 'none',
+                    marginRight: 1,
+                  }}
+                />
+              ) : (
+                <AppsIcon
+                  sx={{
+                    width: 50,
+                    height: 50,
+                    filter: isSelected
+                      ? 'brightness(0) invert(1)'
+                      : theme.palette.mode === 'dark'
+                      ? 'brightness(0) invert(0.8)'
+                      : 'none',
+                  }}
+                />
+              )}
               <Typography>{String(sport).replace('_', ' ')}</Typography>
             </AnimatedButton>
           );
         })}
       </ButtonGroup>
+      {dialogOpen && (
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            top: 0,
+            left: 0,
+            display: 'flex',
+          }}
+        >
+          <SportSelectionDialog
+            state={{ open: dialogOpen, setOpen: setDialogOpen }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
