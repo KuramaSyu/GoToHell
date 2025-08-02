@@ -8,6 +8,7 @@ import dipSVG from '../../assets/sports-dip.svg';
 import legRaisesSVG from '../../assets/sports-leg_raises.svg';
 import lungesSVG from '../../assets/sports-lunges.svg';
 import glute_bridgesSVG from '../../assets/sports-glute_bridges.svg';
+import joggingSVG from '../../assets/sports-jogging.svg';
 
 export const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
@@ -20,6 +21,7 @@ export const sportIconMap: Record<string, string> = {
   leg_raises: legRaisesSVG,
   lunges: lungesSVG,
   glute_bridges: glute_bridgesSVG,
+  jogging: joggingSVG,
 };
 
 // map for which is shown next to the score
@@ -34,3 +36,4 @@ GameSelectionMap.set('dip', 'Dips');
 GameSelectionMap.set('leg_raises', 'Leg Raises');
 GameSelectionMap.set('lunges', 'Lunges');
 GameSelectionMap.set('glute_bridges', 'Glute Bridges');
+GameSelectionMap.set('jogging', 'Meters Jogging');
