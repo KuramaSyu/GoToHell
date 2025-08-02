@@ -21,7 +21,7 @@ import zIndex from '@mui/material/styles/zIndex';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { TwoListDnD } from './TwoListDnD';
 import usePreferenceStore from '../../zustand/PreferenceStore';
-import { UserPreferences } from '../../models/Preferences';
+import { UIElement, UserPreferences } from '../../models/Preferences';
 import { setCookie } from '../../utils/cookies';
 
 export const SportDragDrop = () => {
@@ -30,7 +30,7 @@ export const SportDragDrop = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   // listB are the preferences or all Sports in case of None
   const [listB, setListB] = useState<string[]>(
-    preferences.ui.displayedSports ??
+    preferences.ui.displayedSports?.map((s) => s.name) ??
       (Object.keys(sportResponse?.sports ?? {}) as string[]) ??
       []
   );
@@ -48,7 +48,9 @@ export const SportDragDrop = () => {
       ...preferences,
       ui: {
         ...preferences.ui,
-        displayedSports: uiList,
+        displayedSports:
+          uiList?.map((name) => ({ name, isDisplayed: true } as UIElement)) ??
+          null,
       },
     };
     setPreferences(newPreferences);

@@ -109,11 +109,6 @@ export const SportSelector = () => {
   const { isMobile } = useBreakpoint();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  function isInPreferences(value: string): Boolean {
-    if (preferences.ui.displayedSports === null) return true;
-    return preferences.ui.displayedSports.includes(value);
-  }
-
   const displayedSports = useMemo((): Multiplier[] => {
     if (sportResponse?.sports === undefined) {
       return [];
@@ -122,7 +117,9 @@ export const SportSelector = () => {
 
     // make a list with the users preferences or the defaults
     var sportPerferences = (
-      preferences.ui.displayedSports ?? Object.keys(sports)
+      preferences.ui.displayedSports
+        ?.filter((s) => s.isDisplayed)
+        .map((s) => s.name) ?? Object.keys(sports)
     ).map((sport) => {
       const multiplier: Multiplier = {
         game: null,
