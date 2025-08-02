@@ -29,31 +29,49 @@ const gameFuse = new Fuse(customThemes, {
  */
 export interface SearchEntry {
   name: string;
+  isDisplayed: boolean;
+
   /**
    * This "selects" the current Search Entry in sense of, that is is now the used Game/Sport
    */
   select(): void;
   displayName(): string;
   getNames(): string[];
+  setIsDisplayed: (isDisplayed: boolean) => void;
+  cloneWith: (changes: Partial<SearchEntry>) => SearchEntry;
 }
 
 abstract class DefaultSearchEntry implements SearchEntry {
   abstract name: string;
+  isDisplayed: boolean = true;
+
   abstract select(): void;
   abstract displayName(): string;
+  setIsDisplayed = (isDisplayed: boolean) => {
+    this.isDisplayed = isDisplayed;
+  };
 
   getNames(): string[] {
     return [this.name, this.displayName()];
   }
+
+  cloneWith: (changes: Partial<SearchEntry>) => SearchEntry = (changes) => {
+    return Object.assign(
+      Object.create(Object.getPrototypeOf(this)),
+      this,
+      changes
+    ) as SearchEntry;
+  };
 }
 /**
  * Represents any of the available Sport Kinds
  */
 export class SportEntry extends DefaultSearchEntry {
   name: string;
-  constructor(sport: string) {
+  constructor(sport: string, isDisplayed: boolean = true) {
     super();
     this.name = sport;
+    this.isDisplayed = isDisplayed;
   }
 
   select(): void {
