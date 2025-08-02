@@ -22,7 +22,7 @@ import { sportIconMap } from '../../../utils/data/Sports';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import GamepadIcon from '@mui/icons-material/Gamepad';
-import { GameEntry } from '../QuickActions/SearchModal';
+import { GameEntry } from '../QuickActions/SearchEntry';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
 import { useEffect, useState } from 'react';
