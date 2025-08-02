@@ -248,6 +248,11 @@ export const SportSelector = () => {
             </Button>
           );
         })}
+        {dialogOpen && (
+          <SportSelectionDialog
+            state={{ open: dialogOpen, setOpen: setDialogOpen }}
+          />
+        )}
       </Box>
     );
   }
