@@ -65,7 +65,7 @@ export const MultiplierTable: React.FC = () => {
   const calculateGameCells = (sport: string): Record<string, number> => {
     const multiplier = calculator.get_sport_base(sport);
     const DEATHS = 10;
-    const games = preferences.ui.displayedGames;
+    const games = preferences.ui.displayedGames?.map((game) => game.name) ?? [];
     return (
       games?.reduce(
         (prev, current) => ({
@@ -81,7 +81,8 @@ export const MultiplierTable: React.FC = () => {
 
   // add games to columns when preferences are loaded
   useEffect(() => {
-    const gameColumns = preferences.ui.displayedGames
+    const gameColumns = preferences.ui.displayedGames?.map((game) => game.name);
+    const filteredGameColumns = gameColumns
       ?.reduce<EditableTableColumn[]>(
         (prev, current) => [
           ...prev,
@@ -90,23 +91,25 @@ export const MultiplierTable: React.FC = () => {
         []
       )
       .filter((x) => x.id !== 'custom');
-    setColumns([...getBaseColumns(), ...(gameColumns || [])]);
+    setColumns([...getBaseColumns(), ...(filteredGameColumns || [])]);
   }, [preferences, calculator]);
 
   // add records, with: sport, multiplier, ...<games at x deaths>
   useEffect(() => {
-    const records = preferences.ui.displayedSports?.reduce<TableDataRow[]>(
-      (prev, currentSport) => [
-        ...prev,
-        {
-          id: currentSport,
-          sport: currentSport,
-          multiplier: calculator.get_sport_base(currentSport),
-          ...calculateGameCells(currentSport),
-        },
-      ],
-      []
-    );
+    const records = preferences.ui.displayedSports
+      ?.map((sport) => sport.name)
+      .reduce<TableDataRow[]>(
+        (prev, currentSport) => [
+          ...prev,
+          {
+            id: currentSport,
+            sport: currentSport,
+            multiplier: calculator.get_sport_base(currentSport),
+            ...calculateGameCells(currentSport),
+          },
+        ],
+        []
+      );
     setData([...(records || [])]);
   }, [preferences, calculator]);
 

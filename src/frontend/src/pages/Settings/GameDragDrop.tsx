@@ -28,7 +28,7 @@ export const GameDragDrop = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   // use preferred games, or in case of null, all games
   const [shownGames, setShownGames] = useState<string[]>(
-    preferences.ui.displayedGames ?? getThemeNames()
+    preferences.ui.displayedGames?.map((game) => game.name) ?? getThemeNames()
   );
   const [hiddenGames, setHiddenGames] = useState(
     getThemeNames().filter((v) => !shownGames.includes(v))
@@ -44,7 +44,8 @@ export const GameDragDrop = () => {
       ...preferences,
       ui: {
         ...preferences.ui,
-        displayedGames: uiList,
+        displayedGames:
+          uiList?.map((game) => ({ name: game, isDisplayed: true })) ?? null,
       },
     };
     setPreferences(newPreferences);

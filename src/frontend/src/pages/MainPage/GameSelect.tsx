@@ -36,7 +36,11 @@ export const GameSelector = () => {
 
   useEffect(() => {
     setValidGames(
-      getValidGames(preferences.ui.displayedGames, getThemeNames, theme)
+      getValidGames(
+        preferences.ui.displayedGames?.map((game) => game.name) ?? null,
+        getThemeNames,
+        theme
+      )
     );
   }, [preferences, theme]);
 
