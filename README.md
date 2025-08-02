@@ -51,10 +51,10 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 - [ ] update script: make a backup of db in same folder under backups/iso-date.sql
 - [ ] Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
-- [ ] box for dragging workouts in. Upl oad multiple things at once
+- [ ] box for dragging workouts in. Upload multiple things at once
 - [ ] when auto opend modal, close it after 10 seconds of inactivity
-- [ ] UI: move number description always below number, move tab selection left next to the content, to get more space
 - [ ] Page: where you can enter a sport afterwards, but you have to ask 2 friends, to sign that you did this sport
+- [ ] Calculator/Converter: Take body weight optionally into account
 
 #### Fixes
 
