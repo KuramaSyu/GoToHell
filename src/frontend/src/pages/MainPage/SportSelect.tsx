@@ -301,20 +301,9 @@ export const SportSelector = () => {
         })}
       </ButtonGroup>
       {dialogOpen && (
-        <Box
-          sx={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            top: 0,
-            left: 0,
-            display: 'flex',
-          }}
-        >
-          <SportSelectionDialog
-            state={{ open: dialogOpen, setOpen: setDialogOpen }}
-          />
-        </Box>
+        <SportSelectionDialog
+          state={{ open: dialogOpen, setOpen: setDialogOpen }}
+        />
       )}
     </Box>
   );
