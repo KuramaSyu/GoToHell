@@ -4,10 +4,12 @@ import {
   Button,
   Card,
   CardContent,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   Typography,
 } from '@mui/material';
 import { SearchEntry } from '../../QuickActions/SearchModal';
@@ -28,10 +30,13 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import PushPinIcon from '@mui/icons-material/PushPin';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 
-export const SelectionElement: React.FC<{ entry: SearchEntry }> = ({
-  entry,
-}) => {
+export const SelectionElement: React.FC<{
+  entry: SearchEntry;
+  alterElement: (entry: SearchEntry) => void;
+}> = ({ entry, alterElement }) => {
   const { theme } = useThemeStore();
   const {
     attributes,
@@ -62,8 +67,46 @@ export const SelectionElement: React.FC<{ entry: SearchEntry }> = ({
         cursor: 'grab',
       }}
     >
-      <CardContent>
-        <Typography>{entry.displayName()}</Typography>
+      <CardContent
+        sx={{
+          display: 'flex',
+          alignContent: 'center',
+          alignItems: 'stretch',
+          height: '100%',
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+        }}
+      >
+        <Typography sx={{ alignContent: 'center' }}>
+          {entry.displayName()}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <Divider orientation="vertical" flexItem />
+          {entry.isDisplayed ? (
+            <PushPinIcon
+              sx={{ cursor: 'pointer' }}
+              onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+              onClick={() => {
+                alterElement(entry.cloneWith({ isDisplayed: false }));
+              }}
+            />
+          ) : (
+            <PushPinOutlinedIcon
+              sx={{ cursor: 'pointer' }}
+              onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+              onClick={() => {
+                alterElement(entry.cloneWith({ isDisplayed: true }));
+              }}
+            />
+          )}
+        </Box>
       </CardContent>
     </Card>
     // <Box
