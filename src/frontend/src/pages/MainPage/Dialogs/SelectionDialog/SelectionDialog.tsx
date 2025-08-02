@@ -67,6 +67,17 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
     }
   };
 
+  const alterElement = (entry: SearchEntry) => {
+    console.log('Altering entry:', entry);
+    const newList = copyList.map((e) => {
+      if (e.name === entry.name) {
+        return entry;
+      }
+      return e;
+    });
+    setCopyList(newList);
+  };
+
   return (
     <Dialog
       open={open}
@@ -105,9 +116,12 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
                 {copyList.map((entry) => (
                   <Grid
                     size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                    key={entry.name}
+                    key={entry.name + entry.isDisplayed}
                   >
-                    <SelectionElement entry={entry} />
+                    <SelectionElement
+                      entry={entry}
+                      alterElement={alterElement}
+                    />
                   </Grid>
                 ))}
               </Grid>
