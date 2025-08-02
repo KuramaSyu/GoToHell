@@ -10,6 +10,8 @@ import {
   DialogTitle,
   Typography,
 } from '@mui/material';
+import { Grid } from '@mui/material';
+
 import { SearchEntry } from '../../QuickActions/SearchModal';
 import { useState } from 'react';
 import { useBreakpoint } from '../../../../hooks/useBreakpoint';
@@ -95,11 +97,16 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
               strategy={rectSortingStrategy}
             >
               <Box>
-                {list.map((entry) => (
-                  <Box key={entry.name}>
-                    <SelectionElement entry={entry} />
-                  </Box>
-                ))}
+                <Grid container spacing={2}>
+                  {list.map((entry) => (
+                    <Grid
+                      size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                      key={entry.name}
+                    >
+                      <SelectionElement entry={entry} />
+                    </Grid>
+                  ))}
+                </Grid>
               </Box>
             </SortableContext>
           </DndContext>
