@@ -32,6 +32,7 @@ import { CSS } from '@dnd-kit/utilities';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import { SearchEntry } from '../../QuickActions/SearchEntry';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 export const SelectionElement: React.FC<{
   entry: SearchEntry;
@@ -56,25 +57,48 @@ export const SelectionElement: React.FC<{
   return (
     <Card
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={style}
       sx={{
         height: 100,
         width: 'auto',
         backgroundColor: alpha(theme.palette.primary.main, 0.1),
         marginBottom: 1,
-        cursor: 'grab',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        boxShadow: isDragging ? 6 : 1,
       }}
     >
+      {/* Selection indicator and drag handle */}
+      <Box
+        sx={{
+          width: 40,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: alpha(theme.palette.primary.main, 0.18),
+          borderTopLeftRadius: 8,
+          borderBottomLeftRadius: 8,
+          borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+          cursor: 'grab',
+          userSelect: 'none',
+        }}
+        {...attributes}
+        {...listeners}
+      >
+        <DragIndicatorIcon color="primary" />
+      </Box>
+      {/* Card content */}
       <CardContent
         sx={{
           display: 'flex',
           alignContent: 'center',
-          alignItems: 'stretch',
+          alignItems: 'center',
           height: '100%',
           justifyContent: 'space-between',
           flexDirection: 'row',
+          flex: 1,
+          pl: 2,
         }}
       >
         <Typography sx={{ alignContent: 'center' }}>
