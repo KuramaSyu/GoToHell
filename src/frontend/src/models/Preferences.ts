@@ -1,4 +1,51 @@
 import { setCookie } from '../utils/cookies';
+import { z } from 'zod';
+
+export const UserPreferencesSchema = z.object({
+  game_overrides: z.array(
+    z.object({
+      sport: z.string(),
+      game: z.string(),
+      amount: z.number(),
+    })
+  ),
+  multipliers: z.array(
+    z.object({
+      game: z.string().nullable(),
+      sport: z.string().nullable(),
+      multiplier: z.number(),
+    })
+  ),
+  sport_specific: z.object({
+    plank: z.object({
+      seconds: z.number(),
+    }),
+  }),
+  ui: z.object({
+    displayedGames: z
+      .array(
+        z.object({
+          name: z.string(),
+          isDisplayed: z.boolean(),
+        })
+      )
+      .nullable(),
+    displayedSports: z
+      .array(
+        z.object({
+          name: z.string(),
+          isDisplayed: z.boolean(),
+        })
+      )
+      .nullable(),
+  }),
+  max_deaths: z.number(),
+  other: z.object({
+    instant_open_modal: z.boolean(),
+  }),
+});
+
+export type UserPreferences = z.infer<typeof UserPreferencesSchema>;
 
 // used for custom overrides, if default definitions are not good enough
 export interface OverrideSportDefinition {
@@ -18,7 +65,8 @@ export interface Multiplier {
   sport: string | null; // null means it's used for all sports
   multiplier: number;
 }
-export interface UserPreferences {
+
+interface UserPreferencesOld {
   game_overrides: OverrideSportDefinition[];
   multipliers: Multiplier[];
   sport_specific: SportSpecific;
