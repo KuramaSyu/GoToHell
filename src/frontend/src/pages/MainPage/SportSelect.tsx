@@ -32,7 +32,7 @@ import useInfoStore from '../../zustand/InfoStore';
 import { GameSelectionMap, sportIconMap } from '../../utils/data/Sports';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { SportDialog } from './RecentSports/SportDialog';
-import { SportSelectionDialog } from './Dialogs/SportSelectionDialog';
+import { SportSelectionDialog } from './Dialogs/SelectionDialog/SportSelectionDialog';
 import { set } from 'date-fns';
 import AppsIcon from '@mui/icons-material/Apps';
 import { CustomTheme } from '../../theme/customTheme';

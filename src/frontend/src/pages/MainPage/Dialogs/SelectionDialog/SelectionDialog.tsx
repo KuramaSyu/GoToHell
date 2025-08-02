@@ -10,10 +10,10 @@ import {
   DialogTitle,
   Typography,
 } from '@mui/material';
-import { SearchEntry } from '../QuickActions/SearchModal';
+import { SearchEntry } from '../../QuickActions/SearchModal';
 import { useState } from 'react';
-import { useBreakpoint } from '../../../hooks/useBreakpoint';
-import { useThemeStore } from '../../../zustand/useThemeStore';
+import { useBreakpoint } from '../../../../hooks/useBreakpoint';
+import { useThemeStore } from '../../../../zustand/useThemeStore';
 import {
   DndContext,
   PointerSensor,

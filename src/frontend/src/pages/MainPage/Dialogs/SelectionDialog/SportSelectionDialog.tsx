@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useSportResponseStore } from '../../../zustand/sportResponseStore';
+import { useSportResponseStore } from '../../../../zustand/sportResponseStore';
 import { DialogStateProps, SelectionDialog } from './SelectionDialog';
-import { SportEntry } from '../QuickActions/SearchModal';
+import { SportEntry } from '../../QuickActions/SearchModal';
 
 export interface SportSelectionDialogProps {
   state: DialogStateProps;
