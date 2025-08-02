@@ -31,9 +31,14 @@ export interface OtherPreferences {
   instant_open_modal: boolean; // whether or not to open the quick action modal with every key
 }
 
+export interface UIElement {
+  name: string;
+  isDisplayed: boolean;
+}
+
 export interface UIPreferences {
-  displayedGames: string[] | null; // null means, all Games will be shown
-  displayedSports: string[] | null; // null means, all Sports will be shown
+  displayedGames: UIElement[] | null; // null means, all Games will be shown
+  displayedSports: UIElement[] | null; // null means, all Sports will be shown
 }
 
 export interface SportSpecific {
@@ -49,8 +54,19 @@ export function defaultPreferences(): UserPreferences {
     game_overrides: [],
     multipliers: [],
     ui: {
-      displayedGames: ['league', 'overwatch', 'repo', 'custom'],
-      displayedSports: ['pushup', 'leg_raises', 'plank', 'squats', 'situps'],
+      displayedGames: [
+        { name: 'league', isDisplayed: true },
+        { name: 'overwatch', isDisplayed: true },
+        { name: 'repo', isDisplayed: true },
+        { name: 'custom', isDisplayed: true },
+      ],
+      displayedSports: [
+        { name: 'pushup', isDisplayed: true },
+        { name: 'leg_raises', isDisplayed: true },
+        { name: 'plank', isDisplayed: true },
+        { name: 'squats', isDisplayed: true },
+        { name: 'situps', isDisplayed: true },
+      ],
     },
     sport_specific: {
       plank: {
