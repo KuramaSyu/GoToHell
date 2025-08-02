@@ -33,6 +33,7 @@ import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import { SearchEntry } from '../../QuickActions/SearchEntry';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { SearchEntryIconProvider } from '../../QuickActions/SearchEntryIconProvider';
 
 export const SelectionElement: React.FC<{
   entry: SearchEntry;
@@ -54,6 +55,11 @@ export const SelectionElement: React.FC<{
     zIndex: 3,
   };
 
+  const icon = SearchEntryIconProvider.getIcon(entry, {
+    width: 40,
+    height: 40,
+    filter: 'brightness(0) invert(0.8)',
+  });
   return (
     <Card
       ref={setNodeRef}
@@ -67,6 +73,11 @@ export const SelectionElement: React.FC<{
         flexDirection: 'row',
         alignItems: 'stretch',
         boxShadow: isDragging ? 6 : 1,
+        //transition: 'box-shadow 0.2s, transform 0.2s', // Add transition
+        // '&:hover': {
+        //   boxShadow: 8,
+        //   transform: 'scale(1.02)', // Slightly scale up on hover
+        // },
       }}
     >
       {/* Selection indicator and drag handle */}
@@ -77,8 +88,6 @@ export const SelectionElement: React.FC<{
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: alpha(theme.palette.primary.main, 0.18),
-          borderTopLeftRadius: 8,
-          borderBottomLeftRadius: 8,
           borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
           cursor: 'grab',
           userSelect: 'none',
@@ -90,25 +99,33 @@ export const SelectionElement: React.FC<{
       </Box>
       {/* Card content */}
       <CardContent
+        onClick={() => entry.select()}
         sx={{
           display: 'flex',
-          alignContent: 'center',
+          alignContent: 'space-evenly',
           alignItems: 'center',
           height: '100%',
           justifyContent: 'space-between',
           flexDirection: 'row',
           flex: 1,
           pl: 2,
+          '&:hover': {
+            backgroundColor: alpha(theme.palette.primary.main, 0.25),
+          },
+          cursor: 'pointer',
         }}
       >
-        <Typography sx={{ alignContent: 'center' }}>
+        <Typography sx={{ alignContent: 'center', cursor: 'inherit' }}>
           {entry.displayName()}
         </Typography>
+
+        {icon !== null && <Box sx={{ mx: 1, width: '40px' }}>{icon}</Box>}
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
+            height: '100%',
             gap: 1,
           }}
         >
@@ -123,7 +140,9 @@ export const SelectionElement: React.FC<{
             />
           ) : (
             <PushPinOutlinedIcon
-              sx={{ cursor: 'pointer' }}
+              sx={{
+                cursor: 'pointer',
+              }}
               onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
               onClick={() => {
                 alterElement(entry.cloneWith({ isDisplayed: true }));
@@ -133,17 +152,5 @@ export const SelectionElement: React.FC<{
         </Box>
       </CardContent>
     </Card>
-    // <Box
-    //   sx={{
-    //     width: '100px',
-    //     height: '50px',
-    //     backgroundColor: 'transparent',
-    //     borderRadius: 5,
-    //     borderColor: theme.palette.primary.main,
-    //     borderWidth: 1,
-    //   }}
-    // >
-    //   {entry.displayName()}
-    // </Box>
   );
 };
