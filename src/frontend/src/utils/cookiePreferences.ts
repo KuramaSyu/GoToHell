@@ -1,4 +1,9 @@
-import { defaultPreferences } from '../models/Preferences';
+import {
+  defaultPreferences,
+  UserPreferences,
+  UserPreferencesSchema,
+} from '../models/Preferences';
+import useInfoStore from '../zustand/InfoStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { getCookie } from './cookies';
 
@@ -9,10 +14,19 @@ export function loadPreferencesFromCookie() {
   const setPreferences = usePreferenceStore.getState().setPreferences;
   const value = getCookie('preferences');
   if (value != null) {
-    const json = JSON.parse(value);
+    var currentPreferences: UserPreferences = {} as UserPreferences;
+    try {
+      currentPreferences = UserPreferencesSchema.parse(JSON.parse(value)); // throws if not matching
+    } catch (e) {
+      console.error('Failed to parse preferences from cookie:', e);
+      useInfoStore.getState().setMessage({
+        message: 'Failed to load settings. Using defaults.',
+        severity: 'warning',
+      });
+    }
     const preferences = {
       ...defaultPreferences(),
-      ...json,
+      ...currentPreferences,
     };
     setPreferences(preferences);
   } else {
