@@ -56,8 +56,10 @@ export const SelectionElement: React.FC<{ entry: SearchEntry }> = ({
       style={style}
       sx={{
         height: 100,
+        width: 'auto',
         backgroundColor: alpha(theme.palette.primary.main, 0.1),
         marginBottom: 1,
+        cursor: 'grab',
       }}
     >
       <CardContent>
