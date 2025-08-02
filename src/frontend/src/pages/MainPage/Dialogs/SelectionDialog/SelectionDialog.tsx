@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import { Grid } from '@mui/material';
 
-import { SearchEntry } from '../../QuickActions/SearchModal';
 import { useState } from 'react';
 import { useBreakpoint } from '../../../../hooks/useBreakpoint';
 import { useThemeStore } from '../../../../zustand/useThemeStore';
@@ -33,6 +32,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SelectionElement } from './SelectionElement';
+import { SearchEntry } from '../../QuickActions/SearchEntry';
 
 export interface SelectionDialogProps {
   title: string;

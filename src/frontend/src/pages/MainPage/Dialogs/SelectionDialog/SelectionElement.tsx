@@ -12,7 +12,6 @@ import {
   Divider,
   Typography,
 } from '@mui/material';
-import { SearchEntry } from '../../QuickActions/SearchModal';
 import { useState } from 'react';
 import { useBreakpoint } from '../../../../hooks/useBreakpoint';
 import { useThemeStore } from '../../../../zustand/useThemeStore';
@@ -32,6 +31,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import { SearchEntry } from '../../QuickActions/SearchEntry';
 
 export const SelectionElement: React.FC<{
   entry: SearchEntry;

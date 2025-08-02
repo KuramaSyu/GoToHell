@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSportResponseStore } from '../../../../zustand/sportResponseStore';
 import { DialogStateProps, SelectionDialog } from './SelectionDialog';
-import { SearchEntry, SportEntry } from '../../QuickActions/SearchModal';
+import { SearchEntry, SportEntry } from '../../QuickActions/SearchEntry';
 import { UserPreferences } from '../../../../models/Preferences';
 import usePreferenceStore from '../../../../zustand/PreferenceStore';
 import { setCookie } from '../../../../utils/cookies';
