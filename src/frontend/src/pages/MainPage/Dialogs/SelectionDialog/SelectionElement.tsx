@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  lighten,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
@@ -65,6 +66,7 @@ export const SelectionElement: React.FC<{
       ref={setNodeRef}
       style={style}
       sx={{
+        position: 'relative',
         height: 100,
         width: 'auto',
         backgroundColor: alpha(theme.palette.primary.main, 0.1),
@@ -109,6 +111,7 @@ export const SelectionElement: React.FC<{
           flexDirection: 'row',
           flex: 1,
           pl: 2,
+          //transition: 'background-color 0.2s',
           '&:hover': {
             backgroundColor: alpha(theme.palette.primary.main, 0.25),
           },
@@ -120,37 +123,54 @@ export const SelectionElement: React.FC<{
         </Typography>
 
         {icon !== null && <Box sx={{ mx: 1, width: '40px' }}>{icon}</Box>}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: '100%',
-            gap: 1,
-          }}
-        >
-          <Divider orientation="vertical" flexItem />
-          {entry.isDisplayed ? (
-            <PushPinIcon
-              sx={{ cursor: 'pointer' }}
-              onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
-              onClick={() => {
-                alterElement(entry.cloneWith({ isDisplayed: false }));
-              }}
-            />
-          ) : (
-            <PushPinOutlinedIcon
-              sx={{
-                cursor: 'pointer',
-              }}
-              onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
-              onClick={() => {
-                alterElement(entry.cloneWith({ isDisplayed: true }));
-              }}
-            />
-          )}
-        </Box>
       </CardContent>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'flex-start',
+          p: 1, // optional: padding from the edge
+          //pointerEvents: 'none', // allow clicks to pass through except for the icon
+        }}
+      >
+        {entry.isDisplayed ? (
+          <PushPinIcon
+            sx={{
+              cursor: 'pointer',
+              transition: 'color 0.2s, background 0.2s',
+              '&:hover': {
+                color: lighten(theme.palette.primary.main, 0.5),
+                background: alpha(theme.palette.muted.main, 0.5),
+                borderRadius: '50%',
+              },
+            }}
+            onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+            onClick={() => {
+              alterElement(entry.cloneWith({ isDisplayed: false }));
+            }}
+          />
+        ) : (
+          <PushPinOutlinedIcon
+            sx={{
+              cursor: 'pointer',
+              transition: 'color 0.2s, background 0.2s',
+              '&:hover': {
+                color: lighten(theme.palette.primary.main, 0.5),
+                background: alpha(theme.palette.muted.main, 0.5),
+                borderRadius: '50%',
+              },
+            }}
+            onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+            onClick={() => {
+              alterElement(entry.cloneWith({ isDisplayed: true }));
+            }}
+          />
+        )}
+      </Box>
     </Card>
   );
 };
