@@ -18,6 +18,7 @@ import { useBreakpoint } from '../../../../hooks/useBreakpoint';
 import { useThemeStore } from '../../../../zustand/useThemeStore';
 import {
   DndContext,
+  DragEndEvent,
   PointerSensor,
   TouchSensor,
   useSensor,
@@ -25,6 +26,7 @@ import {
 } from '@dnd-kit/core';
 import {
   SortableContext,
+  arrayMove,
   rectSortingStrategy,
   useSortable,
   verticalListSortingStrategy,
@@ -52,72 +54,79 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
 }) => {
   const { isMobile } = useBreakpoint();
   const { theme } = useThemeStore();
+  const [copyList, setCopyList] = useState<SearchEntry[]>(list);
   const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = copyList.findIndex((entry) => entry.name === active.id);
+      const newIndex = copyList.findIndex((entry) => entry.name === over?.id);
+      const newList = arrayMove(copyList, oldIndex, newIndex);
+      setCopyList(newList);
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: isMobile ? '100vw' : '80vw',
-        height: isMobile ? '90vh' : '80vh',
-        // display: 'flex',
+    <Dialog
+      open={open}
+      onClose={() => {
+        saveChange(copyList);
+        setOpen(false);
       }}
+      sx={{
+        '& .MuiDialog-paper': {
+          width: isMobile ? '100%' : '80%',
+          height: isMobile ? '100%' : '80%',
+          maxWidth: 'none',
+          maxHeight: 'none',
+        },
+      }}
+      slotProps={{
+        paper: {
+          sx: {
+            backdropFilter: 'blur(8px)',
+            backgroundColor: alpha(theme.palette.muted.dark, 0.7),
+            borderRadius: 8,
+          },
+        },
+      }}
+      fullScreen={isMobile}
     >
-      <Dialog
-        open={open}
-        onClose={() => {
-          saveChange(list);
-          setOpen(false);
-        }}
-        sx={{
-          '& .MuiDialog-paper': {
-            width: isMobile ? '100%' : '80%',
-            height: isMobile ? '100%' : '80%',
-            maxWidth: 'none',
-            maxHeight: 'none',
-          },
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              backdropFilter: 'blur(8px)',
-              backgroundColor: alpha(theme.palette.muted.dark, 0.7),
-              borderRadius: 8,
-            },
-          },
-        }}
-      >
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>
-          <DndContext sensors={sensors}>
-            <SortableContext
-              items={list.map((entry) => entry.name)}
-              strategy={rectSortingStrategy}
-            >
-              <Box>
-                <Grid container spacing={2}>
-                  {list.map((entry) => (
-                    <Grid
-                      size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                      key={entry.name}
-                    >
-                      <SelectionElement entry={entry} />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            </SortableContext>
-          </DndContext>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            Close
-          </Button>
-          <DialogActions />
-        </DialogActions>
-      </Dialog>
-    </Box>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <SortableContext
+            items={copyList.map((entry) => entry.name)}
+            strategy={rectSortingStrategy}
+          >
+            <Box>
+              <Grid container spacing={2}>
+                {copyList.map((entry) => (
+                  <Grid
+                    size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                    key={entry.name}
+                  >
+                    <SelectionElement entry={entry} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </SortableContext>
+        </DndContext>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={() => {
+            saveChange(copyList);
+            setOpen(false);
+          }}
+          color="primary"
+        >
+          Save & Close
+        </Button>
+        <DialogActions />
+      </DialogActions>
+    </Dialog>
   );
 };
