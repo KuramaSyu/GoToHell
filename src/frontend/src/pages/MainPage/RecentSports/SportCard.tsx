@@ -8,6 +8,22 @@ interface SportCardProps {
   data: UserSport;
 }
 
+class AmountCalculator {
+  static calculateAmount(data: UserSport): string {
+    if (data.amount >= 1000) {
+      const value = data.amount / 1000;
+      // If the number is a whole number, don't show decimal part.
+      if (value % 1 === 0) {
+        return `${value}K`;
+      }
+      // Otherwise, round it to one decimal place.
+      return `${value.toFixed(1)}K`;
+    }
+    // Assuming data.amount is the amount of the sport
+    return data.amount.toString();
+  }
+}
+
 export const SportCard: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
   const sportUser = users[data.user_id];
@@ -70,7 +86,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         }}
         variant="h6"
       >
-        {data.amount}
+        {AmountCalculator.calculateAmount(data)}
       </Typography>
     </Box>
   );
