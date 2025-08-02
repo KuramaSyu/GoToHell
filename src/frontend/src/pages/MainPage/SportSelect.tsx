@@ -113,14 +113,18 @@ export const SportSelector = () => {
     if (sportResponse?.sports === undefined) {
       return [];
     }
-    const sports = sportResponse!.sports!;
 
-    // make a list with the users preferences or the defaults
-    var sportPerferences = (
+    const sports = sportResponse!.sports!;
+    const defaultSportKeys = Object.keys(sports);
+
+    // Get the list of sports the user has explicitly chosen to display.
+    const preferredSportNames =
       preferences.ui.displayedSports
         ?.filter((s) => s.isDisplayed)
-        .map((s) => s.name) ?? Object.keys(sports)
-    ).map((sport) => {
+        .map((s) => s.name) ?? defaultSportKeys;
+
+    // Build the list of multipliers for the preferred sports.
+    let sportPerferences = preferredSportNames.map((sport) => {
       const multiplier: Multiplier = {
         game: null,
         multiplier: sports[sport] ?? 1,
@@ -131,9 +135,10 @@ export const SportSelector = () => {
 
     if (
       currentSport.sport !== null &&
-      sportPerferences.filter((s) => s.sport === currentSport.sport).length <= 0
+      !sportPerferences.find((s) => s.sport === currentSport.sport)
     ) {
-      // a sport was selected via modal -> append it at the beginning
+      // The currently selected sport is not in the preferred list (e.g., selected from a dialog).
+      // Prepend it to the list so it's visible.
       const multiplier: Multiplier = {
         game: null,
         multiplier: currentSport?.sport_multiplier ?? 1,
@@ -222,9 +227,11 @@ export const SportSelector = () => {
           return (
             <Button
               onClick={() => {
-                currentSport.sport = sport;
-                currentSport.sport_multiplier = multiplier;
-                setSport(currentSport);
+                setSport({
+                  ...currentSport,
+                  sport: sport,
+                  sport_multiplier: multiplier,
+                });
               }}
               variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
               key={sport}
@@ -267,9 +274,11 @@ export const SportSelector = () => {
                 if (sport === 'show_all') {
                   setDialogOpen(true);
                 } else {
-                  currentSport.sport = sport;
-                  currentSport.sport_multiplier = multiplier;
-                  setSport(currentSport);
+                  setSport({
+                    ...currentSport,
+                    sport: sport,
+                    sport_multiplier: multiplier,
+                  });
                 }
               }}
               variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
@@ -280,9 +289,6 @@ export const SportSelector = () => {
                 backgroundColor: isSelected
                   ? null
                   : alpha(theme.palette.primary.dark, 0.25),
-                // textShadow: isSelected
-                //   ? null
-                //   : `2px 2px 2px ${theme.palette.muted.dark}`,
               }}
             >
               {sport !== 'show_all' ? (
