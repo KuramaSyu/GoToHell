@@ -172,6 +172,7 @@ export const SportsTimeline = () => {
                 overflow: 'hidden',
                 position: 'relative',
                 margin: 'auto',
+                color: lighten(theme.palette.primary.main, 2 / 3),
               }}
             >
               <img
@@ -187,7 +188,7 @@ export const SportsTimeline = () => {
                 }}
               />
             </TimelineDot>
-            <TimelineConnector />
+            <TimelineConnector sx={{ bgcolor: 'primary.main' }} />
           </TimelineSeparator>
           <TimelineContent>
             <SportCard data={sport} />

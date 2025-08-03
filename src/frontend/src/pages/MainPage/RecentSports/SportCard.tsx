@@ -1,8 +1,10 @@
-import { Box, Typography } from '@mui/material';
+import { Box, darken, lighten, Typography } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
 import { useUsersStore } from '../../../userStore';
 import { NUMBER_FONT } from '../../../statics';
 import { UserSport } from './Timeline';
+import { useThemeStore } from '../../../zustand/useThemeStore';
+import { hexToRgbString } from '../../../utils/colors/hexToRgb';
 
 interface SportCardProps {
   data: UserSport;
@@ -26,6 +28,7 @@ class AmountCalculator {
 
 export const SportCard: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
+  const { theme } = useThemeStore();
   const sportUser = users[data.user_id];
   return (
     <Box
@@ -36,20 +39,21 @@ export const SportCard: React.FC<SportCardProps> = ({ data }) => {
         pl: 2,
         width: 'auto', // Ensures the width is determined by the content
         flexDirection: 'column',
+        color: lighten(theme.palette.primary.main, 2 / 3),
       }}
     >
       <Typography
         variant="body1"
         component="span"
         sx={{
-          fontWeight: '300',
+          fontWeight: '350',
           textTransform: 'uppercase',
         }}
       >
         {data.kind.replace('_', ' ')}
       </Typography>
 
-      <Typography variant="subtitle2" fontWeight={300}>
+      <Typography variant="subtitle2" fontWeight={350}>
         {formatDistanceToNow(new Date(data.timedate), {
           addSuffix: true,
         })}
@@ -60,7 +64,9 @@ export const SportCard: React.FC<SportCardProps> = ({ data }) => {
 
 export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
+  const { theme } = useThemeStore();
   const sportUser = users[data.user_id];
+  const color = '0,0,0';
   return (
     <Box
       sx={{
@@ -70,8 +76,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         borderRadius: '50%', // Makes the box a circle
         width: 65, // Set a fixed width
         height: 65, // Set the same height as the width
-        background:
-          'radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.05) 85%, rgba(0,0,0,0) 100%)',
+        background: `radial-gradient(circle, rgba(${color},0.5) 0%, rgba(${color},0.05) 85%, rgba(${color},0) 100%)`,
         justifyContent: 'center', // Centers content horizontally
         alignItems: 'center', // Centers content vertically
         overflow: 'hidden',
@@ -81,8 +86,8 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
       <Typography
         sx={{
           fontFamily: NUMBER_FONT,
-          fontSize: '1.5rem', // Adjust font size as needed
-          color: 'white', // Optional: text color for better visibility
+          fontSize: '1.5rem',
+          color: lighten(theme.palette.primary.main, 0.5),
         }}
         variant="h6"
       >
