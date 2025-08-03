@@ -35,6 +35,7 @@ import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import { SearchEntry } from '../../QuickActions/SearchEntry';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { SearchEntryIconProvider } from '../../QuickActions/SearchEntryIconProvider';
+import { blendWithContrast } from '../../../../utils/blendWithContrast';
 
 export const SelectionElement: React.FC<{
   entry: SearchEntry;
@@ -89,15 +90,16 @@ export const SelectionElement: React.FC<{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: alpha(theme.palette.primary.main, 0.18),
-          borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+          backgroundColor: alpha(theme.palette.primary.main, 0.33),
+          borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.4)}`,
           cursor: 'grab',
           userSelect: 'none',
+          color: blendWithContrast(theme.palette.primary.main, theme, 1 / 2),
         }}
         {...attributes}
         {...listeners}
       >
-        <DragIndicatorIcon color="primary" />
+        <DragIndicatorIcon color="inherit" />
       </Box>
       {/* Card content */}
       <CardContent
