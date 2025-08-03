@@ -82,9 +82,10 @@ export class SportEntry extends DefaultSearchEntry {
  */
 export class GameEntry extends DefaultSearchEntry {
   name: string;
-  constructor(game: string) {
+  constructor(game: string, isDisplayed: boolean = false) {
     super();
     this.name = game;
+    this.isDisplayed = isDisplayed;
   }
 
   select(): void {
