@@ -44,8 +44,6 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - [x] Streak
   - [x] OverdueDeaths
 - [x] Show-All-Sport-Selection
-  - [ ] better contrast for save button and drag icon
-  - [ ] ux: what does click do? What does pin do? When do I click what?
 
 #### Features
 
@@ -59,6 +57,8 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 #### Fixes
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
+- [ ] SelectionModal: better contrast for save button and drag icon
+- [ ] Theme Zustand: only choose themes, where isDisplayed == true
 
 #### QoL
 
