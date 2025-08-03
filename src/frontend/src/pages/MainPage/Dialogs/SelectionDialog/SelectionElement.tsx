@@ -135,8 +135,7 @@ export const SelectionElement: React.FC<{
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'flex-start',
-          p: 1, // optional: padding from the edge
-          //pointerEvents: 'none', // allow clicks to pass through except for the icon
+          p: 1,
         }}
       >
         {entry.isDisplayed ? (
