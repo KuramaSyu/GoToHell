@@ -39,7 +39,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - Sport.tsx: POST api/sports
 - [ ] REST documentation:
   - [x] Sports
-  - [ ] sports/total
+  - [x] sports/total
   - [ ] Friends
   - [x] Streak
   - [x] OverdueDeaths
