@@ -44,6 +44,11 @@ type GetSportReply struct {
 	Data []models.Sport `json:"data"`
 }
 
+// swagger:response GetSportTotal
+type GetSportTotalReply struct {
+	Results []models.SportAmount `json:"results"`
+}
+
 // swagger:parameters GetSportsRequestQuery
 type GetSportsRequestQuery struct {
 	// UserIDs is a comma-separated list of user IDs to filter sports by.
@@ -98,11 +103,6 @@ func csvToMap(csv [][]string) map[string]float64 {
 	return m
 }
 
-// GetSports retrieves sports from the database.
-// Query parameters:
-//   - user_id: (optional) if provided, filters sports for that user (default 0)
-//   - limit: (optional) limits the number of returned sports (default all)
-//
 // GetSport godoc
 // @Summary Get sports for all users provided in the query parameter
 // @Tags 	sport
@@ -153,6 +153,16 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 	c.JSON(http.StatusOK, GetSportReply{Data: sports})
 }
 
+// PostSport godoc
+// @Summary Get the total amounts of every sport kind
+// @Tags 	sport
+// @Accept	json
+// @Producte json
+// @Security CookieAuth
+// @Success 200 {object} GetSportTotalReply
+// @Failure 400 {object} ErrorReply
+// @Failure 500 {object} ErrorReply
+// @Router /api/sports/total [get]
 func (sc *SportsController) GetTotalResults(c *gin.Context) {
 	// Check if user is logged in via Discord
 	user, status, err := UserFromSession(c)
@@ -163,10 +173,10 @@ func (sc *SportsController) GetTotalResults(c *gin.Context) {
 
 	amount, err := sc.repo.GetTotalAmounts(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		SetGinError(c, http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"results": amount})
+	c.JSON(http.StatusOK, GetSportTotalReply{Results: amount})
 }
 
 // PostSport godoc
