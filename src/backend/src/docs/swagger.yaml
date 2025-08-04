@@ -40,6 +40,13 @@ definitions:
           $ref: '#/definitions/models.Sport'
         type: array
     type: object
+  controllers.GetSportTotalReply:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/models.SportAmount'
+        type: array
+    type: object
   controllers.GetStreakReply:
     properties:
       data:
@@ -441,6 +448,28 @@ paths:
       security:
       - CookieAuth: []
       summary: Create a sport entry
+      tags:
+      - sport
+  /api/sports/total:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetSportTotalReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Get the total amounts of every sport kind
       tags:
       - sport
   /api/streak:
