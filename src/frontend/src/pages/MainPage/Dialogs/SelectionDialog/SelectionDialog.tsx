@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  lighten,
   Typography,
 } from '@mui/material';
 import { Grid } from '@mui/material';
@@ -129,13 +130,13 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
           </SortableContext>
         </DndContext>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ color: lighten(theme.palette.primary.main, 2 / 3) }}>
         <Button
           onClick={() => {
             saveChange(copyList);
             setOpen(false);
           }}
-          color="primary"
+          color="inherit"
         >
           Save & Close
         </Button>
