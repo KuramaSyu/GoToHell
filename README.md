@@ -57,8 +57,8 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 #### Fixes
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
-- [ ] SelectionModal: better contrast for save button and drag icon
-- [ ] Theme Zustand: only choose themes, where isDisplayed == true
+- [x] SelectionModal: better contrast for save button and drag icon
+- [x] Theme Zustand: only choose themes, where isDisplayed == true
 
 #### QoL
 
