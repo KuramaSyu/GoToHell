@@ -106,9 +106,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
     // filter out valid games, or use all if no preferences are set
     var validThemes = customThemes;
-    if (preferences.ui.displayedGames !== null) {
+    const preferredGames = preferences.ui.displayedGames.filter(
+      (x) => x.isDisplayed
+    );
+    if (preferredGames !== null) {
       validThemes = customThemes.filter((theme) =>
-        preferences.ui.displayedGames!.map((x) => x.name).includes(theme.name)
+        preferredGames!.map((x) => x.name).includes(theme.name)
       );
     }
     const randomTheme =
