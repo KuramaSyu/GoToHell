@@ -5,6 +5,7 @@ import useInfoStore from '../../zustand/InfoStore';
 const InfoDisplay: React.FC = () => {
   const { Message, setMessage: setErrorMessage } = useInfoStore();
   const [open, setOpen] = useState(false);
+  const DEFAULT_DURATION = 6000;
 
   // Monitor error message changes
   useEffect(() => {
@@ -20,7 +21,7 @@ const InfoDisplay: React.FC = () => {
     if (open) {
       const timer = setTimeout(() => {
         handleClose();
-      }, 5000);
+      }, Message.duration ?? DEFAULT_DURATION);
       return () => clearTimeout(timer);
     }
   }, [open]);
@@ -49,7 +50,7 @@ const InfoDisplay: React.FC = () => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={5000}
+      autoHideDuration={Message.duration ?? DEFAULT_DURATION}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       key={Message.message} // This key is important for re-triggering with the same message
