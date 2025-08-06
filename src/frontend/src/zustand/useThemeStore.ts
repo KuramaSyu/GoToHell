@@ -106,7 +106,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
     // filter out valid games, or use all if no preferences are set
     var validThemes = customThemes;
-    const preferredGames = preferences.ui.displayedGames.filter(
+    const preferredGames = preferences.ui.displayedGames?.filter(
       (x) => x.isDisplayed
     );
     if (preferredGames !== null) {
