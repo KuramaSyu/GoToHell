@@ -1,13 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Snackbar, Alert, Typography, Button, Box } from '@mui/material';
+import React, { useState, useEffect, use } from 'react';
+import {
+  Snackbar,
+  Alert,
+  Typography,
+  Button,
+  Box,
+  LinearProgress,
+} from '@mui/material';
 import useInfoStore from '../../zustand/InfoStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { set } from 'zod';
 
 const InfoDisplay: React.FC = () => {
   const { Message, setMessage: setErrorMessage } = useInfoStore();
   const [open, setOpen] = useState(false);
+  const [progress, setProgress] = useState(0); // 0 to 100
   const DEFAULT_DURATION = 6000;
+  const INTERVAL = 100;
   const { isMobile } = useBreakpoint();
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const steps = (Message.duration ?? DEFAULT_DURATION) / INTERVAL;
+    const increment = 100 / steps;
+
+    // timer which increases
+    const timer = window.setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + increment;
+        if (next >= 100) {
+          clearInterval(timer);
+          window.setTimeout(() => {
+            setOpen(false);
+          }, INTERVAL);
+          return 100;
+        }
+        return next;
+      });
+    }, INTERVAL);
+    // close when timer is done
+
+    return () => clearInterval(timer);
+  }, [open]);
 
   // Monitor error message changes
   useEffect(() => {
@@ -18,15 +55,6 @@ const InfoDisplay: React.FC = () => {
     }
   }, [Message]);
 
-  // Auto hide timer
-  useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => {
-        handleClose();
-      }, Message.duration ?? DEFAULT_DURATION);
-      return () => clearTimeout(timer);
-    }
-  }, [open]);
   // Slide animation
   // const SlideTransition = (props: SlideProps) => {
   //   return <Slide {...props} direction="down" />;
@@ -38,15 +66,16 @@ const InfoDisplay: React.FC = () => {
   ) => {
     if (reason === 'clickaway') return;
     setOpen(false);
-    //setErrorMessage('');
   };
 
   // Handle cleanup after animation
+  // useless?
   const handleExited = () => {
-    setErrorMessage({
-      message: '',
-      severity: 'info',
-    });
+    // setErrorMessage({
+    //   message: '',
+    //   severity: 'info',
+    // });
+    // setProgress(0); // Reset progress bar
   };
 
   return (
@@ -61,10 +90,20 @@ const InfoDisplay: React.FC = () => {
       <Typography variant="h4" component="div">
         <Alert severity={Message.severity}>
           <Box
-            sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}
+            sx={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+            }}
           >
             {Message.message}
             <Button onClick={() => setOpen(false)}>ok</Button>
+          </Box>
+          <Box sx={{ width: '100%', position: 'absolute', bottom: 0, left: 0 }}>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{ height: 4 }}
+            />
           </Box>
         </Alert>
       </Typography>
