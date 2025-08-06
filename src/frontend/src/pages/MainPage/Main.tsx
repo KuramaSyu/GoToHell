@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, duration, Fade, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useThemeStore } from '../../zustand/useThemeStore';
 import AppBackground from '../../components/AppBackground';
 import MainContent from './MainContent';
-import { SportsTimeline } from './RecentSports/Timeline';
 import { useUsersStore, useUserStore } from '../../userStore';
-import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
-import { UserApi } from '../../utils/api/Api';
 import { ThemeProvider } from '@emotion/react';
 import { QuickActionMenu } from './QuickActions/Main';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -15,12 +12,10 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
-import { StreakTimeline } from './RecentSports/StreakTimeline';
 import { TimelineWrapper } from './RecentSports/TimelineWrapper';
 import { LoadingPage } from '../LoadingPage/Main';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { AnimatePresence, motion } from 'framer-motion';
-import { s } from 'framer-motion/dist/types.d-6pKw1mTI';
 import { hexToRgbString } from '../../utils/colors/hexToRgb';
 import { LoginPage } from '../LoginPage/Main';
 
