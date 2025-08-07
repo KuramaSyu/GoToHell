@@ -6,13 +6,39 @@ export interface SnackbarUpdate {
   duration?: number;
 }
 
+export class SnackbarUpdateImpl implements SnackbarUpdate {
+  message: string;
+  severity: 'success' | 'info' | 'warning' | 'error';
+  duration?: number;
+
+  constructor(
+    message: string,
+    severity?: 'success' | 'info' | 'warning' | 'error',
+    duration?: number
+  ) {
+    this.message = message;
+    this.severity = severity ?? 'info';
+    this.duration = duration ?? this.geDefaultDuration();
+  }
+
+  geDefaultDuration(): number {
+    if (this.severity === 'info') {
+      return 5;
+    } else if (this.severity === 'warning' || this.severity === 'error') {
+      return 6;
+    } else {
+      return 4;
+    }
+  }
+}
+
 interface AppState {
-  Message: SnackbarUpdate;
-  setMessage: (message: SnackbarUpdate) => void;
+  Message: SnackbarUpdateImpl;
+  setMessage: (message: SnackbarUpdateImpl) => void;
 }
 
 const useInfoStore = create<AppState>((set) => ({
-  Message: { message: '', severity: 'info' },
+  Message: new SnackbarUpdateImpl(''),
   setMessage: (message) => set({ Message: message }),
 }));
 
