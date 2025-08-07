@@ -30,7 +30,7 @@ import { useEffect, useState } from 'react';
 import SyncIcon from '@mui/icons-material/Sync';
 import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
-import useInfoStore from '../../../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -84,10 +84,9 @@ export const SportDialog: React.FC<SportDialogProps> = ({
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
-      setMessage({
-        message: 'Failed to delete sport record',
-        severity: 'error',
-      });
+      setMessage(
+        new SnackbarUpdateImpl('Failed to delete sport record', 'error')
+      );
       console.error(error);
     }
   };

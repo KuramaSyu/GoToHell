@@ -2,7 +2,7 @@ import { Box, darken, Fade, lighten } from '@mui/material';
 import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import { useUserStore } from '../../userStore';
-import useInfoStore from '../../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { AnimatedRoundBtn } from './AnimatedButton';
 import useCalculatorStore from '../../zustand/CalculatorStore';
@@ -32,7 +32,7 @@ export const UploadOverdueDeaths = () => {
       await uploadBuilder.upload();
       uploadBuilder.updateStores();
     } catch (e) {
-      setMessage({ message: String(e), severity: 'error' });
+      setMessage(new SnackbarUpdateImpl(String(e), 'error'));
     }
   };
   if (

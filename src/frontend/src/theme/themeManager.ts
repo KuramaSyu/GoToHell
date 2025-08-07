@@ -8,7 +8,7 @@ import {
   useThemeStore,
 } from '../zustand/useThemeStore';
 import { error } from 'console';
-import useInfoStore from '../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../zustand/InfoStore';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -134,10 +134,14 @@ export class ThemeManager {
 
       // display timer after too much loading time
       const warningTimer = setTimeout(() => {
-        useInfoStore.getState().setMessage({
-          message: `Loading image for theme ${themeName} takes longer then expected`,
-          severity: 'warning',
-        });
+        useInfoStore
+          .getState()
+          .setMessage(
+            new SnackbarUpdateImpl(
+              `Loading image for theme ${themeName} takes longer then expected`,
+              'warning'
+            )
+          );
       }, 1200);
       // Create a promise to wait for the image to load
       const imageLoaded = new Promise((resolve, reject) => {
@@ -148,10 +152,14 @@ export class ThemeManager {
         img.onerror = (e) => {
           clearTimeout(warningTimer);
           reject(e);
-          useInfoStore.getState().setMessage({
-            message: `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`,
-            severity: 'error',
-          });
+          useInfoStore
+            .getState()
+            .setMessage(
+              new SnackbarUpdateImpl(
+                `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`,
+                'error'
+              )
+            );
         };
         img.src = chosenBackground!;
       });

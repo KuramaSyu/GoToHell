@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { getThemeNames } from '../../zustand/useThemeStore';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import useInfoStore from '../../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 import { Add, Remove } from '@mui/icons-material';
 import { setCookie } from '../../utils/cookies';
 import { CustomSelect } from './CustomSelect';
@@ -47,11 +47,12 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
       setCookie('preferences', JSON.stringify(preferences), 999);
       setPreferences(preferences);
     } else {
-      setMessage({
-        message:
+      setMessage(
+        new SnackbarUpdateImpl(
           'Could not find the game override to remove. Please try again.',
-        severity: 'error',
-      });
+          'error'
+        )
+      );
     }
   };
 
@@ -148,24 +149,21 @@ export const GameOverrideSettings: React.FC = () => {
 
   const add = () => {
     if (game === null) {
-      return setMessage({
-        message: 'You need to select a game',
-        severity: 'error',
-      });
+      return setMessage(
+        new SnackbarUpdateImpl('You need to select a game', 'error')
+      );
     }
 
     if (sport === null) {
-      return setMessage({
-        message: 'You need to select a sport',
-        severity: 'error',
-      });
+      return setMessage(
+        new SnackbarUpdateImpl('You need to select a sport', 'error')
+      );
     }
 
     if (exerciseAmount === null) {
-      return setMessage({
-        message: 'Well, how many exerpices per death?',
-        severity: 'error',
-      });
+      return setMessage(
+        new SnackbarUpdateImpl('Well, how many exerpices per death?', 'error')
+      );
     }
     preferences.game_overrides.push({
       game: game,

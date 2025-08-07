@@ -3,7 +3,7 @@ import {
   UserPreferences,
   UserPreferencesSchema,
 } from '../models/Preferences';
-import useInfoStore from '../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../zustand/InfoStore';
 import usePreferenceStore from '../zustand/PreferenceStore';
 import { getCookie } from './cookies';
 
@@ -19,10 +19,14 @@ export function loadPreferencesFromCookie() {
       currentPreferences = UserPreferencesSchema.parse(JSON.parse(value)); // throws if not matching
     } catch (e) {
       console.error('Failed to parse preferences from cookie:', e);
-      useInfoStore.getState().setMessage({
-        message: 'Failed to load settings. Using defaults.',
-        severity: 'warning',
-      });
+      useInfoStore
+        .getState()
+        .setMessage(
+          new SnackbarUpdateImpl(
+            'Failed to load settings. Using defaults.',
+            'warning'
+          )
+        );
     }
     const preferences = {
       ...defaultPreferences(),
