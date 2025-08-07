@@ -61,15 +61,14 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [x] Theme Zustand: only choose themes, where isDisplayed == true
 
 #### QoL
-
-- [ ] Show all multipliers in the settings
+- [ ] Settings Menu v2 structured like immichs settings
+  - [ ] Show all multipliers in the settings
 - [ ] better animate TimeDisplay
 - [ ] add time (seconds) parameter to setErrorMessage. Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
 - [ ] OverdueDeaths: open a modal when clicking on it, which shows all overdueDeaths for all games
 
 #### Perf
 
-- [ ] multiple requests (3) sent to /api/sports/total -> decrease
 
 #### Ideas
 
