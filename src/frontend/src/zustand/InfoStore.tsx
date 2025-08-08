@@ -21,6 +21,10 @@ export class SnackbarUpdateImpl implements SnackbarUpdate {
     this.duration = duration ?? this.geDefaultDuration();
   }
 
+  getDurationMs(): number {
+    return (this.duration ?? this.geDefaultDuration()) * 1000;
+  }
+
   geDefaultDuration(): number {
     if (this.severity === 'info') {
       return 5;
