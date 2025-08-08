@@ -12,13 +12,20 @@ import { useMinSquareSize } from '../LoadingPage/minSquareSize';
 
 export const LoginPage: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
+
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const size = useMinSquareSize(containerRef);
 
   useEffect(() => {
-    setTheme('default');
+    if (theme.custom.themeName !== 'default') {
+      const oldTheme = theme.custom.themeName;
+      setTheme('default');
+      return () => {
+        setTheme(oldTheme);
+      };
+    }
   }, [theme]);
 
   return (
