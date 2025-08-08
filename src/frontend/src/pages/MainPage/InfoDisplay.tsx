@@ -67,7 +67,6 @@ const InfoDisplay: React.FC = () => {
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       key={Message.message} // This key is important for re-triggering with the same message
       //slotProps={{ transition: { onExited: handleExited } }}
-      sx={{ zIndex: 9999 }}
     >
       <Typography variant="h4" component="div">
         <Alert severity={Message.severity}>
