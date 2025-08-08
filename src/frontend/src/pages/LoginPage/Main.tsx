@@ -11,18 +11,15 @@ import { LogoSvgComponent } from '../LoadingPage/Main';
 import { useMinSquareSize } from '../LoadingPage/minSquareSize';
 
 export const LoginPage: React.FC = () => {
-  const theme = defaultTheme;
+  const { theme, setTheme } = useThemeStore();
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const size = useMinSquareSize(containerRef);
 
   useEffect(() => {
-    // Initialize the theme when the component mounts
-    (async () => {
-      await useThemeStore.getState().initializeTheme();
-    })();
-  }, []);
+    setTheme('default');
+  }, [theme]);
 
   return (
     <Box
