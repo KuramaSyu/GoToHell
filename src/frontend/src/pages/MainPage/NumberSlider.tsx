@@ -1,18 +1,11 @@
-import {
-  Box,
-  Typography,
-  Slider,
-  useTheme,
-  Button,
-  OutlinedInput,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Typography, Slider, Button, OutlinedInput } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
 import { GenerateMarks } from '../../utils/Marks';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useState } from 'react';
 
 interface DeathAmountState {
   amount: number;
@@ -33,24 +26,35 @@ export interface NumberSliderProps {
 
 export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const { amount, setAmount } = useDeathAmountStore();
+  const [localAmount, setLocalAmount] = useState<string | null>(
+    amount.toString()
+  );
+
   const { preferencesLoaded } = usePreferenceStore();
   const { theme } = useThemeStore();
   const min = Math.min(0, amount);
   const max = Math.max(12, amount);
-  const selectableMax = 2 ** 11;
+  const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const { isMobile } = useBreakpoint();
 
   // Slider Change - set value or current maximum
-  const handleSliderChange = (_: Event, newValue: number | number[]) => {
-    setAmount(Math.min(newValue as number, selectableMax));
+  const handleSliderChange = (newValue: number | number[]) => {
+    const capped = Math.min(newValue as number, selectableMax);
+    setAmount(capped);
+    setLocalAmount(capped.toString());
   };
 
   // manual input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalAmount(event.target.value);
+    394;
     let newValue = Number(event.target.value);
     if (!isNaN(newValue)) {
       if (newValue > selectableMax) newValue = selectableMax;
       setAmount(newValue);
+      if (event.target.value !== '') {
+        setLocalAmount(newValue.toString());
+      }
     }
   };
 
@@ -76,7 +80,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const AddButton = (
     <Button
       variant="contained"
-      onClick={() => setAmount(amount + 1)}
+      onClick={() => handleSliderChange(amount + 1)}
       sx={{
         borderRadius: '50%',
         width: '80%', // Make the button fill the container
@@ -110,34 +114,27 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   );
 
   const customInput = withInput ? (
-    <Box
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="space-between"
-    >
-      <Typography variant="h6">Too often?</Typography>
-      <OutlinedInput
-        value={amount}
-        placeholder="Amount"
-        onChange={handleInputChange}
-        inputProps={{
-          inputMode: 'numeric',
-          style: { textAlign: 'center' }, // center the number
-        }}
-        sx={{
-          width: 'clamp(40px, 35%, 200px)',
-          height: '80%',
-          display: 'flex',
-          color: theme.palette.primary.main,
-          fontSize: 'clamp(16px, 2vw, 24px)',
-          textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.primary.main,
-          },
-        }}
-      />
-    </Box>
+    <OutlinedInput
+      value={localAmount}
+      placeholder="Amount"
+      onChange={handleInputChange}
+      error={isNaN(Number(localAmount))}
+      inputProps={{
+        inputMode: 'numeric',
+        style: { textAlign: 'center' }, // center the number
+      }}
+      sx={{
+        width: 'clamp(40px, 35%, 200px)',
+        height: '80%',
+        display: 'flex',
+        color: theme.palette.primary.main,
+        fontSize: 'clamp(16px, 2vw, 24px)',
+        textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.primary.main,
+        },
+      }}
+    />
   ) : null;
 
   const AddRemoveButtons = (
@@ -156,7 +153,21 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   );
 
   // calculate the marks below the slider
-  const { marks } = GenerateMarks(12, min, max);
+  const getMarkAmount = () => {
+    // start at 12, going down to 2 as the amount increases
+    if (amount > 1000) {
+      return 2;
+    } else if (amount > 100) {
+      return 4;
+    } else if (amount > 50) {
+      return 8;
+    } else if (amount > 20) {
+      return 10;
+    } else {
+      return 12;
+    }
+  };
+  const { marks } = GenerateMarks(getMarkAmount(), min, max);
   const stepValue = 1;
 
   if (isMobile) {
@@ -186,12 +197,12 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         ) : (
           <Slider
             value={amount}
-            onChange={handleSliderChange}
+            onChange={(e, newValue) => handleSliderChange(newValue)}
             min={min}
             max={max}
             step={1}
             aria-labelledby="number-slider"
-            marks={GenerateMarks(12, min, max).marks}
+            marks={marks}
           />
         )}
       </Box>
@@ -218,13 +229,12 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           width: '100%',
         }}
       >
-        {title}
+        {withInput ? customInput : title}
         {AddRemoveButtons}
       </Box>
-      {customInput}
       <Slider
         value={amount}
-        onChange={handleSliderChange}
+        onChange={(e, newValue) => handleSliderChange(newValue)}
         min={min}
         max={max}
         step={stepValue}
