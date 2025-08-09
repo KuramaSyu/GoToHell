@@ -19,37 +19,33 @@ const InfoDisplay: React.FC = () => {
   const { isMobile } = useBreakpoint();
 
   useEffect(() => {
-    if (open) {
-      const steps = Message.getDurationMs() / INTERVAL;
-      const increment = 100 / steps;
-
-      // timer which increases
-      const timer = window.setInterval(() => {
-        setProgress((prev) => {
-          const next = prev + increment;
-          if (next >= 100) {
-            clearInterval(timer);
-            window.setTimeout(() => {
-              // this delay is used, that the loading bar
-              // actually reaches the end due to animations
-              setOpen(false);
-            }, INTERVAL * 3);
-            return 100;
-          }
-          return next;
-        });
-      }, INTERVAL);
-      // close when timer is done
-
-      return () => clearInterval(timer);
-    }
-  }, [open, Message]);
-
-  // Monitor error message changes
-  useEffect(() => {
     if (Message && Message.message !== '') {
       setOpen(true);
     }
+
+    const steps = Message.getDurationMs() / INTERVAL;
+    const increment = 100 / steps;
+
+    // timer which increases
+    const timer = window.setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + increment;
+        if (next >= 100) {
+          clearInterval(timer);
+          window.setTimeout(() => {
+            // this delay is used, that the loading bar
+            // actually reaches the end due to animations
+            setOpen(false);
+            setProgress(0);
+          }, INTERVAL * 3);
+          return 100;
+        }
+        return next;
+      });
+    }, INTERVAL);
+    // close when timer is done
+
+    return () => clearInterval(timer);
   }, [Message]);
 
   const handleClose = (
