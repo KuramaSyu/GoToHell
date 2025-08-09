@@ -83,11 +83,7 @@ export const UploadScore = () => {
   ) {
     return null;
   }
-  const computedValue = calculator.calculate_amount(
-    currentSport.sport!,
-    currentSport.game!,
-    amount
-  );
+
   const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
   if (isMobile) {
     return (
