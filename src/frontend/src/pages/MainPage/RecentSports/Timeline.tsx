@@ -61,11 +61,6 @@ export const SportsTimeline = () => {
 
     const fetchSports = async () => {
       if (!user || !usersLoaded) return;
-      // Include both the current user and others from the store.
-      const userIds: string[] = [
-        ...Object.values(users).map((u) => u.id), // friends
-        user.id, // self
-      ];
       try {
         await new ApiRequirementsBuilder()
           .add(ApiRequirement.User)

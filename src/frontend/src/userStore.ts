@@ -35,6 +35,11 @@ export interface UsersState {
    * @returns
    */
   removeUser: (id: string) => void;
+
+  /**
+   * sets the friendsLoaded state to true
+   */
+  setFriendsLoaded: () => void;
 }
 
 export const useUsersStore = create<UsersState>((set) => ({
@@ -61,4 +66,5 @@ export const useUsersStore = create<UsersState>((set) => ({
       delete updatedUsers[id];
       return { users: updatedUsers };
     }),
+  setFriendsLoaded: () => set({ friendsLoaded: true }),
 }));

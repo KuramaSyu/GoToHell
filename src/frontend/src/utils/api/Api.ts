@@ -110,6 +110,7 @@ export class UserApi implements UserApiInterface {
       const addFriends = useUsersStore.getState().addFriends;
       const reply = result['data'] as FriendshipReply;
       addFriends(reply.users.map((user) => new DiscordUserImpl(user)));
+      useUsersStore.getState().setFriendsLoaded();
       return reply;
     } else {
       // log error and return null
@@ -279,7 +280,7 @@ export class UserApi implements UserApiInterface {
       throw error;
     }
   }
-    /**
+  /**
    * patches a sport-record to /api/sports
    *
    * @Note
@@ -326,23 +327,27 @@ export class UserApi implements UserApiInterface {
       const result = await response.json();
       if (response.ok) {
         // get zustand setter
-        const { setRecentSports, recentSports, triggerRefresh } = useRecentSportsStore.getState();
+        const { setRecentSports, recentSports, triggerRefresh } =
+          useRecentSportsStore.getState();
 
         var reply = result as PatchSportResponse;
-        console.log(`reply: ${JSON.stringify(reply)}`)
+        console.log(`reply: ${JSON.stringify(reply)}`);
 
         if (updateStores && recentSports !== null) {
-          setRecentSports({data: [...recentSports.data.map(s => {
-            if (s.id !== id) return s;
-            return {
-              ...s,
-              ...(kind !== null && { kind }),
-              ...(game !== null && { game }),
-              ...(amount !== null && { amount }),
-            };
-          })]})
+          setRecentSports({
+            data: [
+              ...recentSports.data.map((s) => {
+                if (s.id !== id) return s;
+                return {
+                  ...s,
+                  ...(kind !== null && { kind }),
+                  ...(game !== null && { game }),
+                  ...(amount !== null && { amount }),
+                };
+              }),
+            ],
+          });
           //triggerRefresh();
-
         }
         return reply;
       } else {
