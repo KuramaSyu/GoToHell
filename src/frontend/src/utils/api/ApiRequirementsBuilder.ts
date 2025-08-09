@@ -18,6 +18,17 @@ interface IApiReuqirement {
   getPriority(): number;
 }
 
+/**
+ * Abstract class for API requirements.
+ *
+ * This class provides a structure for API requirements to not fetch data to often.
+ * Singleton pattern is used to ensure that only one instance of each requirement exists, which
+ * also helps keeping track of whether the data has been fetched or not.
+ *
+ * main method is `fetchIfNeeded` and `fetch`. FetchIfNeeded will check, if the data needs to be fetched
+ * and call `fetch` if necessary. `fetch` executes the actual fetching logic and sets the `hasFetched` flag to true.
+ * The fetching logic is implemented in the `doFetch` method, which needs to be overridden by subclasses.
+ */
 abstract class ApiRequirementABC implements IApiReuqirement {
   private static instances = new Map<string, ApiRequirementABC>();
 
@@ -41,6 +52,12 @@ abstract class ApiRequirementABC implements IApiReuqirement {
   needsFetch(): boolean {
     return !this.hasFetched;
   }
+
+  /**
+   * @deprecated
+   *
+   * Use `needsFetch` instead.
+   */
   abstract fetchPredicate(): Boolean;
 
   async fetch(): Promise<void> {
