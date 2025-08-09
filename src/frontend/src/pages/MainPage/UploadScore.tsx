@@ -12,7 +12,7 @@ import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import SendIcon from '@mui/icons-material/Send';
 import { useUserStore } from '../../userStore';
-import useInfoStore from '../../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import AnimatedButton from './AnimatedButton';
@@ -28,7 +28,7 @@ export const UploadScore = () => {
   const { currentSport } = useSportStore();
   const { amount, setAmount: setDeathAmount } = useDeathAmountStore();
   const { user } = useUserStore();
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const { setMessage } = useInfoStore();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
   const { setAmounts, triggerRefresh: triggerScoreRefresh } =
     useTotalScoreStore();
@@ -64,9 +64,11 @@ export const UploadScore = () => {
 
       uploadBuilder.uploadStrategy.updateStores();
     } catch (e) {
-      // handle uplaod error - description is in error included
+      // handle upload error - description is in error included
       setSnackbarState('failed');
-      setErrorMessage({ message: String(e), severity: 'error' });
+      setMessage(
+        new SnackbarUpdateImpl(`Error uploading score: ${e}`, 'error')
+      );
     }
 
     setTimeout(() => setSnackbarState(null), 2000);

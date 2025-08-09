@@ -1,43 +1,44 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Button, Typography, Snackbar } from '@mui/material';
 import { BACKEND_BASE } from '../../statics';
-import useInfoStore from '../../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 
 const AddFriend: React.FC = () => {
   const [friendId, setFriendId] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setFriendMessage] = useState('');
   const [error, setError] = useState('');
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const { setMessage } = useInfoStore();
 
   const update = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setMessage('');
+      setFriendMessage('');
       setError('');
 
       if (!friendId) {
-        setErrorMessage({
-          message: 'Friend ID is required',
-          severity: 'error',
-        });
+        setMessage(new SnackbarUpdateImpl('User ID cannot be empty', 'error'));
         return;
       }
 
       const id = BigInt(friendId);
       console.log(`ID as string: ${friendId}, as num: ${id}`);
       if (id === null || id <= 0) {
-        setErrorMessage({
-          message: 'Please enter a valid numeric Friend ID',
-          severity: 'error',
-        });
+        setMessage(
+          new SnackbarUpdateImpl(
+            'Please enter a valid numeric Friend ID',
+            'error'
+          )
+        );
         return;
       }
 
       if (friendId.length !== 18) {
-        setErrorMessage({
-          message: "Discord ID's usually contain 18 numbers",
-          severity: 'error',
-        });
+        setMessage(
+          new SnackbarUpdateImpl(
+            "Discord ID's usually contain 18 numbers",
+            'error'
+          )
+        );
         return;
       }
 
@@ -55,7 +56,7 @@ const AddFriend: React.FC = () => {
         });
         const result = await response.json();
         if (response.ok) {
-          setMessage('Friend request sent successfully!');
+          setFriendMessage('Friend request sent successfully!');
           setFriendId('');
         } else {
           setError(result.error || 'Error sending friend request');

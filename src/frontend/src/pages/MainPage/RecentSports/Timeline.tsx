@@ -15,7 +15,7 @@ import { useRecentSportsStore } from '../../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
 import { SportCard, SportCardNumber } from './SportCard';
 import { animated, config, useTransition } from 'react-spring';
-import useInfoStore from '../../../zustand/InfoStore';
+import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
@@ -40,7 +40,7 @@ const AnimatedBox = animated(Box);
 export const SportsTimeline = () => {
   const { user } = useUserStore();
   const { users, friendsLoaded: usersLoaded } = useUsersStore();
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const { setMessage } = useInfoStore();
   const { theme } = useThemeStore();
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
   const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } =
@@ -80,12 +80,12 @@ export const SportsTimeline = () => {
           `Error fetching recent sports: ${error}`,
           error instanceof Error ? error.message : ''
         );
-        setErrorMessage({
-          message: `Error fetching recent sports: ${
-            error instanceof Error ? error.message : 'Unknown error'
-          }`,
-          severity: 'error',
-        });
+        setMessage(
+          new SnackbarUpdateImpl(
+            `Error fetching recent sports: ${error}`,
+            'error'
+          )
+        );
       }
     };
 
