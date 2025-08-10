@@ -13,6 +13,7 @@ import { Settings } from './pages/Settings/Main';
 import { SwaggerDocs } from './pages/docs/Main';
 import { useLoadingStore } from './zustand/loadingStore';
 import { useUserStore } from './userStore';
+import SettingsPage from './pages/SettingsV2/main';
 // Import other components as needed
 
 const App: React.FC = () => {
@@ -55,6 +56,7 @@ const App: React.FC = () => {
               <Route path="/friends" element={<FriendOverview />} />
               <Route path="settings" element={<Settings />} />
               <Route path="/docs/*" element={<SwaggerDocs />} />
+              <Route path="/settings-v2" element={<SettingsPage />} />
             </Routes>
           </Box>
 
