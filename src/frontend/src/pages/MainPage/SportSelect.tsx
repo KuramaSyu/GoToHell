@@ -201,6 +201,24 @@ export const SportSelector = () => {
     console.log(sportResponse);
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
+  /**
+   * Handles button clicks for sport selection.
+   *
+   * @param sport the selected sport
+   * @param multiplier the multiplier for the sport
+   */
+  const onButtonClick = (sport: string | null, multiplier: number) => {
+    if (sport === 'show_all') {
+      setDialogOpen(true);
+    } else {
+      setSport({
+        ...currentSport,
+        sport: sport,
+        sport_multiplier: multiplier,
+      });
+    }
+  };
+
   if (
     sportResponse === null ||
     !preferencesLoaded ||
@@ -226,13 +244,7 @@ export const SportSelector = () => {
 
           return (
             <Button
-              onClick={() => {
-                setSport({
-                  ...currentSport,
-                  sport: sport,
-                  sport_multiplier: multiplier,
-                });
-              }}
+              onClick={() => onButtonClick(sport, multiplier)}
               variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
               key={sport}
               sx={{
@@ -270,17 +282,7 @@ export const SportSelector = () => {
           return (
             <AnimatedButton
               style={style}
-              onClick={() => {
-                if (sport === 'show_all') {
-                  setDialogOpen(true);
-                } else {
-                  setSport({
-                    ...currentSport,
-                    sport: sport,
-                    sport_multiplier: multiplier,
-                  });
-                }
-              }}
+              onClick={() => onButtonClick(sport, multiplier)}
               variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
               key={sport}
               sx={{
