@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserStore } from '../../userStore';
 import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
 import { Box, Typography } from '@mui/material';
@@ -12,7 +12,7 @@ import { useMinSquareSize } from '../LoadingPage/minSquareSize';
 
 export const LoginPage: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
-
+  const [oldTheme, setOldTheme] = useState<string | null>();
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -20,13 +20,19 @@ export const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (theme.custom.themeName !== 'default') {
-      const oldTheme = theme.custom.themeName;
+      setOldTheme(theme.custom.themeName);
       setTheme('default');
-      return () => {
-        setTheme(oldTheme);
-      };
     }
+    return;
   }, [theme]);
+
+  useEffect(() => {
+    if (oldTheme === null || oldTheme === undefined) return;
+    return () => {
+      console.log('set old theme');
+      setTheme(oldTheme);
+    };
+  }, [oldTheme]);
 
   return (
     <Box
