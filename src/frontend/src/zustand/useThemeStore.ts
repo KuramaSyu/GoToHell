@@ -48,8 +48,8 @@ export const docsTheme = createTheme({
   },
   custom: {
     backgroundImage: 'https://i.postimg.cc/prhxrMh8/thumb-1920-553471.jpg',
-    themeName: 'default',
-    longName: 'Nord Theme',
+    themeName: 'docs',
+    longName: 'Nord Theme Bright',
   },
 } as CustomTheme);
 
@@ -88,6 +88,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   themeLongName: defaultTheme.custom.longName,
 
   setTheme: async (themeName: string) => {
+    console.log(`set theme to ${themeName}`);
     const generatedTheme = await themeManager.generateTheme(themeName);
     if (generatedTheme) {
       set({
