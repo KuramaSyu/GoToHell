@@ -22,6 +22,13 @@ type FriendsController struct {
 	userRepo db.UserRepository
 }
 
+// Reply for GET /api/friends
+//
+//swagger:model GetFriendshipReply
+type GetFriendshipReply struct {
+	Data FriendshipReply `json:"data"`
+}
+
 // NewFriendsController initializes a new FriendsController.
 func NewFriendsController(database *gorm.DB) *FriendsController {
 	repo := db.NewGormFriendshipRepository(database)
@@ -47,17 +54,27 @@ type FriendshipReply struct {
 	Users       []User        `json:"users"`
 }
 
-// GetFriends returns all friendships for the logged-in user along with friend details.
+// GetFriends
+// PostSport godoc
+// @Summary returns all friendships for the logged-in user along with friend details.
+// @Tags 	friends
+// @Accept	json
+// @Producte json
+// @Security CookieAuth
+// @Success 200 {object} GetFriendshipReply
+// @Failure 400 {object} ErrorReply
+// @Failure 502 {object} ErrorReply
+// @Router /api/friends [get]
 func (fc *FriendsController) GetFriends(c *gin.Context) {
 	user, status, err := UserFromSession(c)
 	if err != nil {
-		c.JSON(status, gin.H{"error": err.Error()})
+		SetGinError(c, status, err)
 		return
 	}
 
 	friendships, err := fc.repo.GetFriendships(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		SetGinError(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -82,7 +99,7 @@ func (fc *FriendsController) GetFriends(c *gin.Context) {
 		reply.Users = append(reply.Users, *friendData)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": reply})
+	c.JSON(http.StatusOK, GetFriendshipReply{Data: reply})
 }
 
 // Format:
