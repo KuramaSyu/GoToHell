@@ -15,6 +15,42 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/friends": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "friends"
+                ],
+                "summary": "returns all friendships for the logged-in user along with friend details.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetFriendshipReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
         "/api/overdue-deaths": {
             "get": {
                 "security": [
@@ -570,6 +606,31 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.FriendshipReply": {
+            "type": "object",
+            "properties": {
+                "friendships": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Friendships"
+                    }
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                }
+            }
+        },
+        "controllers.GetFriendshipReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/controllers.FriendshipReply"
+                }
+            }
+        },
         "controllers.GetOverdueDeathsReply": {
             "type": "object",
             "properties": {
@@ -726,6 +787,26 @@ const docTemplate = `{
                 "blocked"
             ]
         },
+        "models.Friendships": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "recipient_id": {
+                    "type": "integer"
+                },
+                "requester_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.FriendshipStatus"
+                }
+            }
+        },
         "models.OverdueDeaths": {
             "type": "object",
             "properties": {
@@ -815,6 +896,26 @@ const docTemplate = `{
                 "kind": {
                     "type": "string",
                     "example": "push-up"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "discriminator": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }

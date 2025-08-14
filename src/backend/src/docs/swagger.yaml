@@ -26,6 +26,22 @@ definitions:
     required:
     - friend_id
     type: object
+  controllers.FriendshipReply:
+    properties:
+      friendships:
+        items:
+          $ref: '#/definitions/models.Friendships'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    type: object
+  controllers.GetFriendshipReply:
+    properties:
+      data:
+        $ref: '#/definitions/controllers.FriendshipReply'
+    type: object
   controllers.GetOverdueDeathsReply:
     properties:
       data:
@@ -130,6 +146,19 @@ definitions:
     - Pending
     - Accepted
     - blocked
+  models.Friendships:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      recipient_id:
+        type: integer
+      requester_id:
+        type: integer
+      status:
+        $ref: '#/definitions/models.FriendshipStatus'
+    type: object
   models.OverdueDeaths:
     properties:
       count:
@@ -197,11 +226,46 @@ definitions:
         example: push-up
         type: string
     type: object
+  models.User:
+    properties:
+      avatar:
+        type: string
+      discriminator:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
 info:
   contact: {}
   description: Provides all methods to persist data for GoToHell
   title: GoToHell Gin REST API
 paths:
+  /api/friends:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetFriendshipReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: returns all friendships for the logged-in user along with friend details.
+      tags:
+      - friends
   /api/overdue-deaths:
     delete:
       consumes:
