@@ -28,7 +28,7 @@ jobs:
         working-directory: src/frontend
         run: npm install
 
-      - name: Test frontend Unit Tests
+      - name: Run Frontend Unit Tests
         working-directory: src/frontend
         run: npm test -- --run
 
