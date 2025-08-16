@@ -228,7 +228,9 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 }
 
 /**
- * Adds a custom set multiplier to Latex and calculation
+ * Adds a custom set multiplier to Latex and calculation.
+ * Only per game and global (everything null) multipliers are supported.
+ * Game specific multipliers were removed, since they are implemented in the OverrideSportDecorator
  */
 export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
   multipliers: Multiplier[];
@@ -487,7 +489,20 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     return max_seconds;
   }
 
-  strength_factor(deaths: number, game: string, sport: string): number {
+  // Calculates strength factor with following assumptions:
+  // * 10 deaths are maximum
+  // * X seconds are the maximum time for plank, used from zustand
+  // * game base is 1
+  // * multiplier is 1
+  //
+  // Parameters:
+  // * maxDeaths: the maximum amount of deaths, which is used to calculate the strength
+  // * game: the game, which is used to calculate the strength factor
+  // * sport: the sport, which is used to calculate the strength factor
+  //
+  // Note:
+  // All parameters are currently ignored
+  strength_factor(maxDeaths: number, game: string, sport: string): number {
     const max_seconds = this.get_max_seconds_from_preferences();
     // initially, asume, 10 deaths are maximum
     return max_seconds / this.log_formula(10, game, sport, 1, 1);
