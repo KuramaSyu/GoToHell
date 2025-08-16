@@ -13,19 +13,19 @@ import {
 } from './SportCalculator';
 import { assert } from 'console';
 
-const testingPreferences: UserPreferences = {
-  game_overrides: [{ game: 'pubg', sport: 'push-up', amount: 2 }],
-  max_deaths: 10,
-  multipliers: [
-    { game: null, multiplier: 3, sport: 'leg-raises' },
-    { game: 'overwatch', multiplier: 2, sport: null },
+var testingPreferences: UserPreferences = {
+  game_overrides: [
+    { game: 'pubg', sport: 'push-up', amount: 6 },
+    { game: 'pubg', sport: 'leg-raises', amount: 2 },
   ],
+  max_deaths: 10, // currently not in use
+  multipliers: [{ game: 'overwatch', multiplier: 2, sport: null }],
   other: {
     instant_open_modal: false,
   },
   sport_specific: {
     plank: {
-      seconds: 50,
+      seconds: 180, // try later with other number. Plank Override uses zustand. TODO: better DI
     },
   },
   ui: {
@@ -43,6 +43,7 @@ const testingSportResponse: GetSportsResponse = {
   sports: {
     'push-up': 4,
     'leg-raises': 5,
+    plank: 1,
   },
 };
 
@@ -72,10 +73,48 @@ export const buildDecoratorStack = (): SportsCalculator => {
 };
 
 describe('SportCalculator', () => {
-  const calc = buildDecoratorStack();
+  var calc = buildDecoratorStack();
 
   it('calculates bare metal', () => {
     expect(calc.calculate_amount('push-up', 'league', 5)).toBe(60); // 3 * 4 * 5 = 60
   });
-  //it('calculates pubg by using PUBG-push-up override')
+  it('calculates pubg by using PUBG-push-up override', () => {
+    expect(calc.calculate_amount('push-up', 'pubg', 5)).toBe(30); // 6 * 5 = 30
+  });
+
+  // set gobal multiplier to 3
+  testingPreferences = {
+    ...testingPreferences,
+    multipliers: [
+      ...testingPreferences.multipliers,
+      { game: null, multiplier: 3, sport: null },
+    ],
+  };
+  it('calculates pubg by using PUBG-leg-raise override the gobal multiplier', () => {
+    calc = buildDecoratorStack();
+    expect(calc.calculate_amount('leg-raises', 'pubg', 5)).toBe(30); // 2 (pubg-legraises) * 3 (multiplier) * 5 = 30
+  });
+
+  var strength_factor = 1;
+  it('1.1 calculate strength factor for plank', () => {
+    // at 10 deaths and game base 1, the result should be plank.seconds
+    let strength_log = Math.log(1 + 10 * 1 * 1) / Math.log(1.75);
+
+    strength_factor =
+      testingPreferences.sport_specific.plank.seconds / strength_log;
+    const temp_calculator = new HumanLockDecorator(calc);
+    expect(temp_calculator.strength_factor(10, 'plank', 'league')).toBe(
+      strength_factor
+    );
+  });
+  it('1.2 calculates league plank by using plank decorator and global multiplier', () => {
+    var deaths = 12;
+    var multiplier = 3;
+    var game_base = 3;
+    let log_calculation =
+      Math.log(1 + deaths * multiplier * game_base) / Math.log(1.75);
+
+    let result = Math.round(strength_factor * log_calculation);
+    expect(calc.calculate_amount('plank', 'league', deaths)).toBe(result);
+  });
 });
