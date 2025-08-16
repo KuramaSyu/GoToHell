@@ -17,6 +17,7 @@
     "scminput": false,
     "python": true,
     "typescriptreact": true,
-    "java": false
+    "java": false,
+    "typescript": true
   }
 }

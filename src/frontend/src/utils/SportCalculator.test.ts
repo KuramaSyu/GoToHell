@@ -1,6 +1,6 @@
-import { describe } from 'node:test';
 import { UserPreferences } from '../models/Preferences';
 import { GetSportsResponse } from '../models/Sport';
+import { describe, it, expect } from 'vitest';
 import {
   BaseSportsCalculatorDecorator,
   DeathDecorator,
@@ -14,10 +14,10 @@ import {
 import { assert } from 'console';
 
 const testingPreferences: UserPreferences = {
-  game_overrides: [],
+  game_overrides: [{ game: 'pubg', sport: 'push-up', amount: 2 }],
   max_deaths: 10,
   multipliers: [
-    { game: 'league', multiplier: 3, sport: 'leg-raises' },
+    { game: null, multiplier: 3, sport: 'leg-raises' },
     { game: 'overwatch', multiplier: 2, sport: null },
   ],
   other: {
@@ -38,6 +38,7 @@ const testingSportResponse: GetSportsResponse = {
   games: {
     overwatch: 2,
     league: 3,
+    pubg: 4,
   },
   sports: {
     'push-up': 4,
@@ -74,6 +75,7 @@ describe('SportCalculator', () => {
   const calc = buildDecoratorStack();
 
   it('calculates bare metal', () => {
-    expect(calc.calculate_amount('push-up', 'league', 3)).toBe(60); // 3 * 4 * 5 = 60
+    expect(calc.calculate_amount('push-up', 'league', 5)).toBe(60); // 3 * 4 * 5 = 60
   });
+  //it('calculates pubg by using PUBG-push-up override')
 });

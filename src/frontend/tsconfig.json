@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./node_modules/@types", "./src/theme"],
-        "types": ["vitest/globals", "node"]
+        //"types": ["vitest/globals", "node"]
   },
   "include": ["src", "src/friends/FriendOverview.tsx"],
   "exclude": ["node_modules", "dist"]
