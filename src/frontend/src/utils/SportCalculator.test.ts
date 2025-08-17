@@ -25,7 +25,7 @@ var testingPreferences: UserPreferences = {
   },
   sport_specific: {
     plank: {
-      seconds: 180, // try later with other number. Plank Override uses zustand. TODO: better DI
+      seconds: 100,
     },
   },
   ui: {
