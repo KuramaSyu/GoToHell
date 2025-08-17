@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import {
+  defaultPreferences,
   Multiplier,
   OverrideSportDefinition,
   UserPreferences,
@@ -11,9 +12,7 @@ import Latex from 'react-latex-next';
 import Hexagon from '../components/Shapes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { NUMBER_FONT } from '../statics';
-import usePreferenceStore from '../zustand/PreferenceStore';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
-import { isNumeric } from './UserNumber';
 import { ToolTip } from '../components/ToolTip';
 /**
  * A calculator for the amount of exercises of a given sport a user
@@ -79,6 +78,13 @@ export interface SportsCalculator {
    * @returns The multiplier object or null if none is set.
    */
   get_multiplier(sport: string, game: string): Multiplier | null;
+
+  /**
+   * Retrieves user preferences related to sports calculations.
+   *
+   * @returns The user preferences object.
+   */
+  get_preferences(): UserPreferences | null;
 }
 
 /**
@@ -100,6 +106,10 @@ export class DefaultSportsCalculator implements SportsCalculator {
 
   get_sport_base(sport: string): number {
     return this.default.sports[sport] ?? 0;
+  }
+
+  get_preferences(): UserPreferences | null {
+    return null;
   }
 
   get(sport: string, game: string): number {
@@ -189,6 +199,10 @@ export class PreferenceRespectingDefaultSportsCalculator extends DefaultSportsCa
       )[0]?.multiplier ?? super.get_sport_base(sport)
     );
   }
+
+  get_preferences(): UserPreferences | null {
+    return this.preferences;
+  }
 }
 
 /**
@@ -224,6 +238,10 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 
   make_box(sport: string, game: string, deaths: number): ReactNode | null {
     return this.decorated.make_box(sport, game, deaths);
+  }
+
+  get_preferences(): UserPreferences | null {
+    return this.decorated.get_preferences();
   }
 }
 
@@ -484,8 +502,8 @@ export const wrapWithColor = (content: string, color: string): string => {
  */
 export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
   get_max_seconds_from_preferences(): number {
-    const preferences = usePreferenceStore.getState().preferences;
-    const max_seconds = preferences.sport_specific.plank.seconds ?? 180;
+    const preferences = this.get_preferences();
+    const max_seconds = preferences?.sport_specific.plank.seconds ?? 180;
     return max_seconds;
   }
 
