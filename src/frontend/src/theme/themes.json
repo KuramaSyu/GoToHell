@@ -92,5 +92,12 @@
         "https://i.postimg.cc/yx45rx4y/3.png",
         "https://i.postimg.cc/6qrSsKBJ/4.jpg"
       ]
+    },
+    {
+      "name": "gta v",
+      "longName": "GTA V",
+      "backgrounds": [
+        "https://raw.githubusercontent.com/KuramaSyu/GoToHell-Backgrounds/refs/heads/main/GTA_V/01.jpg"
+      ]
     }
 ]
