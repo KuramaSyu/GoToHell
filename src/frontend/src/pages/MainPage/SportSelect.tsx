@@ -230,11 +230,12 @@ export const SportSelector = () => {
 
   if (isMobile) {
     // return only a grid with 5 per row, with only icons
+    const items_per_row = displayedSports.length > 6 ? 4 : 3;
     return (
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
+          gridTemplateColumns: `repeat(${items_per_row}, 1fr)`,
           gap: 2,
           padding: 2,
         }}
@@ -251,16 +252,25 @@ export const SportSelector = () => {
                 backgroundColor: isSelected
                   ? null
                   : alpha(theme.palette.muted.dark, 0.2),
+                borderRadius: 3,
+                borderWidth: 3,
                 textShadow: isSelected
                   ? null
                   : `2px 2px 2px ${theme.palette.muted.dark}`,
               }}
             >
-              <img
-                src={sportIconMap[String(sport)]}
-                alt={String(sport)}
-                style={getImageProps(isSelected, theme)}
-              />
+              {sport !== 'show_all' ? (
+                <img
+                  src={sportIconMap[String(sport)]}
+                  alt={String(sport)}
+                  style={{
+                    ...getImageProps(isSelected, theme),
+                    marginRight: 1,
+                  }}
+                />
+              ) : (
+                <AppsIcon sx={getImageProps(isSelected, theme)} />
+              )}
             </Button>
           );
         })}
