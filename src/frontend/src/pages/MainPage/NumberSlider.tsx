@@ -137,6 +137,33 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     />
   ) : null;
 
+  const customInputMobile = (
+    <Box>
+      <OutlinedInput
+        value={localAmount}
+        placeholder="Amount"
+        onChange={handleInputChange}
+        error={isNaN(Number(localAmount))}
+        inputProps={{
+          inputMode: 'numeric',
+          style: { textAlign: 'center' }, // center the number
+        }}
+        sx={{
+          width: 'clamp(60px, 50%, 300px)',
+          //height: '80%',
+          borderRadius: 5,
+          display: 'flex',
+          color: theme.palette.primary.main,
+          fontSize: '4vh',
+          textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.primary.main,
+          },
+        }}
+      />
+    </Box>
+  );
+
   const AddRemoveButtons = (
     <Box
       sx={{
@@ -182,29 +209,17 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           gap: 1,
         }}
       >
-        {withInput ? (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
-          >
-            {customInput}
-          </Box>
-        ) : (
-          <Slider
-            value={amount}
-            onChange={(e, newValue) => handleSliderChange(newValue)}
-            min={min}
-            max={max}
-            step={1}
-            aria-labelledby="number-slider"
-            marks={marks}
-          />
-        )}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          {customInputMobile}
+        </Box>
       </Box>
     );
   }
