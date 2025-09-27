@@ -1,4 +1,11 @@
-import { Box, Typography, Slider, Button, OutlinedInput } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Slider,
+  Button,
+  OutlinedInput,
+  IconButton,
+} from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
 import { GenerateMarks } from '../../utils/Marks';
@@ -138,7 +145,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   ) : null;
 
   const customInputMobile = (
-    <Box>
+    <Box sx={{ position: 'relative' }}>
       <OutlinedInput
         value={localAmount}
         placeholder="Amount"
@@ -161,6 +168,25 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           },
         }}
       />
+
+      <Box
+        sx={{
+          position: 'absolute',
+          left: -20,
+          top: -20,
+        }}
+      >
+        {AddButton}
+      </Box>
+      <Box
+        sx={{
+          position: 'absolute',
+          left: -20,
+          bottom: -20,
+        }}
+      >
+        {RemoveButton}
+      </Box>
     </Box>
   );
 
