@@ -105,7 +105,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const RemoveButton = (
     <Button
       variant="contained"
-      onClick={() => setAmount(amount - 1)}
+      onClick={() => handleSliderChange(amount - 1)}
       sx={{
         borderRadius: '50%',
         width: '80%', // Make the button fill the container
@@ -145,7 +145,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   ) : null;
 
   const customInputMobile = (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: 'relative', left: 20 }}>
       <OutlinedInput
         value={localAmount}
         placeholder="Amount"
