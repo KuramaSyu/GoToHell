@@ -114,6 +114,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         minHeight: 0, // Ensure the button does not expand
         aspectRatio: '1 / 1',
         display: 'flex',
+        backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
       }}
     >
       <Remove />
@@ -132,10 +133,10 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       }}
       sx={{
         width: 'clamp(40px, 35%, 200px)',
-        height: '80%',
+        //height: '80%',
         display: 'flex',
         color: theme.palette.primary.main,
-        fontSize: 'clamp(16px, 2vw, 24px)',
+        fontSize: 'clamp(16px, 2.5vw, 24px)',
         textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.palette.primary.main,
@@ -145,7 +146,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   ) : null;
 
   const customInputMobile = (
-    <Box sx={{ position: 'relative', left: 20 }}>
+    <Box sx={{ position: 'relative', left: 20, height: 4 / 5 }}>
       <OutlinedInput
         value={localAmount}
         placeholder="Amount"
@@ -156,11 +157,12 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           style: { textAlign: 'center' }, // center the number
         }}
         sx={{
-          width: 'clamp(60px, 50%, 300px)',
-          //height: '80%',
+          width: isMobile
+            ? 'clamp(100px, 100%, 300px)'
+            : 'clamp(100px, 50%, 300px)',
           borderRadius: 5,
           display: 'flex',
-          color: theme.palette.primary.main,
+          color: theme.palette.primary.light,
           fontSize: '4vh',
           textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
           '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -172,20 +174,22 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       <Box
         sx={{
           position: 'absolute',
-          left: -20,
-          top: -20,
+          width: 3 / 10,
+          left: 'calc(-1 * (3/10 * 100%) / pi)',
+          top: 'calc(-1 * (2/5 * 100%) / pi)',
         }}
       >
-        {AddButton}
+        {RemoveButton}
       </Box>
       <Box
         sx={{
           position: 'absolute',
-          left: -20,
+          width: 3 / 6,
+          left: 'calc(-1 * (1/2 * 100%) / pi)',
           bottom: -20,
         }}
       >
-        {RemoveButton}
+        {AddButton}
       </Box>
     </Box>
   );
