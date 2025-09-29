@@ -77,12 +77,12 @@ const MainContent: React.FC = () => {
               maxHeight: 1 / 5,
             }}
           >
-            <Box sx={{ width: 3 / 4 }}>
+            <Box sx={{ width: isMobile ? 1 / 2 : 3 / 4 }}>
               <NumberSlider withInput={theme.custom.themeName === 'custom'} />
             </Box>
             <Box
               sx={{
-                width: 1 / 4,
+                width: isMobile ? 1 / 2 : 1 / 4,
                 display: 'flex',
                 alignItems: 'center',
                 px: 1,
