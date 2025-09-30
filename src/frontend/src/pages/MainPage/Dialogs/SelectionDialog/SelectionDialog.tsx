@@ -32,7 +32,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { SelectionElement } from './SelectionElement';
+import { SelectAndCloseSeachEntry, SelectionElement } from './SelectionElement';
 import { SearchEntry } from '../../QuickActions/SearchEntry';
 
 export interface SelectionDialogProps {
@@ -120,7 +120,12 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
                     key={entry.name + entry.isDisplayed}
                   >
                     <SelectionElement
-                      entry={entry}
+                      entry={
+                        // use a decorator for entry, which closes the dialog on select
+                        new SelectAndCloseSeachEntry(entry, () =>
+                          setOpen(false)
+                        )
+                      }
                       alterElement={alterElement}
                     />
                   </Grid>

@@ -40,7 +40,7 @@ import { blendWithContrast } from '../../../../utils/blendWithContrast';
 /**
  * A decorator for SearchEntry, which calls a close function after selecting
  */
-class SelectAndCloseSeachEntry implements SearchEntry {
+export class SelectAndCloseSeachEntry implements SearchEntry {
   wrapped: SearchEntry;
   close_fn: () => void;
   name: string;
@@ -71,6 +71,9 @@ class SelectAndCloseSeachEntry implements SearchEntry {
   }
 }
 
+/**
+ * Represents an Element used in the Selection Dialog
+ */
 export const SelectionElement: React.FC<{
   entry: SearchEntry;
   alterElement: (entry: SearchEntry) => void;
@@ -110,11 +113,6 @@ export const SelectionElement: React.FC<{
         flexDirection: 'row',
         alignItems: 'stretch',
         boxShadow: isDragging ? 6 : 1,
-        //transition: 'box-shadow 0.2s, transform 0.2s', // Add transition
-        // '&:hover': {
-        //   boxShadow: 8,
-        //   transform: 'scale(1.02)', // Slightly scale up on hover
-        // },
       }}
     >
       {/* Selection indicator and drag handle */}
