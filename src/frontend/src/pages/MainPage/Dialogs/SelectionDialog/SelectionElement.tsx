@@ -37,6 +37,40 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { SearchEntryIconProvider } from '../../QuickActions/SearchEntryIconProvider';
 import { blendWithContrast } from '../../../../utils/blendWithContrast';
 
+/**
+ * A decorator for SearchEntry, which calls a close function after selecting
+ */
+class SelectAndCloseSeachEntry implements SearchEntry {
+  wrapped: SearchEntry;
+  close_fn: () => void;
+  name: string;
+  isDisplayed: boolean;
+
+  constructor(wrapped: SearchEntry, close_fn: () => void) {
+    this.wrapped = wrapped;
+    this.close_fn = close_fn;
+    this.name = wrapped.name;
+    this.isDisplayed = wrapped.isDisplayed;
+  }
+
+  select(): void {
+    this.wrapped.select();
+    this.close_fn();
+  }
+  displayName(): string {
+    return this.wrapped.displayName();
+  }
+  getNames(): string[] {
+    return this.wrapped.getNames();
+  }
+  setIsDisplayed(isDisplayed: boolean): void {
+    this.wrapped.setIsDisplayed(isDisplayed);
+  }
+  cloneWith(changes: Partial<SearchEntry>): SearchEntry {
+    return this.wrapped.cloneWith(changes);
+  }
+}
+
 export const SelectionElement: React.FC<{
   entry: SearchEntry;
   alterElement: (entry: SearchEntry) => void;
