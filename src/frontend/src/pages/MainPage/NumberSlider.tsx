@@ -104,7 +104,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           : undefined,
       }}
     >
-      <Add fontSize={isMobile ? 'large' : 'inherit'} />
+      <Add fontSize={isMobile ? 'large' : undefined} />
     </Button>
   );
 
@@ -171,8 +171,8 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
             : 'clamp(100px, 50%, 300px)',
           borderRadius: 8,
           display: 'flex',
-          color: blendWithContrast(theme.palette.primary.light, theme, 2 / 3),
-          backgroundColor: alpha(theme.palette.primary.light, 2 / 3),
+          color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
+          backgroundColor: theme.palette.muted.dark,
           fontSize: '4vh',
           fontWeight: 600,
           borderWidth: 0,
