@@ -5,6 +5,7 @@ import {
   Button,
   OutlinedInput,
   IconButton,
+  alpha,
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
@@ -168,10 +169,13 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           width: isMobile
             ? 'clamp(100px, 100%, 300px)'
             : 'clamp(100px, 50%, 300px)',
-          borderRadius: 5,
+          borderRadius: 8,
           display: 'flex',
-          color: theme.palette.primary.light,
+          color: blendWithContrast(theme.palette.primary.light, theme, 2 / 3),
+          backgroundColor: alpha(theme.palette.primary.light, 2 / 3),
           fontSize: '4vh',
+          fontWeight: 600,
+          borderWidth: 0,
           textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.primary.main,
