@@ -13,6 +13,7 @@ import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useState } from 'react';
+import { blendWithContrast } from '../../utils/blendWithContrast';
 
 interface DeathAmountState {
   amount: number;
@@ -96,9 +97,13 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         minHeight: 0, // Ensure the button does not expand
         aspectRatio: '1 / 1',
         display: 'flex',
+        backgroundColor: isMobile ? theme.palette.primary.main : undefined,
+        color: isMobile
+          ? blendWithContrast(theme.palette.primary.main, theme, 2 / 3)
+          : undefined,
       }}
     >
-      <Add />
+      <Add fontSize={isMobile ? 'large' : 'inherit'} />
     </Button>
   );
 
@@ -115,6 +120,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         aspectRatio: '1 / 1',
         display: 'flex',
         backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
+        color: isMobile
+          ? blendWithContrast(theme.palette.secondary.main, theme, 2 / 3)
+          : undefined,
       }}
     >
       <Remove />
