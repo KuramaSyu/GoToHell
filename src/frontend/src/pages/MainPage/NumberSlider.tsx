@@ -155,7 +155,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   ) : null;
 
   const customInputMobile = (
-    <Box sx={{ position: 'relative', left: 20, height: 4 / 5 }}>
+    <Box sx={{ position: 'relative', height: '100%', ml: 3 }}>
       <OutlinedInput
         value={localAmount}
         placeholder="Amount"
@@ -166,9 +166,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           style: { textAlign: 'center' }, // center the number
         }}
         sx={{
-          width: isMobile
-            ? 'clamp(100px, 100%, 300px)'
-            : 'clamp(100px, 50%, 300px)',
+          height: '100%',
           borderRadius: 8,
           display: 'flex',
           color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
@@ -186,9 +184,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       <Box
         sx={{
           position: 'absolute',
-          width: 3 / 10,
-          left: 'calc(-1 * (3/10 * 100%) / pi)',
-          top: 'calc(-1 * (2/5 * 100%) / pi)',
+          width: 6 / 21,
+          left: 'calc(-1 * (6/21 * 100%) / pi)',
+          top: 'calc(-1 * (6/21 * 100%) / (pi/2))',
         }}
       >
         {RemoveButton}
@@ -196,9 +194,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       <Box
         sx={{
           position: 'absolute',
-          width: 3 / 6,
-          left: 'calc(-1 * (1/2 * 100%) / pi)',
-          bottom: -20,
+          width: 9 / 20,
+          left: 'calc(-1 * (9/20 * 100%) / pi)',
+          bottom: 'calc(-1 * (9/20 * 100%) / (pi/2))',
         }}
       >
         {AddButton}
@@ -241,29 +239,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   if (isMobile) {
     // Mobile view
-    return (
-      <Box
-        sx={{
-          p: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 1,
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
-        >
-          {customInputMobile}
-        </Box>
-      </Box>
-    );
+    return <Box sx={{ height: '100%' }}> {customInputMobile} </Box>;
   }
 
   // Desktop view

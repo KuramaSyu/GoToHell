@@ -76,25 +76,27 @@ const MainContent: React.FC = () => {
               alignItems: 'center',
               gap: 1,
               maxHeight: isMobile ? undefined : 1 / 5,
-              height: isMobile ? 1 / 3 : undefined,
+              height: isMobile ? 1 / 7 : undefined,
+              mx: 3,
             }}
           >
             <Box
               sx={{
                 display: 'flex',
-                height: '66%',
-                width: isMobile ? 1 / 2 : 3 / 4,
+                height: '100%',
+                alignItems: 'center',
+                width: isMobile ? 3 / 4 : 3 / 4,
+                zIndex: 0,
               }}
             >
               <NumberSlider withInput={theme.custom.themeName === 'custom'} />
             </Box>
             <Box
               sx={{
-                height: '100%',
-                width: isMobile ? 1 / 2 : 1 / 4,
+                width: isMobile ? 6 / 20 : 1 / 4,
                 display: 'flex',
                 alignItems: 'center',
-                px: 1,
+                zIndex: 1,
               }}
             >
               <UploadScore />
