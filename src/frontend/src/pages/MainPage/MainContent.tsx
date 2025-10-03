@@ -73,15 +73,24 @@ const MainContent: React.FC = () => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
+              alignItems: 'center',
               gap: 1,
-              maxHeight: 1 / 5,
+              maxHeight: isMobile ? undefined : 1 / 5,
+              height: isMobile ? 1 / 3 : undefined,
             }}
           >
-            <Box sx={{ width: isMobile ? 1 / 2 : 3 / 4 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                height: '66%',
+                width: isMobile ? 1 / 2 : 3 / 4,
+              }}
+            >
               <NumberSlider withInput={theme.custom.themeName === 'custom'} />
             </Box>
             <Box
               sx={{
+                height: '100%',
                 width: isMobile ? 1 / 2 : 1 / 4,
                 display: 'flex',
                 alignItems: 'center',
