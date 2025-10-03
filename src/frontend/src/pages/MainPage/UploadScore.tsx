@@ -103,8 +103,12 @@ export const UploadScore = () => {
               : darken(theme.palette.primary.main, 0.3),
         }}
       >
-        <AnimatedRoundBtn onClick={OnUploadClick} duration={DURATION}>
-          <SendIcon></SendIcon>
+        <AnimatedRoundBtn
+          onClick={OnUploadClick}
+          duration={DURATION}
+          edgeFade={0}
+        >
+          <SendIcon sx={{ fontSize: '2rem' }}></SendIcon>
         </AnimatedRoundBtn>
       </Box>
     );
