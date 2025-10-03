@@ -11,6 +11,10 @@ interface AnimatedButtonProps {
   circular?: boolean;
 }
 
+interface AnimatedRoundBtnProps extends AnimatedButtonProps {
+  edgeFade?: number; // 0 (no fade) to 1 (full fade) between the colorfull part and the animated part
+}
+
 const AnimatedButton = ({
   children,
   onClick,
@@ -66,7 +70,8 @@ export const AnimatedRoundBtn = ({
   children,
   onClick,
   duration = 10,
-}: AnimatedButtonProps) => {
+  edgeFade = 0.1,
+}: AnimatedRoundBtnProps) => {
   const theme = useTheme();
 
   const isAnimationActive = duration !== 0;
@@ -130,7 +135,9 @@ export const AnimatedRoundBtn = ({
       right: '0px',
       bottom: '0px',
       background: isAnimationActive
-        ? `radial-gradient(circle, rgba(${primaryColorRgb},1) 0%,  rgba(${primaryColorRgb},1) 55%, rgba(${primaryColorRgb},0) 60%)`
+        ? `radial-gradient(circle, rgba(${primaryColorRgb},1) 0%,  rgba(${primaryColorRgb},1) ${
+            (1 - edgeFade) * 60
+          }%, rgba(${primaryColorRgb},0) 60%)`
         : 'transparent',
       borderRadius: '50%',
       zIndex: 1,
