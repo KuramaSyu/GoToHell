@@ -15,7 +15,7 @@ import { useUserStore } from '../../userStore';
 import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 import { alpha } from '@mui/material/styles';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
-import AnimatedButton from './AnimatedButton';
+import AnimatedButton, { AnimatedRoundBtn } from './AnimatedButton';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import useUploadStore from '../../zustand/UploadStore';
@@ -94,7 +94,8 @@ export const UploadScore = () => {
           justifyItems: 'center',
           alignItems: 'stretch',
 
-          height: '60%',
+          height: 'fill',
+          aspectRatio: '1 / 1',
           flexGrow: 1,
           color:
             DURATION !== 0
@@ -102,9 +103,9 @@ export const UploadScore = () => {
               : darken(theme.palette.primary.main, 0.3),
         }}
       >
-        <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
+        <AnimatedRoundBtn onClick={OnUploadClick} duration={DURATION}>
           <SendIcon></SendIcon>
-        </AnimatedButton>
+        </AnimatedRoundBtn>
       </Box>
     );
   }
