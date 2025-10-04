@@ -63,7 +63,9 @@ const MainContent: React.FC = () => {
           }}
         >
           {/* Game Selection */}
-          <Box sx={{ display: 'flex' }}>
+          <Box
+            sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}
+          >
             <GameSelector />
           </Box>
 

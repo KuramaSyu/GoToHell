@@ -61,6 +61,7 @@ export const GameSelector = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         height: '100%',
+        width: '100%',
       }}
     >
       <DynamicGameGrid
