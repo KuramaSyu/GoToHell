@@ -44,33 +44,43 @@ const TopBar: React.FC = () => {
             </Box>
 
             {/* Title */}
-            <Typography
-              variant="h4"
-              component="div"
+            <Button
+              //startIcon={<LogoSvgComponent style={{ width: 60, height: 60 }} />}
               onClick={() => navigate('/')}
               sx={{
-                color: theme.palette.vibrant.main,
-                fontFamily: '"Architects Daughter", cursive', // custom font
-                textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
+                borderRadius: 6,
+                color: theme.palette.vibrant.light,
+                // fontFamily: '"Architects Daughter", cursive',
+                filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
+                //textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
+                fontSize: theme.typography.h4.fontSize, // Maintain h2 size
+                fontWeight: theme.typography.h4.fontWeight, // Maintain h2 weight
+                lineHeight: theme.typography.h4.lineHeight, // Maintain h2 line height
+                padding: '0px 8px',
+                textTransform: 'none', // Prevent uppercase transformation
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
+                },
               }}
             >
               <Title theme={theme} />
-            </Typography>
+            </Button>
             {/* Discord Login and Settings */}
             <Box
               sx={{
                 gap: 1,
                 display: 'flex',
                 flexDirection: 'row',
-                alignItems: 'center',
-                width: '30%',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+                width: '35%',
               }}
             >
-              <Button variant="outlined" onClick={() => navigate('/settings')}>
+              {/* <Button variant="outlined" onClick={() => navigate('/settings')}>
                 <SettingsIcon
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
                 />
-              </Button>
+              </Button> */}
               <Button variant="outlined" onClick={() => navigate('/friends')}>
                 <PeopleIcon
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
