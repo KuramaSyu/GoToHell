@@ -74,7 +74,7 @@ const AnimatedThemeButton: React.FC<{
       variant={isSelected ? 'contained' : 'outlined'}
       onClick={onClick}
       sx={{
-        fontSize: 'clamp(12px, 1.5vw, 32px)',
+        fontSize: 'clamp(18px, 1.5vw, 40px)',
         padding: 2,
         border: '2px solid',
         borderColor: 'secondary.main',
