@@ -10,6 +10,8 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import { AmountDisplay } from './AmountDisplay';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { UploadOverdueDeaths } from './UploadOverdueDeaths';
+import { useNavigate } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
 
 interface MainContentProps {
   theme: any;
@@ -18,16 +20,23 @@ interface MainContentProps {
 const MainContent: React.FC = () => {
   const { theme } = useThemeStore();
   const { isMobile } = useBreakpoint();
+  const navigate = useNavigate();
+  const handlers = useSwipeable({
+    onSwipedRight: () => navigate('/settings'),
+    onSwipedLeft: () => {},
+  });
 
   if (isMobile) {
     return (
       <Box
+        {...handlers}
         sx={{
           flex: '1 1 auto',
           display: 'flex',
           flexDirection: 'column',
           height: '92vh',
           justifyContent: 'space-between',
+          touchAction: 'pan-y',
         }}
       >
         {/* top row */}
