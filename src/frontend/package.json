@@ -29,6 +29,7 @@
     "react-latex-next": "^3.0.0",
     "react-router-dom": "^7.2.0",
     "react-spring": "^9.7.5",
+    "react-swipeable": "^7.0.2",
     "swagger-ui-react": "^5.26.0",
     "swagger-ui-themes": "^3.0.1",
     "zod": "^4.0.14",
