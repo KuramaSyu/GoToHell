@@ -16,6 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { LogoSvgComponent } from '../pages/LoadingPage/Main';
 import { Title } from '../pages/LoadingPage/Title';
+import HomeIcon from '@mui/icons-material/Home';
 
 enum Pages {
   HOME = '/',
@@ -72,6 +73,14 @@ const TopBar: React.FC = () => {
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
                 />
               </Button> */}
+              <Button
+                variant={containedIfSelected(Pages.HOME)}
+                onClick={() => navigate(Pages.HOME)}
+              >
+                <HomeIcon
+                  sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
+                />
+              </Button>
               <Button
                 variant={containedIfSelected(Pages.FRIENDS)}
                 onClick={() => navigate(Pages.FRIENDS)}
