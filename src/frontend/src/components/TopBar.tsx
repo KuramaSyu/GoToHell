@@ -23,6 +23,7 @@ enum Pages {
   FRIENDS = '/friends',
   SETTINGS = '/settings',
   HISTORY = '/history',
+  SETTINGSV2 = '/settings-v2',
 }
 
 function containedIfSelected(page: Pages) {
@@ -64,15 +65,10 @@ const TopBar: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'flex-end',
-                justifyContent: 'flex-end',
-                width: '35%',
+                justifyContent: 'flex-start',
+                width: '70%',
               }}
             >
-              {/* <Button variant="outlined" onClick={() => navigate('/settings')}>
-                <SettingsIcon
-                  sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-                />
-              </Button> */}
               <Button
                 variant={containedIfSelected(Pages.HOME)}
                 onClick={() => navigate(Pages.HOME)}
@@ -86,6 +82,14 @@ const TopBar: React.FC = () => {
                 onClick={() => navigate(Pages.FRIENDS)}
               >
                 <PeopleIcon
+                  sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
+                />
+              </Button>
+              <Button
+                variant={containedIfSelected(Pages.SETTINGSV2)}
+                onClick={() => navigate(Pages.SETTINGSV2)}
+              >
+                <SettingsIcon
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
                 />
               </Button>
