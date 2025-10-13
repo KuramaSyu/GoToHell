@@ -6,7 +6,7 @@ import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { alpha, Button, CssBaseline } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
 import { Streak } from './Streak';
@@ -17,8 +17,21 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import { LogoSvgComponent } from '../pages/LoadingPage/Main';
 import { Title } from '../pages/LoadingPage/Title';
 
+enum Pages {
+  HOME = '/',
+  FRIENDS = '/friends',
+  SETTINGS = '/settings',
+  HISTORY = '/history',
+}
+
+function containedIfSelected(page: Pages) {
+  const location = useLocation();
+  return location.pathname === page ? 'contained' : 'outlined';
+}
+
 const TopBar: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme } = useThemeStore();
   const { isMobile } = useBreakpoint();
 
@@ -59,7 +72,10 @@ const TopBar: React.FC = () => {
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
                 />
               </Button> */}
-              <Button variant="outlined" onClick={() => navigate('/friends')}>
+              <Button
+                variant={containedIfSelected(Pages.FRIENDS)}
+                onClick={() => navigate(Pages.FRIENDS)}
+              >
                 <PeopleIcon
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
                 />
