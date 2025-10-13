@@ -14,12 +14,14 @@ import { SwaggerDocs } from './pages/docs/Main';
 import { useLoadingStore } from './zustand/loadingStore';
 import { useUserStore } from './userStore';
 import SettingsPage from './pages/SettingsV2/main';
+import { useBreakpoint } from './hooks/useBreakpoint';
 // Import other components as needed
 
 const App: React.FC = () => {
   const { theme } = useThemeStore();
   const { isLoading } = useLoadingStore();
   const { user } = useUserStore();
+  const { isMobile } = useBreakpoint();
 
   return (
     <Router>
@@ -36,7 +38,7 @@ const App: React.FC = () => {
           }}
         >
           {/* Fixed TopBar with auto height */}
-          {!isLoading && user !== null && (
+          {!isLoading && user !== null && !isMobile && (
             <Box sx={{ flexShrink: 0 }}>
               <TopBar />
               <Toolbar></Toolbar>
@@ -59,6 +61,14 @@ const App: React.FC = () => {
               <Route path="/settings-v2" element={<SettingsPage />} />
             </Routes>
           </Box>
+
+          {/* Fixed TopBar Mobile with auto height */}
+          {!isLoading && user !== null && isMobile && (
+            <Box sx={{ flexShrink: 0 }}>
+              <TopBar />
+              <Toolbar></Toolbar>
+            </Box>
+          )}
 
           {/* Optional Error Display */}
           <InfoDisplay />

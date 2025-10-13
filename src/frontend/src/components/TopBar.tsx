@@ -27,7 +27,11 @@ const TopBar: React.FC = () => {
     return (
       <AppBar
         position="fixed"
-        sx={{ backgroundColor: theme.palette.muted.dark }}
+        sx={{
+          backgroundColor: theme.palette.muted.dark,
+          top: 'auto',
+          buttom: 0,
+        }}
       >
         <CssBaseline></CssBaseline>
         <Toolbar>
@@ -39,33 +43,7 @@ const TopBar: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <DiscordLogin />
-            </Box>
-
-            {/* Title */}
-            <Button
-              //startIcon={<LogoSvgComponent style={{ width: 60, height: 60 }} />}
-              onClick={() => navigate('/')}
-              sx={{
-                borderRadius: 6,
-                color: theme.palette.vibrant.light,
-                // fontFamily: '"Architects Daughter", cursive',
-                filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
-                //textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
-                fontSize: theme.typography.h4.fontSize, // Maintain h2 size
-                fontWeight: theme.typography.h4.fontWeight, // Maintain h2 weight
-                lineHeight: theme.typography.h4.lineHeight, // Maintain h2 line height
-                padding: '0px 8px',
-                textTransform: 'none', // Prevent uppercase transformation
-                '&:hover': {
-                  backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
-                },
-              }}
-            >
-              <Title theme={theme} />
-            </Button>
-            {/* Discord Login and Settings */}
+            {/* Friends, History and Settings */}
             <Box
               sx={{
                 gap: 1,
@@ -86,6 +64,10 @@ const TopBar: React.FC = () => {
                   sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
                 />
               </Button>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <DiscordLogin />
             </Box>
           </Box>
         </Toolbar>
