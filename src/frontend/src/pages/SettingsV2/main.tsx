@@ -364,6 +364,14 @@ export default function SettingsPage() {
             <AccountSettings />
           </SettingsSection>
         )}
+        {mobileOpenId === 'exercise-overrides' && (
+          <SettingsSection
+            id="exercise-overrides-mobile"
+            label="Exercise Overrides"
+          >
+            <ExcerciseOverrideSettings />
+          </SettingsSection>
+        )}
         {mobileOpenId === 'security' && (
           <SettingsSection id="security-mobile" label="Security">
             <SecuritySettings />
