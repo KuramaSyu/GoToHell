@@ -220,16 +220,11 @@ export default function SettingsPage() {
           display: { xs: 'none', md: 'block' },
           borderRight: 1,
           borderColor: 'divider',
-          //height: 'calc(100vh - 64px)',
-          // height: '100%',
-          // position: 'sticky',
-          //top: 64, // adjust to your AppBar height
-          //alignSelf: 'flex-start',
-          bgcolor: 'background.paper',
+          bgcolor: theme.palette.muted.dark,
         }}
       >
         <Box sx={{ p: 2, position: 'sticky', top: 0 }}>
-          <Typography variant="h6" sx={{ mb: 1 }}>
+          <Typography variant="h5" sx={{ mb: 1 }}>
             Settings
           </Typography>
 
@@ -252,7 +247,13 @@ export default function SettingsPage() {
       {/* Right content (all sections) */}
       <Grid
         size={{ xs: 12, md: 9 }}
-        sx={{ ml: { md: 2 }, px: { xs: 2, md: 4 }, pt: 4 }}
+        sx={{
+          ml: { md: 2 },
+          px: { xs: 2, md: 4 },
+          pt: 4,
+          height: '100vh',
+          overflowY: 'auto',
+        }}
       >
         {/* All sections rendered in one flow */}
         <SettingsSection
