@@ -27,6 +27,10 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { useEffect } from 'react';
+import {
+  GameOverrideList,
+  GameOverrideSettings,
+} from '../Settings/GameOverride';
 
 // ---- Notes ----
 // 1) Replace the demo settings sections with your real forms/controls.
@@ -121,6 +125,18 @@ function AppearanceSettings() {
   );
 }
 
+function ExcerciseOverrideSettings() {
+  return (
+    <Box>
+      <Typography variant="body1">
+        Exercise-Amount overrides for games.
+      </Typography>
+      <GameOverrideSettings />
+      <GameOverrideList />
+    </Box>
+  );
+}
+
 // ---- The main page component ----
 export default function SettingsPage() {
   const { theme } = useThemeStore();
@@ -131,6 +147,11 @@ export default function SettingsPage() {
   const categories = React.useMemo<SettingsCategory[]>(
     () => [
       { id: 'account', label: 'Account', icon: <SettingsIcon /> },
+      {
+        id: 'exercise-overrides',
+        label: 'Exercise Overrides',
+        icon: <SettingsIcon />,
+      },
       { id: 'security', label: 'Security', icon: <SecurityIcon /> },
       {
         id: 'notifications',
@@ -253,6 +274,7 @@ export default function SettingsPage() {
           pt: 4,
           height: '100vh',
           overflowY: 'auto',
+          //width: '100%',
         }}
       >
         {/* All sections rendered in one flow */}
@@ -264,6 +286,16 @@ export default function SettingsPage() {
           }}
         >
           <AccountSettings />
+        </SettingsSection>
+
+        <SettingsSection
+          id="excercise-overrides"
+          label="Excercise Overrides"
+          ref={(el) => {
+            sectionRefs.current['exercise-overrides'] = el;
+          }}
+        >
+          <ExcerciseOverrideSettings />
         </SettingsSection>
         <SettingsSection
           id="security"
