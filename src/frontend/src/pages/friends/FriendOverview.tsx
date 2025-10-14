@@ -24,6 +24,7 @@ import {
   DiscordViewModel,
 } from '../../components/DiscordLogin';
 import { UserApi } from '../../utils/api/Api';
+import { useLoadingStore } from '../../zustand/loadingStore';
 
 interface FriendShip {
   id: number;
@@ -48,11 +49,10 @@ export const FriendOverview: React.FC = () => {
   const { theme } = useThemeStore();
   const backgroundImage = theme.custom.backgroundImage;
   const [loaded, setLoaded] = useState(false);
-
+  const { isLoading, setLoading } = useLoadingStore();
   const [friends, setFriends] = useState<FriendShip[]>([]);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<TabIndex>(TabIndex.Overview);
-  const [loading, setLoading] = useState(false);
 
   const { setMessage: setErrorMessage } = useInfoStore();
   const { user } = useUserStore();
@@ -202,7 +202,7 @@ export const FriendOverview: React.FC = () => {
                 <Tab label="Blocked" value={TabIndex.Blocked} />
                 <Tab label="Incoming" value={TabIndex.Incoming} />
               </Tabs>
-              {loading ? (
+              {isLoading ? (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                   <CircularProgress />
                 </Box>
