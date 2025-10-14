@@ -141,15 +141,10 @@ const DiscordLogin: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* CssBaseline applies the theme's background and text colors */}
-      <CssBaseline />
-
       {!loading ? (
         <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
           <Button variant="outlined" color="inherit" onClick={handleLogout}>
-            <LogoutIcon
-              sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-            />
+            <LogoutIcon />
           </Button>
 
           <Avatar
@@ -165,7 +160,7 @@ const DiscordLogin: React.FC = () => {
       ) : (
         <Button
           variant="contained"
-          color="primary"
+          color="inherit"
           onClick={handleLogin}
           startIcon={
             <svg

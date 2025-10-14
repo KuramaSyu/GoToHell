@@ -17,6 +17,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import { LogoSvgComponent } from '../pages/LoadingPage/Main';
 import { Title } from '../pages/LoadingPage/Title';
 import HomeIcon from '@mui/icons-material/Home';
+import { ThemeProvider } from '@emotion/react';
 
 enum Pages {
   HOME = '/',
@@ -44,11 +45,11 @@ const TopBar: React.FC = () => {
         position="fixed"
         sx={{
           backgroundColor: theme.palette.muted.dark,
-          top: 'auto',
-          buttom: 0,
+          top: 'auto', // top auto and bottom 0 to stick to bottom
+          bottom: 0,
         }}
       >
-        <CssBaseline></CssBaseline>
+        {/* <CssBaseline></CssBaseline> */}
         <Toolbar>
           <Box
             sx={{
@@ -73,25 +74,19 @@ const TopBar: React.FC = () => {
                 variant={containedIfSelected(Pages.HOME)}
                 onClick={() => navigate(Pages.HOME)}
               >
-                <HomeIcon
-                  sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-                />
+                <HomeIcon />
               </Button>
               <Button
                 variant={containedIfSelected(Pages.FRIENDS)}
                 onClick={() => navigate(Pages.FRIENDS)}
               >
-                <PeopleIcon
-                  sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-                />
+                <PeopleIcon />
               </Button>
               <Button
                 variant={containedIfSelected(Pages.SETTINGSV2)}
                 onClick={() => navigate(Pages.SETTINGSV2)}
               >
-                <SettingsIcon
-                  sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-                />
+                <SettingsIcon />
               </Button>
             </Box>
 
@@ -106,8 +101,13 @@ const TopBar: React.FC = () => {
 
   // Desktop view
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: theme.palette.muted.dark }}>
-      <CssBaseline></CssBaseline>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: theme.palette.muted.dark,
+        color: theme.palette.primary.light,
+      }}
+    >
       <Toolbar>
         <Box
           sx={{
@@ -124,12 +124,8 @@ const TopBar: React.FC = () => {
               sx={{
                 borderRadius: 6,
                 color: theme.palette.vibrant.light,
-                // fontFamily: '"Architects Daughter", cursive',
                 filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
-                //textShadow: `2px 2px 6px ${theme.palette.secondary.dark}, 2px 2px 6px ${theme.palette.secondary.dark}`,
-                fontSize: theme.typography.h3.fontSize, // Maintain h2 size
-                fontWeight: theme.typography.h3.fontWeight, // Maintain h2 weight
-                lineHeight: theme.typography.h3.lineHeight, // Maintain h2 line height
+                fontSize: theme.typography.h3.fontSize,
                 padding: '0px 8px',
                 textTransform: 'none', // Prevent uppercase transformation
                 '&:hover': {
@@ -153,26 +149,28 @@ const TopBar: React.FC = () => {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              color: theme.palette.primary.light,
             }}
           >
             <Button
-              variant="outlined"
-              onClick={() => navigate('/settings')}
+              variant={containedIfSelected(Pages.HOME)}
+              onClick={() => navigate(Pages.HOME)}
               color="inherit"
             >
-              <SettingsIcon
-                sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-              />
+              <HomeIcon />
             </Button>
             <Button
-              variant="outlined"
-              onClick={() => navigate('/friends')}
+              variant={containedIfSelected(Pages.FRIENDS)}
+              onClick={() => navigate(Pages.FRIENDS)}
               color="inherit"
             >
-              <PeopleIcon
-                sx={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))' }}
-              />
+              <PeopleIcon />
+            </Button>
+            <Button
+              variant={containedIfSelected(Pages.SETTINGSV2)}
+              onClick={() => navigate(Pages.SETTINGSV2)}
+              color="inherit"
+            >
+              <SettingsIcon />
             </Button>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
