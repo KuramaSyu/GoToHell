@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { alpha, Button, CssBaseline } from '@mui/material';
+import {
+  alpha,
+  Avatar,
+  Button,
+  CssBaseline,
+  Divider,
+  Drawer,
+  IconButton,
+} from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
@@ -18,6 +26,7 @@ import { LogoSvgComponent } from '../pages/LoadingPage/Main';
 import { Title } from '../pages/LoadingPage/Title';
 import HomeIcon from '@mui/icons-material/Home';
 import { ThemeProvider } from '@emotion/react';
+import { useUserStore } from '../userStore';
 
 enum Pages {
   HOME = '/',
@@ -37,65 +46,115 @@ const TopBar: React.FC = () => {
   const location = useLocation();
   const { theme } = useThemeStore();
   const { isMobile } = useBreakpoint();
+  const [userDrawerOpen, setUserDrawerOpen] = useState(false);
+  const { user } = useUserStore();
+
+  const UserDrawer = () => {
+    return (
+      <Drawer
+        anchor="bottom"
+        open={userDrawerOpen}
+        onClose={() => setUserDrawerOpen(false)}
+        sx={{
+          '& .MuiDrawer-paper': {
+            height: '33vh',
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            backgroundColor: alpha(theme.palette.muted.dark, 2 / 3),
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            px: 5,
+            py: 2,
+            gap: 2,
+          }}
+        >
+          <Avatar
+            sx={{ width: 64, height: 64 }}
+            src={user ? user.getAvatarUrl() : undefined}
+            alt={user ? user.username : ''}
+          ></Avatar>
+          <Divider orientation="vertical"></Divider>
+          <Typography variant="h6"> {user?.username ?? 'login'} </Typography>
+        </Box>
+        <Divider></Divider>
+      </Drawer>
+    );
+  };
 
   if (isMobile) {
     // Mobile view
     return (
-      <AppBar
-        position="fixed"
-        sx={{
-          backgroundColor: theme.palette.muted.dark,
-          top: 'auto', // top auto and bottom 0 to stick to bottom
-          bottom: 0,
-        }}
-      >
-        {/* <CssBaseline></CssBaseline> */}
-        <Toolbar>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            {/* Friends, History and Settings */}
+      <>
+        <AppBar
+          position="fixed"
+          sx={{
+            backgroundColor: theme.palette.muted.dark,
+            top: 'auto', // top auto and bottom 0 to stick to bottom
+            bottom: 0,
+          }}
+        >
+          {/* <CssBaseline></CssBaseline> */}
+          <Toolbar>
             <Box
               sx={{
-                gap: 1,
+                flexGrow: 1,
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-start',
-                width: '70%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
-              <Button
-                variant={containedIfSelected(Pages.HOME)}
-                onClick={() => navigate(Pages.HOME)}
+              {/* Friends, History and Settings */}
+              <Box
+                sx={{
+                  gap: 1,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'flex-end',
+                  justifyContent: 'flex-start',
+                  width: '70%',
+                }}
               >
-                <HomeIcon />
-              </Button>
-              <Button
-                variant={containedIfSelected(Pages.FRIENDS)}
-                onClick={() => navigate(Pages.FRIENDS)}
-              >
-                <PeopleIcon />
-              </Button>
-              <Button
-                variant={containedIfSelected(Pages.SETTINGSV2)}
-                onClick={() => navigate(Pages.SETTINGSV2)}
-              >
-                <SettingsIcon />
-              </Button>
-            </Box>
+                <Button
+                  variant={containedIfSelected(Pages.HOME)}
+                  onClick={() => navigate(Pages.HOME)}
+                >
+                  <HomeIcon />
+                </Button>
+                <Button
+                  variant={containedIfSelected(Pages.FRIENDS)}
+                  onClick={() => navigate(Pages.FRIENDS)}
+                >
+                  <PeopleIcon />
+                </Button>
+                <Button
+                  variant={containedIfSelected(Pages.SETTINGSV2)}
+                  onClick={() => navigate(Pages.SETTINGSV2)}
+                >
+                  <SettingsIcon />
+                </Button>
+              </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <DiscordLogin />
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton onClick={() => setUserDrawerOpen(true)}>
+                  <Avatar
+                    sx={{ width: 40, height: 40 }}
+                    src={user ? user.getAvatarUrl() : undefined}
+                    alt={user ? user.username : ''}
+                  ></Avatar>
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          </Toolbar>
+        </AppBar>
+        <UserDrawer />
+      </>
     );
   }
 
