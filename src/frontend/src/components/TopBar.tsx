@@ -27,6 +27,8 @@ import { Title } from '../pages/LoadingPage/Title';
 import HomeIcon from '@mui/icons-material/Home';
 import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../userStore';
+import { useStreakStore } from '../zustand/StreakStore';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 enum Pages {
   HOME = '/',
@@ -48,6 +50,7 @@ const TopBar: React.FC = () => {
   const { isMobile } = useBreakpoint();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
   const { user } = useUserStore();
+  const { streak } = useStreakStore();
 
   const UserDrawer = () => {
     return (
@@ -64,6 +67,7 @@ const TopBar: React.FC = () => {
           },
         }}
       >
+        {/* Headline with icon and name */}
         <Box
           sx={{
             display: 'flex',
@@ -84,6 +88,29 @@ const TopBar: React.FC = () => {
           <Typography variant="h6"> {user?.username ?? 'login'} </Typography>
         </Box>
         <Divider></Divider>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}>
+            <Typography variant="h6">Streak</Typography>
+            <Typography variant="subtitle2">
+              Amount of days where sport was back to back done
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              justifyItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant="h3">
+              <LocalFireDepartmentIcon fontSize="inherit" />
+              {streak}
+            </Typography>
+          </Box>
+        </Box>
       </Drawer>
     );
   };
