@@ -7,7 +7,7 @@ import {
   ApiRequirementsBuilder,
 } from '../../../utils/api/ApiRequirementsBuilder';
 import { DiscordUserImpl } from '../../../components/DiscordLogin';
-import { StreakCard } from './StreakCard';
+import { StreakNumberCircle } from './StreakCard';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 
 const AnimatedBox = animated(Box);
@@ -49,7 +49,7 @@ export const StreakTimeline: React.FC = () => {
   const timelineItems: ReactElement[] = transition((style, user) => {
     return (
       <Box sx={{ ml: 1, mb: 2 }}>
-        <StreakCard style={style} user={user} />
+        <StreakNumberCircle style={style} user={user} />
       </Box>
     );
   });

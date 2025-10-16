@@ -20,7 +20,10 @@ interface StreakCardProps {
 
 const AnimatedBox = animated(Box);
 
-export const StreakCard: React.FC<StreakCardProps> = ({ user, style }) => {
+export const StreakNumberCircle: React.FC<StreakCardProps> = ({
+  user,
+  style,
+}) => {
   return (
     <AnimatedBox
       sx={{
