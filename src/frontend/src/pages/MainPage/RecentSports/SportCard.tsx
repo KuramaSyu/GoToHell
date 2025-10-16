@@ -26,15 +26,15 @@ class AmountCalculator {
   }
 }
 
-export const SportCard: React.FC<SportCardProps> = ({ data }) => {
+export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
   const { theme } = useThemeStore();
   const sportUser = users[data.user_id];
   return (
     <Box
       sx={{
-        display: 'flex', // Enables Flexbox
-        flexShrink: 0, // Prevents shrinking
+        display: 'flex',
+        flexShrink: 0,
         alignSelf: 'flex-start', // Ensures it doesn't stretch in the parent flex container
         pl: 2,
         width: 'auto', // Ensures the width is determined by the content

@@ -13,7 +13,7 @@ import { useUserStore, useUsersStore } from '../../../userStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import { useRecentSportsStore } from '../../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
-import { SportCard, SportCardNumber } from './SportCard';
+import { SportTimelineEntry, SportCardNumber } from './SportCard';
 import { animated, config, useTransition } from 'react-spring';
 import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 import {
@@ -186,7 +186,7 @@ export const SportsTimeline = () => {
             <TimelineConnector sx={{ bgcolor: 'primary.main' }} />
           </TimelineSeparator>
           <TimelineContent>
-            <SportCard data={sport} />
+            <SportTimelineEntry data={sport} />
           </TimelineContent>
         </TimelineItem>
       </AnimatedBox>
