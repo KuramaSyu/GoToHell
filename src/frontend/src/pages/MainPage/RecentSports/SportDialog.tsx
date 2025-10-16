@@ -93,10 +93,10 @@ export const SportDialog: React.FC<SportDialogProps> = ({
 
   const updateRecord = async (record: UserSport) => {
     try {
-      const response = await new UserApi().patchSport(
+      const _ = await new UserApi().patchSport(
         record.id,
-        null, // kind is not being changed, so we pass null
-        null, // game is not being changed, so we pass null
+        null, // kind is not being changed
+        null, // game is not being changed
         amountValue,
         true
       );
@@ -152,7 +152,6 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                     height: 60,
                     filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))',
                   }}
-                  // onClick={handleLogout} show details on click
                 />
 
                 {users[selectedSport!.user_id]?.username}
