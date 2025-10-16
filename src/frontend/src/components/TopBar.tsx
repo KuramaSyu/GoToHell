@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -29,6 +29,10 @@ import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../userStore';
 import { useStreakStore } from '../zustand/StreakStore';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../utils/api/ApiRequirementsBuilder';
 
 enum Pages {
   HOME = '/',
@@ -50,9 +54,18 @@ const TopBar: React.FC = () => {
   const { isMobile } = useBreakpoint();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
   const { user } = useUserStore();
-  const { streak } = useStreakStore();
 
   const UserDrawer = () => {
+    const { streak } = useStreakStore();
+    useEffect(() => {
+      async function init() {
+        if (!userDrawerOpen || !user) return;
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.Streak)
+          .forceFetch();
+      }
+      init();
+    }, [userDrawerOpen]);
     return (
       <Drawer
         anchor="bottom"
