@@ -35,7 +35,7 @@ import {
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
 
-enum Pages {
+export enum Pages {
   HOME = '/',
   FRIENDS = '/friends',
   SETTINGS = '/settings',
