@@ -4,11 +4,11 @@ import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
 import {
   docsTheme,
   customThemes,
-  defaultTheme,
   useThemeStore,
 } from '../zustand/useThemeStore';
 import { error } from 'console';
 import useInfoStore, { SnackbarUpdateImpl } from '../zustand/InfoStore';
+import { defaultTheme } from '../zustand/defaultTheme';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
