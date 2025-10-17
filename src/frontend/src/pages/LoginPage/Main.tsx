@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useUserStore } from '../../userStore';
-import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import { Box, Typography } from '@mui/material';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { StaticCircleBackground } from '../LoadingPage/CircleBackground';
@@ -9,6 +9,7 @@ import { Title } from '../LoadingPage/Title';
 import React from 'react';
 import { LogoSvgComponent } from '../LoadingPage/Main';
 import { useMinSquareSize } from '../LoadingPage/minSquareSize';
+import { defaultTheme } from '../../zustand/defaultTheme';
 
 export const LoginPage: React.FC = () => {
   const { theme, setTheme } = useThemeStore();

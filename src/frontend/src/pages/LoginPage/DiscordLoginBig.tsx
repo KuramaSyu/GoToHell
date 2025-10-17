@@ -9,7 +9,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import { useUserStore } from '../../userStore';
 import { BACKEND_BASE } from '../../statics';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -18,6 +18,7 @@ import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { UserApi } from '../../utils/api/Api';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { ApiRequirementsBuilder } from '../../utils/api/ApiRequirementsBuilder';
+import { defaultTheme } from '../../zustand/defaultTheme';
 
 export const DiscordLoginBig: React.FC = () => {
   const { user, setUser } = useUserStore();

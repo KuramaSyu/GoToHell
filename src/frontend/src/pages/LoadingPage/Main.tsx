@@ -20,7 +20,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import BlockIcon from '@mui/icons-material/Block';
 import Fade from '@mui/material/Fade';
-import { defaultTheme, useThemeStore } from '../../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../../userStore';
 import {
@@ -32,6 +32,7 @@ import { Title } from './Title';
 import { useSportStore } from '../../useSportStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useMinSquareSize } from './minSquareSize';
+import { defaultTheme } from '../../zustand/defaultTheme';
 
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
