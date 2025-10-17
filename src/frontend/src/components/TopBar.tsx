@@ -13,6 +13,7 @@ import {
   Divider,
   Drawer,
   IconButton,
+  Slide,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -55,7 +56,7 @@ const TopBar: React.FC = () => {
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
   const { user } = useUserStore();
 
-  const UserDrawer = () => {
+  const UserDrawerContents = () => {
     const { streak } = useStreakStore();
     useEffect(() => {
       async function init() {
@@ -67,21 +68,9 @@ const TopBar: React.FC = () => {
       init();
     }, [userDrawerOpen]);
     return (
-      <Drawer
-        anchor="bottom"
-        open={userDrawerOpen}
-        onClose={() => setUserDrawerOpen(false)}
-        sx={{
-          '& .MuiDrawer-paper': {
-            height: '33vh',
-            borderTopLeftRadius: 16,
-            borderTopRightRadius: 16,
-            backgroundColor: alpha(theme.palette.muted.dark, 2 / 3),
-          },
-        }}
-      >
-        {/* Headline with icon and name */}
+      <>
         <Box
+          role="presentation"
           sx={{
             display: 'flex',
             flexDirection: 'row',
@@ -124,7 +113,7 @@ const TopBar: React.FC = () => {
             </Typography>
           </Box>
         </Box>
-      </Drawer>
+      </>
     );
   };
 
@@ -193,7 +182,21 @@ const TopBar: React.FC = () => {
             </Box>
           </Toolbar>
         </AppBar>
-        <UserDrawer />
+        <Drawer
+          anchor="bottom"
+          open={userDrawerOpen}
+          onClose={() => setUserDrawerOpen(false)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              height: '33vh',
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+              backgroundColor: alpha(theme.palette.muted.dark, 9 / 10),
+            },
+          }}
+        >
+          <UserDrawerContents />
+        </Drawer>
       </>
     );
   }
