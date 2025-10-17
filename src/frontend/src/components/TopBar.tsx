@@ -59,14 +59,15 @@ const TopBar: React.FC = () => {
   const UserDrawerContents = () => {
     const { streak } = useStreakStore();
     useEffect(() => {
-      async function init() {
+      async function fetchStreak() {
         if (!userDrawerOpen || !user) return;
         await new ApiRequirementsBuilder()
           .add(ApiRequirement.Streak)
           .forceFetch();
       }
-      init();
+      fetchStreak();
     }, [userDrawerOpen]);
+
     return (
       <Box
         sx={{
@@ -145,7 +146,6 @@ const TopBar: React.FC = () => {
             bottom: 0,
           }}
         >
-          {/* <CssBaseline></CssBaseline> */}
           <Toolbar>
             <Box
               sx={{
@@ -198,13 +198,15 @@ const TopBar: React.FC = () => {
             </Box>
           </Toolbar>
         </AppBar>
+
+        {/* Drawer which shows streak and user info */}
         <Drawer
           anchor="bottom"
           open={userDrawerOpen}
           onClose={() => setUserDrawerOpen(false)}
           sx={{
             '& .MuiDrawer-paper': {
-              height: '40vh',
+              height: 1 / 3,
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
               backgroundColor: alpha(theme.palette.muted.dark, 9 / 10),
@@ -260,7 +262,7 @@ const TopBar: React.FC = () => {
             <Streak />
           </Box>
 
-          {/* Discord Login and Settings */}
+          {/* Home, Friends, Settings, Discord Login or Profile */}
           <Box
             sx={{
               gap: 1,
@@ -290,7 +292,6 @@ const TopBar: React.FC = () => {
             >
               <SettingsIcon />
             </Button>
-
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <DiscordLogin />
             </Box>
