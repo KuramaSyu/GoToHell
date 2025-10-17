@@ -29,11 +29,6 @@ const MainPage: React.FC = () => {
     Math.round(Math.random() * 100)
   );
   const oneOrZero = Math.round(exitPercentage / 100) * 100;
-  const spring = {
-    type: 'spring',
-    damping: 8,
-    stiffness: 30,
-  };
 
   useEffect(() => {
     (async () => {

@@ -18,6 +18,8 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
+import { useSwipeable } from 'react-swipeable';
+import { Pages } from '../../components/TopBar';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -39,6 +41,9 @@ const RoundedBlurBoxSX = {
 export const Settings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   const navigate = useNavigate();
+  const handlers = useSwipeable({
+    onSwipedRight: () => navigate(Pages.FRIENDS),
+  });
   const { isMobile } = useBreakpoint();
 
   useEffect(() => {
@@ -55,11 +60,6 @@ export const Settings: React.FC = () => {
       width: isMobile ? '100%' : '4/5',
     };
   };
-  // done in theme store
-  // useEffect(() => {
-  //   // read preferences on page load
-  //   loadPreferencesFromCookie();
-  // }, []);
 
   // Listen for esc, to navigate to home page
   useEffect(() => {
@@ -79,6 +79,7 @@ export const Settings: React.FC = () => {
       <AppBackground></AppBackground>
       <CssBaseline></CssBaseline>
       <Box
+        {...handlers}
         sx={{
           display: 'flex',
           flexDirection: 'column',

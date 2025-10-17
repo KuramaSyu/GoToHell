@@ -31,6 +31,9 @@ import {
   GameOverrideList,
   GameOverrideSettings,
 } from '../Settings/GameOverride';
+import { useNavigate } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
+import { Pages } from '../../components/TopBar';
 
 // ---- Notes ----
 // 1) Replace the demo settings sections with your real forms/controls.
@@ -142,6 +145,10 @@ export default function SettingsPage() {
   const { theme } = useThemeStore();
   const { isMobile } = useBreakpoint();
   const { isLoading, setLoading } = useLoadingStore();
+  const navigate = useNavigate();
+  const handlers = useSwipeable({
+    onSwipedRight: () => navigate(Pages.FRIENDS),
+  });
 
   // Define your categories once
   const categories = React.useMemo<SettingsCategory[]>(
@@ -392,7 +399,7 @@ export default function SettingsPage() {
   );
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box {...handlers} sx={{ width: '100%', height: '100%' }}>
       {/* Optional: put your <AppBar /> above this component */}
       {isMobile
         ? mobileOpenId

@@ -25,6 +25,9 @@ import {
 } from '../../components/DiscordLogin';
 import { UserApi } from '../../utils/api/Api';
 import { useLoadingStore } from '../../zustand/loadingStore';
+import { useNavigate } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
+import { Pages } from '../../components/TopBar';
 
 interface FriendShip {
   id: number;
@@ -57,6 +60,12 @@ export const FriendOverview: React.FC = () => {
   const { setMessage: setErrorMessage } = useInfoStore();
   const { user } = useUserStore();
   const { users } = useUsersStore();
+
+  const navigate = useNavigate();
+  const handlers = useSwipeable({
+    onSwipedLeft: () => navigate(Pages.SETTINGSV2),
+    onSwipedRight: () => navigate(Pages.HOME),
+  });
 
   function GetFriendId(f: FriendShip) {
     if (String(f.requester_id) == user?.id) {
@@ -153,7 +162,7 @@ export const FriendOverview: React.FC = () => {
   });
 
   return (
-    <Box width="100vw">
+    <Box {...handlers} width="100vw">
       <ThemeProvider theme={theme!}>
         <CssBaseline></CssBaseline>
         {backgroundImage && (

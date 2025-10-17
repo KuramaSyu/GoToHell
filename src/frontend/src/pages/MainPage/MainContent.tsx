@@ -12,6 +12,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { UploadOverdueDeaths } from './UploadOverdueDeaths';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
+import { Pages } from '../../components/TopBar';
 
 interface MainContentProps {
   theme: any;
@@ -22,8 +23,7 @@ const MainContent: React.FC = () => {
   const { isMobile } = useBreakpoint();
   const navigate = useNavigate();
   const handlers = useSwipeable({
-    onSwipedRight: () => navigate('/settings'),
-    onSwipedLeft: () => {},
+    onSwipedLeft: () => navigate(Pages.FRIENDS),
   });
 
   if (isMobile) {
