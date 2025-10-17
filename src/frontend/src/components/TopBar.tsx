@@ -68,7 +68,17 @@ const TopBar: React.FC = () => {
       init();
     }, [userDrawerOpen]);
     return (
-      <>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          px: 2,
+          gap: 2,
+          pb: 2,
+          justifyContent: 'space-between',
+          height: '100%',
+        }}
+      >
         <Box
           role="presentation"
           sx={{
@@ -113,7 +123,16 @@ const TopBar: React.FC = () => {
             </Typography>
           </Box>
         </Box>
-      </>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            variant="outlined"
+            onClick={() => setUserDrawerOpen(false)}
+            sx={{ width: 2 / 3, borderRadius: 4 }}
+          >
+            Ok
+          </Button>
+        </Box>
+      </Box>
     );
   };
 
@@ -188,7 +207,7 @@ const TopBar: React.FC = () => {
           onClose={() => setUserDrawerOpen(false)}
           sx={{
             '& .MuiDrawer-paper': {
-              height: '33vh',
+              height: '40vh',
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
               backgroundColor: alpha(theme.palette.muted.dark, 9 / 10),
