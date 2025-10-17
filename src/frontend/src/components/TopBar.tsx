@@ -72,34 +72,31 @@ const TopBar: React.FC = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          px: 2,
-          gap: 2,
-          pb: 2,
+          p: 2,
           justifyContent: 'space-between',
           height: '100%',
         }}
       >
-        <Box
-          role="presentation"
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            px: 5,
-            py: 2,
-            gap: 2,
-          }}
-        >
-          <Avatar
-            sx={{ width: 64, height: 64 }}
-            src={user ? user.getAvatarUrl() : undefined}
-            alt={user ? user.username : ''}
-          ></Avatar>
-          <Divider orientation="vertical"></Divider>
-          <Typography variant="h6"> {user?.username ?? 'login'} </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              p: 1,
+            }}
+          >
+            <Avatar
+              sx={{ width: 64, height: 64 }}
+              src={user ? user.getAvatarUrl() : undefined}
+              alt={user ? user.username : ''}
+            ></Avatar>
+            <Divider orientation="vertical"></Divider>
+            <Typography variant="h6"> {user?.username ?? 'login'} </Typography>
+          </Box>
+          <Divider></Divider>
         </Box>
-        <Divider></Divider>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}>
             <Typography variant="h6">Streak</Typography>
