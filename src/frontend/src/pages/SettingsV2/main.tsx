@@ -400,7 +400,6 @@ export default function SettingsPage() {
 
   return (
     <Box {...handlers} sx={{ width: '100%', height: '100%' }}>
-      {/* Optional: put your <AppBar /> above this component */}
       {isMobile
         ? mobileOpenId
           ? MobileSection
