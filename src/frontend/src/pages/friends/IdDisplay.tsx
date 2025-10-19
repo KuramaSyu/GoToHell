@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useUserStore } from '../../userStore';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const IdDisplay: React.FC = () => {
   const { user } = useUserStore();
   const [copied, setCopied] = useState(false);
+  const { isMobile } = useBreakpoint();
 
   const handleCopy = async () => {
     try {
@@ -18,7 +20,15 @@ const IdDisplay: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        mt: 2,
+        flexDirection: isMobile ? 'column' : 'row',
+      }}
+    >
       <Typography variant="body1">Your ID: {user?.id}</Typography>
       <Button
         variant="contained"

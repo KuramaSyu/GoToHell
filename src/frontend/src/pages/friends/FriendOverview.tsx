@@ -28,6 +28,7 @@ import { useLoadingStore } from '../../zustand/loadingStore';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface FriendShip {
   id: number;
@@ -60,6 +61,7 @@ export const FriendOverview: React.FC = () => {
   const { setMessage: setErrorMessage } = useInfoStore();
   const { user } = useUserStore();
   const { users } = useUsersStore();
+  const { isMobile } = useBreakpoint();
 
   const navigate = useNavigate();
   const handlers = useSwipeable({
@@ -162,144 +164,133 @@ export const FriendOverview: React.FC = () => {
   });
 
   return (
-    <Box {...handlers} width="100vw">
-      <ThemeProvider theme={theme!}>
-        <CssBaseline></CssBaseline>
-        {backgroundImage && (
+    <Box {...handlers} width="100%">
+      {backgroundImage && (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            backgroundColor: theme.palette.background.default,
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(9px)',
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.5s ease',
+            zIndex: 0,
+            display: 'flex',
+          }}
+        />
+      )}
+      <Box sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignContent: 'space-between',
+            justifyContent: 'space-between',
+          }}
+        >
+          {/* Friendship Box */}
           <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              backgroundColor: theme.palette.background.default,
-              backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'blur(9px)',
-              opacity: loaded ? 1 : 0,
-              transition: 'opacity 0.5s ease',
-              zIndex: 0,
-              display: 'flex',
-            }}
-          />
-        )}
-        <Box sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignContent: 'space-between',
-              justifyContent: 'space-between',
-            }}
+            sx={{ display: 'flex', minWidth: 1 / 4, flexDirection: 'column' }}
           >
-            {/* Friendship Box */}
-            <Box
-              sx={{ display: 'flex', minWidth: 1 / 4, flexDirection: 'column' }}
+            <Typography variant="h4" gutterBottom>
+              Friend Overview
+            </Typography>
+            <Tabs
+              value={activeTab}
+              onChange={(_e, newValue) => setActiveTab(newValue)}
+              indicatorColor="primary"
+              textColor="primary"
             >
-              <Typography variant="h4" gutterBottom>
-                Friend Overview
+              <Tab label="Existing" value={TabIndex.Overview} />
+              <Tab label="Incoming" value={TabIndex.Incoming} />
+            </Tabs>
+            {isLoading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <List>
+                {filteredFriends.map((fr) => (
+                  <ListItem key={fr.id} sx={{ borderBottom: '1px solid #ccc' }}>
+                    <ListItemText
+                      primary={
+                        <DiscordViewModel
+                          user={users[GetFriendId(fr)]}
+                        ></DiscordViewModel>
+                      }
+                      secondary={`Status: ${fr.status}`}
+                    />
+                    {activeTab === TabIndex.Incoming && (
+                      <Box>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={() => handleUpdateStatus(fr.id, 'accepted')}
+                          sx={{ mr: 1 }}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleDelete(fr.id)}
+                        >
+                          Reject
+                        </Button>
+                      </Box>
+                    )}
+                    {activeTab === TabIndex.Overview && (
+                      <Box>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleDelete(fr.id)}
+                          sx={{ mr: 1 }}
+                        >
+                          Delete
+                        </Button>
+                        {/* <Button
+                          variant="outlined"
+                          onClick={() => handleUpdateStatus(fr.id, 'blocked')}
+                        >
+                          Block
+                        </Button> */}
+                      </Box>
+                    )}
+                    {activeTab === TabIndex.Blocked && (
+                      <Box>
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleUpdateStatus(fr.id, 'accepted')}
+                        >
+                          Unblock
+                        </Button>
+                      </Box>
+                    )}
+                  </ListItem>
+                ))}
+              </List>
+            )}
+            {error && (
+              <Typography color="error" sx={{ mt: 2 }}>
+                {error}
               </Typography>
-              <Tabs
-                value={activeTab}
-                onChange={(_e, newValue) => setActiveTab(newValue)}
-                indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab label="Existing" value={TabIndex.Overview} />
-                <Tab label="Blocked" value={TabIndex.Blocked} />
-                <Tab label="Incoming" value={TabIndex.Incoming} />
-              </Tabs>
-              {isLoading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <List>
-                  {filteredFriends.map((fr) => (
-                    <ListItem
-                      key={fr.id}
-                      sx={{ borderBottom: '1px solid #ccc' }}
-                    >
-                      <ListItemText
-                        primary={
-                          <DiscordViewModel
-                            user={users[GetFriendId(fr)]}
-                          ></DiscordViewModel>
-                        }
-                        secondary={`Status: ${fr.status}`}
-                      />
-                      {activeTab === TabIndex.Incoming && (
-                        <Box>
-                          <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() =>
-                              handleUpdateStatus(fr.id, 'accepted')
-                            }
-                            sx={{ mr: 1 }}
-                          >
-                            Accept
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() => handleDelete(fr.id)}
-                          >
-                            Reject
-                          </Button>
-                        </Box>
-                      )}
-                      {activeTab === TabIndex.Overview && (
-                        <Box>
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() => handleDelete(fr.id)}
-                            sx={{ mr: 1 }}
-                          >
-                            Delete
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleUpdateStatus(fr.id, 'blocked')}
-                          >
-                            Block
-                          </Button>
-                        </Box>
-                      )}
-                      {activeTab === TabIndex.Blocked && (
-                        <Box>
-                          <Button
-                            variant="outlined"
-                            onClick={() =>
-                              handleUpdateStatus(fr.id, 'accepted')
-                            }
-                          >
-                            Unblock
-                          </Button>
-                        </Box>
-                      )}
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-              {error && (
-                <Typography color="error" sx={{ mt: 2 }}>
-                  {error}
-                </Typography>
-              )}
-            </Box>
-            <Box>
-              <AddFriend></AddFriend>
-            </Box>
-            <Box>
-              <IdDisplay></IdDisplay>
-            </Box>
+            )}
+          </Box>
+          <Box>
+            <AddFriend></AddFriend>
+          </Box>
+          <Box>
+            <IdDisplay></IdDisplay>
           </Box>
         </Box>
-      </ThemeProvider>
+      </Box>
     </Box>
   );
 };
