@@ -34,7 +34,7 @@ const MainContent: React.FC = () => {
           flex: '1 1 auto',
           display: 'flex',
           flexDirection: 'column',
-          height: '92vh',
+          height: isMobile ? '100%' : '92vh',
           justifyContent: 'space-between',
           touchAction: 'pan-y',
         }}
