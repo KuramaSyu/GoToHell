@@ -14,6 +14,7 @@ import {
   Drawer,
   IconButton,
   Slide,
+  SwipeableDrawer,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -228,8 +229,9 @@ const TopBar: React.FC = () => {
         </AppBar>
 
         {/* Drawer which shows streak and user info */}
-        <Drawer
+        <SwipeableDrawer
           anchor="bottom"
+          onOpen={() => setUserDrawerOpen(true)}
           open={userDrawerOpen}
           onClose={() => setUserDrawerOpen(false)}
           sx={{
@@ -242,7 +244,7 @@ const TopBar: React.FC = () => {
           }}
         >
           <UserDrawerContents />
-        </Drawer>
+        </SwipeableDrawer>
       </>
     );
   }
