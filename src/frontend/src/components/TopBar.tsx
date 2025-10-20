@@ -157,15 +157,6 @@ const TopBar: React.FC = () => {
               </Typography>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              variant="outlined"
-              onClick={() => setUserDrawerOpen(false)}
-              sx={{ width: 2 / 3, borderRadius: 4 }}
-            >
-              Ok
-            </Button>
-          </Box>
         </Box>
       </Box>
     );
