@@ -13,7 +13,7 @@ import { GenerateMarks } from '../../utils/Marks';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { blendWithContrast } from '../../utils/blendWithContrast';
 
 interface DeathAmountState {
@@ -46,6 +46,11 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const { isMobile } = useBreakpoint();
 
+  useEffect(() => {
+    if (localAmount !== amount.toString()) {
+      setLocalAmount(amount.toString());
+    }
+  }, [amount]);
   // Slider Change - set value or current maximum
   const handleSliderChange = (newValue: number | number[]) => {
     const capped = Math.min(newValue as number, selectableMax);
