@@ -63,3 +63,14 @@ export function blendWithContrast(
 
   return rgbToHex(blended);
 }
+
+/**
+ * checks if a color is dark based on the theme contrast text
+ * @param theme the theme to use to get the contrast color
+ * @param color the color to check, if null uses theme.palette.background.muted
+ * @returns true if dark, false if light
+ */
+export function isDarkColored(theme: any, color: string | null): boolean {
+  color = color || theme.palette.background.muted;
+  return theme.palette.getContrastText(color) === '#fff'; // #fff or #000
+}
