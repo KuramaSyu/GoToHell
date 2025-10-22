@@ -13,17 +13,19 @@ import {
 } from '../../zustand/RecentSportsState';
 import SportRow, { Sport } from '../../models/Sport';
 import { sportIconMap } from '../../utils/data/Sports';
+import { isDarkColored } from '../../utils/blendWithContrast';
 
 const MAX_PILLS = 5;
 
 export const HistoryPills: React.FC = () => {
   const { recentSports } = useRecentSportsStore();
+  const { theme } = useThemeStore();
   const lastDone: SportRow[] = useMemo(() => {
     if (recentSports === null) {
       return [];
     }
     var sports: SportRow[] = [];
-    for (const sport of recentSports.data) {
+    for (const sport of recentSports.data.toReversed()) {
       const sportRow = new SportRow(sport.kind, sport.game, sport.amount);
       const isContained = sports.includes(sportRow);
       if (!isContained) {
@@ -37,17 +39,22 @@ export const HistoryPills: React.FC = () => {
   }, [recentSports]);
 
   return (
-    <Stack direction="row" spacing={1} sx={{ overflowX: 'auto', pb: 1 }}>
+    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
       {lastDone.map((sportRow, index) => (
         <Chip
           key={index}
-          label={`${sportRow.amount} @${sportRow.game}`}
+          label={`${sportRow.amount} @ ${sportRow.game}`}
           avatar={
             <img
               src={sportIconMap[String(sportRow.kind)]}
               alt={sportRow.kind}
               width={24}
               height={24}
+              style={{
+                filter: isDarkColored(theme, null)
+                  ? 'brightness(0) invert(0.8)'
+                  : 'none',
+              }}
             />
           }
         />
