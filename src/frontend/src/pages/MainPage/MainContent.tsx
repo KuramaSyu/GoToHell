@@ -13,6 +13,7 @@ import { UploadOverdueDeaths } from './UploadOverdueDeaths';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar';
+import { HistoryPills } from './HistoryPills';
 
 interface MainContentProps {
   theme: any;
@@ -73,9 +74,15 @@ const MainContent: React.FC = () => {
         >
           {/* Game Selection */}
           <Box
-            sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              justifyContent: 'center',
+            }}
           >
             <GameSelector />
+            <HistoryPills />
           </Box>
 
           {/* Death Slider and Upload */}
