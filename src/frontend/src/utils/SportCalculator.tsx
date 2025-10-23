@@ -584,7 +584,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
       return (
         (Math.exp((amount * Math.log(1.75)) / strength_factor) - 1) /
         (game_base * multiplier)
-      );
+      ); // calculate_amount formula rearranged to deaths
     }
     return this.decorated.calculate_deaths(sport, game, amount);
   }
