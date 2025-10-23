@@ -14,12 +14,18 @@ import {
 import SportRow, { Sport } from '../../models/Sport';
 import { sportIconMap } from '../../utils/data/Sports';
 import { isDarkColored } from '../../utils/blendWithContrast';
+import { useDeathAmountStore } from './NumberSlider';
+import { useSportStore } from '../../useSportStore';
+import useCalculatorStore from '../../zustand/CalculatorStore';
 
 const MAX_PILLS = 5;
 
 export const HistoryPills: React.FC = () => {
   const { recentSports } = useRecentSportsStore();
-  const { theme } = useThemeStore();
+  const { theme, setTheme } = useThemeStore();
+  const { setAmount: setDeathAmount } = useDeathAmountStore();
+  const { setSport } = useSportStore();
+
   const lastDone: SportRow[] = useMemo(() => {
     if (recentSports === null) {
       return [];
@@ -38,12 +44,24 @@ export const HistoryPills: React.FC = () => {
     return sports;
   }, [recentSports]);
 
+  const handleChipClick = (sportRow: SportRow) => {
+    // Handle chip click event
+    setTheme(sportRow.game as keyof CustomTheme);
+    const currentSport = useSportStore.getState().currentSport;
+    setSport({ ...currentSport, sport: sportRow.kind, sport_multiplier: null });
+    const calculator = useCalculatorStore.getState().calculator;
+    setDeathAmount(
+      calculator.calculate_deaths(sportRow.kind, sportRow.game, sportRow.amount)
+    );
+  };
+
   return (
     <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
       {lastDone.map((sportRow, index) => (
         <Chip
           key={index}
           label={`${sportRow.amount} @ ${sportRow.game}`}
+          onClick={() => handleChipClick(sportRow)}
           avatar={
             <img
               src={sportIconMap[String(sportRow.kind)]}
