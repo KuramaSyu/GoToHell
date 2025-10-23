@@ -135,6 +135,11 @@ export class DefaultSportsCalculator implements SportsCalculator {
   calculate_amount(sport: string, game: string, deaths: number): number {
     return Math.round(this.get(sport, game) * deaths);
   }
+
+  calculate_deaths(sport: string, game: string, amount: number): number {
+    return amount / this.get(sport, game);
+  }
+
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
     const text_color = lighten(theme.palette.muted.main, 0.5);
