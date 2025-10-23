@@ -562,6 +562,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     }
     return result;
   }
+
   calculate_amount(sport: string, game: string, deaths: number): number {
     const safeDeaths =
       typeof deaths === 'number' && !isNaN(deaths) ? deaths : 0;
@@ -572,6 +573,20 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
       );
     }
     return this.decorated.calculate_amount(sport, game, safeDeaths);
+  }
+
+  calculate_deaths(sport: string, game: string, amount: number): number {
+    if (sport == 'plank') {
+      // reverse the calculation for deaths
+      const strength_factor = this.strength_factor(10, game, sport);
+      const game_base = this.get_game_base(game);
+      const multiplier = this.get_multiplier(sport, game)?.multiplier ?? 1;
+      return (
+        (Math.exp((amount * Math.log(1.75)) / strength_factor) - 1) /
+        (game_base * multiplier)
+      );
+    }
+    return this.decorated.calculate_deaths(sport, game, amount);
   }
 
   make_box(sport: string, game: string, deaths: number): ReactNode | null {
