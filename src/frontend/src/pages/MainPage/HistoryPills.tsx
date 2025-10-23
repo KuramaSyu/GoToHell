@@ -17,6 +17,7 @@ import { isDarkColored } from '../../utils/blendWithContrast';
 import { useDeathAmountStore } from './NumberSlider';
 import { useSportStore } from '../../useSportStore';
 import useCalculatorStore from '../../zustand/CalculatorStore';
+import { useUserStore } from '../../userStore';
 
 const MAX_PILLS = 5;
 
@@ -26,12 +27,21 @@ export const HistoryPills: React.FC = () => {
   const { setAmount: setDeathAmount } = useDeathAmountStore();
   const { setSport } = useSportStore();
 
-  const lastDone: SportRow[] = useMemo(() => {
+  const usersLatestSportRecords: SportRow[] = useMemo(() => {
+    // on mobile these are currently not updated - only fetched
+    // once which is theoretically enough. Updates for this
+    // component is not really worth the amount of REST-requests
+    // which are normally done each 30s within the timeline
     if (recentSports === null) {
       return [];
     }
+
+    const user = useUserStore.getState().user;
     var sports: SportRow[] = [];
     for (const sport of recentSports.data.toReversed()) {
+      if (sport.user_id !== user?.id) {
+        continue;
+      }
       const sportRow = new SportRow(sport.kind, sport.game, sport.amount);
       const isContained = sports.includes(sportRow);
       if (!isContained) {
@@ -57,9 +67,9 @@ export const HistoryPills: React.FC = () => {
 
   return (
     <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
-      {lastDone.map((sportRow, index) => (
+      {usersLatestSportRecords.map((sportRow, index) => (
         <Chip
-          key={index}
+          key={`history-pill-${sportRow.kind}-${sportRow.game}-${sportRow.amount}`}
           label={`${sportRow.amount} @ ${sportRow.game}`}
           onClick={() => handleChipClick(sportRow)}
           avatar={
