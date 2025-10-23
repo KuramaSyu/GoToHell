@@ -44,6 +44,17 @@ export interface SportsCalculator {
   calculate_amount(sport: string, game: string, deaths: number): number;
 
   /**
+   * Calculates the required deaths to match the given amount. More or less
+   * a reversed `calculate_amount`
+   *
+   * @param sport - The name of the sport.
+   * @param game - The name of the game.
+   * @param amount - The exercise amount
+   * @returns The calculated amount of exercises.
+   */
+  calculate_deaths(sport: string, game: string, amount: number): number;
+
+  /**
    * Generates a ReactNode containing a LaTeX box that visually represents the calculation
    * performed by `calculate_amount()`.
    *
