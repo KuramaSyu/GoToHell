@@ -19,7 +19,7 @@ import { useSportStore } from '../../useSportStore';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useUserStore } from '../../userStore';
 
-const MAX_PILLS = 5;
+const MAX_PILLS = 4;
 
 export const HistoryPills: React.FC = () => {
   const { recentSports } = useRecentSportsStore();
@@ -54,6 +54,21 @@ export const HistoryPills: React.FC = () => {
     return sports;
   }, [recentSports]);
 
+  const SportRowMatchesCurrentSettings = (sportRow: SportRow): boolean => {
+    const currentSport = useSportStore.getState().currentSport;
+    const calculator = useCalculatorStore.getState().calculator;
+    const amount = calculator.calculate_amount(
+      sportRow.kind,
+      sportRow.game,
+      useDeathAmountStore.getState().amount
+    );
+    return (
+      sportRow.kind === currentSport.sport &&
+      sportRow.game === currentSport.game &&
+      sportRow.amount === amount
+    );
+  };
+
   const handleChipClick = (sportRow: SportRow) => {
     // Handle chip click event
     setTheme(sportRow.game as keyof CustomTheme);
@@ -72,6 +87,9 @@ export const HistoryPills: React.FC = () => {
           key={`history-pill-${sportRow.kind}-${sportRow.game}-${sportRow.amount}`}
           label={`${sportRow.amount} @ ${sportRow.game}`}
           onClick={() => handleChipClick(sportRow)}
+          color={
+            SportRowMatchesCurrentSettings(sportRow) ? 'primary' : 'default'
+          }
           avatar={
             <img
               src={sportIconMap[String(sportRow.kind)]}
@@ -79,7 +97,8 @@ export const HistoryPills: React.FC = () => {
               width={24}
               height={24}
               style={{
-                filter: isDarkColored(theme, null)
+                backgroundColor: 'transparent',
+                filter: isDarkColored(theme, theme.palette.secondary.main)
                   ? 'brightness(0) invert(0.8)'
                   : 'none',
               }}
