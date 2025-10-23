@@ -78,8 +78,14 @@ describe('SportCalculator', () => {
   it('calculates bare metal', () => {
     expect(calc.calculate_amount('push-up', 'league', 5)).toBe(60); // 3 * 4 * 5 = 60
   });
+  it('calculates the deaths from amount', () => {
+    expect(calc.calculate_deaths('push-up', 'league', 60)).toBe(5); // 60 / (3 * 4) = 5
+  });
   it('calculates pubg by using PUBG-push-up override', () => {
     expect(calc.calculate_amount('push-up', 'pubg', 5)).toBe(30); // 6 * 5 = 30
+  });
+  it('calcuates pubg deaths by using PUBG-push-up override', () => {
+    expect(calc.calculate_deaths('push-up', 'pubg', 30)).toBe(5); // 30 / 6 = 5
   });
 
   // set gobal multiplier to 3
@@ -94,7 +100,9 @@ describe('SportCalculator', () => {
     calc = buildDecoratorStack();
     expect(calc.calculate_amount('leg-raises', 'pubg', 5)).toBe(30); // 2 (pubg-legraises) * 3 (multiplier) * 5 = 30
   });
-
+  it('calculates the deaths from amount for pubg using the PUBG-leg-raise override and the global multiplier', () => {
+    expect(calc.calculate_deaths('leg-raises', 'pubg', 30)).toBe(5); // 30 / (2 * 3) = 5
+  });
   var strength_factor = 1;
   it('1.1 calculate strength factor for plank', () => {
     // at 10 deaths and game base 1, the result should be plank.seconds
@@ -116,5 +124,17 @@ describe('SportCalculator', () => {
 
     let result = Math.round(strength_factor * log_calculation);
     expect(calc.calculate_amount('plank', 'league', deaths)).toBe(result);
+  });
+  it('1.3 calculates league plank deaths by using the given amount with plank decorator and global multiplier', () => {
+    var deaths = 12;
+    var multiplier = 3;
+    var game_base = 3;
+    let log_calculation =
+      Math.log(1 + deaths * multiplier * game_base) / Math.log(1.75);
+
+    let amount = Math.round(strength_factor * log_calculation);
+    expect(Math.round(calc.calculate_deaths('plank', 'league', amount))).toBe(
+      deaths
+    );
   });
 });
