@@ -84,7 +84,7 @@ export const HistoryPills: React.FC = () => {
     <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
       {usersLatestSportRecords.map((sportRow, index) => (
         <Chip
-          key={`history-pill-${sportRow.kind}-${sportRow.game}-${sportRow.amount}`}
+          key={index}
           label={`${sportRow.amount} @ ${sportRow.game}`}
           onClick={() => handleChipClick(sportRow)}
           color={
