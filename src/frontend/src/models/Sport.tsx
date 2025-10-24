@@ -11,6 +11,18 @@ class SportRow {
     this.amount = amount;
   }
 
+  equals(other: SportRow): boolean {
+    return (
+      this.kind === other.kind &&
+      this.game === other.game &&
+      this.amount === other.amount
+    );
+  }
+
+  hash(): string {
+    return `${this.kind};${this.game};${this.amount}`;
+  }
+
   toJson(): string {
     const rounded = {
       ...this,
