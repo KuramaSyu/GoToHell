@@ -18,6 +18,7 @@ import { useDeathAmountStore } from './NumberSlider';
 import { useSportStore } from '../../useSportStore';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useUserStore } from '../../userStore';
+import { useSportResponseStore } from '../../zustand/sportResponseStore';
 
 const MAX_PILLS = 4;
 
@@ -26,6 +27,7 @@ export const HistoryPills: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
   const { setAmount: setDeathAmount } = useDeathAmountStore();
   const { setSport } = useSportStore();
+  const { getSportMultiplier } = useSportResponseStore();
 
   const usersLatestSportRecords: SportRow[] = useMemo(() => {
     // on mobile these are currently not updated - only fetched
@@ -78,7 +80,12 @@ export const HistoryPills: React.FC = () => {
     // Handle chip click event
     setTheme(sportRow.game as keyof CustomTheme);
     const currentSport = useSportStore.getState().currentSport;
-    setSport({ ...currentSport, sport: sportRow.kind, sport_multiplier: null });
+    const multiplier = getSportMultiplier(sportRow.kind);
+    setSport({
+      ...currentSport,
+      sport: sportRow.kind,
+      sport_multiplier: multiplier.multiplier,
+    });
     const calculator = useCalculatorStore.getState().calculator;
     setDeathAmount(
       calculator.calculate_deaths(sportRow.kind, sportRow.game, sportRow.amount)
