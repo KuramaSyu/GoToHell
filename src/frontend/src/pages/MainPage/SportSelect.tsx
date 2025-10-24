@@ -51,6 +51,7 @@ const getImageProps = (isSelected: boolean, theme: CustomTheme) => {
       : 'none',
   };
 };
+
 /**
  * builds up the Decorator Stack, which is used to calculate the amount of exercies
  * and display it's latex.
@@ -101,7 +102,7 @@ export const buildDecoratorStack = (
 export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
-  const { sportResponse } = useSportResponseStore();
+  const { sportResponse, getSportMultiplier } = useSportResponseStore();
   const { setCalculator } = useCalculatorStore();
   const { preferences, preferencesLoaded } = usePreferenceStore();
   const { usedMultiplier } = useUsedMultiplierStore();
@@ -125,12 +126,7 @@ export const SportSelector = () => {
 
     // Build the list of multipliers for the preferred sports.
     let sportPerferences = preferredSportNames.map((sport) => {
-      const multiplier: Multiplier = {
-        game: null,
-        multiplier: sports[sport] ?? 1,
-        sport: sport,
-      };
-      return multiplier;
+      return getSportMultiplier(sport);
     });
 
     if (
