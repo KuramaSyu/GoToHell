@@ -268,7 +268,7 @@ export class BaseSportsCalculatorDecorator implements SportsCalculator {
 /**
  * Adds a custom set multiplier to Latex and calculation.
  * Only per game and global (everything null) multipliers are supported.
- * Game specific multipliers were removed, since they are implemented in the OverrideSportDecorator
+ * Sport specific multipliers were removed, since they are implemented in the OverrideSportDecorator
  */
 export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
   multipliers: Multiplier[];
