@@ -37,21 +37,26 @@ export const HistoryPills: React.FC = () => {
     }
 
     const user = useUserStore.getState().user;
+
     var sports: SportRow[] = [];
+    // JS uses === (camparing by Address rather than value),
+    // so Set<SportRow> resulted in duplicates -- WTF
+    var seen = new Set<string>();
     for (const sport of recentSports.data.toReversed()) {
       if (sport.user_id !== user?.id) {
         continue;
       }
       const sportRow = new SportRow(sport.kind, sport.game, sport.amount);
-      const isContained = sports.includes(sportRow);
-      if (!isContained) {
+
+      if (!seen.has(sportRow.hash())) {
+        seen.add(sportRow.hash());
         sports.push(sportRow);
       }
       if (sports.length >= MAX_PILLS) {
         break;
       }
     }
-    return sports;
+    return Array.from(sports);
   }, [recentSports]);
 
   const SportRowMatchesCurrentSettings = (sportRow: SportRow): boolean => {
