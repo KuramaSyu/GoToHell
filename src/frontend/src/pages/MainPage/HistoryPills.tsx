@@ -76,9 +76,9 @@ export const HistoryPills: React.FC = () => {
     );
   };
 
-  const handleChipClick = (sportRow: SportRow) => {
+  const handleChipClick = async (sportRow: SportRow) => {
     // Handle chip click event
-    setTheme(sportRow.game as keyof CustomTheme);
+    await setTheme(sportRow.game as keyof CustomTheme);
     const currentSport = useSportStore.getState().currentSport;
     const multiplier = getSportMultiplier(sportRow.kind);
     setSport({
