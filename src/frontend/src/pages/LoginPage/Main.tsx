@@ -10,12 +10,14 @@ import React from 'react';
 import { LogoSvgComponent } from '../LoadingPage/Main';
 import { useMinSquareSize } from '../LoadingPage/minSquareSize';
 import { defaultTheme } from '../../zustand/defaultTheme';
+import { useLoadingStore } from '../../zustand/loadingStore';
 
 export const LoginPage: React.FC = () => {
   const { theme, setTheme } = useThemeStore();
   const [oldTheme, setOldTheme] = useState<string | null>();
   const { user } = useUserStore();
   const { isMobile } = useBreakpoint();
+  const {isLoading} = useLoadingStore();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const size = useMinSquareSize(containerRef);
 
@@ -28,7 +30,7 @@ export const LoginPage: React.FC = () => {
   }, [theme]);
 
   useEffect(() => {
-    if (oldTheme === null || oldTheme === undefined) return;
+    if (oldTheme === null || oldTheme === undefined || isLoading) return;
     return () => {
       console.log('set old theme');
       setTheme(oldTheme);
