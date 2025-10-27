@@ -65,11 +65,11 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
   setTheme: async (themeName: string) => {
     console.log(`set theme to ${themeName}`);
+    set({ themeName: themeName });
     const generatedTheme = await themeManager.generateTheme(themeName);
     if (generatedTheme) {
       set({
         theme: generatedTheme,
-        themeName: generatedTheme.custom.themeName,
         themeLongName: generatedTheme.custom.longName,
       });
     } else {
