@@ -135,6 +135,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       </Box>
       <TextField
         autoFocus
+        defaultValue={typed}
         variant="outlined"
         placeholder="Search..."
         onChange={handleInputChanged}
