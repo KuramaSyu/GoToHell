@@ -52,6 +52,7 @@ export const QuickActionMenu: React.FC = () => {
     immediate: (state) => state === 'leave' && open.open,
   });
 
+  // Calculate the minimum time until modal is allowed close
   function missingOpenTime(): number {
     if (!open.openedAt) return 0;
     const now = new Date();
