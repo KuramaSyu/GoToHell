@@ -43,6 +43,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
 
+  const handleInputChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setTyped(value);
+  };
+
   const filteredSearch: SearchEntry[] = useMemo(() => {
     if (typed === null) {
       return [];
@@ -129,10 +134,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         <SearchCardButton page={page} setPage={setPage} />
       </Box>
       <TextField
+        autoFocus
         variant="outlined"
         placeholder="Search..."
-        value={typed}
-        onChange={() => {}}
+        onChange={handleInputChanged}
         slotProps={{
           input: {
             startAdornment: (
