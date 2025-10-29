@@ -5,13 +5,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { KeyboardReturnTwoTone } from '@mui/icons-material';
 import { useDeathAmountStore } from '../NumberSlider';
 import { isNumeric } from '../../../utils/UserNumber';
 import { SearchModalProps } from './SearchModal';
 import { NumberCardButton } from './QuickActionEntries';
+import { handleInputChanged } from './Main';
 
 export const AmountModal: React.FC<SearchModalProps> = ({
   typed,
@@ -120,10 +121,13 @@ export const AmountModal: React.FC<SearchModalProps> = ({
         >
           {errorBox}
           <TextField
+            autoFocus
+            defaultValue={typed}
             variant="outlined"
             placeholder="Search..."
-            value={typed}
-            onChange={() => {}}
+            onChange={(event) => {
+              handleInputChanged(event, setTyped);
+            }}
             error={!isNumeric(typed)}
             slotProps={{
               input: {
