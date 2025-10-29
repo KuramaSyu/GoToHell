@@ -21,6 +21,27 @@ type OpenState = {
   openedAt?: Date;
 };
 
+/**
+ * Handles the input change event for the search text field, to
+ * set the typed value react state.
+ *
+ * @param event the react event which is given from mui input method
+ * @param setTyped function which accepts str | null to set the typed value
+ */
+export const handleInputChanged = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  setTyped: React.Dispatch<React.SetStateAction<string | null>>
+) => {
+  const value = event.target.value;
+  setTyped(value);
+};
+
+/**
+ * The main Component to display the Quick Action Menu Modal.
+ * This contains when opening 3 sub-modals: Set Game/Sport, Set Amount, Upload.
+ * Each sub-modal will be displayed within the main modal. Submodals can be triggered
+ * from keyboard input (alphanumeric -> sport/game, numeric -> amount, enter -> upload).
+ */
 export const QuickActionMenu: React.FC = () => {
   const MIN_OPEN_DURATION = 1000; // Minimum time the modal should stay open
   const [open, setOpen] = useState<OpenState>({ open: false });
