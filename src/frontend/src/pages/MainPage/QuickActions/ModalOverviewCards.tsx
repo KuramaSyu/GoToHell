@@ -3,7 +3,7 @@ import {
   NumberCardButton,
   SearchCardButton,
   UploadCardButton,
-  CardButtonProps,
+  QuickActionCardButtonProps,
 } from './QuickActionEntries';
 
 export enum ModalPages {
@@ -12,7 +12,10 @@ export enum ModalPages {
   AMOUNT_MODAL = 'AmountModal',
   UPLOAD_MODAL = 'UploadModal',
 }
-export const ModalOverview: React.FC<CardButtonProps> = ({ page, setPage }) => {
+export const ModalOverview: React.FC<QuickActionCardButtonProps> = ({
+  page,
+  setPage,
+}) => {
   return (
     <Box
       sx={{

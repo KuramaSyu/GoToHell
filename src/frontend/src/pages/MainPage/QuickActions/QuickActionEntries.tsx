@@ -6,11 +6,11 @@ import { useSportStore } from '../../../useSportStore';
 import { ICON_QICK_ACTION_SX, QuickActionEntry } from './QuickActionEntry';
 import { ModalPages } from './ModalOverviewCards';
 
-export interface CardButtonProps {
-  page: string;
-  setPage: React.Dispatch<React.SetStateAction<string>>;
+export interface QuickActionCardButtonProps {
+  page: string | ModalPages;
+  setPage: React.Dispatch<React.SetStateAction<ModalPages | string>>;
 }
-export const UploadCardButton: React.FC<CardButtonProps> = ({
+export const UploadCardButton: React.FC<QuickActionCardButtonProps> = ({
   page,
   setPage,
 }) => {
@@ -26,7 +26,7 @@ export const UploadCardButton: React.FC<CardButtonProps> = ({
   );
 };
 
-export const NumberCardButton: React.FC<CardButtonProps> = ({
+export const NumberCardButton: React.FC<QuickActionCardButtonProps> = ({
   page,
   setPage,
 }) => {
@@ -42,7 +42,7 @@ export const NumberCardButton: React.FC<CardButtonProps> = ({
   );
 };
 
-export const SearchCardButton: React.FC<CardButtonProps> = ({
+export const SearchCardButton: React.FC<QuickActionCardButtonProps> = ({
   page,
   setPage,
 }) => {
