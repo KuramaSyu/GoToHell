@@ -29,7 +29,7 @@ type OpenState = {
  * @param setTyped function which accepts str | null to set the typed value
  */
 export const handleInputChanged = (
-  event: React.ChangeEvent<HTMLInputElement>,
+  event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   setTyped: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
   const value = event.target.value;
@@ -47,11 +47,12 @@ export const QuickActionMenu: React.FC = () => {
   const [open, setOpen] = useState<OpenState>({ open: false });
   const [visible, setVisible] = useState(false);
   const { theme } = useThemeStore();
-  const [typed, SetTyped] = useState<string | null>(null);
-  const [page, setPage] = useState('overview');
+  const [typed, setTyped] = useState<string | null>(null);
+  const [page, setPage] = useState<ModalPages | string>(ModalPages.OVERVIEW);
   const { triggerUpload } = useUploadStore();
   const { preferences } = usePreferenceStore();
 
+  // transition to open/close modal with a slide in and out animation
   const transitions = useTransition(open.open, {
     from: { opacity: 0, transform: 'translateY(-50px) translateX(-50%)' },
     enter: { opacity: 1, transform: 'translateY(0px) translateX(-50%)' },
@@ -66,7 +67,7 @@ export const QuickActionMenu: React.FC = () => {
     onRest: () => {
       if (!open.open) {
         setVisible(false);
-        SetTyped(null);
+        setTyped(null);
       }
     },
     exitBeforeEnter: true,
@@ -78,12 +79,6 @@ export const QuickActionMenu: React.FC = () => {
     if (!open.openedAt) return 0;
     const now = new Date();
     return Math.max(now.getTime() - open.openedAt.getTime(), 0);
-  }
-
-  function isOpenForMinimumDuration(): boolean {
-    if (!open.openedAt) return true;
-    const elapsed = missingOpenTime();
-    return elapsed >= MIN_OPEN_DURATION;
   }
 
   /**
@@ -138,8 +133,8 @@ export const QuickActionMenu: React.FC = () => {
         setOpen((currentOpen) => {
           if (!currentOpen) {
             unfocusCurrentElement();
-            SetTyped(null); // Reset typed when opening
-            setPage('overview'); // Ensure starting page is overview
+            setTyped(null); // Reset typed when opening
+            setPage(ModalPages.OVERVIEW); // Ensure starting page is overview
           }
           return { open: !currentOpen.open, openedAt: new Date() };
         });
@@ -159,7 +154,7 @@ export const QuickActionMenu: React.FC = () => {
       }
 
       // Handle typing only if the modal is currently open
-      if (open.open) processTyping(e);
+      if (open.open && page === ModalPages.OVERVIEW) processTyping(e);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -187,13 +182,13 @@ export const QuickActionMenu: React.FC = () => {
   const processTyping = (e: KeyboardEvent) => {
     // Basic check for printable characters (length 1)
     if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      SetTyped((prev) => (prev ? prev + e.key : e.key));
+      setTyped((prev) => (prev ? prev + e.key : e.key));
     } else if (e.key === 'Backspace' && e.ctrlKey) {
       // Handle full delete
-      SetTyped(null);
+      setTyped(null);
     } else if (e.key === 'Backspace') {
       // Handle backspace
-      SetTyped((prev) => (prev ? prev.slice(0, -1) : null));
+      setTyped((prev) => (prev ? prev.slice(0, -1) : null));
     }
   };
   // change window when something was typed
@@ -241,7 +236,7 @@ export const QuickActionMenu: React.FC = () => {
   const overviewButton = (
     <Button
       variant="outlined"
-      onClick={() => setPage('overview')}
+      onClick={() => setPage(ModalPages.OVERVIEW)}
       sx={{
         display: 'flex',
         justifyContent: 'end',
@@ -379,7 +374,7 @@ export const QuickActionMenu: React.FC = () => {
                     <SearchModal
                       key="search"
                       typed={typed}
-                      setTyped={SetTyped}
+                      setTyped={setTyped}
                       page={page}
                       setPage={setPage}
                     />
@@ -387,7 +382,7 @@ export const QuickActionMenu: React.FC = () => {
                     <AmountModal
                       key="search"
                       typed={typed}
-                      setTyped={SetTyped}
+                      setTyped={setTyped}
                       page={page}
                       setPage={setPage}
                     />
@@ -395,7 +390,7 @@ export const QuickActionMenu: React.FC = () => {
                     <UploadModal
                       key="search"
                       typed={typed}
-                      setTyped={SetTyped}
+                      setTyped={setTyped}
                       page={page}
                       setPage={setPage}
                     />
