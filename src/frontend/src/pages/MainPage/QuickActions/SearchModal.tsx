@@ -11,19 +11,10 @@ import { useSportResponseStore } from '../../../zustand/sportResponseStore';
 import { animated, useSprings } from 'react-spring';
 import { useSportStore } from '../../../useSportStore';
 import { KeyboardReturnTwoTone } from '@mui/icons-material';
-import {
-  customThemes,
-  getThemeNames,
-  useThemeStore,
-} from '../../../zustand/useThemeStore';
+import { getThemeNames } from '../../../zustand/useThemeStore';
 import { SearchCardButton } from './QuickActionEntries';
 import Fuse from 'fuse.js';
 import { GameEntry, SearchEntry, SportEntry } from './SearchEntry';
-
-const gameFuse = new Fuse(customThemes, {
-  keys: ['name', 'longName'],
-  threshold: 0.5,
-});
 
 export const AnimatedBox = animated(Box);
 export interface SearchModalProps {
@@ -39,7 +30,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   setPage,
 }) => {
   const { sportResponse } = useSportResponseStore();
-  const { currentSport, setSport } = useSportStore();
   getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
 
@@ -91,7 +81,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
   const springs = useSprings(
     filteredSearch.length,
-    filteredSearch.map((_, index) => ({
+    filteredSearch.map((_, _index) => ({
       from: { opacity: 0, transform: 'scale(0.7)' },
       to: { opacity: 1, transform: 'scale(1)' },
 
