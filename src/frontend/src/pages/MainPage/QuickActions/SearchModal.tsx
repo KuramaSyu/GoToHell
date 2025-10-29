@@ -15,6 +15,7 @@ import { getThemeNames } from '../../../zustand/useThemeStore';
 import { SearchCardButton } from './QuickActionEntries';
 import Fuse from 'fuse.js';
 import { GameEntry, SearchEntry, SportEntry } from './SearchEntry';
+import { handleInputChanged } from './Main';
 
 export const AnimatedBox = animated(Box);
 export interface SearchModalProps {
@@ -32,11 +33,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const { sportResponse } = useSportResponseStore();
   getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
-
-  const handleInputChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setTyped(value);
-  };
 
   const filteredSearch: SearchEntry[] = useMemo(() => {
     if (typed === null) {
@@ -128,7 +124,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         defaultValue={typed}
         variant="outlined"
         placeholder="Search..."
-        onChange={handleInputChanged}
+        onChange={(event) => {
+          handleInputChanged(event, setTyped);
+        }}
         slotProps={{
           input: {
             startAdornment: (
