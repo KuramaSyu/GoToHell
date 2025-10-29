@@ -30,8 +30,12 @@ type OpenState = {
  */
 export const handleInputChanged = (
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  setTyped: React.Dispatch<React.SetStateAction<string | null>>
+  setTyped: React.Dispatch<React.SetStateAction<string | null>>,
+  page: string | ModalPages
 ) => {
+  if (page !== ModalPages.SEARCH_MODAL && page !== ModalPages.AMOUNT_MODAL) {
+    return;
+  }
   const value = event.target.value;
   setTyped(value);
 };
@@ -144,7 +148,7 @@ export const QuickActionMenu: React.FC = () => {
         unfocusCurrentElement();
         console.log(`Opening modal due to key: ${e.key}`);
         setOpen({ open: true, openedAt: new Date() });
-        processTyping(e);
+        processTyping(e, true);
       }
 
       if (e.key === 'Escape') {
@@ -154,7 +158,10 @@ export const QuickActionMenu: React.FC = () => {
       }
 
       // Handle typing only if the modal is currently open
-      if (open.open && page === ModalPages.OVERVIEW) processTyping(e);
+      if (open.open) {
+        console.log(`Processing typing in overview modal: ${e.key}`);
+        processTyping(e, true);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -179,10 +186,19 @@ export const QuickActionMenu: React.FC = () => {
     }
   }, [page, triggerUpload]);
 
-  const processTyping = (e: KeyboardEvent) => {
+  /**
+   *
+   * @param e react event
+   * @param replace whether to replace the current typed value with the new key. Otherwise extend the current value
+   */
+  const processTyping = (e: KeyboardEvent, replace: boolean) => {
     // Basic check for printable characters (length 1)
     if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      setTyped((prev) => (prev ? prev + e.key : e.key));
+      if (replace) {
+        setTyped(e.key);
+      } else {
+        setTyped((prev) => (prev ? prev + e.key : e.key));
+      }
     } else if (e.key === 'Backspace' && e.ctrlKey) {
       // Handle full delete
       setTyped(null);
@@ -193,7 +209,7 @@ export const QuickActionMenu: React.FC = () => {
   };
   // change window when something was typed
   useEffect(() => {
-    if (typed?.length ?? 0 > 0) {
+    if ((typed?.length ?? 0) > 0) {
       // something was typed -> either sport or amount modal
       if (isNumeric(typed![0]!)) {
         // first character is a number -> amount modal

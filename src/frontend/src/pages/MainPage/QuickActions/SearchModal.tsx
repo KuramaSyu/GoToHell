@@ -125,7 +125,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         variant="outlined"
         placeholder="Search..."
         onChange={(event) => {
-          handleInputChanged(event, setTyped);
+          handleInputChanged(event, setTyped, page);
         }}
         slotProps={{
           input: {

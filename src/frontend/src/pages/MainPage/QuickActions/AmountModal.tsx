@@ -126,7 +126,7 @@ export const AmountModal: React.FC<SearchModalProps> = ({
             variant="outlined"
             placeholder="Search..."
             onChange={(event) => {
-              handleInputChanged(event, setTyped);
+              handleInputChanged(event, setTyped, page);
             }}
             error={!isNumeric(typed)}
             slotProps={{
