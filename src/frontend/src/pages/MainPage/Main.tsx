@@ -121,7 +121,7 @@ const MainPage: React.FC = () => {
           paddingTop: user !== null ? '6px' : undefined,
         }}
       >
-        {user !== null ? (
+        {user !== null || isLoading ? (
           <>
             <AppBackground></AppBackground>
 
@@ -131,7 +131,10 @@ const MainPage: React.FC = () => {
             </Box>
           </>
         ) : (
-          <LoginPage></LoginPage>
+          <>
+            {console.log('render login page')}
+            <LoginPage></LoginPage>
+          </>
         )}
       </Box>
     </ThemeProvider>
