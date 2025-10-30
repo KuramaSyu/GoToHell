@@ -180,7 +180,7 @@ export const LoadingPage: React.FC = () => {
     }, 0);
   }, []);
 
-  // set isLoading to true, when everthing is initialized
+  // set isLoading to false, when everthing is initialized
   useEffect(() => {
     const allLoaded = Array.from(loadingMap.values())
       .map(
@@ -239,7 +239,7 @@ export const LoadingPage: React.FC = () => {
       // load friends
       startTime = Date.now();
       try {
-        const friends = await new ApiRequirementsBuilder()
+        const _friends = await new ApiRequirementsBuilder()
           .add(ApiRequirement.Friends)
           .fetchIfNeeded();
         setLoadingMap((prev) => {
@@ -265,7 +265,7 @@ export const LoadingPage: React.FC = () => {
 
       // load streaks, history, big numbers, settings, overdue deaths
       startTime = Date.now();
-      const data = await new ApiRequirementsBuilder()
+      const _data = await new ApiRequirementsBuilder()
         .add(ApiRequirement.AllStreaks)
         .add(ApiRequirement.AllRecentSports)
         .add(ApiRequirement.TotalScore)
