@@ -83,6 +83,9 @@ const MainPage: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {/* Loading Animation for Loading Page
+      which is as long visible as "overlay" as
+      it needs to fetch all resources via REST. */}
       <AnimatePresence initial={false}>
         {isLoading && (
           <motion.div
@@ -111,14 +114,15 @@ const MainPage: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <QuickActionMenu></QuickActionMenu>
+
+      {/* Box for either the Main App or Login Page, depending on user state */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          height: '100%', // Instead of 100vh, it now respects its parent’s height
+          height: '100%',
           overflow: 'hidden', // Prevents overflow
-          paddingTop: user !== null ? '6px' : undefined,
+          paddingTop: user !== null && !isMobile ? '6px' : undefined,
         }}
       >
         {user !== null || isLoading ? (
@@ -137,6 +141,7 @@ const MainPage: React.FC = () => {
           </>
         )}
       </Box>
+      <QuickActionMenu></QuickActionMenu>
     </ThemeProvider>
   );
 };
