@@ -52,6 +52,9 @@ const MainPage: React.FC = () => {
     }
   }, [user]);
 
+  // Box for the Desktop-Timeline on the right Side.
+  // Within the box is the timeline wrapper which shows either the
+  // streak display or the actual timeline.
   const TimelineBox =
     isMobile || isLoading ? null : (
       <Box
