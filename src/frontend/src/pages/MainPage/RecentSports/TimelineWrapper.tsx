@@ -6,8 +6,10 @@ import { SportsTimeline } from './Timeline';
 export const TimelineWrapper: React.FC = () => {
   // progress from 0 to 100
   const [progress, setProgress] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
 
+  // constant ticking timer to make a smooth
+  // progress animation to show, when history
+  // timeline will be displayed instead of streak display
   useEffect(() => {
     const duration = 5000;
     const interval = 50;
