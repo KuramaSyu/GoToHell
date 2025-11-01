@@ -1,5 +1,3 @@
-import { Timedelta } from './Timedelta';
-
 // Small wrapper to make interval calculation for timers
 // a bit easier
 export class DurationCalculator {
