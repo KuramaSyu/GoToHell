@@ -24,21 +24,27 @@ export class DurationCalculator {
 
   // incement step by one
   next_step(): void {
-    if (this.current_step.n >= this.steps - 1) {
+    if (this.current_step.get_n() >= this.steps) {
       throw new Error('cant increment to next step. Already reached last step');
     }
-    this.current_step = new Step(this.current_step.n + 1, this);
+    // get_n is the number not starting from 0 e.g. already incremented
+    this.current_step = new Step(this.current_step.get_n(), this);
   }
 }
 
 // Represents one (most likely `currnent`) step for
 // Duration calculator
 export class Step {
-  n: number;
+  private n: number;
   duration_calculator: DurationCalculator;
   constructor(n: number, duration_calculator: DurationCalculator) {
     this.n = n;
     this.duration_calculator = duration_calculator;
+  }
+
+  // starting from 1
+  get_n() {
+    return this.n + 1;
   }
 
   // calculates the percentage of this step compared to the
