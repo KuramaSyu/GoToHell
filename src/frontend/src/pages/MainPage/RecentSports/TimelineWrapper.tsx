@@ -19,20 +19,18 @@ export const TimelineWrapper: React.FC = () => {
     // timer which increases
     const timer = window.setInterval(() => {
       setProgress((prevProgress) => {
-        if (progress.is_completed()) {
+        if (prevProgress.is_completed()) {
           clearInterval(timer);
           return prevProgress;
         }
-        // Create a new instance to trigger a re-render
+        // Clone object to get a new reference,
+        // so React detects the state change
         const newProgress = Object.assign(
           Object.create(Object.getPrototypeOf(prevProgress)),
           prevProgress
         );
+        // actually increment step
         newProgress.next_step();
-        console.log(
-          newProgress.current_step.get_percentage(),
-          newProgress.is_completed()
-        );
         return newProgress;
       });
     }, progress.get_step_ms());
