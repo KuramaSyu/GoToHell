@@ -24,7 +24,8 @@ export class DurationCalculator {
   /** increments step by one */
   next_step(): void {
     if (this.current_step.get_n() >= this.steps) {
-      throw new Error('cant increment to next step. Already reached last step');
+      return;
+      //throw new Error('cant increment to next step. Already reached last step');
     }
     // get_n is the number not starting from 0 e.g. already incremented
     this.current_step = new Step(this.current_step.get_n(), this);
