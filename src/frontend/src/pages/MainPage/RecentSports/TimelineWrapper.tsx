@@ -2,41 +2,50 @@ import { Box, LinearProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { StreakTimeline } from './StreakTimeline';
 import { SportsTimeline } from './Timeline';
+import { DurationCalculator } from '../../../utils/durationCalculator';
 
+const TOTAL_DURATION_MS = 5000;
+const WITHIN_X_STEPS = 25;
 export const TimelineWrapper: React.FC = () => {
   // progress from 0 to 100
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(
+    new DurationCalculator(TOTAL_DURATION_MS, WITHIN_X_STEPS)
+  );
 
   // constant ticking timer to make a smooth
   // progress animation to show, when history
   // timeline will be displayed instead of streak display
   useEffect(() => {
-    const duration = 5000;
-    const interval = 50;
-    const steps = duration / interval;
-    const increment = 100 / steps;
-
     // timer which increases
     const timer = window.setInterval(() => {
-      setProgress((prev) => {
-        const next = prev + increment;
-        if (next >= 100) {
+      setProgress((prevProgress) => {
+        if (progress.is_completed()) {
           clearInterval(timer);
-          return 100;
+          return prevProgress;
         }
-        return next;
+        // Create a new instance to trigger a re-render
+        const newProgress = Object.assign(
+          Object.create(Object.getPrototypeOf(prevProgress)),
+          prevProgress
+        );
+        newProgress.next_step();
+        console.log(
+          newProgress.current_step.get_percentage(),
+          newProgress.is_completed()
+        );
+        return newProgress;
       });
-    }, interval);
+    }, progress.get_step_ms());
 
     return () => clearInterval(timer);
   }, []);
   return (
     <Box>
-      {progress < 100 ? (
+      {!progress.is_completed() ? (
         <Box>
           <LinearProgress
             variant="determinate"
-            value={progress}
+            value={progress.current_step.get_percentage()}
             sx={{ height: 10 }}
           ></LinearProgress>
           <StreakTimeline></StreakTimeline>
