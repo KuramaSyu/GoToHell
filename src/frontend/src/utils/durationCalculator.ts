@@ -1,5 +1,4 @@
-// Small wrapper to make interval calculation for timers
-// a bit easier
+/** Small wrapper to make interval calculation for timers a bit easier */
 export class DurationCalculator {
   total_ms: number;
   steps: number;
@@ -11,18 +10,18 @@ export class DurationCalculator {
     this.current_step = new Step(0, this);
   }
 
-  // The duration of one step/interval in ms
+  /** The duration of one step/interval in ms */
   get_step_ms(): number {
     return this.total_ms / this.steps;
   }
 
-  // returns the progress
-  // percentage (0 - 1) of one step.
+  /** returns the progress
+  percentage (0 - 100) of one step. */
   get_step_percentage(): number {
-    return this.steps / 100;
+    return 100 / this.steps;
   }
 
-  // incement step by one
+  /** increments step by one */
   next_step(): void {
     if (this.current_step.get_n() >= this.steps) {
       throw new Error('cant increment to next step. Already reached last step');
@@ -30,10 +29,15 @@ export class DurationCalculator {
     // get_n is the number not starting from 0 e.g. already incremented
     this.current_step = new Step(this.current_step.get_n(), this);
   }
+
+  /** whether all steps are completed */
+  is_completed(): boolean {
+    return this.current_step.get_n() >= this.steps;
+  }
 }
 
-// Represents one (most likely `currnent`) step for
-// Duration calculator
+/** Represents one (most likely `current`) step for
+Duration calculator */
 export class Step {
   private n: number;
   duration_calculator: DurationCalculator;
@@ -47,9 +51,9 @@ export class Step {
     return this.n + 1;
   }
 
-  // calculates the percentage of this step compared to the
-  // total from the DurationCalculator
+  /** calculates the percentage of this step compared to the
+  total from the DurationCalculator (0 - 100) */
   get_percentage(): number {
-    return this.duration_calculator.get_step_percentage() * (this.n + 1);
+    return this.duration_calculator.get_step_percentage() * this.get_n();
   }
 }
