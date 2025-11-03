@@ -16,4 +16,12 @@ describe('DurationCalculator', () => {
     expect(calc.current_step.get_n()).toBe(3);
     expect(calc.current_step.get_percentage().toPrecision(3)).toBe('30.0');
   });
+
+  it('detects completion correctly', () => {
+    const calc = new DurationCalculator(100, 10);
+    for (let i = 0; i < 10; i++) {
+      calc.next_step();
+    }
+    expect(calc.is_completed()).toBe(true);
+  });
 });
