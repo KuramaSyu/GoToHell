@@ -20,6 +20,7 @@ describe('DurationCalculator', () => {
   it('detects completion correctly', () => {
     const calc = new DurationCalculator(100, 10);
     for (let i = 0; i < 10; i++) {
+      expect(calc.is_completed()).toBe(false);
       calc.next_step();
     }
     expect(calc.is_completed()).toBe(true);
