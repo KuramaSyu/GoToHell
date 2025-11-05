@@ -32,15 +32,6 @@ import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Fade timeout={1000} ref={ref} {...props} />;
-});
-
 export interface SportDialogProps {
   selectedSport: UserSport | null;
   setSelectedSport: React.Dispatch<React.SetStateAction<UserSport | null>>;
