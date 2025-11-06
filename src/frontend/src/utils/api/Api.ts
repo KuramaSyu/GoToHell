@@ -85,10 +85,13 @@ export class UserApi implements UserApiInterface {
     const response = await fetch(`${BACKEND_BASE}/api/auth/user`, {
       credentials: 'include',
     });
-
     if (response.ok) {
-      const userData: DiscordUser = await response.json();
-      setUser(new DiscordUserImpl(userData));
+      const userData: DiscordUser | null = await response.json().catch((e) => {
+        this.logError(`/api/auth/user`, e);
+        return null;
+      });
+      if (userData) setUser(new DiscordUserImpl(userData));
+
     } else {
       this.logError(`/api/auth/user`, response.json());
     }
