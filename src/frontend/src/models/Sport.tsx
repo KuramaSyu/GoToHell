@@ -42,6 +42,8 @@ class SportRow {
   }
 }
 
+
+// Used for API responses from /api/sports
 export interface SportScore {
   kind: string;
   amount: number;
