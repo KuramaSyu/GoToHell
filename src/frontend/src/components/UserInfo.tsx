@@ -1,21 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
-import DiscordLogin from './DiscordLogin';
 import Box from '@mui/material/Box';
-import { useThemeStore } from '../zustand/useThemeStore';
-import {
-  alpha,
-  Avatar,
-  Button,
-  CssBaseline,
-  Divider,
-  Drawer,
-  IconButton,
-  Slide,
-  SwipeableDrawer,
-} from '@mui/material';
+import { Avatar, Divider } from '@mui/material';
 
 import { useStreakStore } from '../zustand/StreakStore';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -23,9 +10,9 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
-import { useUsersStore, useUserStore } from '../userStore';
+import { useUserStore } from '../userStore';
 
-const UserInfo = () => {
+export const UserInfo = () => {
   const { user } = useUserStore();
   const { streak } = useStreakStore();
   useEffect(() => {
