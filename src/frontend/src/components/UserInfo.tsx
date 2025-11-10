@@ -11,9 +11,14 @@ import {
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
 import { useUserStore } from '../userStore';
+import { DiscordUser, DiscordUserImpl } from './DiscordLogin';
 
-export const UserInfo = () => {
-  const { user } = useUserStore();
+export interface UserInfoProps {
+  user: DiscordUser;
+}
+
+export const UserInfo = ({ user: discordUser }: UserInfoProps) => {
+  const user = new DiscordUserImpl(discordUser);
   const { streak } = useStreakStore();
   useEffect(() => {
     async function fetchStreak() {
