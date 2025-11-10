@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactElement } from 'react';
-import { alpha, Box, lighten } from '@mui/material';
+import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -21,6 +21,8 @@ import {
   ApiRequirementsBuilder,
 } from '../../../utils/api/ApiRequirementsBuilder';
 import { SportDialog } from './SportDialog';
+import { DiscordUserImpl } from '../../../components/DiscordLogin';
+import { UserInfo } from '../../../components/UserInfo';
 
 export interface UserSport {
   id: number;
@@ -46,6 +48,9 @@ export const SportsTimeline = () => {
   const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } =
     useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
+  const [selectedUser, setSelectedUser] = useState<DiscordUserImpl | null>(
+    null
+  );
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -213,10 +218,19 @@ export const SportsTimeline = () => {
       >
         {timelineItems}
       </Timeline>
-      <SportDialog
-        selectedSport={selectedSport}
-        setSelectedSport={setSelectedSport}
-      ></SportDialog>
+      {selectedSport != null ? (
+        <SportDialog
+          selectedSport={selectedSport}
+          setSelectedSport={setSelectedSport}
+        ></SportDialog>
+      ) : selectedUser != null ? (
+        <Dialog
+          open={selectedUser !== null}
+          onClose={() => setSelectedUser(null)}
+        >
+          <UserInfo user={selectedUser}></UserInfo>
+        </Dialog>
+      ) : null}
     </Box>
   );
 };
