@@ -99,6 +99,7 @@ export const SportsTimeline = () => {
     return () => clearInterval(interval);
   }, [users, ScoreRefreshTrigger, RecentSportsRefreshTrigger, user]);
 
+  // animation for timeline items
   const itemsToAnimate = recentSports?.data.toReversed() || [];
   const transition = useTransition(itemsToAnimate, {
     key: (sport) => sport.id,
@@ -118,9 +119,11 @@ export const SportsTimeline = () => {
     },
   });
 
+  // early returns
   if (!user || !usersLoaded) return <Box />;
   if (!recentSports || !recentSports.data) return <Box />;
 
+  // iterate each sport entry to build up the timeline items
   const timelineItems: ReactElement[] = transition((style, sport) => {
     if (sport === undefined) return null;
     const sportUser = users[sport.user_id];
@@ -198,6 +201,7 @@ export const SportsTimeline = () => {
     );
   });
 
+  // return timeline with previously built items
   return (
     <Box>
       <Timeline
