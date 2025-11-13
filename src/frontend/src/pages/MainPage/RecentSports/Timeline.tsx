@@ -23,6 +23,7 @@ import {
 import { SportDialog } from './SportDialog';
 import { DiscordUserImpl } from '../../../components/DiscordLogin';
 import { UserInfo } from '../../../components/UserInfo';
+import { SportUserDialogWrapper } from './SportUserDialogWrapper';
 
 export interface UserSport {
   id: number;
@@ -222,19 +223,12 @@ export const SportsTimeline = () => {
       >
         {timelineItems}
       </Timeline>
-      {selectedSport != null ? (
-        <SportDialog
+      {selectedSport !== null && (
+        <SportUserDialogWrapper
           selectedSport={selectedSport}
           setSelectedSport={setSelectedSport}
-        ></SportDialog>
-      ) : selectedUser != null ? (
-        <Dialog
-          open={selectedUser !== null}
-          onClose={() => setSelectedUser(null)}
-        >
-          <UserInfo user={selectedUser}></UserInfo>
-        </Dialog>
-      ) : null}
+        ></SportUserDialogWrapper>
+      )}
     </Box>
   );
 };
