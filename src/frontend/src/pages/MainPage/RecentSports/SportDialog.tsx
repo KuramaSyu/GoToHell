@@ -100,22 +100,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   return (
     <>
       {selectedSport !== null && user !== null && (
-        <Dialog
-          open={selectedSport !== null}
-          onClose={() => setSelectedSport(null)}
-          fullScreen={isMobile}
-          fullWidth
-          maxWidth="sm"
-          slotProps={{
-            paper: {
-              sx: {
-                backdropFilter: 'blur(8px)',
-                backgroundColor: alpha(theme.palette.primary.dark, 0.7),
-                borderRadius: 8,
-              },
-            },
-          }}
-        >
+        <>
           <DialogTitle>
             <Box
               sx={{
@@ -256,7 +241,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
               Close
             </Button>
           </DialogActions>
-        </Dialog>
+        </>
       )}
     </>
   );
