@@ -14,21 +14,28 @@ import { useUserStore } from '../userStore';
 import { DiscordUser, DiscordUserImpl } from './DiscordLogin';
 import Tooltip from '@mui/material/Tooltip';
 import { RowingRounded } from '@mui/icons-material';
+import { log } from 'console';
 export interface UserInfoProps {
   user: DiscordUser;
 }
 
 export const UserInfo = ({ user: discordUser }: UserInfoProps) => {
   const user = new DiscordUserImpl(discordUser);
-  const { streak } = useStreakStore();
+  const { user: loggedInUser } = useUserStore();
   useEffect(() => {
-    async function fetchStreak() {
-      await new ApiRequirementsBuilder()
-        .add(ApiRequirement.Streak)
-        .forceFetch();
+    async function fetchStreaks() {
+      if (user.id === loggedInUser?.id) {
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.Streak)
+          .forceFetch();
+      } else {
+        await new ApiRequirementsBuilder()
+          .add(ApiRequirement.AllStreaks)
+          .fetchIfNeeded(); // only fetch once out of performance reasons
+      }
     }
-    fetchStreak();
-  });
+    fetchStreaks();
+  }, []);
 
   return (
     <Box
@@ -80,7 +87,7 @@ export const UserInfo = ({ user: discordUser }: UserInfoProps) => {
                 alignContent: 'center',
               }}
             >
-              <Typography>{streak} days</Typography>
+              <Typography>{user.streak} days</Typography>
             </Box>
           </Box>
         </Tooltip>
