@@ -10,7 +10,7 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
-import { useUserStore } from '../userStore';
+import { useUsersStore, useUserStore } from '../userStore';
 import { DiscordUser, DiscordUserImpl } from './DiscordLogin';
 import Tooltip from '@mui/material/Tooltip';
 import { RowingRounded } from '@mui/icons-material';
@@ -20,8 +20,12 @@ export interface UserInfoProps {
 }
 
 export const UserInfo = ({ user: discordUser }: UserInfoProps) => {
-  const user = new DiscordUserImpl(discordUser);
   const { user: loggedInUser } = useUserStore();
+  const [user, setUser] = React.useState<DiscordUserImpl>(
+    new DiscordUserImpl(discordUser)
+  );
+
+  // fetch user streaks on mount
   useEffect(() => {
     async function fetchStreaks() {
       if (user.id === loggedInUser?.id) {
@@ -35,6 +39,7 @@ export const UserInfo = ({ user: discordUser }: UserInfoProps) => {
       }
     }
     fetchStreaks();
+    setUser((prevUser) => useUsersStore.getState().users[prevUser.id]!);
   }, []);
 
   return (
@@ -87,7 +92,7 @@ export const UserInfo = ({ user: discordUser }: UserInfoProps) => {
                 alignContent: 'center',
               }}
             >
-              <Typography>{user.streak} days</Typography>
+              <Typography>{user.streak ?? 0} days</Typography>
             </Box>
           </Box>
         </Tooltip>
