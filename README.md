@@ -57,6 +57,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 #### Fixes
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
+- [ ] Modal adds value twice to input when adding a sport and directly after a number / other direction
 
 #### QoL
 - [ ] Settings Menu v2 structured like immichs settings
