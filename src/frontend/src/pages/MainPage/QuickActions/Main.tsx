@@ -88,7 +88,7 @@ export const QuickActionMenu: React.FC = () => {
   /**
    * Un-focuses an element, if one is active. This is mainly used,
    * to prevent EnterKey from beeing registered from multiple components,
-   * when modal is active
+   * when modal is active (e.g. Game Select)
    */
   const unfocusCurrentElement = () => {
     if (document.activeElement instanceof HTMLElement) {
