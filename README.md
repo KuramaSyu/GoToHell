@@ -33,17 +33,15 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [x] Overdue Deaths
 
 #### Ongoing
-
 - [ ] move API calls to utils/API
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
 - [ ] REST documentation:
-  - [x] Sports
-  - [x] sports/total
   - [ ] Friends
-  - [x] Streak
-  - [x] OverdueDeaths
-- [x] Show-All-Sport-Selection
+- [ ] Timeline page:
+  - [ ] adjust timeline for mobile (improve modal spacing and use 100% width for timeline items)
+  - [ ] add a button, to show the streak overview
+  - [ ] rename timeline page to timeline for both desktop and mobile. Then add background and API requirements
 
 #### Features
 
@@ -58,6 +56,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
 - [ ] Modal adds value twice to input when adding a sport and directly after a number / other direction
+- [ ] UploadAmount: unit is missing. Make a class for each sport which takes number as input and returns the number and the unit as output
 
 #### QoL
 - [ ] Settings Menu v2 structured like immichs settings
