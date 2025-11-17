@@ -31,6 +31,8 @@ import { ThemeProvider } from '@emotion/react';
 import { useUserStore } from '../userStore';
 import { useStreakStore } from '../zustand/StreakStore';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import HistoryIcon from '@mui/icons-material/History';
+
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
@@ -195,6 +197,12 @@ const TopBar: React.FC = () => {
                   width: '70%',
                 }}
               >
+                <Button
+                  variant={containedIfSelected(Pages.HISTORY)}
+                  onClick={() => navigate(Pages.HISTORY)}
+                >
+                  <HistoryIcon />
+                </Button>
                 <Button
                   variant={containedIfSelected(Pages.HOME)}
                   onClick={() => navigate(Pages.HOME)}
