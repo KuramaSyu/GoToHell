@@ -1,7 +1,8 @@
 import { useThemeStore } from '../../zustand/useThemeStore';
+import { SportsTimeline } from '../MainPage/RecentSports/Timeline';
 
-export const MobileTimepline: React.FC = () => {
+export const MobileTimeline: React.FC = () => {
   const { theme } = useThemeStore();
 
-  return null;
+  return <SportsTimeline />;
 };
