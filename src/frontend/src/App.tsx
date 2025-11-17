@@ -15,6 +15,9 @@ import { useLoadingStore } from './zustand/loadingStore';
 import { useUserStore } from './userStore';
 import SettingsPage from './pages/SettingsV2/main';
 import { useBreakpoint } from './hooks/useBreakpoint';
+import { MobileTimeline } from './pages/MobileTimeline/Main';
+import { SportsTimeline } from './pages/MainPage/RecentSports/Timeline';
+import { TimelineWrapper } from './pages/MainPage/RecentSports/TimelineWrapper';
 // Import other components as needed
 
 const App: React.FC = () => {
@@ -59,6 +62,7 @@ const App: React.FC = () => {
               <Route path="settings" element={<Settings />} />
               <Route path="/docs/*" element={<SwaggerDocs />} />
               <Route path="/settings-v2" element={<SettingsPage />} />
+              <Route path="/history" element={<TimelineWrapper />} />
             </Routes>
           </Box>
 
