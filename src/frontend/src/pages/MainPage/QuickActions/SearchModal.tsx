@@ -5,7 +5,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useSportResponseStore } from '../../../zustand/sportResponseStore';
 import { animated, useSprings } from 'react-spring';
@@ -18,12 +18,17 @@ import { GameEntry, SearchEntry, SportEntry } from './SearchEntry';
 import { handleInputChanged } from './Main';
 
 export const AnimatedBox = animated(Box);
+
 export interface SearchModalProps {
   typed: string | null;
   setTyped: React.Dispatch<React.SetStateAction<string | null>>;
   page: string;
   setPage: React.Dispatch<React.SetStateAction<string>>;
 }
+
+/**
+ * Sub Component of QuickActions which contains the textfield
+ */
 export const SearchModal: React.FC<SearchModalProps> = ({
   typed,
   setTyped,
@@ -31,6 +36,30 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   setPage,
 }) => {
   const { sportResponse } = useSportResponseStore();
+
+  // ref for the textfield to focus it as soon as
+  // inputLock switches to false
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // whether or not the input for the input field is locked.
+  // it's locked for the first 10ms as debounce time to prevent dup input
+  const [inputLocked, setInputLocked] = useState(true);
+
+  // effect to disable inputLock
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInputLocked(false);
+    }, 10); // 10ms debounce time
+
+    return () => clearTimeout(timer);
+  }, [inputLocked]);
+
+  useEffect(() => {
+    if (!inputLocked && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [inputLocked]);
+
   getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
 
@@ -120,10 +149,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         <SearchCardButton page={page} setPage={setPage} />
       </Box>
       <TextField
-        autoFocus
+        inputRef={inputRef}
         defaultValue={typed}
         variant="outlined"
         placeholder="Search..."
+        disabled={inputLocked}
         onChange={(event) => {
           handleInputChanged(event, setTyped, page);
         }}
