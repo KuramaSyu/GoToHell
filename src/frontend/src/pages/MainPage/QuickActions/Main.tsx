@@ -36,6 +36,7 @@ export const handleInputChanged = (
   if (page !== ModalPages.SEARCH_MODAL && page !== ModalPages.AMOUNT_MODAL) {
     return;
   }
+
   const value = event.target.value;
   setTyped(value);
 };
@@ -244,7 +245,7 @@ export const QuickActionMenu: React.FC = () => {
   const pageTransitions = useTransition(page, {
     from: { opacity: 0, transform: 'scale(0.7)' },
     enter: { opacity: 1, transform: 'scale(1)' },
-    // better without leave animation
+    // better without leave animation; otherwise animation looks broken
     config: (_item, _index, state) =>
       state === 'enter' ? { tension: 350, friction: 25 } : { duration: 150 },
   });
