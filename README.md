@@ -56,6 +56,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 - [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
 - [ ] Modal adds value twice to input when adding a sport and directly after a number / other direction
+  - [ ] Only use one InputBox for AmountModal and SearchModal. Always mount it in main view. Currently the textbox receives the input while it's fading out.
 - [ ] UploadAmount: unit is missing. Make a class for each sport which takes number as input and returns the number and the unit as output
 
 #### QoL
