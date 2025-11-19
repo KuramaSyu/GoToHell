@@ -8,6 +8,7 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
+import { Box } from '@mui/material';
 
 export const TimelinePageMainComponent: React.FC = () => {
   const { theme } = useThemeStore();
@@ -22,7 +23,9 @@ export const TimelinePageMainComponent: React.FC = () => {
   return (
     <>
       <AppBackground />
-      <TimelineWrapper />
+      <Box sx={{ height: '100%', overflowY: 'auto' }}>
+        <TimelineWrapper />
+      </Box>
     </>
   );
 };
