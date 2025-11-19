@@ -105,9 +105,9 @@ export const SportDialog: React.FC<SportDialogProps> = ({
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'row',
-                gap: 4,
-                alignItems: 'center',
+                flexDirection: isMobile ? 'column' : 'row',
+                gap: isMobile ? 1 : 4,
+                alignItems: isMobile ? 'flex-start' : 'center',
               }}
             >
               <Box
@@ -132,7 +132,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
 
                 {users[selectedSport!.user_id]?.username}
               </Box>
-              <Divider orientation="vertical" flexItem></Divider>
+              {!isMobile && <Divider orientation="vertical" flexItem></Divider>}
               <Box
                 sx={{
                   display: 'flex',
