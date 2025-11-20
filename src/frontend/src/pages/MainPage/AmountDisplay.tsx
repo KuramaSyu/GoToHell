@@ -145,13 +145,14 @@ export function getSportDescription(
   sport: string | undefined,
   computedValue: number
 ): string | undefined {
+  console.log('Getting sport description for', sport, computedValue);
   if (sport === 'plank') {
     const timedelta = new Timedelta(computedValue);
     const biggestUnit = timedelta.biggestUnit();
     return unitToString(biggestUnit);
   }
   if (sport === undefined) return;
-  return GameSelectionMap[sport];
+  return GameSelectionMap.get(sport);
 }
 
 export const AmountDisplay = () => {
@@ -214,7 +215,7 @@ export const AmountDisplay = () => {
         </Box>
         <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
           <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-            {getSportDescription(currentSport.sport, computedValue)}
+            {getSportDescription(currentSport.sport, computedValue) ?? 'test'}
           </Typography>
           <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
             to do now
