@@ -152,7 +152,7 @@ export function getSportDescription(
     return unitToString(biggestUnit);
   }
   if (sport === undefined) return;
-  return GameSelectionMap.get(sport);
+  return GameSelectionMap.get(sport) as string;
 }
 
 export const AmountDisplay = () => {
