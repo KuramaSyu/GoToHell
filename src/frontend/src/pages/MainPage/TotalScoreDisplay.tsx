@@ -13,13 +13,13 @@ import {
   AMOUNT_DISPLAY_CONTENT_BOX_SX,
   AMOUNT_DISPLAY_TITLE_SX,
   getDisplayComponent,
-  getSportDescription,
 } from './AmountDisplay';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
+import { getSportDescription } from '../../utils/descriptionProvider';
 
 // returns the score of the kind
 // game does not matter, since it's summed up

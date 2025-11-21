@@ -21,6 +21,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { PopNumber } from './PopNumber';
 import { styled } from '@mui/material';
 import { motion } from 'framer-motion';
+import { getSportDescription } from '../../utils/descriptionProvider';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
@@ -139,25 +140,6 @@ export function getDisplayComponent(
     default:
       return NumberDisplay;
   }
-}
-
-/**
- * @param sport the sport to get the description for
- * @param computedValue the value belonging to the sport. This is only used for plank (for second/minute/hour)
- * @returns description or the unit for the sport
- */
-export function getSportDescription(
-  sport: string | undefined,
-  computedValue: number
-): string | undefined {
-  console.log('Getting sport description for', sport, computedValue);
-  if (sport === 'plank') {
-    const timedelta = new Timedelta(computedValue);
-    const biggestUnit = timedelta.biggestUnit();
-    return unitToString(biggestUnit);
-  }
-  if (sport === undefined) return;
-  return GameSelectionMap.get(sport) as string;
 }
 
 export const AmountDisplay = () => {
