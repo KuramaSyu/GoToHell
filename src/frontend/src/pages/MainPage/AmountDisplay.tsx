@@ -141,6 +141,11 @@ export function getDisplayComponent(
   }
 }
 
+/**
+ * @param sport the sport to get the description for
+ * @param computedValue the value belonging to the sport. This is only used for plank (for second/minute/hour)
+ * @returns description or the unit for the sport
+ */
 export function getSportDescription(
   sport: string | undefined,
   computedValue: number
@@ -215,7 +220,7 @@ export const AmountDisplay = () => {
         </Box>
         <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
           <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-            {getSportDescription(currentSport.sport, computedValue) ?? 'test'}
+            {getSportDescription(currentSport.sport, computedValue)}
           </Typography>
           <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
             to do now
