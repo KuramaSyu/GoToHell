@@ -4,9 +4,17 @@ import { Timedelta, unitToString } from './Timedelta';
 interface SportDescriptionProvider {
   get_supported_sports(): string[];
   get_description(computedValue: number): string | undefined;
+  is_supported(sport: string): boolean;
 }
 
-class TimeDescriptionProvider implements SportDescriptionProvider {
+abstract class SportDescriptionProviderABC implements SportDescriptionProvider {
+  abstract get_supported_sports(): string[];
+  abstract get_description(computedValue: number): string | undefined;
+  is_supported(sport: string): boolean {
+    return this.get_supported_sports().includes(sport);
+  }
+}
+class TimeDescriptionProvider extends SportDescriptionProviderABC {
   get_supported_sports(): string[] {
     return ['plank'];
   }
@@ -27,8 +35,11 @@ export function getSportDescription(
   sport: string | undefined,
   computedValue: number
 ): string | undefined {
-  console.log('Getting sport description for', sport, computedValue);
-  if (sport === 'plank') {
+  let providers: SportDescriptionProvider[] = [new TimeDescriptionProvider()];
+  for (const provider of providers) {
+    if (sport !== undefined && provider.is_supported(sport)) {
+      return provider.get_description(computedValue);
+    }
   }
   if (sport === undefined) return;
   return GameSelectionMap.get(sport) as string;
