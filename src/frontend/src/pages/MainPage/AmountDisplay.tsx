@@ -21,7 +21,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { PopNumber } from './PopNumber';
 import { styled } from '@mui/material';
 import { motion } from 'framer-motion';
-import { getSportDescription } from '../../utils/descriptionProvider';
+import { getSportDescription } from '../../utils/DescriptionProvider';
 
 export const BIG_NUMBER_SIZE_MOBILE = '6vh';
 export const BIG_NUMBER_SIZE_DESKTOP = '12vh';
