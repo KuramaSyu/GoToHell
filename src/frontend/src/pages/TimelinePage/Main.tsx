@@ -20,7 +20,7 @@ export const TimelinePageMainComponent: React.FC = () => {
   const { isLoading, setLoading } = useLoadingStore();
   const navigate = useNavigate();
   const handlers = useSwipeable({
-    onSwipedRight: () => navigate(Pages.HOME),
+    onSwipedLeft: () => navigate(Pages.HOME),
   });
 
   useEffect(() => {
