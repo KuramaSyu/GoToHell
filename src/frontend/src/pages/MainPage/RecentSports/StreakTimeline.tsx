@@ -48,7 +48,7 @@ export const StreakTimeline: React.FC = () => {
 
   const timelineItems: ReactElement[] = transition((style, user) => {
     return (
-      <Box sx={{ ml: 1, mb: 2 }}>
+      <Box sx={{ ml: 1, mb: 2, zIndex: 1 }}>
         <StreakNumberCircle style={style} user={user} />
       </Box>
     );
