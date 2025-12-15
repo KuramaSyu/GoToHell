@@ -9,16 +9,29 @@ import {
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
 import { Box } from '@mui/material';
+import { useLoadingStore } from '../../zustand/loadingStore';
+import { set } from 'zod';
 
 export const TimelinePageMainComponent: React.FC = () => {
   const { theme } = useThemeStore();
+  const { isLoading, setLoading } = useLoadingStore();
 
   useEffect(() => {
-    new ApiRequirementsBuilder()
-      .add(ApiRequirement.AllStreaks)
-      .add(ApiRequirement.AllRecentSports)
-      .add(ApiRequirement.User)
-      .fetchIfNeeded();
+    async function init() {
+      setLoading(true);
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .fetchIfNeeded();
+
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.AllStreaks)
+        .add(ApiRequirement.AllRecentSports)
+        .forceFetch();
+
+      setLoading(false);
+    }
+    init();
+    return () => setLoading(false);
   }, []);
   return (
     <>
