@@ -25,6 +25,7 @@ const MainContent: React.FC = () => {
   const navigate = useNavigate();
   const handlers = useSwipeable({
     onSwipedLeft: () => navigate(Pages.FRIENDS),
+    onSwipedRight: () => navigate(Pages.HISTORY),
   });
 
   if (isMobile) {

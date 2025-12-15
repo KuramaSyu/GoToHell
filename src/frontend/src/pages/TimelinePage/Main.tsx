@@ -11,10 +11,17 @@ import {
 import { Box } from '@mui/material';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { set } from 'zod';
+import { useNavigate } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
+import { Pages } from '../../components/TopBar';
 
 export const TimelinePageMainComponent: React.FC = () => {
   const { theme } = useThemeStore();
   const { isLoading, setLoading } = useLoadingStore();
+  const navigate = useNavigate();
+  const handlers = useSwipeable({
+    onSwipedRight: () => navigate(Pages.HOME),
+  });
 
   useEffect(() => {
     async function init() {
@@ -36,7 +43,7 @@ export const TimelinePageMainComponent: React.FC = () => {
   return (
     <>
       <AppBackground />
-      <Box sx={{ height: '100%', overflowY: 'auto' }}>
+      <Box {...handlers} sx={{ height: '100%', overflowY: 'auto' }}>
         <TimelineWrapper />
       </Box>
     </>
