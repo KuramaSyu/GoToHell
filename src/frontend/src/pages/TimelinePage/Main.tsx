@@ -38,8 +38,11 @@ export const TimelinePageMainComponent: React.FC = () => {
       setLoading(false);
     }
     init();
-    return () => setLoading(false);
+    return () => {
+      setLoading(true);
+    };
   }, []);
+
   return (
     <>
       <AppBackground />
