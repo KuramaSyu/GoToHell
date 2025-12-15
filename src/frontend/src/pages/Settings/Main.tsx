@@ -47,8 +47,10 @@ export const Settings: React.FC = () => {
   const { isMobile } = useBreakpoint();
 
   useEffect(() => {
-    const { setUpload } = useUploadStore.getState();
-    setUpload(0);
+    // fixes a bug, where random uploads where triggered
+    useUploadStore.getState().setUpload(0);
+
+    // load requirements to prevent a not loading page
     new ApiRequirementsBuilder()
       .add(ApiRequirement.User)
       .add(ApiRequirement.Streak)
