@@ -23,6 +23,7 @@ export const TimelinePageMainComponent: React.FC = () => {
     onSwipedLeft: () => navigate(Pages.HOME),
   });
 
+  // on mount, load all requirements and when unloading, set loading to true again
   useEffect(() => {
     async function init() {
       setLoading(true);
