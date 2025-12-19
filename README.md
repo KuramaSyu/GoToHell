@@ -33,6 +33,7 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [x] Overdue Deaths
 
 #### Ongoing
+
 - [ ] move API calls to utils/API
   - standard.tsx: DELETE api/sports
   - Sport.tsx: POST api/sports
@@ -60,15 +61,15 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [ ] UploadAmount: unit is missing. Make a class for each sport which takes number as input and returns the number and the unit as output
 
 #### QoL
+
 - [ ] Settings Menu v2 structured like immichs settings
   - [ ] Show all multipliers in the settings
 - [ ] better animate TimeDisplay
-- [x] add time (seconds) parameter to setErrorMessage. 
+- [x] add time (seconds) parameter to setErrorMessage.
   - [ ] Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
 - [ ] OverdueDeaths: open a modal when clicking on it, which shows all overdueDeaths for all games
 
 #### Perf
-
 
 #### Ideas
 
@@ -127,6 +128,45 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
     },
   ];
   ```
+
+### Things required to add a new sport:
+
+- an entry for the new sport in `src/frontend/src/utils/data/Multipliers.json`:
+
+  ```js
+  {
+    "sports": {
+      "pushup": 2.5,
+      "plank": 10,
+      // ...
+      // "sport": base_unit (will be multiplied with the game base)
+    },
+
+  }
+  ```
+
+- 2 map entries and 1 import in `src/frontend/src/utils/data/Sports.ts`:
+
+```ts
+import pushupSVG from '../../assets/sports-pushup.svg';
+import plankSVG from '../../assets/sports-plank.svg';
+// ...
+// import newSportSVG from '../../assets/new-sport.svg';
+
+export const sportIconMap: Record<string, string> = {
+  pushup: pushupSVG,
+  plank: plankSVG,
+  // ...
+  // new_sport: newSportSVG,
+
+// map for which is shown next to the score
+export const GameSelectionMap: Map<String, String> = new Map();
+GameSelectionMap.set('pushup', 'Push-Ups');
+GameSelectionMap.set('plank', 'Seconds Plank');
+// GameSelectionMap.set('new-sport-display-name', 'Sport unit after the number');
+
+};
+```
 
 # Development
 
