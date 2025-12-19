@@ -10,7 +10,8 @@
     "dip": 1.8,
     "lunges": 3.75,
     "glute_bridges": 5.5,
-    "jogging": 15
+    "jogging": 15,
+    "workout": 20
   },
   "games": {
     "overwatch": 1,

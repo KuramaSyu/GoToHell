@@ -37,3 +37,4 @@ GameSelectionMap.set('leg_raises', 'Leg Raises');
 GameSelectionMap.set('lunges', 'Lunges');
 GameSelectionMap.set('glute_bridges', 'Glute Bridges');
 GameSelectionMap.set('jogging', 'Meters Jogging');
+GameSelectionMap.set('workout', 'Seconds Workout');
