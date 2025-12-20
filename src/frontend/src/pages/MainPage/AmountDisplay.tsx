@@ -136,6 +136,7 @@ export function getDisplayComponent(
 ): React.FC<SportServiceProps> {
   switch (sport) {
     case 'plank':
+    case 'workout':
       return TimeDisplay;
     default:
       return NumberDisplay;
