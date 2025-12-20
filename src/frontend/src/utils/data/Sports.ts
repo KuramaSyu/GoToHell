@@ -9,7 +9,7 @@ import legRaisesSVG from '../../assets/sports-leg_raises.svg';
 import lungesSVG from '../../assets/sports-lunges.svg';
 import glute_bridgesSVG from '../../assets/sports-glute_bridges.svg';
 import joggingSVG from '../../assets/sports-jogging.svg';
-
+import cyclingSVG from '../../assets/sports-cycling.svg';
 export const sportIconMap: Record<string, string> = {
   pushup: pushupSVG,
   plank: plankSVG,
@@ -22,6 +22,8 @@ export const sportIconMap: Record<string, string> = {
   lunges: lungesSVG,
   glute_bridges: glute_bridgesSVG,
   jogging: joggingSVG,
+  workout: pilatesSVG,
+  cycling: cyclingSVG,
 };
 
 // map for which is shown next to the score
@@ -38,3 +40,4 @@ GameSelectionMap.set('lunges', 'Lunges');
 GameSelectionMap.set('glute_bridges', 'Glute Bridges');
 GameSelectionMap.set('jogging', 'Meters Jogging');
 GameSelectionMap.set('workout', 'Seconds Workout');
+GameSelectionMap.set('cycling', 'Meters Cycling');
