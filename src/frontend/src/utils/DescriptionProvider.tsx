@@ -16,7 +16,7 @@ abstract class SportDescriptionProviderABC implements SportDescriptionProvider {
 }
 class TimeDescriptionProvider extends SportDescriptionProviderABC {
   get_supported_sports(): string[] {
-    return ['plank'];
+    return ['plank', 'workout'];
   }
 
   get_description(computedValue: number): string | undefined {
