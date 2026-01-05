@@ -29,8 +29,17 @@ export const useDeathAmountStore = create<DeathAmountState>((set) => ({
   setAmount: (value: number) => set({ amount: value }),
 }));
 
+type InputVariant = 'default' | 'custom';
+
+export interface InputStrategyProps {
+  value: number;
+  onChange: (value: number) => void;
+  step: number;
+  disabled?: boolean;
+}
+
 export interface NumberSliderProps {
-  withInput: boolean;
+  withInput: InputVariant;
 }
 
 export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
@@ -41,16 +50,26 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   const { preferencesLoaded } = usePreferenceStore();
   const { theme } = useThemeStore();
-  const min = Math.min(0, amount);
-  const max = Math.max(12, amount);
+
   const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const { isMobile } = useBreakpoint();
 
+  const INPUT_STRATEGIES: Record<InputVariant, React.FC<InputStrategyProps>> = {
+    default: SliderInput,
+    custom: CustomSliderInput,
+  };
+  const STEP_VALUES: Record<InputVariant, number> = {
+    default: 1,
+    custom: 10,
+  };
+  const SliderComponent = INPUT_STRATEGIES[withInput];
+  const stepValue = STEP_VALUES[withInput];
   useEffect(() => {
     if (localAmount !== amount.toString()) {
       setLocalAmount(amount.toString());
     }
   }, [amount]);
+
   // Slider Change - set value or current maximum
   const handleSliderChange = (newValue: number | number[]) => {
     const capped = Math.min(newValue as number, selectableMax);
@@ -94,7 +113,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const AddButton = (
     <Button
       variant="contained"
-      onClick={() => handleSliderChange(amount + 1)}
+      onClick={() => handleSliderChange(amount + stepValue)}
       sx={{
         borderRadius: '50%',
         width: '80%', // Make the button fill the container
@@ -116,7 +135,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const RemoveButton = (
     <Button
       variant="contained"
-      onClick={() => handleSliderChange(amount - 1)}
+      onClick={() => handleSliderChange(amount - stepValue)}
       sx={{
         borderRadius: '50%',
         width: '80%', // Make the button fill the container
@@ -224,24 +243,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     </Box>
   );
 
-  // calculate the marks below the slider
-  const getMarkAmount = () => {
-    // start at 12, going down to 2 as the amount increases
-    if (amount > 1000) {
-      return 2;
-    } else if (amount > 100) {
-      return 4;
-    } else if (amount > 50) {
-      return 8;
-    } else if (amount > 20) {
-      return 10;
-    } else {
-      return 12;
-    }
-  };
-  const { marks } = GenerateMarks(getMarkAmount(), min, max);
-  const stepValue = 1;
-
   if (isMobile) {
     // Mobile view
     return <Box sx={{ height: '100%' }}> {customInputMobile} </Box>;
@@ -270,15 +271,72 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         {withInput ? customInput : title}
         {AddRemoveButtons}
       </Box>
-      <Slider
+      <SliderComponent
         value={amount}
-        onChange={(e, newValue) => handleSliderChange(newValue)}
-        min={min}
-        max={max}
+        onChange={handleSliderChange}
         step={stepValue}
-        aria-labelledby="number-slider"
-        marks={marks}
-      ></Slider>
+      />
     </Box>
+  );
+};
+
+const SliderInput: React.FC<InputStrategyProps> = ({
+  value,
+  onChange,
+  step,
+  disabled,
+}) => {
+  const min = Math.min(0, value);
+  const max = Math.max(12, value);
+  // calculate the marks below the slider
+  const getMarkAmount = () => {
+    // start at 12, going down to 2 as the amount increases
+    if (value > 1000) {
+      return 2;
+    } else if (value > 100) {
+      return 4;
+    } else if (value > 50) {
+      return 8;
+    } else if (value > 20) {
+      return 10;
+    } else {
+      return 12;
+    }
+  };
+  const { marks } = GenerateMarks(getMarkAmount(), min, max);
+
+  return (
+    <Slider
+      value={value}
+      onChange={(e, newValue) => onChange(newValue as number)}
+      min={min}
+      max={max}
+      step={step}
+      aria-labelledby="number-slider"
+      marks={marks}
+    ></Slider>
+  );
+};
+
+const CustomSliderInput: React.FC<InputStrategyProps> = ({
+  value,
+  onChange,
+  disabled,
+}) => {
+  const min = Math.min(0, value);
+  const max = Math.max(120, value);
+  const { marks } = GenerateMarks(4, min, max);
+
+  // TODO: make step depend on sport (plank needs bigger step then pushup)
+  return (
+    <Slider
+      value={value}
+      onChange={(e, newValue) => onChange(newValue as number)}
+      min={min}
+      max={max}
+      step={1}
+      aria-labelledby="number-slider"
+      marks={marks}
+    ></Slider>
   );
 };

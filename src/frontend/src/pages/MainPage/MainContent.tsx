@@ -108,7 +108,11 @@ const MainContent: React.FC = () => {
                 zIndex: 0,
               }}
             >
-              <NumberSlider withInput={theme.custom.themeName === 'custom'} />
+              <NumberSlider
+                withInput={
+                  theme.custom.themeName === 'custom' ? 'custom' : 'default'
+                }
+              />
             </Box>
             <Box
               sx={{
@@ -199,7 +203,11 @@ const MainContent: React.FC = () => {
             gap: 1,
           }}
         >
-          <NumberSlider withInput={theme.custom.themeName === 'custom'} />
+          <NumberSlider
+            withInput={
+              theme.custom.themeName === 'custom' ? 'custom' : 'default'
+            }
+          />
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
