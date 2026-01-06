@@ -71,7 +71,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   // when amount is changed, also update the input box amount (localAmount)
   // amount is changed from slider or modal
   useEffect(() => {
-    if (localAmount !== amount.toString()) {
+    if (Number(localAmount) !== amount) {
       setLocalAmount(amount.toString());
     }
   }, [amount]);
@@ -80,12 +80,12 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const handleSliderChange = (newValue: number | number[]) => {
     const capped = Math.min(newValue as number, selectableMax);
     setAmount(capped);
+    setLocalAmount(capped.toString());
   };
 
   // manual input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocalAmount(event.target.value);
-    394;
     let newValue = Number(event.target.value);
     if (!isNaN(newValue)) {
       if (newValue > selectableMax) newValue = selectableMax;
@@ -115,50 +115,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     </Typography>
   );
 
-  const AddButton = (
-    <Button
-      variant="contained"
-      onClick={() => handleSliderChange(amount + stepValue)}
-      sx={{
-        borderRadius: '50%',
-        width: '80%', // Make the button fill the container
-        height: '80%', // Make the button fill the container
-        minWidth: 0, // Ensure the button does not expand
-        minHeight: 0, // Ensure the button does not expand
-        aspectRatio: '1 / 1',
-        display: 'flex',
-        backgroundColor: isMobile ? theme.palette.primary.main : undefined,
-        color: isMobile
-          ? blendWithContrast(theme.palette.primary.main, theme, 2 / 3)
-          : undefined,
-      }}
-    >
-      <Add fontSize={isMobile ? 'large' : undefined} />
-    </Button>
-  );
-
-  const RemoveButton = (
-    <Button
-      variant="contained"
-      onClick={() => handleSliderChange(amount - stepValue)}
-      sx={{
-        borderRadius: '50%',
-        width: '80%', // Make the button fill the container
-        height: '80%', // Make the button fill the container
-        minWidth: 0, // Ensure the button does not expand
-        minHeight: 0, // Ensure the button does not expand
-        aspectRatio: '1 / 1',
-        display: 'flex',
-        backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
-        color: isMobile
-          ? blendWithContrast(theme.palette.secondary.main, theme, 2 / 3)
-          : undefined,
-      }}
-    >
-      <Remove />
-    </Button>
-  );
-
   const customInput = withInput ? (
     <OutlinedInput
       value={localAmount}
@@ -171,9 +127,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       }}
       sx={{
         width: 'clamp(40px, 35%, 200px)',
-        //height: '80%',
         display: 'flex',
-        color: theme.palette.primary.main,
+        color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
+        backgroundColor: theme.palette.muted.dark,
         fontSize: 'clamp(16px, 2.5vw, 24px)',
         textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
         '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -218,7 +174,11 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           top: 'calc(-1 * (6/21 * 100%) / (pi/2))',
         }}
       >
-        {RemoveButton}
+        <AddButton
+          onChange={handleSliderChange}
+          amount={amount}
+          stepValue={stepValue}
+        />
       </Box>
       <Box
         sx={{
@@ -228,7 +188,11 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           bottom: 'calc(-1 * (9/20 * 100%) / (pi/2))',
         }}
       >
-        {AddButton}
+        <RemoveButton
+          onChange={handleSliderChange}
+          amount={amount}
+          stepValue={stepValue}
+        />
       </Box>
     </Box>
   );
@@ -243,8 +207,16 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         maxWidth: 2 / 3,
       }}
     >
-      {RemoveButton}
-      {AddButton}
+      <AddButton
+        onChange={handleSliderChange}
+        amount={amount}
+        stepValue={stepValue}
+      />
+      <RemoveButton
+        onChange={handleSliderChange}
+        amount={amount}
+        stepValue={stepValue}
+      />
     </Box>
   );
 
@@ -344,5 +316,73 @@ const CustomSliderInput: React.FC<InputStrategyProps> = ({
       aria-labelledby="number-slider"
       marks={marks}
     ></Slider>
+  );
+};
+
+interface AddRemoveButtonProps {
+  onChange: (amount: number) => void;
+  amount: number;
+  stepValue: number;
+}
+
+const AddButton: React.FC<AddRemoveButtonProps> = ({
+  onChange,
+  amount,
+  stepValue,
+}) => {
+  const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
+
+  return (
+    <Button
+      variant="contained"
+      onClick={() => onChange(amount + stepValue)}
+      sx={{
+        borderRadius: '50%',
+        width: '80%', // Make the button fill the container
+        height: '80%', // Make the button fill the container
+        minWidth: 0, // Ensure the button does not expand
+        minHeight: 0, // Ensure the button does not expand
+        aspectRatio: '1 / 1',
+        display: 'flex',
+        backgroundColor: isMobile ? theme.palette.primary.main : undefined,
+        color: isMobile
+          ? blendWithContrast(theme.palette.primary.main, theme, 2 / 3)
+          : undefined,
+      }}
+    >
+      <Add fontSize={isMobile ? 'large' : undefined} />
+    </Button>
+  );
+};
+
+const RemoveButton: React.FC<AddRemoveButtonProps> = ({
+  onChange,
+  amount,
+  stepValue,
+}) => {
+  const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
+
+  return (
+    <Button
+      variant="contained"
+      onClick={() => onChange(amount - stepValue)}
+      sx={{
+        borderRadius: '50%',
+        width: '80%', // Make the button fill the container
+        height: '80%', // Make the button fill the container
+        minWidth: 0, // Ensure the button does not expand
+        minHeight: 0, // Ensure the button does not expand
+        aspectRatio: '1 / 1',
+        display: 'flex',
+        backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
+        color: isMobile
+          ? blendWithContrast(theme.palette.secondary.main, theme, 2 / 3)
+          : undefined,
+      }}
+    >
+      <Remove />
+    </Button>
   );
 };
