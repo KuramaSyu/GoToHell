@@ -43,7 +43,10 @@ export interface NumberSliderProps {
 }
 
 export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
+  // actual amount
   const { amount, setAmount } = useDeathAmountStore();
+
+  // string for input box (so that .0 or something like this can be typed)
   const [localAmount, setLocalAmount] = useState<string | null>(
     amount.toString()
   );
@@ -64,6 +67,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   };
   const SliderComponent = INPUT_STRATEGIES[withInput];
   const stepValue = STEP_VALUES[withInput];
+
+  // when amount is changed, also update the input box amount (localAmount)
+  // amount is changed from slider or modal
   useEffect(() => {
     if (localAmount !== amount.toString()) {
       setLocalAmount(amount.toString());
@@ -74,7 +80,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const handleSliderChange = (newValue: number | number[]) => {
     const capped = Math.min(newValue as number, selectableMax);
     setAmount(capped);
-    setLocalAmount(capped.toString());
   };
 
   // manual input
