@@ -323,6 +323,7 @@ const SliderInput: React.FC<InputStrategyProps> = ({
   );
 };
 
+// Custom slider from 0-100 with steps of 5
 const CustomSliderInput: React.FC<InputStrategyProps> = ({
   value,
   onChange,
@@ -330,7 +331,7 @@ const CustomSliderInput: React.FC<InputStrategyProps> = ({
 }) => {
   const min = Math.min(0, value);
   const max = Math.max(100, value);
-  const { marks } = GenerateMarks(4, min, max);
+  const { marks } = GenerateMarks(5, min, max);
 
   // TODO: make step depend on sport (plank needs bigger step then pushup)
   return (
