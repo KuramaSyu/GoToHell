@@ -207,12 +207,12 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         maxWidth: 2 / 3,
       }}
     >
-      <AddButton
+      <RemoveButton
         onChange={handleSliderChange}
         amount={amount}
         stepValue={stepValue}
       />
-      <RemoveButton
+      <AddButton
         onChange={handleSliderChange}
         amount={amount}
         stepValue={stepValue}
