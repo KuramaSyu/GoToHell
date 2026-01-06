@@ -60,7 +60,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   };
   const STEP_VALUES: Record<InputVariant, number> = {
     default: 1,
-    custom: 10,
+    custom: 1,
   };
   const SliderComponent = INPUT_STRATEGIES[withInput];
   const stepValue = STEP_VALUES[withInput];
@@ -324,7 +324,7 @@ const CustomSliderInput: React.FC<InputStrategyProps> = ({
   disabled,
 }) => {
   const min = Math.min(0, value);
-  const max = Math.max(120, value);
+  const max = Math.max(100, value);
   const { marks } = GenerateMarks(4, min, max);
 
   // TODO: make step depend on sport (plank needs bigger step then pushup)
@@ -334,7 +334,7 @@ const CustomSliderInput: React.FC<InputStrategyProps> = ({
       onChange={(e, newValue) => onChange(newValue as number)}
       min={min}
       max={max}
-      step={1}
+      step={5}
       aria-labelledby="number-slider"
       marks={marks}
     ></Slider>
