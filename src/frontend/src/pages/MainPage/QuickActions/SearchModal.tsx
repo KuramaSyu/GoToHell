@@ -145,9 +145,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         height: '80%',
       }}
     >
-      <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-        <SearchCardButton page={page} setPage={setPage} />
-      </Box>
       <TextField
         inputRef={inputRef}
         defaultValue={typed}

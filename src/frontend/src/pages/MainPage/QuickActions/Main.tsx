@@ -53,7 +53,9 @@ export const QuickActionMenu: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const { theme } = useThemeStore();
   const [typed, setTyped] = useState<string | null>(null);
-  const [page, setPage] = useState<ModalPages | string>(ModalPages.OVERVIEW);
+  const [page, setPage] = useState<ModalPages | string>(
+    ModalPages.SEARCH_MODAL
+  );
   const { triggerUpload } = useUploadStore();
   const { preferences } = usePreferenceStore();
 
@@ -139,7 +141,7 @@ export const QuickActionMenu: React.FC = () => {
           if (!currentOpen) {
             unfocusCurrentElement();
             setTyped(null); // Reset typed when opening
-            setPage(ModalPages.OVERVIEW); // Ensure starting page is overview
+            setPage(ModalPages.SEARCH_MODAL); // Ensure starting page is overview
           }
           return { open: !currentOpen.open, openedAt: new Date() };
         });
@@ -161,7 +163,7 @@ export const QuickActionMenu: React.FC = () => {
       // Handle typing only if the modal is currently open
       if (open.open) {
         console.log(`Processing typing in overview modal: ${e.key}`);
-        processTyping(e, true);
+        //processTyping(e, false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -177,7 +179,7 @@ export const QuickActionMenu: React.FC = () => {
 
       // wait for minimum open duration before closing
       const timeout = setTimeout(() => {
-        setPage(ModalPages.OVERVIEW);
+        setPage(ModalPages.SEARCH_MODAL);
         setOpen({ open: false });
       }, MIN_OPEN_DURATION - missingOpenTime());
 
@@ -242,35 +244,6 @@ export const QuickActionMenu: React.FC = () => {
     };
   }, [typed, open, page]);
 
-  const pageTransitions = useTransition(page, {
-    from: { opacity: 0, transform: 'scale(0.7)' },
-    enter: { opacity: 1, transform: 'scale(1)' },
-    // better without leave animation; otherwise animation looks broken
-    config: (_item, _index, state) =>
-      state === 'enter' ? { tension: 350, friction: 25 } : { duration: 150 },
-  });
-
-  const overviewButton = (
-    <Button
-      variant="outlined"
-      onClick={() => setPage(ModalPages.OVERVIEW)}
-      sx={{
-        display: 'flex',
-        justifyContent: 'end',
-        gap: 1,
-        px: 2,
-        fontSize: '1.5vh',
-      }}
-    >
-      Overview
-      <AppsIcon
-        sx={{
-          height: '2vh',
-          width: 'auto',
-        }}
-      />
-    </Button>
-  );
   const exitButton = (
     <Button
       variant="outlined"
@@ -332,6 +305,7 @@ export const QuickActionMenu: React.FC = () => {
                 flexShrink: 0,
               }}
             >
+              {/* placeholder box */}
               <Box
                 sx={{
                   flex: 1,
@@ -339,9 +313,7 @@ export const QuickActionMenu: React.FC = () => {
                   justifyContent: 'start',
                   alignItems: 'center',
                 }}
-              >
-                {page !== 'overview' ? overviewButton : null}
-              </Box>
+              ></Box>
               <Box
                 sx={{
                   flex: 1,
@@ -372,50 +344,13 @@ export const QuickActionMenu: React.FC = () => {
                 width: '100%',
               }}
             >
-              {pageTransitions((style, currentPage) => (
-                <AnimatedBox
-                  style={{
-                    ...style,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    height: '100%',
-                  }}
-                >
-                  {currentPage === ModalPages.OVERVIEW ? (
-                    <ModalOverview
-                      key="overview"
-                      page={page}
-                      setPage={setPage}
-                    />
-                  ) : currentPage === ModalPages.SEARCH_MODAL ? (
-                    <SearchModal
-                      key="search"
-                      typed={typed}
-                      setTyped={setTyped}
-                      page={page}
-                      setPage={setPage}
-                    />
-                  ) : currentPage === ModalPages.AMOUNT_MODAL ? (
-                    <AmountModal
-                      key="search"
-                      typed={typed}
-                      setTyped={setTyped}
-                      page={page}
-                      setPage={setPage}
-                    />
-                  ) : currentPage === ModalPages.UPLOAD_MODAL ? (
-                    <UploadModal
-                      key="search"
-                      typed={typed}
-                      setTyped={setTyped}
-                      page={page}
-                      setPage={setPage}
-                    />
-                  ) : (
-                    <Box sx={{ flexGrow: 1 }}></Box>
-                  )}
-                </AnimatedBox>
-              ))}
+              <SearchModal
+                key="search"
+                typed={typed}
+                setTyped={setTyped}
+                page={page}
+                setPage={setPage}
+              />
             </Box>
           </AnimatedBox>
         ) : null
