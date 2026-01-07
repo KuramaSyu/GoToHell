@@ -210,22 +210,6 @@ export const QuickActionMenu: React.FC = () => {
       setTyped((prev) => (prev ? prev.slice(0, -1) : null));
     }
   };
-  // change window when something was typed
-  useEffect(() => {
-    if ((typed?.length ?? 0) > 0) {
-      // something was typed -> either sport or amount modal
-      if (isNumeric(typed![0]!)) {
-        // first character is a number -> amount modal
-        setPage(ModalPages.AMOUNT_MODAL);
-      } else {
-        // first character is a letter -> sport modal
-        setPage(ModalPages.SEARCH_MODAL);
-      }
-    } else {
-      // nothing was typed -> overview
-      setPage(ModalPages.OVERVIEW);
-    }
-  }, [typed]);
 
   // Listen for Enter to trigger upload and close
   useEffect(() => {
