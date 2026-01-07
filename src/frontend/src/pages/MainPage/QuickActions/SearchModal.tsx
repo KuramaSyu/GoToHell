@@ -14,7 +14,12 @@ import { KeyboardReturnTwoTone } from '@mui/icons-material';
 import { getThemeNames } from '../../../zustand/useThemeStore';
 import { SearchCardButton } from './QuickActionEntries';
 import Fuse from 'fuse.js';
-import { GameEntry, SearchEntry, SportEntry } from './SearchEntry';
+import {
+  GameEntry,
+  InfoSearchEntry,
+  SearchEntry,
+  SportEntry,
+} from './SearchEntry';
 import { handleInputChanged } from './Main';
 
 export const AnimatedBox = animated(Box);
@@ -37,35 +42,16 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 }) => {
   const { sportResponse } = useSportResponseStore();
 
-  // ref for the textfield to focus it as soon as
-  // inputLock switches to false
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // whether or not the input for the input field is locked.
-  // it's locked for the first 10ms as debounce time to prevent dup input
-  const [inputLocked, setInputLocked] = useState(true);
-
-  // effect to disable inputLock
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setInputLocked(false);
-    }, 10); // 10ms debounce time
-
-    return () => clearTimeout(timer);
-  }, [inputLocked]);
-
-  useEffect(() => {
-    if (!inputLocked && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputLocked]);
-
   getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
 
   const filteredSearch: SearchEntry[] = useMemo(() => {
     if (typed === null) {
-      return [];
+      return [
+        new InfoSearchEntry('Type letters for game'),
+        new InfoSearchEntry('Type letters for sport'),
+        new InfoSearchEntry('Type numbers for exercise amount'),
+      ];
     }
 
     // filter sports and wrap into SearchEntry
@@ -88,7 +74,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     const element = filteredSearch[0];
     if (element === undefined) return;
     element.select();
-    setTyped(null);
+    setTyped('');
   };
 
   // opening keyboard listener
@@ -146,11 +132,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       }}
     >
       <TextField
-        inputRef={inputRef}
+        autoFocus
         defaultValue={typed}
         variant="outlined"
         placeholder="Search..."
-        disabled={inputLocked}
         onChange={(event) => {
           handleInputChanged(event, setTyped, page);
         }}
@@ -201,9 +186,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             style={style}
           >
             {i !== 0 ? (
-              <Typography variant="h5" sx={{ fontWeight: '300' }}>
-                {filteredSearch[i]!.displayName()}
-              </Typography>
+              <>
+                <Typography variant="h5" sx={{ fontWeight: '300' }}>
+                  {filteredSearch[i]!.displayName()}
+                </Typography>
+              </>
             ) : (
               // flex with one empty element, the typography and selectbox
               <Box
