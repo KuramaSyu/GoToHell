@@ -163,7 +163,7 @@ export const QuickActionMenu: React.FC = () => {
       // Handle typing only if the modal is currently open
       if (open.open) {
         console.log(`Processing typing in overview modal: ${e.key}`);
-        //processTyping(e, false);
+        processTyping(e, false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
