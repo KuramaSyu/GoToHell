@@ -41,6 +41,27 @@ abstract class DefaultSearchEntry implements SearchEntry {
     ) as SearchEntry;
   };
 }
+
+/**
+ * Reporesents one of the overview infos when no search is typed yet
+ */
+export class InfoSearchEntry extends DefaultSearchEntry {
+  name: string;
+  constructor(name: string, isDisplayed: boolean = true) {
+    super();
+    this.name = name;
+    this.isDisplayed = isDisplayed;
+  }
+
+  select(): void {
+    // no selection action
+  }
+
+  displayName(): string {
+    return this.name;
+  }
+}
+
 /**
  * Represents any of the available Sport Kinds
  */
