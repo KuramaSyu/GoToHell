@@ -6,6 +6,7 @@ import {
   OutlinedInput,
   IconButton,
   alpha,
+  Tooltip,
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
@@ -15,6 +16,7 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useEffect, useState } from 'react';
 import { blendWithContrast } from '../../utils/blendWithContrast';
+import { useSportStore } from '../../useSportStore';
 
 interface DeathAmountState {
   amount: number;
@@ -65,8 +67,15 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     default: 1,
     custom: 1,
   };
+  const TOOLTIP_TEXT: Record<InputVariant, string> = {
+    default: 'How often did you die?',
+    custom: `How many units of ${
+      useSportStore.getState().currentSport.sport
+    } did you do?`,
+  };
   const SliderComponent = INPUT_STRATEGIES[withInput];
   const stepValue = STEP_VALUES[withInput];
+  const tooltipText = TOOLTIP_TEXT[withInput];
 
   // when amount is changed, also update the input box amount (localAmount)
   // amount is changed from slider or modal
@@ -174,7 +183,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           top: 'calc(-1 * (6/21 * 100%) / (pi/2))',
         }}
       >
-        <AddButton
+        <RemoveButton
           onChange={handleSliderChange}
           amount={amount}
           stepValue={stepValue}
@@ -188,7 +197,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           bottom: 'calc(-1 * (9/20 * 100%) / (pi/2))',
         }}
       >
-        <RemoveButton
+        <AddButton
           onChange={handleSliderChange}
           amount={amount}
           stepValue={stepValue}
@@ -227,33 +236,35 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   // Desktop view
   return (
-    <Box
-      sx={{
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 1,
-      }}
-    >
+    <Tooltip title={tooltipText} arrow>
       <Box
         sx={{
+          p: 2,
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
+          gap: 1,
         }}
       >
-        {withInput ? customInput : title}
-        {AddRemoveButtons}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          {withInput ? customInput : title}
+          {AddRemoveButtons}
+        </Box>
+        <SliderComponent
+          value={amount}
+          onChange={handleSliderChange}
+          step={stepValue}
+        />
       </Box>
-      <SliderComponent
-        value={amount}
-        onChange={handleSliderChange}
-        step={stepValue}
-      />
-    </Box>
+    </Tooltip>
   );
 };
 
