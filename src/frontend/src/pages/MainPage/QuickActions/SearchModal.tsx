@@ -46,7 +46,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const sports = Object.keys(sportResponse?.sports ?? {});
 
   const filteredSearch: SearchEntry[] = useMemo(() => {
-    if (typed === null) {
+    if (typed === null || typed.length === 0) {
       return [
         new InfoSearchEntry('Type letters for game'),
         new InfoSearchEntry('Type letters for sport'),
