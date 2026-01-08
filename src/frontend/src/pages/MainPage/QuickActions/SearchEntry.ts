@@ -1,6 +1,7 @@
 import { useSportStore } from '../../../useSportStore';
 import { useSportResponseStore } from '../../../zustand/sportResponseStore';
 import { customThemes, useThemeStore } from '../../../zustand/useThemeStore';
+import { useDeathAmountStore } from '../NumberSlider';
 
 /**
  * Represents an Abstract Element, which can be selected
@@ -59,6 +60,31 @@ export class InfoSearchEntry extends DefaultSearchEntry {
 
   displayName(): string {
     return this.name;
+  }
+}
+
+/**
+ * Represents a typed number which will set the exercise amount
+ */
+export class NumericEntry extends DefaultSearchEntry {
+  name: string;
+  constructor(amount: string, isDisplayed: boolean = true) {
+    super();
+    this.name = amount;
+    this.isDisplayed = isDisplayed;
+  }
+
+  select(): void {
+    const setAmount = useDeathAmountStore.getState().setAmount;
+    setAmount(Number(this.name));
+  }
+
+  /**
+   *
+   * @returns string with Exercise Amount: <number>
+   */
+  displayName(): string {
+    return `Exercise Amount: ${this.name}`;
   }
 }
 
