@@ -1,4 +1,5 @@
 import {
+  alpha,
   Box,
   Button,
   InputAdornment,
@@ -11,7 +12,7 @@ import { useSportResponseStore } from '../../../zustand/sportResponseStore';
 import { animated, useSprings } from 'react-spring';
 import { useSportStore } from '../../../useSportStore';
 import { KeyboardReturnTwoTone } from '@mui/icons-material';
-import { getThemeNames } from '../../../zustand/useThemeStore';
+import { getThemeNames, useThemeStore } from '../../../zustand/useThemeStore';
 import { SearchCardButton } from './QuickActionEntries';
 import Fuse from 'fuse.js';
 import {
@@ -41,12 +42,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   setPage,
 }) => {
   const { sportResponse } = useSportResponseStore();
+  const { theme } = useThemeStore();
 
   getThemeNames();
   const sports = Object.keys(sportResponse?.sports ?? {});
 
+  const nothingTyped = typed === null || typed.length === 0;
   const filteredSearch: SearchEntry[] = useMemo(() => {
-    if (typed === null || typed.length === 0) {
+    if (nothingTyped) {
       return [
         new InfoSearchEntry('Type letters for game'),
         new InfoSearchEntry('Type letters for sport'),
@@ -106,11 +109,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       onClick={onEnter}
       variant="contained"
       sx={{
-        display: 'inline-flex', // Use inline-flex to size based on content
+        display: 'flex', // Use inline-flex to size based on content
         flexDirection: 'row',
+        flexGrow: 1,
         alignItems: 'center',
         gap: 1,
-        padding: '8px 16px',
+        height: '100%',
         borderRadius: 6,
         border: '1px solid rgba(255, 255, 255, 0.3)',
       }}
@@ -156,12 +160,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           maxWidth: 600,
         }}
       />
+      {/* autocomplete content */}
       <Box
         sx={{
           position: 'absolute',
           width: '50vw',
           height: '33vh',
-          top: '15vh',
+          top: '20vh',
           gap: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -171,21 +176,21 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <AnimatedBox
             sx={{
               width: '100%',
-              height: '40px',
+              height: '48px',
               display: 'flex',
-              backdropFilter: 'blur(30px)',
+              backdropFilter: 'blur(40px)',
               borderRadius: 6,
               backgroundColor:
-                i === 0
-                  ? 'rgba(255, 255, 255, 0.2)'
-                  : 'rgba(255, 255, 255, 0.08)',
+                i === 0 || nothingTyped
+                  ? theme.palette.muted.main
+                  : alpha(theme.palette.muted.main, 0.6),
               alignItems: 'center',
               justifyContent: 'center',
             }}
             key={filteredSearch[i]?.name}
             style={style}
           >
-            {i !== 0 ? (
+            {i !== 0 || nothingTyped ? (
               <>
                 <Typography variant="h5" sx={{ fontWeight: '300' }}>
                   {filteredSearch[i]!.displayName()}
@@ -210,7 +215,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 </Typography>
                 <Box
                   width={1 / 5}
-                  sx={{ display: 'flex', justifyContent: 'right' }}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'right',
+                    height: '100%',
+                  }}
                 >
                   {selectBox}
                 </Box>
