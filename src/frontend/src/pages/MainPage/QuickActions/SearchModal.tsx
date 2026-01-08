@@ -18,10 +18,12 @@ import Fuse from 'fuse.js';
 import {
   GameEntry,
   InfoSearchEntry,
+  NumericEntry,
   SearchEntry,
   SportEntry,
 } from './SearchEntry';
 import { handleInputChanged } from './Main';
+import { isNumeric } from '../../../utils/UserNumber';
 
 export const AnimatedBox = animated(Box);
 
@@ -55,6 +57,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         new InfoSearchEntry('Type letters for sport'),
         new InfoSearchEntry('Type numbers for exercise amount'),
       ];
+    }
+
+    if (isNumeric(typed)) {
+      return [new NumericEntry(typed!)];
     }
 
     // filter sports and wrap into SearchEntry
