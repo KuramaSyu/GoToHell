@@ -104,7 +104,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const selectBox = (
     <Button
       onClick={onEnter}
-      variant="outlined"
+      variant="contained"
       sx={{
         display: 'inline-flex', // Use inline-flex to size based on content
         flexDirection: 'row',
