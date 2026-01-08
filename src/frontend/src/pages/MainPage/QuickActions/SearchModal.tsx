@@ -176,7 +176,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <AnimatedBox
             sx={{
               width: '100%',
-              height: '48px',
+              height: 48,
               display: 'flex',
               backdropFilter: 'blur(40px)',
               borderRadius: 6,
@@ -201,9 +201,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               <Box
                 sx={{
                   display: 'flex',
-                  justifyContent: 'space-around',
                   alignItems: 'center',
                   width: '100%',
+                  height: '100%',
                 }}
               >
                 <Box width={1 / 5}></Box>
