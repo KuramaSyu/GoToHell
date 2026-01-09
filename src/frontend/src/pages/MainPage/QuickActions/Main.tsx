@@ -13,6 +13,7 @@ import usePreferenceStore from '../../../zustand/PreferenceStore';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
 import { UploadModal } from './UploadModal';
+import { SelectionOverview } from './SelectionOverview';
 
 const AnimatedBox = animated(Box);
 
@@ -322,6 +323,7 @@ export const QuickActionMenu: React.FC = () => {
             </Box>
 
             {/* Content Area */}
+            <SelectionOverview></SelectionOverview>
             <Box
               sx={{
                 flexGrow: 1,
