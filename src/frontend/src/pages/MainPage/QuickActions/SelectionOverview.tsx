@@ -19,3 +19,17 @@ export const SelectionOverview: React.FC = () => {
     </Stack>
   );
 };
+
+export interface KeyValuePillProps {
+  key: string;
+  value: string;
+}
+export const KeyValuePill: React.FC<KeyValuePillProps> = ({ key, value }) => {
+  const { theme } = useThemeStore();
+  return (
+    <Stack color={'primary'}>
+      <Typography>key</Typography>
+      <Box sx={{ zIndex: 2, border: theme.shape.borderRadius }}>value</Box>
+    </Stack>
+  );
+};
