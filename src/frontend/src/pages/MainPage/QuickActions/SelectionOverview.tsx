@@ -14,18 +14,18 @@ export const SelectionOverview: React.FC = () => {
 
   return (
     <Stack direction="row" width={'100%'} justifyContent="space-around" mb={2}>
-      <KeyValuePill title="Theme" value={theme.custom.themeName} />
-      <KeyValuePill title="Sport" value={currentSport.sport || 'Not set'} />
-      <KeyValuePill title="Amount" value={amount.toString()} />
+      <TitleValuePill title="Theme" value={theme.custom.themeName} />
+      <TitleValuePill title="Sport" value={currentSport.sport || 'Not set'} />
+      <TitleValuePill title="Amount" value={amount.toString()} />
     </Stack>
   );
 };
 
-export interface KeyValuePillProps {
+export interface TitleValuePills {
   title: string;
   value: string;
 }
-export const KeyValuePill: React.FC<KeyValuePillProps> = ({ title, value }) => {
+export const TitleValuePill: React.FC<TitleValuePills> = ({ title, value }) => {
   const { theme } = useThemeStore();
   return (
     <Stack
