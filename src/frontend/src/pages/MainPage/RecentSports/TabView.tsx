@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Box, useMediaQuery, alpha } from '@mui/material';
+import { Tabs, Tab, Box } from '@mui/material';
 import { MultiplierSettings } from '../../../pages/Settings/Multiplier';
-import { useSportStore } from '../../../useSportStore';
-import { useDeathAmountStore } from '../NumberSlider';
-import useCalculatorStore from '../../../zustand/CalculatorStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import { SecondaryTabView } from './SecondaryTabView';
 import { hexToRgbString } from '../../../utils/colors/hexToRgb';
 
 export const RecentSports = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const { currentSport } = useSportStore();
-  const { amount } = useDeathAmountStore();
-  const { calculator } = useCalculatorStore();
   const { theme } = useThemeStore();
-
-  const BelowXL = useMediaQuery(theme.breakpoints.down('xl'));
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
