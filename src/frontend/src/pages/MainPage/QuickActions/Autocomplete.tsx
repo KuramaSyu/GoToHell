@@ -36,8 +36,9 @@ export const QuickActionAutocomplete: React.FC<SearchModalProps> = ({
   const { sportResponse } = useSportResponseStore();
   const { theme } = useThemeStore();
   const sports = Object.keys(sportResponse?.sports ?? {});
-  const isCustom: boolean = theme.custom.themeName === 'custom';
 
+  // helper variables
+  const isCustom: boolean = theme.custom.themeName === 'custom';
   const nothingTyped = typed === null || typed.length === 0;
 
   // creates a list with all relevant search entries
