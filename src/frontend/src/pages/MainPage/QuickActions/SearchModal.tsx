@@ -90,7 +90,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     setTyped('');
   };
 
-  // opening keyboard listener
+  // setup keyboard listener to call onEnter
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
@@ -147,7 +147,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     >
       <TextField
         autoFocus
-        defaultValue={typed}
+        value={typed}
         variant="outlined"
         placeholder="Search..."
         onChange={(event) => {
