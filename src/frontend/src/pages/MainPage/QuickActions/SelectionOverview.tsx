@@ -12,12 +12,16 @@ export const SelectionOverview: React.FC = () => {
   const { amount } = useDeathAmountStore();
   const { theme } = useThemeStore();
   const { currentSport } = useSportStore();
+  const isCustom: boolean = theme.custom.themeName === 'custom';
 
   return (
-    <Stack direction="row" width={'100%'} justifyContent="space-evenly" mb={2}>
-      <TitleValuePill title="Theme" value={theme.custom.themeName} />
+    <Stack direction="row" width={'100%'} justifyContent="space-around" mb={2}>
       <TitleValuePill title="Sport" value={currentSport.sport || 'Not set'} />
-      <TitleValuePill title="Amount" value={amount.toString()} />
+      <TitleValuePill title="Theme" value={theme.custom.longName} />
+      <TitleValuePill
+        title={isCustom ? 'Exercises' : 'Deaths'}
+        value={amount > 0 ? amount.toString() : 'Not set'}
+      />
     </Stack>
   );
 };
