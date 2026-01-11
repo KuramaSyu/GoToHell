@@ -4,16 +4,14 @@ import { useThemeStore } from '../../../zustand/useThemeStore';
 
 import { animated, useTransition } from 'react-spring';
 import React from 'react';
-import { ModalOverview, ModalPages } from './ModalOverviewCards';
 import { SearchModal } from './SearchModal';
 import { isNumeric } from '../../../utils/UserNumber';
-import { AmountModal } from './AmountModal';
 import useUploadStore from '../../../zustand/UploadStore';
 import usePreferenceStore from '../../../zustand/PreferenceStore';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AppsIcon from '@mui/icons-material/Apps';
-import { UploadModal } from './UploadModal';
 import { SelectionOverview } from './SelectionOverview';
+import { ModalPages } from './ModalPages';
 
 const AnimatedBox = animated(Box);
 

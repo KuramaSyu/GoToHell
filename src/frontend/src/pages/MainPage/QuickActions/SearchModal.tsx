@@ -13,7 +13,6 @@ import { animated, useSprings } from 'react-spring';
 import { useSportStore } from '../../../useSportStore';
 import { KeyboardReturnTwoTone } from '@mui/icons-material';
 import { getThemeNames, useThemeStore } from '../../../zustand/useThemeStore';
-import { SearchCardButton } from './QuickActionEntries';
 import Fuse from 'fuse.js';
 import {
   GameEntry,
@@ -110,12 +109,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     };
   }, [filteredSearch]);
 
-  const springs = useSprings(
+  // springs to animate autocomplete entries
+  const autocompleteSprings = useSprings(
     filteredSearch.length,
     filteredSearch.map((_, _index) => ({
       from: { opacity: 0, transform: 'scale(0.7)' },
       to: { opacity: 1, transform: 'scale(1)' },
-
       config: { tension: 200, friction: 20 },
     }))
   );
@@ -189,7 +188,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           flexDirection: 'column',
         }}
       >
-        {springs.map((style, i) => (
+        {autocompleteSprings.map((style, i) => (
           <AnimatedBox
             sx={{
               width: '100%',
