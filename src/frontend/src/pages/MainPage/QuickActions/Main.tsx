@@ -4,7 +4,7 @@ import { useThemeStore } from '../../../zustand/useThemeStore';
 
 import { animated, useTransition } from 'react-spring';
 import React from 'react';
-import { QuickActionsSearch } from './SearchModal';
+import { QuickActionsSearch } from './Search';
 import { isNumeric } from '../../../utils/UserNumber';
 import useUploadStore from '../../../zustand/UploadStore';
 import usePreferenceStore from '../../../zustand/PreferenceStore';

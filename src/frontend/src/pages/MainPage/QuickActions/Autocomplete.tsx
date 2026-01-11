@@ -24,7 +24,7 @@ import {
 import { handleInputChanged } from './Main';
 import { isNumeric } from '../../../utils/UserNumber';
 import { useDeathAmountStore } from '../NumberSlider';
-import { AnimatedBox, SearchModalProps } from './SearchModal';
+import { AnimatedBox, SearchModalProps } from './Search';
 
 /**
  * Sub Component of QuickActions which shows Autocomplete options
