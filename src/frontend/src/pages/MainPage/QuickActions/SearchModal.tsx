@@ -50,7 +50,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const sports = Object.keys(sportResponse?.sports ?? {});
 
   const nothingTyped = typed === null || typed.length === 0;
+
+  // creates a list with all relevant search entries
   const filteredSearch: SearchEntry[] = useMemo(() => {
+    // search helper
     if (nothingTyped) {
       return [
         new InfoSearchEntry('Type letters for game'),
@@ -59,6 +62,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       ];
     }
 
+    // numeric search
     if (isNumeric(typed)) {
       return [new NumericEntry(typed!)];
     }
