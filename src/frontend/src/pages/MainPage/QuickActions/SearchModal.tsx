@@ -24,6 +24,7 @@ import {
 } from './SearchEntry';
 import { handleInputChanged } from './Main';
 import { isNumeric } from '../../../utils/UserNumber';
+import { useDeathAmountStore } from '../NumberSlider';
 
 export const AnimatedBox = animated(Box);
 
@@ -55,11 +56,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const filteredSearch: SearchEntry[] = useMemo(() => {
     // search helper
     if (nothingTyped) {
-      return [
-        new InfoSearchEntry('Type letters for game'),
-        new InfoSearchEntry('Type letters for sport'),
-        new InfoSearchEntry('Type numbers for exercise amount'),
+      var l = [
+        new InfoSearchEntry('letters for game or sport'),
+        new InfoSearchEntry('numbers for exercise amount'),
       ];
+      if (
+        useSportStore.getState().currentSport.sport !== null &&
+        useDeathAmountStore.getState().amount > 0
+      ) {
+        l = [new InfoSearchEntry('Enter to upload'), ...l];
+      }
+      return l;
     }
 
     // numeric search
@@ -176,7 +183,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           position: 'absolute',
           width: '50vw',
           height: '33vh',
-          top: '20vh',
+          top: '20.5vh',
           gap: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -191,7 +198,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               backdropFilter: 'blur(40px)',
               borderRadius: 6,
               backgroundColor:
-                i === 0 || nothingTyped
+                i === 0 && !nothingTyped
                   ? theme.palette.muted.main
                   : alpha(theme.palette.muted.main, 0.6),
               alignItems: 'center',
