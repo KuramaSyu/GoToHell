@@ -215,9 +215,7 @@ export const QuickActionMenu: React.FC = () => {
   // Listen for Enter to trigger upload and close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open.open || page !== ModalPages.OVERVIEW) return; // Only listen when modal is open
-
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && typed === '') {
         // upload was triggerd by keyboard
         setPage(ModalPages.UPLOAD_MODAL);
       }
