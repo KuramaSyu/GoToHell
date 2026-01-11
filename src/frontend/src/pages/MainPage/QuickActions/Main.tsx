@@ -32,7 +32,7 @@ export const handleInputChanged = (
   setTyped: React.Dispatch<React.SetStateAction<string | null>>,
   page: string | ModalPages
 ) => {
-  if (page !== ModalPages.SEARCH_MODAL && page !== ModalPages.AMOUNT_MODAL) {
+  if (page !== ModalPages.SEARCH_MODAL) {
     return;
   }
 
