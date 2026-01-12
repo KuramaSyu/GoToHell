@@ -242,12 +242,10 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         flexDirection: 'row',
         gap: 2,
         alignItems: 'center',
-        backdropFilter: 'blur(25px)',
+        backdropFilter: 'blur(16px)',
         padding: 3,
-        borderRadius: 5,
-        backgroundColor: `rgba(${hexToRgbString(
-          theme.palette.muted.dark
-        )}, 0.33)`,
+        borderRadius: 4,
+        backgroundColor: alpha(theme.palette.muted.dark, 0.33),
       }}
     >
       <OutlinedInput

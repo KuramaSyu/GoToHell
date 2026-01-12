@@ -20,7 +20,8 @@ export const RecentSports = () => {
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
-        alignContent: 'center',
+        alignContent: 'stretch',
+        alignItems: 'flex-end', // Add this to align children to bottom
         gap: 1,
         px: 2,
       }}
@@ -29,10 +30,11 @@ export const RecentSports = () => {
         display="flex"
         flexDirection="column"
         justifyContent="left"
-        alignContent="left"
-        sx={{ width: 2 / 3 }}
+        alignContent="flex-start"
+        flexGrow={1}
+        sx={{ minWidth: 3 / 5, maxWidth: '100%' }}
       >
-        <Box display="flex" justifyContent="center">
+        {/* <Box display="flex" justifyContent="center">
           <Tabs
             value={activeTab}
             onChange={handleChange}
@@ -50,15 +52,15 @@ export const RecentSports = () => {
           >
             <Tab label="Multiplier" sx={{ minWidth: 150, width: 'auto' }} />
           </Tabs>
-        </Box>
+        </Box> */}
         <Box
           sx={{
-            mt: 2,
+            //mt: 2,
             display: 'flex',
-            position: 'relative',
+            //position: 'relative',
             width: '100%',
             justifyContent: 'center',
-            minHeight: 129,
+            //minHeight: 129,
             overflow: 'hidden',
           }}
         >
@@ -66,6 +68,7 @@ export const RecentSports = () => {
             <Box
               sx={{
                 width: '100%',
+                height: '100%',
               }}
             >
               <MultiplierSettings />
@@ -73,7 +76,14 @@ export const RecentSports = () => {
           )}
         </Box>
       </Box>
-      <Box sx={{ width: 1 / 3 }}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="left"
+        alignContent="flex-start"
+        flexShrink={1}
+        sx={{ width: 2 / 5 }}
+      >
         <SecondaryTabView></SecondaryTabView>
       </Box>
     </Box>
