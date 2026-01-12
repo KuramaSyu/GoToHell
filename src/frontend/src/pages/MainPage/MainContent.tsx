@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, useMediaQuery } from '@mui/material';
+import { alpha, Box, Divider, useMediaQuery } from '@mui/material';
 import { GameSelector } from './GameSelect';
 import { NumberSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
@@ -147,6 +147,7 @@ const MainContent: React.FC = () => {
         flexDirection: 'column',
         height: '92vh',
         justifyContent: 'space-between',
+        width: '100%',
       }}
     >
       {/* top row */}
@@ -177,9 +178,11 @@ const MainContent: React.FC = () => {
           position: 'relative',
           display: 'flex',
           flexDirection: isMobile ? 'column' : 'row',
-          width: '100%',
           justifyContent: 'space-around',
-          // p: 2,
+          backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+          mx: 2,
+          py: 2,
+          borderRadius: 4,
           minHeight: 0,
         }}
       >
@@ -192,6 +195,7 @@ const MainContent: React.FC = () => {
         >
           <GameSelector />
         </Box>
+        <Divider orientation="vertical" flexItem />
 
         {/* Death Slider and Upload */}
         <Box
@@ -233,6 +237,9 @@ const MainContent: React.FC = () => {
             </Box>
           </Box>
         </Box>
+        <Divider orientation="vertical" flexItem />
+
+        {/* Sport Selection */}
         <Box
           sx={{
             flex: 1,
