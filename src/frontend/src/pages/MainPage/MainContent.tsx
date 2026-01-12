@@ -177,9 +177,10 @@ const MainContent: React.FC = () => {
         sx={{
           position: 'relative',
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
+          flexDirection: 'row',
           justifyContent: 'space-around',
           backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+          backdropFilter: 'blur(16px)',
           mx: 2,
           py: 2,
           borderRadius: 4,
@@ -261,7 +262,6 @@ const MainContent: React.FC = () => {
           alignContent: 'center',
           zIndex: 1,
           pb: 2,
-          // height: 1 / 4,
         }}
       >
         <RecentSports></RecentSports>
