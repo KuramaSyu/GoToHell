@@ -5,6 +5,14 @@ import { useThemeStore } from '../../../zustand/useThemeStore';
 import { SecondaryTabView } from './SecondaryTabView';
 import { hexToRgbString } from '../../../utils/colors/hexToRgb';
 
+const SecondaryTabViewExists = (themeName: string) => {
+  // simplified more intelligent version without tabs
+  if (themeName === 'custom') {
+    return false;
+  }
+  return true;
+};
+
 export const RecentSports = () => {
   const [activeTab, setActiveTab] = useState(0);
   const { theme } = useThemeStore();
@@ -31,8 +39,12 @@ export const RecentSports = () => {
         flexDirection="column"
         justifyContent="left"
         alignContent="flex-start"
-        flexGrow={1}
-        sx={{ minWidth: 3 / 5, maxWidth: '100%' }}
+        sx={{
+          width: SecondaryTabViewExists(theme.custom.themeName)
+            ? '60%'
+            : '100%',
+          transition: 'width 0.3s ease-in-out',
+        }}
       >
         {/* <Box display="flex" justifyContent="center">
           <Tabs
@@ -76,16 +88,19 @@ export const RecentSports = () => {
           )}
         </Box>
       </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="left"
-        alignContent="flex-start"
-        flexShrink={1}
-        sx={{ width: 2 / 5 }}
-      >
-        <SecondaryTabView></SecondaryTabView>
-      </Box>
+
+      {SecondaryTabViewExists(theme.custom.themeName) && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="left"
+          alignContent="flex-start"
+          flexShrink={1}
+          sx={{ width: 2 / 5 }}
+        >
+          <SecondaryTabView></SecondaryTabView>
+        </Box>
+      )}
     </Box>
   );
 };
