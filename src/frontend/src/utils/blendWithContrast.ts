@@ -29,6 +29,28 @@ function rgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
   );
 }
 
+/**
+ * calculates the relative luminance of a color
+ *
+ * @param r red amount
+ * @param g green amount
+ * @param b blue amount
+ * @returns luminance of the color (0-1)
+ */
+function getRelativeLuminance(r: number, g: number, b: number): number {
+  const [rs = 0, gs = 0, bs = 0] = [r, g, b].map((c) => {
+    c = c / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+function getContrastColor(hex: string): string {
+  const rgb = hexToRgb(hex);
+  const luminance = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
+  return luminance > 0.5 ? '#000000' : '#ffffff';
+}
+
 function blendColors(
   color1: { r: number; g: number; b: number },
   color2: { r: number; g: number; b: number },
@@ -39,6 +61,27 @@ function blendColors(
     g: Math.round(color1.g + (color2.g - color1.g) * ratio),
     b: Math.round(color1.b + (color2.b - color1.b) * ratio),
   };
+}
+
+/**
+ * mixes the mainColor with its calculated contrast color
+ * to a specified amount. Like a dynamic brighten() or darken()
+ * depending on the color's luminance.
+ * @param mainColor the color to mix
+ * @param amount the amount to mix, 0.0 = mainColor, 1.0 = contrastColor
+ * @returns the blended color in hex format
+ */
+export function blendAgainstContrast(
+  mainColor: string,
+  amount: number
+): string {
+  const contrastColor = getContrastColor(mainColor);
+
+  const mainRgb = hexToRgb(mainColor);
+  const contrastRgb = hexToRgb(contrastColor);
+  const blended = blendColors(mainRgb, contrastRgb, amount);
+
+  return rgbToHex(blended);
 }
 
 /**
@@ -65,12 +108,10 @@ export function blendWithContrast(
 }
 
 /**
- * checks if a color is dark based on the theme contrast text
- * @param theme the theme to use to get the contrast color
- * @param color the color to check, if null uses theme.palette.background.muted.main
+ * checks if a color is dark based on its luminance
+ * @param color the color to check
  * @returns true if dark, false if light
  */
-export function isDarkColored(theme: any, color: string | null): boolean {
-  color = color || theme.palette.muted.main;
-  return theme.palette.getContrastText(color) === '#fff'; // #fff or #000
+export function isDarkColored(color: string): boolean {
+  return getContrastColor(color) === '#ffffff';
 }
