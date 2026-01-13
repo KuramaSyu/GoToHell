@@ -9,6 +9,11 @@ import {
 import { error } from 'console';
 import useInfoStore, { SnackbarUpdateImpl } from '../zustand/InfoStore';
 import { defaultTheme } from '../zustand/defaultTheme';
+import {
+  blendAgainstContrast,
+  blendWithContrast,
+} from '../utils/blendWithContrast';
+import { th } from 'zod/v4/locales/index.cjs';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -207,16 +212,16 @@ export class ThemeManager {
     const secondaryMain = themeConfig.secondary || darkVibrantHex;
 
     // Build and return the full MUI theme.
-    return createTheme({
+    var theme = createTheme({
       palette: {
         mode: this.isDark ? 'dark' : 'light',
         primary: {
-          main: primaryMain,
+          main: vibrantHex,
           light: lightVibrantHex,
           dark: darkVibrantHex,
         },
         secondary: {
-          main: secondaryMain,
+          main: mutedHex,
           light: lightMutedHex,
           dark: darkMutedHex,
         },
@@ -232,11 +237,29 @@ export class ThemeManager {
           dark: darkMutedHex,
         },
       },
+
       custom: {
         backgroundImage: chosenBackground,
         themeName: themeConfig.name,
         longName: themeConfig.longName,
       },
     }) as CustomTheme;
+
+    // regenerate text colors
+    return createTheme({
+      ...theme,
+      palette: {
+        ...theme.palette,
+        text: {
+          primary: blendWithContrast(theme.palette.primary.main, theme, 0.8),
+          secondary: blendWithContrast(theme.palette.primary.main, theme, 0.6),
+          disabled: blendWithContrast(theme.palette.primary.main, theme, 0.4),
+        },
+        background: {
+          default: blendAgainstContrast(theme.palette.muted.main, theme, 0.8),
+          paper: blendAgainstContrast(theme.palette.primary.main, theme, 0.8),
+        },
+      },
+    });
   }
 }

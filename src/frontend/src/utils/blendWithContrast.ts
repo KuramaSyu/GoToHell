@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material/styles';
+import { CustomTheme } from '../theme/customTheme';
 
 // Helpers
 function hexToRgb(hex: string) {
@@ -47,8 +48,20 @@ function getRelativeLuminance(r: number, g: number, b: number): number {
 
 function getContrastColor(hex: string): string {
   const rgb = hexToRgb(hex);
+  console.log(`RGB: ${JSON.stringify(rgb)}, Hex: ${hex}`);
+
   const luminance = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
   return luminance > 0.5 ? '#000000' : '#ffffff';
+}
+
+function invertColor(hex: string): string {
+  const rgb = hexToRgb(hex);
+  const inverted = {
+    r: 255 - rgb.r,
+    g: 255 - rgb.g,
+    b: 255 - rgb.b,
+  };
+  return rgbToHex(inverted);
 }
 
 function blendColors(
@@ -73,9 +86,10 @@ function blendColors(
  */
 export function blendAgainstContrast(
   mainColor: string,
+  theme: CustomTheme,
   amount: number
 ): string {
-  const contrastColor = getContrastColor(mainColor);
+  const contrastColor = invertColor(theme.palette.getContrastText(mainColor));
 
   const mainRgb = hexToRgb(mainColor);
   const contrastRgb = hexToRgb(contrastColor);

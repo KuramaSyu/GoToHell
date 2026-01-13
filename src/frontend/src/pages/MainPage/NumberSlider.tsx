@@ -15,7 +15,10 @@ import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useEffect, useState } from 'react';
-import { blendWithContrast } from '../../utils/blendWithContrast';
+import {
+  blendAgainstContrast,
+  blendWithContrast,
+} from '../../utils/blendWithContrast';
 import { useSportStore } from '../../useSportStore';
 
 interface DeathAmountState {
@@ -137,10 +140,9 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       sx={{
         width: 'clamp(40px, 35%, 200px)',
         display: 'flex',
-        color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
-        backgroundColor: theme.palette.muted.dark,
+        color: blendWithContrast(theme.palette.primary.main, theme, 2 / 3),
+        backgroundColor: theme.palette.primary.main,
         fontSize: 'clamp(16px, 2.5vw, 24px)',
-        textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.palette.primary.main,
         },
