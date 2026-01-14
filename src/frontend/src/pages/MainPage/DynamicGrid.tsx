@@ -11,6 +11,7 @@ import { darken } from '@mui/material/styles';
 import { animated, useSpring } from '@react-spring/web';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { blendWithContrast } from '../../utils/blendWithContrast';
+import { CustomTheme } from '../../theme/customTheme';
 
 export interface GameItem {
   text: string;
@@ -83,18 +84,13 @@ const AnimatedThemeButton: React.FC<{
       variant={isSelected ? 'contained' : 'outlined'}
       onClick={onClick}
       sx={{
-        //fontSize: 'clamp(18px, 1.5vw, 40px)',
         padding: 2,
         border: '2px solid',
         borderColor: 'primary.main',
-        // backgroundColor: isSelected ? undefined : 'transparent',
-        // color: 'text.primary',
         height: '100%',
         '&:hover': {
-          backgroundColor: (theme) =>
-            blendWithContrast(theme.palette.primary.main, theme, 0.2),
-          borderColor: (theme) =>
-            blendWithContrast(theme.palette.primary.main, theme, 0.5),
+          backgroundColor: theme.palette.primary.main,
+          borderColor: 'inherit',
         },
       }}
     >
@@ -102,8 +98,8 @@ const AnimatedThemeButton: React.FC<{
         variant="h5"
         color={
           isSelected
-            ? blendWithContrast(theme.palette.primary.main, theme, 0.75)
-            : blendWithContrast(theme.palette.primary.main, theme, 0.5)
+            ? theme.palette.primary.contrastText
+            : theme.palette.secondary.contrastText
         }
       >
         {item.text}
