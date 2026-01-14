@@ -110,7 +110,7 @@ export const HistoryPills: React.FC = () => {
               height={24}
               style={{
                 backgroundColor: 'transparent',
-                filter: isDarkColored(theme, theme.palette.secondary.main)
+                filter: isDarkColored(theme.palette.secondary.main)
                   ? 'brightness(0) invert(0.8)'
                   : 'none',
               }}
