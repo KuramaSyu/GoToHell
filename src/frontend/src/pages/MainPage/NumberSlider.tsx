@@ -20,6 +20,7 @@ import {
   blendWithContrast,
 } from '../../utils/blendWithContrast';
 import { useSportStore } from '../../useSportStore';
+import { GameSelectionMap } from '../../utils/data/Sports';
 
 interface DeathAmountState {
   amount: number;
@@ -61,6 +62,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const { isMobile } = useBreakpoint();
+  const { currentSport } = useSportStore();
 
   const INPUT_STRATEGIES: Record<InputVariant, React.FC<InputStrategyProps>> = {
     default: SliderInput,
@@ -72,14 +74,13 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   };
   const TOOLTIP_TEXT: Record<InputVariant, string> = {
     default: 'How often did you die?',
-    custom: `How many units of ${
-      useSportStore.getState().currentSport.sport
-    } did you do?`,
+    custom: currentSport.sport
+      ? `How many ${GameSelectionMap.get(currentSport.sport)}?`
+      : 'How many exercises?',
   };
   const SliderComponent = INPUT_STRATEGIES[withInput];
   const stepValue = STEP_VALUES[withInput];
   const tooltipText = TOOLTIP_TEXT[withInput];
-
   // when amount is changed, also update the input box amount (localAmount)
   // amount is changed from slider or modal
   useEffect(() => {
