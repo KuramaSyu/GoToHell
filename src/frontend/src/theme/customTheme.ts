@@ -43,7 +43,7 @@ export interface CustomTheme extends Theme {
    * @param amount the amount to mix, 0.0 = mainColor, 1.0 = contrastColor
    * @returns the blended color in hex format
    */
-  blendWithConstrast(color: ColorInput, amount: number): string;
+  blendWithContrast(color: ColorInput, amount: number): string;
 
   /**
    * mixes the mainColor with its calculated contrast color
@@ -135,18 +135,24 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     };
 
     this.palette.text = {
-      primary: this.blendWithContrast(theme.palette.primary.main, 0.8),
-      secondary: this.blendWithContrast(theme.palette.primary.main, 0.6),
-      disabled: this.blendWithContrast(theme.palette.primary.main, 0.4),
+      primary: this.blendWithContrast(theme.palette.background.default, 0.9),
+      secondary: this.blendWithContrast(theme.palette.background.default, 0.7),
+      disabled: this.blendWithContrast(theme.palette.background.default, 0.5),
     };
 
     this.palette.background = {
       default: this.blendAgainstContrast(this.palette.muted.main, 0.8),
       paper: this.blendAgainstContrast(this.palette.primary.main, 0.8),
     };
+
+    this.palette.primary.contrastText = this.blendWithContrast('primary', 0.8);
+    this.palette.secondary.contrastText = this.blendWithContrast(
+      'secondary',
+      0.8
+    );
   }
 
-  blendWithContrast(mainColor: ColorInput, amount: number) {
+  blendWithContrast(mainColor: ColorInput, amount: number): string {
     const color = this.resolveColor(mainColor);
     const invertedContrastColor = this.palette.getContrastText(color); // '#fff' or '#000'
 
