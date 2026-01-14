@@ -6,6 +6,9 @@ import {
   ButtonGroup,
   alpha,
   useMediaQuery,
+  ToggleButtonGroup,
+  ToggleButton,
+  SvgIcon,
 } from '@mui/material';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useSportStore } from '../../useSportStore';
@@ -38,17 +41,23 @@ import AppsIcon from '@mui/icons-material/Apps';
 import { CustomTheme } from '../../theme/customTheme';
 import { get } from 'http';
 
-const AnimatedButton = animated(Button);
+const AnimatedToggleButton = animated(ToggleButton);
 
 const getImageProps = (isSelected: boolean, theme: CustomTheme) => {
   return {
     width: 50,
     height: 50,
-    filter: isSelected
-      ? 'brightness(0) invert(1)'
-      : theme.palette.mode === 'dark'
-      ? 'brightness(0) invert(0.8)'
-      : 'none',
+    fill: isSelected
+      ? theme.palette.primary.contrastText
+      : theme.palette.secondary.contrastText,
+    color: isSelected
+      ? theme.palette.primary.contrastText
+      : theme.palette.secondary.contrastText,
+    // filter: isSelected
+    //   ? 'brightness(0) invert(1)'
+    //   : theme.palette.mode === 'dark'
+    //   ? 'brightness(0) invert(0.8)'
+    //   : 'none',
   };
 };
 
@@ -256,13 +265,16 @@ export const SportSelector = () => {
               }}
             >
               {sport !== 'show_all' ? (
-                <img
-                  src={sportIconMap[String(sport)]}
-                  alt={String(sport)}
-                  style={{
-                    ...getImageProps(isSelected, theme),
-                    marginRight: 1,
+                <SvgIcon
+                  component={sportIconMap[String(sport)]!}
+                  sx={{
+                    color: isSelected
+                      ? theme.palette.primary.contrastText
+                      : theme.palette.text.primary,
+                    height: 42,
+                    width: 42,
                   }}
+                  inheritViewBox
                 />
               ) : (
                 <AppsIcon sx={getImageProps(isSelected, theme)} />
@@ -281,41 +293,62 @@ export const SportSelector = () => {
   return (
     <Box width="clamp(40px, 100%, 350px)">
       {/* Vertical ButtonGroup for sports selection */}
-      <ButtonGroup orientation="vertical" fullWidth>
+      <ToggleButtonGroup
+        orientation="vertical"
+        fullWidth
+        exclusive
+        value={currentSport?.sport}
+        //color="primary"
+      >
         {transitions((style, { sport, multiplier }) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
-            <AnimatedButton
+            <AnimatedToggleButton
               style={style}
               onClick={() => onButtonClick(sport, multiplier)}
-              variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
+              value={sport ?? ''}
               key={sport}
               sx={{
                 gap: 3,
-                color: isSelected ? null : theme.palette.primary.light,
-                backgroundColor: isSelected
-                  ? null
-                  : alpha(theme.palette.primary.dark, 0.25),
+                color: theme.palette.secondary.contrastText,
+                backgroundColor: 'transparent',
+                // Add selected state styling
+                '&.Mui-selected': {
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.primary.contrastText,
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                },
+                // Optional: add hover state for non-selected buttons
+                '&:hover': {
+                  backgroundColor: theme.palette.primary.main,
+                },
               }}
             >
               {sport !== 'show_all' ? (
-                <img
-                  src={sportIconMap[String(sport)]}
-                  alt={String(sport)}
-                  style={{
-                    ...getImageProps(isSelected, theme),
-                    marginRight: 1,
-                  }}
-                />
+                sportIconMap[String(sport)] ? (
+                  <SvgIcon
+                    component={sportIconMap[String(sport)]!}
+                    sx={{
+                      color: isSelected
+                        ? theme.palette.primary.contrastText
+                        : theme.palette.text.primary,
+                      height: 42,
+                      width: 42,
+                    }}
+                    inheritViewBox
+                  />
+                ) : null
               ) : (
                 <AppsIcon sx={getImageProps(isSelected, theme)} />
               )}
               <Typography>{String(sport).replace('_', ' ')}</Typography>
-            </AnimatedButton>
+            </AnimatedToggleButton>
           );
         })}
-      </ButtonGroup>
+      </ToggleButtonGroup>
       {dialogOpen && (
         <SportSelectionDialog
           state={{ open: dialogOpen, setOpen: setDialogOpen }}
