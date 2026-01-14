@@ -48,7 +48,6 @@ function getRelativeLuminance(r: number, g: number, b: number): number {
 
 function getContrastColor(hex: string): string {
   const rgb = hexToRgb(hex);
-  console.log(`RGB: ${JSON.stringify(rgb)}, Hex: ${hex}`);
 
   const luminance = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
   return luminance > 0.5 ? '#000000' : '#ffffff';
