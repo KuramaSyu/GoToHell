@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import { CustomTheme } from '../theme/customTheme';
 
 // Helpers
-function hexToRgb(hex: string) {
+export function hexToRgb(hex: string) {
   hex = hex.replace('#', '');
   if (hex.length === 3) {
     hex = hex
@@ -18,7 +18,7 @@ function hexToRgb(hex: string) {
   };
 }
 
-function rgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
+export function rgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
   return (
     '#' +
     [r, g, b]
@@ -38,7 +38,7 @@ function rgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
  * @param b blue amount
  * @returns luminance of the color (0-1)
  */
-function getRelativeLuminance(r: number, g: number, b: number): number {
+export function getRelativeLuminance(r: number, g: number, b: number): number {
   const [rs = 0, gs = 0, bs = 0] = [r, g, b].map((c) => {
     c = c / 255;
     return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
@@ -46,14 +46,14 @@ function getRelativeLuminance(r: number, g: number, b: number): number {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
 
-function getContrastColor(hex: string): string {
+export function getContrastColor(hex: string): string {
   const rgb = hexToRgb(hex);
 
   const luminance = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
   return luminance > 0.5 ? '#000000' : '#ffffff';
 }
 
-function invertColor(hex: string): string {
+export function invertColor(hex: string): string {
   const rgb = hexToRgb(hex);
   const inverted = {
     r: 255 - rgb.r,
@@ -63,7 +63,7 @@ function invertColor(hex: string): string {
   return rgbToHex(inverted);
 }
 
-function blendColors(
+export function blendColors(
   color1: { r: number; g: number; b: number },
   color2: { r: number; g: number; b: number },
   ratio: number
