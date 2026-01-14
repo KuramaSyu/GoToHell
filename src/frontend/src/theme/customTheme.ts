@@ -33,8 +33,27 @@ export interface CustomTheme extends Theme {
     };
   };
   custom: ThemeCustomExtension;
-  blendWithConstrast(color: string, amount: number): string;
-  blendAgainstContrast(color: string, amount: number): string;
+
+  /**
+   * mixes the mainColor with the contrast color from the theme
+   * to a specified amount. Like a dynamic brigthen() or darken()
+   * depending theme.
+   * @param mainColor the color to mix
+   * @param theme the theme to use to get the contrast color
+   * @param amount the amount to mix, 0.0 = mainColor, 1.0 = contrastColor
+   * @returns the blended color in hex format
+   */
+  blendWithConstrast(color: ColorInput, amount: number): string;
+
+  /**
+   * mixes the mainColor with its calculated contrast color
+   * to a specified amount. Like a dynamic brighten() or darken()
+   * depending on the color's luminance.
+   * @param mainColor the color to mix
+   * @param amount the amount to mix, 0.0 = mainColor, 1.0 = contrastColor
+   * @returns the blended color in hex format
+   */
+  blendAgainstContrast(color: ColorInput, amount: number): string;
 }
 
 /**
@@ -53,6 +72,12 @@ export interface ThemeCustomExtension {
   backgroundImage: string;
 }
 
+/**
+ * Implementation of CustomTheme with following features:
+ * - blendWithContrast and blendAgainstContrast methods
+ * - adjusted text colors
+ * - adjusted background colors
+ */
 export class CustomThemeImpl extends Object implements CustomTheme {
   // Declare all Theme properties
   palette!: CustomTheme['palette'];
@@ -98,15 +123,6 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     };
   }
 
-  /**
-   * mixes the mainColor with the contrast color from the theme
-   * to a specified amount. Like a dynamic brigthen() or darken()
-   * depending theme.
-   * @param mainColor the color to mix
-   * @param theme the theme to use to get the contrast color
-   * @param amount the amount to mix, 0.0 = mainColor, 1.0 = contrastColor
-   * @returns the blended color in hex format
-   */
   blendWithContrast(mainColor: ColorInput, amount: number) {
     const color = this.resolveColor(mainColor);
     const invertedContrastColor = this.palette.getContrastText(color); // '#fff' or '#000'
@@ -118,14 +134,6 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     return rgbToHex(blended);
   }
 
-  /**
-   * mixes the mainColor with its calculated contrast color
-   * to a specified amount. Like a dynamic brighten() or darken()
-   * depending on the color's luminance.
-   * @param mainColor the color to mix
-   * @param amount the amount to mix, 0.0 = mainColor, 1.0 = contrastColor
-   * @returns the blended color in hex format
-   */
   blendAgainstContrast(mainColor: ColorInput, amount: number): string {
     const color = this.resolveColor(mainColor);
     const contrastColor = invertColor(this.palette.getContrastText(color));
