@@ -98,10 +98,10 @@ export class CustomThemeImpl extends Object implements CustomTheme {
   applyStyles!: Theme['applyStyles'];
   containerQueries!: Theme['containerQueries'];
 
-  // methods
-  alpha!: typeof alpha;
-  lighten!: typeof lighten;
-  darken!: typeof darken;
+  // Wrap the methods to match the Theme interface signature
+  alpha: (color: string, value: string | number) => string;
+  lighten: (color: string, coefficient: string | number) => string;
+  darken: (color: string, coefficient: string | number) => string;
 
   constructor(theme: CustomTheme);
   constructor(theme: Theme, config: ThemeCustomExtension);
@@ -116,10 +116,23 @@ export class CustomThemeImpl extends Object implements CustomTheme {
       this.custom = (theme as CustomTheme).custom;
     }
 
-    // add methods which are required for MUI Theme
-    this.alpha = alpha;
-    this.lighten = lighten;
-    this.darken = darken;
+    // Wrap methods to handle string | number parameters
+    this.alpha = (color: string, value: string | number) => {
+      const numValue = typeof value === 'string' ? parseFloat(value) : value;
+      return alpha(color, numValue);
+    };
+
+    this.lighten = (color: string, coefficient: string | number) => {
+      const numCoef =
+        typeof coefficient === 'string' ? parseFloat(coefficient) : coefficient;
+      return lighten(color, numCoef);
+    };
+
+    this.darken = (color: string, coefficient: string | number) => {
+      const numCoef =
+        typeof coefficient === 'string' ? parseFloat(coefficient) : coefficient;
+      return darken(color, numCoef);
+    };
 
     this.palette.text = {
       primary: this.blendWithContrast(theme.palette.primary.main, 0.8),
