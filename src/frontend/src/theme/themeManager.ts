@@ -1,6 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
-import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
+import {
+  CustomThemeConfig,
+  CustomTheme,
+  CustomThemeImpl,
+} from '../theme/customTheme';
 import {
   docsTheme,
   customThemes,
@@ -112,9 +116,9 @@ export class ThemeManager {
     const background = useThemeStore.getState().theme.custom.backgroundImage;
     switch (themeName) {
       case 'docsTheme':
-        return docsTheme;
+        return new CustomThemeImpl(docsTheme);
       case 'default':
-        return defaultTheme;
+        return new CustomThemeImpl(defaultTheme);
     }
     const themeConfig = this.themes.get(themeName);
     if (!themeConfig) {
@@ -207,10 +211,6 @@ export class ThemeManager {
       ? extractedPalette.DarkMuted.hex
       : '#494949';
 
-    // Use provided primary/secondary if available.
-    const primaryMain = themeConfig.primary || vibrantHex;
-    const secondaryMain = themeConfig.secondary || darkVibrantHex;
-
     // Build and return the full MUI theme.
     var theme = createTheme({
       palette: {
@@ -245,21 +245,7 @@ export class ThemeManager {
       },
     }) as CustomTheme;
 
-    // regenerate text colors
-    return createTheme({
-      ...theme,
-      palette: {
-        ...theme.palette,
-        text: {
-          primary: blendWithContrast(theme.palette.primary.main, theme, 0.8),
-          secondary: blendWithContrast(theme.palette.primary.main, theme, 0.6),
-          disabled: blendWithContrast(theme.palette.primary.main, theme, 0.4),
-        },
-        background: {
-          default: blendAgainstContrast(theme.palette.muted.main, theme, 0.8),
-          paper: blendAgainstContrast(theme.palette.primary.main, theme, 0.8),
-        },
-      },
-    });
+    // calculates background colors, text colors and extends methods
+    return new CustomThemeImpl(theme);
   }
 }
