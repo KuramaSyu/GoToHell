@@ -22,7 +22,7 @@ import { sportIconMap } from '../../../utils/data/Sports';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import GamepadIcon from '@mui/icons-material/Gamepad';
-import { GameEntry } from '../QuickActions/SearchEntry';
+import { GameEntry, SportEntry } from '../QuickActions/SearchEntry';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
 import { useEffect, useState } from 'react';
@@ -31,6 +31,7 @@ import SyncIcon from '@mui/icons-material/Sync';
 import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
+import { SearchEntryIconProvider } from '../QuickActions/SearchEntryIconProvider';
 
 export interface SportDialogProps {
   selectedSport: UserSport | null;
@@ -143,16 +144,10 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                   width: 1 / 2,
                 }}
               >
-                <img
-                  src={sportIconMap[String(selectedSport.kind)]}
-                  alt={String(selectedSport.kind)}
-                  style={{
-                    width: 60,
-                    height: 60,
-                    filter: 'brightness(0) invert(1)',
-                    marginRight: 1,
-                  }}
-                />
+                {SearchEntryIconProvider.getIcon(
+                  new SportEntry(selectedSport.kind),
+                  { height: 42, width: 42 }
+                )}
                 {selectedSport.kind.toUpperCase()}
               </Box>
             </Box>
