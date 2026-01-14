@@ -73,6 +73,7 @@ export const PopNumber = ({
   return (
     <Typography
       component="span"
+      color="textPrimary"
       style={{
         fontFamily: font,
         display: 'inline-block',
