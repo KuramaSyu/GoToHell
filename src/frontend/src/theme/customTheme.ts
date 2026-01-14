@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material/styles';
+import { Theme, alpha, lighten, darken } from '@mui/material/styles';
 import { Palette } from '@mui/material/styles/createPalette';
 import {
   blendColors,
