@@ -32,28 +32,31 @@ export interface CustomTheme extends Theme {
       dark: string;
     };
   };
-  custom: {
-    backgroundImage: string;
-    themeName: string;
-    longName: string;
-  };
+  custom: ThemeCustomExtension;
   blendWithConstrast(color: string, amount: number): string;
   blendAgainstContrast(color: string, amount: number): string;
 }
 
+/**
+ * Config to extend theme.
+ * Multiple backgrounds. actual theme gets one of them.
+ */
 export interface CustomThemeConfig {
   name: string; // Short identifier, e.g. 'ocean'
   longName: string; // Descriptive name, e.g. 'Ocean Breeze'
   backgrounds: string[];
-  // Optional overrides – if provided these will be used instead of Vibrant extraction.
-  primary?: string;
-  secondary?: string;
+}
+
+export interface ThemeCustomExtension {
+  themeName: string; // Short identifier, e.g. 'ocean'
+  longName: string; // Descriptive name, e.g. 'Ocean Breeze'
+  backgroundImage: string;
 }
 
 export class CustomThemeImpl extends Object implements CustomTheme {
   // Declare all Theme properties
   palette!: CustomTheme['palette'];
-  custom!: CustomTheme['custom'];
+  custom!: ThemeCustomExtension;
   blendWithConstrast: any;
   breakpoints!: Theme['breakpoints'];
   direction!: Theme['direction'];
@@ -70,14 +73,28 @@ export class CustomThemeImpl extends Object implements CustomTheme {
   applyStyles!: Theme['applyStyles'];
   containerQueries!: Theme['containerQueries'];
 
-  constructor(theme: Theme, config: CustomThemeConfig) {
+  constructor(theme: CustomTheme);
+  constructor(theme: Theme, config: ThemeCustomExtension);
+  constructor(theme: Theme | CustomTheme, config?: ThemeCustomExtension) {
     super();
     Object.assign(this, theme);
 
-    this.custom = {
-      backgroundImage: config.backgrounds[0] || '',
-      themeName: config.name,
-      longName: config.longName,
+    // If config is provided, use it; otherwise use theme's custom property
+    if (config) {
+      this.custom = config;
+    } else if ('custom' in theme) {
+      this.custom = (theme as CustomTheme).custom;
+    }
+
+    this.palette.text = {
+      primary: this.blendWithContrast(theme.palette.primary.main, 0.8),
+      secondary: this.blendWithContrast(theme.palette.primary.main, 0.6),
+      disabled: this.blendWithContrast(theme.palette.primary.main, 0.4),
+    };
+
+    this.palette.background = {
+      default: this.blendAgainstContrast(this.palette.muted.main, 0.8),
+      paper: this.blendAgainstContrast(this.palette.primary.main, 0.8),
     };
   }
 
@@ -126,7 +143,7 @@ export class CustomThemeImpl extends Object implements CustomTheme {
    * returns hex color for given ColorInput
    *
    * @param color the hex itself, or the name (primary, secondary, ...)
-   * @returns
+   * @returns a hex color string
    */
   private resolveColor(color: ColorInput): string {
     switch (color) {
