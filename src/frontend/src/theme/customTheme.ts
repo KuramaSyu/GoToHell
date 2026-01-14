@@ -98,6 +98,11 @@ export class CustomThemeImpl extends Object implements CustomTheme {
   applyStyles!: Theme['applyStyles'];
   containerQueries!: Theme['containerQueries'];
 
+  // methods
+  alpha!: typeof alpha;
+  lighten!: typeof lighten;
+  darken!: typeof darken;
+
   constructor(theme: CustomTheme);
   constructor(theme: Theme, config: ThemeCustomExtension);
   constructor(theme: Theme | CustomTheme, config?: ThemeCustomExtension) {
@@ -110,6 +115,11 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     } else if ('custom' in theme) {
       this.custom = (theme as CustomTheme).custom;
     }
+
+    // add methods which are required for MUI Theme
+    this.alpha = alpha;
+    this.lighten = lighten;
+    this.darken = darken;
 
     this.palette.text = {
       primary: this.blendWithContrast(theme.palette.primary.main, 0.8),
