@@ -146,7 +146,7 @@ export class CustomThemeImpl extends Object implements CustomTheme {
           hexToRgb(
             this.palette.getContrastText(this.palette.background.default)
           ),
-          0.4
+          0.6
         )
       ),
       secondary: rgbToHex(
@@ -155,7 +155,7 @@ export class CustomThemeImpl extends Object implements CustomTheme {
           hexToRgb(
             this.palette.getContrastText(this.palette.background.default)
           ),
-          0.4
+          0.6
         )
       ),
       disabled: rgbToHex(
@@ -164,16 +164,16 @@ export class CustomThemeImpl extends Object implements CustomTheme {
           hexToRgb(
             this.palette.getContrastText(this.palette.background.default)
           ),
-          0.2
+          0.4
         )
       ),
     };
 
     // bend text colors from primary and secondary colors
-    this.palette.primary.contrastText = this.blendWithContrast('primary', 0.5);
+    this.palette.primary.contrastText = this.blendWithContrast('primary', 0.66);
     this.palette.secondary.contrastText = this.blendWithContrast(
       'secondary',
-      0.5
+      0.66
     );
   }
 
