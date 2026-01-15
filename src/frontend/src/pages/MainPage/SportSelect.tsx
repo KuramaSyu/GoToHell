@@ -49,10 +49,10 @@ const getImageProps = (isSelected: boolean, theme: CustomTheme) => {
     height: 50,
     fill: isSelected
       ? theme.palette.primary.contrastText
-      : theme.palette.secondary.contrastText,
+      : theme.palette.text.primary,
     color: isSelected
       ? theme.palette.primary.contrastText
-      : theme.palette.secondary.contrastText,
+      : theme.palette.text.primary,
     // filter: isSelected
     //   ? 'brightness(0) invert(1)'
     //   : theme.palette.mode === 'dark'
@@ -311,7 +311,7 @@ export const SportSelector = () => {
               key={sport}
               sx={{
                 gap: 3,
-                color: theme.palette.secondary.contrastText,
+                color: theme.palette.text.primary,
                 backgroundColor: 'transparent',
                 // Add selected state styling
                 '&.Mui-selected': {
