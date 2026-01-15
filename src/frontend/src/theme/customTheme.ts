@@ -132,24 +132,48 @@ export class CustomThemeImpl extends Object implements CustomTheme {
       return darken(color, numCoef);
     };
 
-    // blend text colors with contrast color
-    this.palette.text = {
-      primary: this.blendWithContrast(theme.palette.background.default, 0.75),
-      secondary: this.blendWithContrast(theme.palette.background.default, 0.6),
-      disabled: this.blendWithContrast(theme.palette.background.default, 0.4),
-    };
-
     // blend background colors against contrast color (to increase contrast with text)
     this.palette.background = {
       default: this.blendAgainstContrast(this.palette.muted.dark, 0.5),
       paper: this.blendAgainstContrast(this.palette.primary.main, 0.5),
     };
 
+    // blend text colors with contrast color
+    this.palette.text = {
+      primary: rgbToHex(
+        blendColors(
+          hexToRgb(this.palette.primary.light),
+          hexToRgb(
+            this.palette.getContrastText(this.palette.background.default)
+          ),
+          0.4
+        )
+      ),
+      secondary: rgbToHex(
+        blendColors(
+          hexToRgb(this.palette.secondary.light),
+          hexToRgb(
+            this.palette.getContrastText(this.palette.background.default)
+          ),
+          0.4
+        )
+      ),
+      disabled: rgbToHex(
+        blendColors(
+          hexToRgb(this.palette.primary.main),
+          hexToRgb(
+            this.palette.getContrastText(this.palette.background.default)
+          ),
+          0.2
+        )
+      ),
+    };
+
     // bend text colors from primary and secondary colors
-    this.palette.primary.contrastText = this.blendWithContrast('primary', 0.8);
+    this.palette.primary.contrastText = this.blendWithContrast('primary', 0.5);
     this.palette.secondary.contrastText = this.blendWithContrast(
       'secondary',
-      0.8
+      0.5
     );
   }
 
@@ -201,8 +225,11 @@ export class CustomThemeImpl extends Object implements CustomTheme {
         return this.palette.vibrant.main;
       case 'muted':
         return this.palette.muted.main;
-      default:
-        return color;
     }
+    if (color.startsWith('#')) {
+      return color;
+    }
+    console.error(`Unknown color input in resolveColor: ${color}`);
+    return color;
   }
 }
