@@ -40,6 +40,10 @@ import { set } from 'date-fns';
 import AppsIcon from '@mui/icons-material/Apps';
 import { CustomTheme } from '../../theme/customTheme';
 import { get } from 'http';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
 
 const AnimatedToggleButton = animated(ToggleButton);
 
@@ -205,6 +209,32 @@ export const SportSelector = () => {
     }
     console.log(sportResponse);
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
+
+  // on mount: set random sport as current sport (only displayed sports)
+  useEffect(() => {
+    new ApiRequirementsBuilder()
+      .add(ApiRequirement.Preferences)
+      .fetchIfNeeded()
+      .then(() => {
+        // get random sport from preferences
+        const preferredSports = preferences.ui.displayedSports?.filter(
+          (s) => s.isDisplayed && s.name !== 'show_all'
+        );
+        if (preferredSports != null && preferredSports.length > 0) {
+          const randomSport =
+            preferredSports[Math.floor(Math.random() * preferredSports.length)];
+
+          if (randomSport == null) return;
+          // Then use randomSport to set the sport
+          const multiplier = getSportMultiplier(randomSport.name);
+          setSport({
+            ...currentSport,
+            sport: randomSport.name,
+            sport_multiplier: multiplier.multiplier,
+          });
+        }
+      });
+  }, []);
 
   /**
    * Handles button clicks for sport selection.
