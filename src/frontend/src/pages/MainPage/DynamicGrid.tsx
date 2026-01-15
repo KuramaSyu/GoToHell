@@ -99,7 +99,7 @@ const AnimatedThemeButton: React.FC<{
         color={
           isSelected
             ? theme.palette.primary.contrastText
-            : theme.palette.secondary.contrastText
+            : theme.palette.text.primary
         }
       >
         {item.text}
