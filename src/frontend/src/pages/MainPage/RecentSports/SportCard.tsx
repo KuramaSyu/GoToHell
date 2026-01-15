@@ -39,12 +39,13 @@ export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
         pl: 2,
         width: 'auto', // Ensures the width is determined by the content
         flexDirection: 'column',
-        color: lighten(theme.palette.primary.main, 2 / 3),
+        color: theme.palette.secondary.contrastText,
       }}
     >
       <Typography
         variant="body1"
         component="span"
+        color={theme.palette.secondary.contrastText}
         sx={{
           fontWeight: '350',
           textTransform: 'uppercase',
@@ -87,7 +88,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         sx={{
           fontFamily: NUMBER_FONT,
           fontSize: '1.5rem',
-          color: lighten(theme.palette.primary.main, 0.5),
+          color: theme.palette.secondary.contrastText,
         }}
         variant="h6"
       >
