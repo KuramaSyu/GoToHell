@@ -135,9 +135,9 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     };
 
     this.palette.text = {
-      primary: this.blendWithContrast(theme.palette.background.default, 0.9),
-      secondary: this.blendWithContrast(theme.palette.background.default, 0.7),
-      disabled: this.blendWithContrast(theme.palette.background.default, 0.5),
+      primary: this.blendWithContrast(theme.palette.background.default, 0.75),
+      secondary: this.blendWithContrast(theme.palette.background.default, 0.6),
+      disabled: this.blendWithContrast(theme.palette.background.default, 0.4),
     };
 
     this.palette.background = {
