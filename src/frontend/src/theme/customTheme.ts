@@ -121,30 +121,31 @@ export class CustomThemeImpl extends Object implements CustomTheme {
       const numValue = typeof value === 'string' ? parseFloat(value) : value;
       return alpha(color, numValue);
     };
-
     this.lighten = (color: string, coefficient: string | number) => {
       const numCoef =
         typeof coefficient === 'string' ? parseFloat(coefficient) : coefficient;
       return lighten(color, numCoef);
     };
-
     this.darken = (color: string, coefficient: string | number) => {
       const numCoef =
         typeof coefficient === 'string' ? parseFloat(coefficient) : coefficient;
       return darken(color, numCoef);
     };
 
+    // blend text colors with contrast color
     this.palette.text = {
       primary: this.blendWithContrast(theme.palette.background.default, 0.75),
       secondary: this.blendWithContrast(theme.palette.background.default, 0.6),
       disabled: this.blendWithContrast(theme.palette.background.default, 0.4),
     };
 
+    // blend background colors against contrast color (to increase contrast with text)
     this.palette.background = {
-      default: this.blendAgainstContrast(this.palette.muted.main, 0.8),
-      paper: this.blendAgainstContrast(this.palette.primary.main, 0.8),
+      default: this.blendAgainstContrast(this.palette.muted.dark, 0.5),
+      paper: this.blendAgainstContrast(this.palette.primary.main, 0.5),
     };
 
+    // bend text colors from primary and secondary colors
     this.palette.primary.contrastText = this.blendWithContrast('primary', 0.8);
     this.palette.secondary.contrastText = this.blendWithContrast(
       'secondary',
