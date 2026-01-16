@@ -105,7 +105,16 @@ export class CustomThemeImpl extends Object implements CustomTheme {
 
   constructor(theme: CustomTheme);
   constructor(theme: Theme, config: ThemeCustomExtension);
-  constructor(theme: Theme | CustomTheme, config?: ThemeCustomExtension) {
+  constructor(
+    theme: Theme,
+    config?: ThemeCustomExtension,
+    recalculateColors?: boolean
+  );
+  constructor(
+    theme: Theme | CustomTheme,
+    config?: ThemeCustomExtension,
+    recalculateColors?: boolean
+  ) {
     super();
     Object.assign(this, theme);
 
@@ -132,49 +141,69 @@ export class CustomThemeImpl extends Object implements CustomTheme {
       return darken(color, numCoef);
     };
 
-    // blend background colors against contrast color (to increase contrast with text)
-    this.palette.background = {
-      default: this.blendAgainstContrast(this.palette.muted.dark, 0.5),
-      paper: this.blendAgainstContrast(this.palette.primary.main, 0.5),
-    };
+    if (recalculateColors === true) {
+      // blend background colors against contrast color (to increase contrast with text)
+      const contrastColor = invertColor(
+        this.palette.getContrastText(this.palette.background.default)
+      );
+      this.palette.background = {
+        default: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.muted.dark),
+            hexToRgb(contrastColor),
+            0.25
+          )
+        ),
+        paper: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.muted.dark),
+            hexToRgb(contrastColor),
+            0
+          )
+        ),
+      };
 
-    // blend text colors with contrast color
-    this.palette.text = {
-      primary: rgbToHex(
-        blendColors(
-          hexToRgb(this.palette.primary.light),
-          hexToRgb(
-            this.palette.getContrastText(this.palette.background.default)
-          ),
-          0.6
-        )
-      ),
-      secondary: rgbToHex(
-        blendColors(
-          hexToRgb(this.palette.secondary.light),
-          hexToRgb(
-            this.palette.getContrastText(this.palette.background.default)
-          ),
-          0.6
-        )
-      ),
-      disabled: rgbToHex(
-        blendColors(
-          hexToRgb(this.palette.primary.main),
-          hexToRgb(
-            this.palette.getContrastText(this.palette.background.default)
-          ),
-          0.4
-        )
-      ),
-    };
+      // blend text colors with contrast color
+      this.palette.text = {
+        primary: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.primary.light),
+            hexToRgb(
+              this.palette.getContrastText(this.palette.background.default)
+            ),
+            0.6
+          )
+        ),
+        secondary: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.secondary.light),
+            hexToRgb(
+              this.palette.getContrastText(this.palette.background.default)
+            ),
+            0.6
+          )
+        ),
+        disabled: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.primary.main),
+            hexToRgb(
+              this.palette.getContrastText(this.palette.background.default)
+            ),
+            0.4
+          )
+        ),
+      };
 
-    // bend text colors from primary and secondary colors
-    this.palette.primary.contrastText = this.blendWithContrast('primary', 0.66);
-    this.palette.secondary.contrastText = this.blendWithContrast(
-      'secondary',
-      0.66
-    );
+      // bend text colors from primary and secondary colors
+      this.palette.primary.contrastText = this.blendWithContrast(
+        'primary',
+        0.66
+      );
+      this.palette.secondary.contrastText = this.blendWithContrast(
+        'secondary',
+        0.66
+      );
+    }
   }
 
   blendWithContrast(mainColor: ColorInput, amount: number): string {

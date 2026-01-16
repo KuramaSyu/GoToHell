@@ -39,13 +39,12 @@ export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
         pl: 2,
         width: 'auto', // Ensures the width is determined by the content
         flexDirection: 'column',
-        color: theme.palette.secondary.contrastText,
+        color: theme.palette.text.secondary,
       }}
     >
       <Typography
         variant="body1"
         component="span"
-        color={theme.palette.secondary.contrastText}
         sx={{
           fontWeight: '350',
           textTransform: 'uppercase',
@@ -54,7 +53,7 @@ export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
         {data.kind.replace('_', ' ')}
       </Typography>
 
-      <Typography variant="subtitle2" fontWeight={350}>
+      <Typography variant="subtitle2" fontWeight={350} color="inherit">
         {formatDistanceToNow(new Date(data.timedate), {
           addSuffix: true,
         })}
@@ -88,7 +87,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         sx={{
           fontFamily: NUMBER_FONT,
           fontSize: '1.5rem',
-          color: theme.palette.secondary.contrastText,
+          color: theme.palette.text.secondary,
         }}
         variant="h6"
       >

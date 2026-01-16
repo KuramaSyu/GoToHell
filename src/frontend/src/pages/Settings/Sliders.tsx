@@ -302,7 +302,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           onClick={() => setUsedMultiplierAndUpdateValue(null)}
           sx={{
             backgroundColor: getColor(null),
-            color: theme.palette.text.secondary,
+            color: theme.palette.secondary.contrastText,
             whiteSpace: 'nowrap', // Prevent text wrapping
             justifyContent: 'center',
           }}
@@ -312,7 +312,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         <Button
           sx={{
             backgroundColor: getColor(theme.custom.themeName),
-            color: theme.palette.text.secondary,
+            color: theme.palette.secondary.contrastText,
             whiteSpace: 'nowrap', // Prevent text wrapping
             justifyContent: 'center',
           }}

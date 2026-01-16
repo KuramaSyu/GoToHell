@@ -142,7 +142,6 @@ export class DefaultSportsCalculator implements SportsCalculator {
 
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
-    const text_color = lighten(theme.palette.muted.main, 0.5);
     const sport_base = this.get_sport_base(sport);
     const game_base = this.get_game_base(game);
     const sport_times_game_base = this.get(sport, game);
@@ -166,15 +165,18 @@ export class DefaultSportsCalculator implements SportsCalculator {
         {/* Main Box */}
         <Box
           sx={{
-            backgroundColor: darken(theme.palette.muted.dark, 0),
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.secondary,
             px: 5,
             py: 1,
             borderRadius: 8,
-            borderColor: lighten(theme.palette.muted.dark, 1 / 5),
+            borderColor: theme.blendWithContrast(
+              theme.palette.background.paper,
+              0.2
+            ),
             borderWidth: 1,
             fontSize: 24,
             fontFamily: NUMBER_FONT,
-            color: text_color,
             justifyContent: 'center',
             alignItems: 'center',
             display: 'inline-flex',
@@ -348,11 +350,11 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
         >
           {this.decorated.make_box(sport, game, deaths)}
           <Box sx={{ display: 'flex' }}>
-            <Hexagon color={theme.palette.muted.dark}>
+            <Hexagon color={theme.palette.background.paper}>
               <Box
                 sx={{
                   fontSize: 42,
-                  color: lighten(theme.palette.muted.dark, 0.5),
+                  color: theme.palette.text.secondary,
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -410,7 +412,7 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const override = this.get_override(sport, game);
     const theme = useThemeStore.getState().theme;
-    const text_color = lighten(theme.palette.muted.main, 0.5);
+    const text_color = theme.palette.text.secondary;
 
     if (override !== null) {
       return (
@@ -432,11 +434,14 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
           {/* Main Box */}
           <Box
             sx={{
-              backgroundColor: darken(theme.palette.muted.dark, 0),
+              backgroundColor: theme.palette.background.paper,
               px: 5,
               py: 1,
               borderRadius: 8,
-              borderColor: lighten(theme.palette.muted.dark, 1 / 5),
+              borderColor: theme.blendWithContrast(
+                theme.palette.background.paper,
+                0.25
+              ),
               borderWidth: 1,
               fontSize: 22,
               fontFamily: NUMBER_FONT,
@@ -475,7 +480,7 @@ export class ExactlyOneDecorator extends BaseSportsCalculatorDecorator {
 export class DeathDecorator extends BaseSportsCalculatorDecorator {
   make_box(sport: string, game: string, deaths: number): ReactNode {
     const theme = useThemeStore.getState().theme;
-    const text_color = lighten(theme.palette.muted.main, 0.5);
+    const text_color = theme.palette.text.secondary;
     return (
       <Box
         sx={{
@@ -490,11 +495,14 @@ export class DeathDecorator extends BaseSportsCalculatorDecorator {
         {this.decorated.make_box(sport, game, deaths)}{' '}
         <Box
           sx={{
-            backgroundColor: darken(theme.palette.muted.dark, 0),
+            backgroundColor: theme.palette.background.paper,
             px: 1,
             py: 1.5, // Add padding for better fit
             borderRadius: 8,
-            borderColor: lighten(theme.palette.muted.dark, 1 / 5),
+            borderColor: theme.blendWithContrast(
+              theme.palette.background.paper,
+              0.25
+            ),
             borderWidth: 1,
             fontSize: 18,
             fontFamily: NUMBER_FONT,
@@ -594,7 +602,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
       return this.decorated.make_box(sport, game, deaths);
     }
     const theme = useThemeStore.getState().theme;
-    const text_color = lighten(theme.palette.muted.main, 0.5);
+    const text_color = theme.palette.text.secondary;
     const multiplier = this.get_multiplier(sport, game)?.multiplier;
     const strength_factor = this.strength_factor(deaths, game, sport);
     const multiplier_latex = multiplier
@@ -628,11 +636,14 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box
             sx={{
-              backgroundColor: darken(theme.palette.muted.dark, 0),
+              backgroundColor: theme.palette.background.paper,
               px: 1,
               py: 1,
               borderRadius: 8,
-              borderColor: lighten(theme.palette.muted.dark, 1 / 5),
+              borderColor: theme.blendWithContrast(
+                theme.palette.background.paper,
+                0.25
+              ),
               borderWidth: 1,
               fontSize: 20,
               fontFamily: NUMBER_FONT,
