@@ -236,7 +236,7 @@ export class CustomThemeImpl extends Object implements CustomTheme {
    * @param color the hex itself, or the name (primary, secondary, ...)
    * @returns a hex color string
    */
-  private resolveColor(color: ColorInput): string {
+  resolveColor(color: ColorInput): string {
     switch (color) {
       case 'primary':
         return this.palette.primary.main;
