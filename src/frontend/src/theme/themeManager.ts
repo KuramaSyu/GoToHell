@@ -181,14 +181,7 @@ export class ThemeManager {
     } catch (err) {
       console.error('Error extracting colors with Node-Vibrant:', err);
       extractedPalette = {};
-      return {
-        ...defaultTheme,
-        custom: {
-          themeName: themeConfig.name,
-          longName: themeConfig.longName,
-          backgroundImage: themeConfig.backgrounds[0] ?? '',
-        },
-      };
+      return defaultTheme;
     }
 
     // Get extracted swatches (with sensible fallbacks).
@@ -214,6 +207,7 @@ export class ThemeManager {
     // Build and return the full MUI theme.
     var theme = createTheme({
       palette: {
+        contrastThreshold: 3.5,
         mode: this.isDark ? 'dark' : 'light',
         primary: {
           main: vibrantHex,
@@ -246,6 +240,6 @@ export class ThemeManager {
     }) as CustomTheme;
 
     // calculates background colors, text colors and extends methods
-    return new CustomThemeImpl(theme);
+    return new CustomThemeImpl(theme, undefined, true);
   }
 }
