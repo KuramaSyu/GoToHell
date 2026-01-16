@@ -15,6 +15,8 @@ import {
   IconButton,
   Slide,
   SwipeableDrawer,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -197,30 +199,32 @@ const TopBar: React.FC = () => {
                   width: '70%',
                 }}
               >
-                <Button
-                  variant={containedIfSelected(Pages.HISTORY)}
-                  onClick={() => navigate(Pages.HISTORY)}
+                <ToggleButtonGroup
+                  value={location.pathname}
+                  exclusive
+                  onChange={(event, newValue) => {
+                    if (newValue !== null) {
+                      navigate(newValue);
+                    }
+                  }}
+                  sx={{
+                    gap: 1,
+                  }}
+                  color="secondary"
                 >
-                  <HistoryIcon />
-                </Button>
-                <Button
-                  variant={containedIfSelected(Pages.HOME)}
-                  onClick={() => navigate(Pages.HOME)}
-                >
-                  <HomeIcon />
-                </Button>
-                <Button
-                  variant={containedIfSelected(Pages.FRIENDS)}
-                  onClick={() => navigate(Pages.FRIENDS)}
-                >
-                  <PeopleIcon />
-                </Button>
-                <Button
-                  variant={containedIfSelected(Pages.SETTINGSV2)}
-                  onClick={() => navigate(Pages.SETTINGSV2)}
-                >
-                  <SettingsIcon />
-                </Button>
+                  <ToggleButton value={Pages.HISTORY}>
+                    <HistoryIcon />
+                  </ToggleButton>
+                  <ToggleButton value={Pages.HOME}>
+                    <HomeIcon />
+                  </ToggleButton>
+                  <ToggleButton value={Pages.FRIENDS}>
+                    <PeopleIcon />
+                  </ToggleButton>
+                  <ToggleButton value={Pages.SETTINGSV2}>
+                    <SettingsIcon />
+                  </ToggleButton>
+                </ToggleButtonGroup>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -262,8 +266,8 @@ const TopBar: React.FC = () => {
     <AppBar
       position="fixed"
       sx={{
-        backgroundColor: theme.palette.muted.dark,
-        color: theme.palette.primary.light,
+        backgroundColor: theme.palette.background.default,
+        //color: theme.palette.primary.light,
       }}
     >
       <Toolbar>
