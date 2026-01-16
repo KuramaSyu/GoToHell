@@ -100,15 +100,14 @@ export const HistoryPills: React.FC = () => {
           label={`${sportRow.amount} @ ${sportRow.game}`}
           onClick={() => handleChipClick(sportRow)}
           color={
-            SportRowMatchesCurrentSettings(sportRow) ? 'primary' : 'default'
+            SportRowMatchesCurrentSettings(sportRow) ? 'secondary' : 'default'
           }
-          avatar={
+          icon={
             <SvgIcon
               component={sportIconMap[String(sportRow.kind)]!}
               sx={{
-                color: theme.palette.primary.contrastText,
-                height: 24,
-                width: 24,
+                height: 32,
+                width: 32,
               }}
               inheritViewBox
             />
