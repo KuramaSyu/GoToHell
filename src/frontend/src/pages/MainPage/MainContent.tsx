@@ -160,7 +160,7 @@ const MainContent: React.FC = () => {
           justifyItems: 'center',
           px: 5,
           pt: 2,
-          maxHeight: 1 / 3,
+          height: '20%',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
