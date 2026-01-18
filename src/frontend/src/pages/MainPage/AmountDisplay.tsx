@@ -62,8 +62,8 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
       mass={1}
       key={'AnimatedNumber'}
       style={{
-        color: theme.palette.secondary.contrastText,
-        textShadow: `5px 5px ${theme.palette.secondary.main}`,
+        color: theme.palette.text.primary,
+        textShadow: `5px 5px ${theme.palette.primary.dark}`,
       }}
     />
   );
@@ -81,8 +81,8 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
   const numberKind = 'time';
   const { theme } = useThemeStore();
   const style = {
-    color: theme.palette.secondary.contrastText,
-    textShadow: `4px 4px ${theme.palette.secondary.main}`,
+    color: theme.palette.text.primary,
+    textShadow: `4px 4px ${theme.palette.primary.dark}`,
   };
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -100,6 +100,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
           <Typography
             fontFamily={NUMBER_FONT}
             fontSize={getAnimatedNumberSize(isMobile, numberKind)}
+            style={style}
           >
             :
           </Typography>
@@ -120,6 +121,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
           <Typography
             fontFamily={NUMBER_FONT}
             fontSize={getAnimatedNumberSize(isMobile, numberKind)}
+            style={style}
           >
             :
           </Typography>
