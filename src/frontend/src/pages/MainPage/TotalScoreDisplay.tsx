@@ -55,40 +55,4 @@ export const TotalScoreDisplay = () => {
 
   const bigNumber = GetScore(currentSport!.sport!, amounts);
   return <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />;
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: {
-          xs: 'column',
-          md: 'column',
-          lg: 'row',
-        },
-        justifyItems: 'center',
-        alignItems: {
-          xs: 'left',
-          md: 'left',
-          lg: 'center',
-        },
-        fontFamily: NUMBER_FONT,
-      }}
-    >
-      <Box
-        sx={{
-          mr: 2,
-          //width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
-        }}
-      >
-        <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
-      </Box>
-      <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
-        <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-          {getSportDescription(currentSport.sport!, bigNumber)}
-        </Typography>
-        <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
-          in total
-        </Typography>
-      </Box>
-    </Box>
-  );
 };
