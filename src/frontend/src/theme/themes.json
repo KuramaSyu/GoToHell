@@ -34,6 +34,19 @@
         "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3241660/ss_a66715d57329c456d91aeb11fbd406e7d8c5dbc7.1920x1080.jpg?t=1740578354"
       ]
     },
+        {
+      "name": "hollow knight",
+      "longName": "Hollow Knight",
+      "backgrounds": [
+        "https://i.postimg.cc/C1mJ8TPX/00.webp",
+        "https://i.postimg.cc/50npzd7D/01.webp",
+        "https://i.postimg.cc/9MJ19586/02.webp",
+        "https://i.postimg.cc/xCtgmDx7/03.webp",
+        "https://i.postimg.cc/0QcZSRX1/04.webp",
+        "https://i.postimg.cc/xCtgmDpS/05.webp",
+        "https://i.postimg.cc/B6MNF970/06.webp"
+      ]
+    },
     {
         "name": "custom",
         "longName": "Any Activity",
