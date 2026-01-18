@@ -1,19 +1,20 @@
-import React from 'react';
-import { alpha, Box, Divider, useMediaQuery } from '@mui/material';
-import { GameSelector } from './GameSelect';
-import { NumberSlider } from './NumberSlider';
-import { UploadScore } from './UploadScore';
-import { TotalScoreDisplay } from './TotalScoreDisplay';
-import { SportSelector } from './SportSelect';
-import { RecentSports } from './RecentSports/TabView';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { AmountDisplay } from './AmountDisplay';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { UploadOverdueDeaths } from './UploadOverdueDeaths';
-import { useNavigate } from 'react-router-dom';
-import { useSwipeable } from 'react-swipeable';
-import { Pages } from '../../components/TopBar';
-import { HistoryPills } from './HistoryPills';
+import React from "react";
+import { alpha, Box, Divider, useMediaQuery } from "@mui/material";
+import { GameSelector } from "./GameSelect";
+import { NumberSlider } from "./NumberSlider";
+import { UploadScore } from "./UploadScore";
+import { TotalScoreDisplay } from "./TotalScoreDisplay";
+import { SportSelector } from "./SportSelect";
+import { RecentSports } from "./RecentSports/TabView";
+import { useThemeStore } from "../../zustand/useThemeStore";
+import { AmountDisplay } from "./AmountDisplay";
+import { useBreakpoint } from "../../hooks/useBreakpoint";
+import { UploadOverdueDeaths } from "./UploadOverdueDeaths";
+import { useNavigate } from "react-router-dom";
+import { useSwipeable } from "react-swipeable";
+import { Pages } from "../../components/TopBar";
+import { HistoryPills } from "./HistoryPills";
+import { BoxElevation2 } from "../../theme/statics";
 
 interface MainContentProps {
   theme: any;
@@ -33,31 +34,31 @@ const MainContent: React.FC = () => {
       <Box
         {...handlers}
         sx={{
-          flex: '1 1 auto',
-          display: 'flex',
-          flexDirection: 'column',
-          height: isMobile ? '100%' : '92vh',
-          justifyContent: 'space-between',
-          touchAction: 'pan-y',
+          flex: "1 1 auto",
+          display: "flex",
+          flexDirection: "column",
+          height: isMobile ? "100%" : "92vh",
+          justifyContent: "space-between",
+          touchAction: "pan-y",
         }}
       >
         {/* top row */}
         <Box
           sx={{
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            justifyItems: 'center',
+            position: "relative",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            justifyItems: "center",
             px: 1,
             height: 1 / 5,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <TotalScoreDisplay />
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <AmountDisplay />
           </Box>
         </Box>
@@ -65,21 +66,21 @@ const MainContent: React.FC = () => {
         {/* box for middle row */}
         <Box
           sx={{
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
             flexGrow: 1,
-            justifyContent: 'space-around',
+            justifyContent: "space-around",
           }}
         >
           {/* Game Selection */}
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              justifyContent: 'center',
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              justifyContent: "center",
             }}
           >
             <GameSelector />
@@ -89,10 +90,10 @@ const MainContent: React.FC = () => {
           {/* Death Slider and Upload */}
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
               gap: 1,
               maxHeight: isMobile ? undefined : 1 / 5,
               height: isMobile ? 1 / 7 : undefined,
@@ -101,24 +102,24 @@ const MainContent: React.FC = () => {
           >
             <Box
               sx={{
-                display: 'flex',
-                height: '100%',
-                alignItems: 'center',
+                display: "flex",
+                height: "100%",
+                alignItems: "center",
                 width: isMobile ? 3 / 4 : 3 / 4,
                 zIndex: 0,
               }}
             >
               <NumberSlider
                 withInput={
-                  theme.custom.themeName === 'custom' ? 'custom' : 'default'
+                  theme.custom.themeName === "custom" ? "custom" : "default"
                 }
               />
             </Box>
             <Box
               sx={{
                 width: isMobile ? 6 / 20 : 1 / 4,
-                display: 'flex',
-                alignItems: 'center',
+                display: "flex",
+                alignItems: "center",
                 zIndex: 1,
               }}
             >
@@ -127,10 +128,10 @@ const MainContent: React.FC = () => {
           </Box>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <SportSelector />
@@ -142,32 +143,32 @@ const MainContent: React.FC = () => {
   return (
     <Box
       sx={{
-        flex: '1 1 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '92vh',
-        justifyContent: 'space-between',
-        width: '100%',
+        flex: "1 1 auto",
+        display: "flex",
+        flexDirection: "column",
+        height: "92vh",
+        justifyContent: "space-between",
+        width: "100%",
       }}
     >
       {/* top row */}
       <Box
         sx={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          justifyItems: 'center',
+          position: "relative",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          justifyItems: "center",
           px: 5,
           pt: 2,
-          height: '20%',
+          height: "20%",
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <TotalScoreDisplay />
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <AmountDisplay />
         </Box>
       </Box>
@@ -175,12 +176,11 @@ const MainContent: React.FC = () => {
       {/* box for middle row */}
       <Box
         sx={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          backgroundColor: alpha(theme.palette.muted.dark, 0.33),
-          backdropFilter: 'blur(16px)',
+          position: "relative",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          ...BoxElevation2(theme),
           mx: 2,
           py: 2,
           borderRadius: 4,
@@ -202,33 +202,33 @@ const MainContent: React.FC = () => {
         <Box
           sx={{
             width: 1 / 3,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
             gap: 1,
           }}
         >
           <NumberSlider
             withInput={
-              theme.custom.themeName === 'custom' ? 'custom' : 'default'
+              theme.custom.themeName === "custom" ? "custom" : "default"
             }
           />
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Box
               sx={{
-                position: 'relative',
-                display: 'flex',
+                position: "relative",
+                display: "flex",
                 // flexDirection: 'row',
-                justifyContent: 'center',
-                width: 'fit-content',
+                justifyContent: "center",
+                width: "fit-content",
               }}
             >
               <UploadScore />
               <Box
                 sx={{
-                  position: 'absolute',
-                  bottom: '-30%',
-                  right: '-12%',
+                  position: "absolute",
+                  bottom: "-30%",
+                  right: "-12%",
 
                   zIndex: 1,
                 }}
@@ -245,21 +245,21 @@ const MainContent: React.FC = () => {
           sx={{
             flex: 1,
             maxWidth: 1 / 5,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <SportSelector />
         </Box>
       </Box>
-      {/* Box for History row */}
+      {/* Box for Multiplier / 3rd info */}
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignContent: 'center',
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
           zIndex: 1,
           pb: 2,
         }}

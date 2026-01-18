@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Tabs, Tab, Box } from '@mui/material';
-import { MultiplierSettings } from '../../../pages/Settings/Multiplier';
-import { useThemeStore } from '../../../zustand/useThemeStore';
-import { SecondaryTabView } from './SecondaryTabView';
-import { hexToRgbString } from '../../../utils/colors/hexToRgb';
+import React, { useState } from "react";
+import { Tabs, Tab, Box } from "@mui/material";
+import { MultiplierSettings } from "../../../pages/Settings/Multiplier";
+import { useThemeStore } from "../../../zustand/useThemeStore";
+import { SecondaryTabView } from "./SecondaryTabView";
+import { hexToRgbString } from "../../../utils/colors/hexToRgb";
 
 const SecondaryTabViewExists = (themeName: string) => {
   // simplified more intelligent version without tabs
-  if (themeName === 'custom') {
+  if (themeName === "custom") {
     return false;
   }
   return true;
@@ -24,12 +24,12 @@ export const RecentSports = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'center',
-        alignContent: 'stretch',
-        alignItems: 'flex-end', // Add this to align children to bottom
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "center",
+        alignContent: "stretch",
+        alignItems: "flex-end", // Add this to align children to bottom
         gap: 1,
         px: 2,
       }}
@@ -41,9 +41,9 @@ export const RecentSports = () => {
         alignContent="flex-start"
         sx={{
           width: SecondaryTabViewExists(theme.custom.themeName)
-            ? '60%'
-            : '100%',
-          transition: 'width 0.3s ease-in-out',
+            ? "60%"
+            : "100%",
+          transition: "width 0.3s ease-in-out",
         }}
       >
         {/* <Box display="flex" justifyContent="center">
@@ -67,20 +67,17 @@ export const RecentSports = () => {
         </Box> */}
         <Box
           sx={{
-            //mt: 2,
-            display: 'flex',
-            //position: 'relative',
-            width: '100%',
-            justifyContent: 'center',
-            //minHeight: 129,
-            overflow: 'hidden',
+            display: "flex",
+            width: "100%",
+            justifyContent: "center",
+            overflow: "hidden",
           }}
         >
           {activeTab === 0 && (
             <Box
               sx={{
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
               }}
             >
               <MultiplierSettings />

@@ -5,22 +5,23 @@ import {
   Input,
   OutlinedInput,
   Slider,
-} from '@mui/material';
-import { GenerateMarks } from '../../utils/Marks';
-import { Add, Remove } from '@mui/icons-material';
-import { useThemeStore } from '../../zustand/useThemeStore';
-import { useEffect, useState } from 'react';
-import { useUsedMultiplierStore } from '../../zustand/usedMultiplierStore';
+} from "@mui/material";
+import { GenerateMarks } from "../../utils/Marks";
+import { Add, Remove } from "@mui/icons-material";
+import { useThemeStore } from "../../zustand/useThemeStore";
+import { useEffect, useState } from "react";
+import { useUsedMultiplierStore } from "../../zustand/usedMultiplierStore";
 import {
   DefaultSportsCalculator,
   MultiplierDecorator,
-} from '../../utils/SportCalculator';
-import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import usePreferenceStore from '../../zustand/PreferenceStore';
-import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
-import { blendWithContrast } from '../../utils/blendWithContrast';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { hexToRgbString } from '../../utils/colors/hexToRgb';
+} from "../../utils/SportCalculator";
+import { useSportResponseStore } from "../../zustand/sportResponseStore";
+import usePreferenceStore from "../../zustand/PreferenceStore";
+import { handleStringNumber, StringNumberProps } from "../../utils/UserNumber";
+import { blendWithContrast } from "../../utils/blendWithContrast";
+import { useBreakpoint } from "../../hooks/useBreakpoint";
+import { hexToRgbString } from "../../utils/colors/hexToRgb";
+import { BoxElevation2 } from "../../theme/statics";
 
 export interface SettingsSliderProperties {
   min: number;
@@ -57,14 +58,14 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
         gap: 5,
-        alignItems: 'center',
-        backdropFilter: 'blur(25px)',
+        alignItems: "center",
+        backdropFilter: "blur(25px)",
         padding: 3,
         borderRadius: 5,
-        backgroundColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: "rgba(0,0,0,0.2)",
       }}
     >
       <OutlinedInput
@@ -82,19 +83,19 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
         inputProps={{
           step: step,
           style: {
-            textAlign: 'center',
+            textAlign: "center",
           },
         }}
         sx={{
-          fontSize: '24px',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '15%',
-          minWidth: '150px', // Minimum width of 20px
-          maxWidth: '400px', // Maximum width of 100px
+          fontSize: "24px",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "15%",
+          minWidth: "150px", // Minimum width of 20px
+          maxWidth: "400px", // Maximum width of 100px
           display: {
-            xs: 'none',
-            sm: 'flex',
+            xs: "none",
+            sm: "flex",
           },
         }}
       />
@@ -110,7 +111,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
       />
 
       <Slider
-        size={isMobile ? 'small' : 'medium'}
+        size={isMobile ? "small" : "medium"}
         value={sliderValue ?? min}
         marks={marks}
         onChange={(_e, value) =>
@@ -188,13 +189,13 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     const multiplierCalculator = new MultiplierDecorator(
       new DefaultSportsCalculator(
         useSportResponseStore.getState().sportResponse ??
-          useSportResponseStore.getState().emptySportsResponse()
+          useSportResponseStore.getState().emptySportsResponse(),
       ),
-      preferences.multipliers
+      preferences.multipliers,
     );
     const multiplier = multiplierCalculator.get_multiplier(
-      '',
-      theme.custom.themeName
+      "",
+      theme.custom.themeName,
     );
     return multiplier;
   };
@@ -220,7 +221,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
    * If the Decorator returns null, 1 will be used as value
    */
   const setUsedMultiplierAndUpdateValue = (
-    usedMultiplier: string | null | undefined
+    usedMultiplier: string | null | undefined,
   ) => {
     setUsedMultiplier(usedMultiplier);
     UpdateSliderValue();
@@ -238,14 +239,13 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
         gap: 2,
-        alignItems: 'center',
-        backdropFilter: 'blur(16px)',
+        alignItems: "center",
         padding: 3,
         borderRadius: 4,
-        backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+        ...BoxElevation2(theme),
       }}
     >
       <OutlinedInput
@@ -262,19 +262,19 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         }}
         inputProps={{
           style: {
-            textAlign: 'center',
+            textAlign: "center",
           },
         }}
         sx={{
-          fontSize: '24px',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '10%', // Set width to 1/10
-          minWidth: '100px', // Minimum width of 20px
-          maxWidth: '300px', // Maximum width of 100px
+          fontSize: "24px",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "10%", // Set width to 1/10
+          minWidth: "100px", // Minimum width of 20px
+          maxWidth: "300px", // Maximum width of 100px
           display: {
-            xs: 'none',
-            sm: 'flex',
+            xs: "none",
+            sm: "flex",
           },
         }}
       />
@@ -291,11 +291,11 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       {/* Col for Global or Game Switch */}
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
           gap: 1,
-          xs: 'block',
+          xs: "block",
         }}
       >
         <Button
@@ -303,8 +303,8 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           sx={{
             backgroundColor: getColor(null),
             color: theme.palette.secondary.contrastText,
-            whiteSpace: 'nowrap', // Prevent text wrapping
-            justifyContent: 'center',
+            whiteSpace: "nowrap", // Prevent text wrapping
+            justifyContent: "center",
           }}
         >
           Global
@@ -313,8 +313,8 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           sx={{
             backgroundColor: getColor(theme.custom.themeName),
             color: theme.palette.secondary.contrastText,
-            whiteSpace: 'nowrap', // Prevent text wrapping
-            justifyContent: 'center',
+            whiteSpace: "nowrap", // Prevent text wrapping
+            justifyContent: "center",
           }}
           onClick={() =>
             setUsedMultiplierAndUpdateValue(theme.custom.themeName)
@@ -324,7 +324,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         </Button>
       </Box>
       <Slider
-        size={isMobile ? 'small' : 'medium'}
+        size={isMobile ? "small" : "medium"}
         color="secondary"
         value={sliderValue ?? min}
         marks={marks}
@@ -381,12 +381,12 @@ const PlusMinusCol: React.FC<PlusMinusColProps> = ({
   return (
     <Box
       sx={{
-        flexDirection: 'column',
-        height: '100%',
+        flexDirection: "column",
+        height: "100%",
         gap: 1,
         display: {
-          xs: 'none', // dont show on mobile
-          sm: 'flex',
+          xs: "none", // dont show on mobile
+          sm: "flex",
         },
       }}
     >
