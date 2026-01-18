@@ -51,6 +51,7 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
   computedValue,
   isMobile,
 }) => {
+  const { theme } = useThemeStore();
   return (
     <PopNumber
       value={computedValue}
@@ -60,7 +61,10 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
       damping={300}
       mass={1}
       key={'AnimatedNumber'}
-      style={{}}
+      style={{
+        color: theme.palette.secondary.contrastText,
+        textShadow: `5px 5px ${theme.palette.secondary.main}`,
+      }}
     />
   );
 };
@@ -75,6 +79,11 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
   const hours = timedelta.hours();
   const biggestUnit = timedelta.biggestUnit();
   const numberKind = 'time';
+  const { theme } = useThemeStore();
+  const style = {
+    color: theme.palette.secondary.contrastText,
+    textShadow: `4px 4px ${theme.palette.secondary.main}`,
+  };
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       {biggestUnit >= Unit.hours ? (
@@ -86,6 +95,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
             stiffness={1000}
             damping={300}
             mass={1}
+            style={style}
           />
           <Typography
             fontFamily={NUMBER_FONT}
@@ -105,6 +115,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
             damping={300}
             mass={1}
             zeroPadding={hours > 0 ? 2 : undefined}
+            style={style}
           />
           <Typography
             fontFamily={NUMBER_FONT}
@@ -125,6 +136,7 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
           damping={300}
           mass={1}
           zeroPadding={minutes > 0 ? 2 : undefined}
+          style={style}
         />
       </Box>
     </Box>
@@ -147,8 +159,6 @@ export const AmountDisplay = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountStore();
   const { calculator } = useCalculatorStore();
-  const { theme } = useThemeStore();
-  const { preferences } = usePreferenceStore();
   const { isMobile, isXL } = useBreakpoint();
 
   if (currentSport.game == null || currentSport.sport == null) {
@@ -163,52 +173,4 @@ export const AmountDisplay = () => {
 
   const DisplayComponent = getDisplayComponent(currentSport.sport);
   return <DisplayComponent computedValue={computedValue} isMobile={isMobile} />;
-  // return (
-  //   <Box
-  //     sx={{
-  //       display: 'flex',
-  //       flexDirection: 'column',
-  //       justifyItems: 'center',
-  //       alignItems: {
-  //         xs: 'right',
-  //         md: 'right',
-  //         lg: 'center',
-  //       },
-  //     }}
-  //   >
-  //     <Box
-  //       sx={{
-  //         display: 'flex',
-  //         flexDirection: {
-  //           xs: 'column',
-  //           md: 'column',
-  //           lg: 'row',
-  //         },
-  //         justifyItems: 'center',
-  //         alignItems: {
-  //           xs: 'right',
-  //           md: 'right',
-  //           lg: 'center',
-  //         },
-  //         fontFamily: NUMBER_FONT,
-  //       }}
-  //     >
-  //       {isXL
-  //         ? calculator.make_box(currentSport.sport!, currentSport.game!, amount)
-  //         : null}
-
-  //       <Box sx={{ mr: 2 }}>
-  //         <DisplayComponent computedValue={computedValue} isMobile={isMobile} />
-  //       </Box>
-  //       <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
-  //         <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-  //           {getSportDescription(currentSport.sport, computedValue)}
-  //         </Typography>
-  //         <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
-  //           to do now
-  //         </Typography>
-  //       </Box>
-  //     </Box>
-  //   </Box>
-  // );
 };
