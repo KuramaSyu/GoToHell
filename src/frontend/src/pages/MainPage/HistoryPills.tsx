@@ -67,7 +67,7 @@ export const HistoryPills: React.FC = () => {
     const amount = calculator.calculate_amount(
       sportRow.kind,
       sportRow.game,
-      useDeathAmountStore.getState().amount
+      useDeathAmountStore.getState().amount,
     );
     return (
       sportRow.kind === currentSport.sport &&
@@ -88,12 +88,16 @@ export const HistoryPills: React.FC = () => {
     });
     const calculator = useCalculatorStore.getState().calculator;
     setDeathAmount(
-      calculator.calculate_deaths(sportRow.kind, sportRow.game, sportRow.amount)
+      calculator.calculate_deaths(
+        sportRow.kind,
+        sportRow.game,
+        sportRow.amount,
+      ),
     );
   };
 
   return (
-    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+    <Stack direction='row' spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
       {usersLatestSportRecords.map((sportRow, index) => (
         <Chip
           key={index}

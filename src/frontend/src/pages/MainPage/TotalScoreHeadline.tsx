@@ -28,12 +28,10 @@ const GetScore = (kind: string, amounts: SportScore[]) => {
   return score?.amount || 0;
 };
 
-export const TotalScoreDisplay = () => {
+export const TotalScoreHeadline = () => {
   const { currentSport } = useSportStore();
   const { user } = useUserStore();
-  const { amounts, setAmounts, refreshTrigger } = useTotalScoreStore();
-  const { theme } = useThemeStore();
-  const { isMobile } = useBreakpoint();
+  const { amounts, refreshTrigger } = useTotalScoreStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,44 +49,11 @@ export const TotalScoreDisplay = () => {
   if (!currentSport || !user) {
     return <Typography></Typography>;
   }
-  const DisplayComponent = getDisplayComponent(currentSport.sport!);
 
   const bigNumber = GetScore(currentSport!.sport!, amounts);
-  return <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />;
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: {
-          xs: 'column',
-          md: 'column',
-          lg: 'row',
-        },
-        justifyItems: 'center',
-        alignItems: {
-          xs: 'left',
-          md: 'left',
-          lg: 'center',
-        },
-        fontFamily: NUMBER_FONT,
-      }}
-    >
-      <Box
-        sx={{
-          mr: 2,
-          //width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
-        }}
-      >
-        <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
-      </Box>
-      <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
-        <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-          {getSportDescription(currentSport.sport!, bigNumber)}
-        </Typography>
-        <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
-          in total
-        </Typography>
-      </Box>
-    </Box>
+    <Typography variant='h2' fontFamily={'inherit'}>
+      {getSportDescription(currentSport.sport!, bigNumber)}
+    </Typography>
   );
 };
