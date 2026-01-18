@@ -1,4 +1,4 @@
 {
-  "singleQuote": false,
-  "jsxSingleQuote": false
+  "singleQuote": true,
+  "jsxSingleQuote": true
 }
