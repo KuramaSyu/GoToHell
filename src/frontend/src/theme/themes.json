@@ -42,9 +42,11 @@
         "https://i.postimg.cc/50npzd7D/01.webp",
         "https://i.postimg.cc/9MJ19586/02.webp",
         "https://i.postimg.cc/xCtgmDx7/03.webp",
-        "https://i.postimg.cc/0QcZSRX1/04.webp",
         "https://i.postimg.cc/xCtgmDpS/05.webp",
         "https://i.postimg.cc/B6MNF970/06.webp"
+      ],
+      "disabled_backgrounds": [
+         "https://i.postimg.cc/0QcZSRX1/04.webp"
       ]
     },
     {
