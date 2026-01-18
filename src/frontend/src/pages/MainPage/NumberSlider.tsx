@@ -6,6 +6,7 @@ import {
   OutlinedInput,
   IconButton,
   alpha,
+  Tooltip,
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
@@ -14,7 +15,12 @@ import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useEffect, useState } from 'react';
-import { blendWithContrast } from '../../utils/blendWithContrast';
+import {
+  blendAgainstContrast,
+  blendWithContrast,
+} from '../../utils/blendWithContrast';
+import { useSportStore } from '../../useSportStore';
+import { GameSelectionMap } from '../../utils/data/Sports';
 
 interface DeathAmountState {
   amount: number;
@@ -29,28 +35,60 @@ export const useDeathAmountStore = create<DeathAmountState>((set) => ({
   setAmount: (value: number) => set({ amount: value }),
 }));
 
+type InputVariant = 'default' | 'custom';
+
+export interface InputStrategyProps {
+  value: number;
+  onChange: (value: number) => void;
+  step: number;
+  disabled?: boolean;
+}
+
 export interface NumberSliderProps {
-  withInput: boolean;
+  withInput: InputVariant;
 }
 
 export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
+  // actual amount
   const { amount, setAmount } = useDeathAmountStore();
+
+  // string for input box (so that .0 or something like this can be typed)
   const [localAmount, setLocalAmount] = useState<string | null>(
     amount.toString()
   );
 
   const { preferencesLoaded } = usePreferenceStore();
   const { theme } = useThemeStore();
-  const min = Math.min(0, amount);
-  const max = Math.max(12, amount);
+
   const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const { isMobile } = useBreakpoint();
+  const { currentSport } = useSportStore();
 
+  const INPUT_STRATEGIES: Record<InputVariant, React.FC<InputStrategyProps>> = {
+    default: SliderInput,
+    custom: CustomSliderInput,
+  };
+  const STEP_VALUES: Record<InputVariant, number> = {
+    default: 1,
+    custom: 1,
+  };
+  const TOOLTIP_TEXT: Record<InputVariant, string> = {
+    default: 'How often did you die?',
+    custom: currentSport.sport
+      ? `How many ${GameSelectionMap.get(currentSport.sport)}?`
+      : 'How many exercises?',
+  };
+  const SliderComponent = INPUT_STRATEGIES[withInput];
+  const stepValue = STEP_VALUES[withInput];
+  const tooltipText = TOOLTIP_TEXT[withInput];
+  // when amount is changed, also update the input box amount (localAmount)
+  // amount is changed from slider or modal
   useEffect(() => {
-    if (localAmount !== amount.toString()) {
+    if (Number(localAmount) !== amount) {
       setLocalAmount(amount.toString());
     }
   }, [amount]);
+
   // Slider Change - set value or current maximum
   const handleSliderChange = (newValue: number | number[]) => {
     const capped = Math.min(newValue as number, selectableMax);
@@ -61,7 +99,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   // manual input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocalAmount(event.target.value);
-    394;
     let newValue = Number(event.target.value);
     if (!isNaN(newValue)) {
       if (newValue > selectableMax) newValue = selectableMax;
@@ -91,50 +128,6 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     </Typography>
   );
 
-  const AddButton = (
-    <Button
-      variant="contained"
-      onClick={() => handleSliderChange(amount + 1)}
-      sx={{
-        borderRadius: '50%',
-        width: '80%', // Make the button fill the container
-        height: '80%', // Make the button fill the container
-        minWidth: 0, // Ensure the button does not expand
-        minHeight: 0, // Ensure the button does not expand
-        aspectRatio: '1 / 1',
-        display: 'flex',
-        backgroundColor: isMobile ? theme.palette.primary.main : undefined,
-        color: isMobile
-          ? blendWithContrast(theme.palette.primary.main, theme, 2 / 3)
-          : undefined,
-      }}
-    >
-      <Add fontSize={isMobile ? 'large' : undefined} />
-    </Button>
-  );
-
-  const RemoveButton = (
-    <Button
-      variant="contained"
-      onClick={() => handleSliderChange(amount - 1)}
-      sx={{
-        borderRadius: '50%',
-        width: '80%', // Make the button fill the container
-        height: '80%', // Make the button fill the container
-        minWidth: 0, // Ensure the button does not expand
-        minHeight: 0, // Ensure the button does not expand
-        aspectRatio: '1 / 1',
-        display: 'flex',
-        backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
-        color: isMobile
-          ? blendWithContrast(theme.palette.secondary.main, theme, 2 / 3)
-          : undefined,
-      }}
-    >
-      <Remove />
-    </Button>
-  );
-
   const customInput = withInput ? (
     <OutlinedInput
       value={localAmount}
@@ -147,11 +140,10 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
       }}
       sx={{
         width: 'clamp(40px, 35%, 200px)',
-        //height: '80%',
         display: 'flex',
-        color: theme.palette.primary.main,
+        color: blendWithContrast(theme.palette.primary.main, theme, 2 / 3),
+        backgroundColor: theme.palette.primary.main,
         fontSize: 'clamp(16px, 2.5vw, 24px)',
-        textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.palette.primary.main,
         },
@@ -194,7 +186,11 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           top: 'calc(-1 * (6/21 * 100%) / (pi/2))',
         }}
       >
-        {RemoveButton}
+        <RemoveButton
+          onChange={handleSliderChange}
+          amount={amount}
+          stepValue={stepValue}
+        />
       </Box>
       <Box
         sx={{
@@ -204,7 +200,11 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
           bottom: 'calc(-1 * (9/20 * 100%) / (pi/2))',
         }}
       >
-        {AddButton}
+        <AddButton
+          onChange={handleSliderChange}
+          amount={amount}
+          stepValue={stepValue}
+        />
       </Box>
     </Box>
   );
@@ -219,28 +219,18 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
         maxWidth: 2 / 3,
       }}
     >
-      {RemoveButton}
-      {AddButton}
+      <RemoveButton
+        onChange={handleSliderChange}
+        amount={amount}
+        stepValue={stepValue}
+      />
+      <AddButton
+        onChange={handleSliderChange}
+        amount={amount}
+        stepValue={stepValue}
+      />
     </Box>
   );
-
-  // calculate the marks below the slider
-  const getMarkAmount = () => {
-    // start at 12, going down to 2 as the amount increases
-    if (amount > 1000) {
-      return 2;
-    } else if (amount > 100) {
-      return 4;
-    } else if (amount > 50) {
-      return 8;
-    } else if (amount > 20) {
-      return 10;
-    } else {
-      return 12;
-    }
-  };
-  const { marks } = GenerateMarks(getMarkAmount(), min, max);
-  const stepValue = 1;
 
   if (isMobile) {
     // Mobile view
@@ -249,36 +239,164 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   // Desktop view
   return (
-    <Box
-      sx={{
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 1,
-      }}
-    >
+    <Tooltip title={tooltipText} arrow>
       <Box
         sx={{
+          p: 2,
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
+          gap: 1,
         }}
       >
-        {withInput ? customInput : title}
-        {AddRemoveButtons}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          {withInput ? customInput : title}
+          {AddRemoveButtons}
+        </Box>
+        <SliderComponent
+          value={amount}
+          onChange={handleSliderChange}
+          step={stepValue}
+        />
       </Box>
-      <Slider
-        value={amount}
-        onChange={(e, newValue) => handleSliderChange(newValue)}
-        min={min}
-        max={max}
-        step={stepValue}
-        aria-labelledby="number-slider"
-        marks={marks}
-      ></Slider>
-    </Box>
+    </Tooltip>
+  );
+};
+
+const SliderInput: React.FC<InputStrategyProps> = ({
+  value,
+  onChange,
+  step,
+  disabled,
+}) => {
+  const min = Math.min(0, value);
+  const max = Math.max(12, value);
+  // calculate the marks below the slider
+  const getMarkAmount = () => {
+    // start at 12, going down to 2 as the amount increases
+    if (value > 1000) {
+      return 2;
+    } else if (value > 100) {
+      return 4;
+    } else if (value > 50) {
+      return 8;
+    } else if (value > 20) {
+      return 10;
+    } else {
+      return 12;
+    }
+  };
+  const { marks } = GenerateMarks(getMarkAmount(), min, max);
+
+  return (
+    <Slider
+      value={value}
+      onChange={(e, newValue) => onChange(newValue as number)}
+      min={min}
+      max={max}
+      step={step}
+      aria-labelledby="number-slider"
+      marks={marks}
+    ></Slider>
+  );
+};
+
+// Custom slider from 0-100 with steps of 5
+const CustomSliderInput: React.FC<InputStrategyProps> = ({
+  value,
+  onChange,
+  disabled,
+}) => {
+  const min = Math.min(0, value);
+  const max = Math.max(100, value);
+  const { marks } = GenerateMarks(5, min, max);
+
+  // TODO: make step depend on sport (plank needs bigger step then pushup)
+  return (
+    <Slider
+      value={value}
+      onChange={(e, newValue) => onChange(newValue as number)}
+      min={min}
+      max={max}
+      step={5}
+      aria-labelledby="number-slider"
+      marks={marks}
+    ></Slider>
+  );
+};
+
+interface AddRemoveButtonProps {
+  onChange: (amount: number) => void;
+  amount: number;
+  stepValue: number;
+}
+
+const AddButton: React.FC<AddRemoveButtonProps> = ({
+  onChange,
+  amount,
+  stepValue,
+}) => {
+  const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
+
+  return (
+    <Button
+      variant="contained"
+      onClick={() => onChange(amount + stepValue)}
+      sx={{
+        borderRadius: '50%',
+        width: '80%', // Make the button fill the container
+        height: '80%', // Make the button fill the container
+        minWidth: 0, // Ensure the button does not expand
+        minHeight: 0, // Ensure the button does not expand
+        aspectRatio: '1 / 1',
+        display: 'flex',
+        backgroundColor: isMobile ? theme.palette.primary.main : undefined,
+        color: isMobile
+          ? blendWithContrast(theme.palette.primary.main, theme, 2 / 3)
+          : undefined,
+      }}
+    >
+      <Add fontSize={isMobile ? 'large' : undefined} />
+    </Button>
+  );
+};
+
+const RemoveButton: React.FC<AddRemoveButtonProps> = ({
+  onChange,
+  amount,
+  stepValue,
+}) => {
+  const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
+
+  return (
+    <Button
+      variant="contained"
+      onClick={() => onChange(amount - stepValue)}
+      sx={{
+        borderRadius: '50%',
+        width: '80%', // Make the button fill the container
+        height: '80%', // Make the button fill the container
+        minWidth: 0, // Ensure the button does not expand
+        minHeight: 0, // Ensure the button does not expand
+        aspectRatio: '1 / 1',
+        display: 'flex',
+        backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
+        color: isMobile
+          ? blendWithContrast(theme.palette.secondary.main, theme, 2 / 3)
+          : undefined,
+      }}
+    >
+      <Remove />
+    </Button>
   );
 };

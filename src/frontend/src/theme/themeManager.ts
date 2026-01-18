@@ -1,6 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import { Vibrant } from 'node-vibrant/browser';
-import { CustomThemeConfig, CustomTheme } from '../theme/customTheme';
+import {
+  CustomThemeConfig,
+  CustomTheme,
+  CustomThemeImpl,
+} from '../theme/customTheme';
 import {
   docsTheme,
   customThemes,
@@ -9,6 +13,11 @@ import {
 import { error } from 'console';
 import useInfoStore, { SnackbarUpdateImpl } from '../zustand/InfoStore';
 import { defaultTheme } from '../zustand/defaultTheme';
+import {
+  blendAgainstContrast,
+  blendWithContrast,
+} from '../utils/blendWithContrast';
+import { th } from 'zod/v4/locales/index.cjs';
 
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
@@ -107,9 +116,9 @@ export class ThemeManager {
     const background = useThemeStore.getState().theme.custom.backgroundImage;
     switch (themeName) {
       case 'docsTheme':
-        return docsTheme;
+        return new CustomThemeImpl(docsTheme);
       case 'default':
-        return defaultTheme;
+        return new CustomThemeImpl(defaultTheme);
     }
     const themeConfig = this.themes.get(themeName);
     if (!themeConfig) {
@@ -172,14 +181,7 @@ export class ThemeManager {
     } catch (err) {
       console.error('Error extracting colors with Node-Vibrant:', err);
       extractedPalette = {};
-      return {
-        ...defaultTheme,
-        custom: {
-          themeName: themeConfig.name,
-          longName: themeConfig.longName,
-          backgroundImage: themeConfig.backgrounds[0] ?? '',
-        },
-      };
+      return defaultTheme;
     }
 
     // Get extracted swatches (with sensible fallbacks).
@@ -202,21 +204,18 @@ export class ThemeManager {
       ? extractedPalette.DarkMuted.hex
       : '#494949';
 
-    // Use provided primary/secondary if available.
-    const primaryMain = themeConfig.primary || vibrantHex;
-    const secondaryMain = themeConfig.secondary || darkVibrantHex;
-
     // Build and return the full MUI theme.
-    return createTheme({
+    var theme = createTheme({
       palette: {
+        contrastThreshold: 3.5,
         mode: this.isDark ? 'dark' : 'light',
         primary: {
-          main: primaryMain,
+          main: vibrantHex,
           light: lightVibrantHex,
           dark: darkVibrantHex,
         },
         secondary: {
-          main: secondaryMain,
+          main: mutedHex,
           light: lightMutedHex,
           dark: darkMutedHex,
         },
@@ -232,11 +231,15 @@ export class ThemeManager {
           dark: darkMutedHex,
         },
       },
+
       custom: {
         backgroundImage: chosenBackground,
         themeName: themeConfig.name,
         longName: themeConfig.longName,
       },
     }) as CustomTheme;
+
+    // calculates background colors, text colors and extends methods
+    return new CustomThemeImpl(theme, undefined, true);
   }
 }

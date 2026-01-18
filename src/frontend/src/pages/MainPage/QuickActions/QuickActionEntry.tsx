@@ -1,7 +1,7 @@
 import { alpha, Box, Button } from '@mui/material';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import React from 'react';
-import { ModalPages } from './ModalOverviewCards';
+import { ModalPages } from './ModalPages';
 
 export interface QuickActionEntryProps {
   title: string;

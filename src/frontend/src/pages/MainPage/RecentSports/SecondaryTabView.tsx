@@ -6,6 +6,7 @@ import { useSportStore } from '../../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
 import { OverdueDeaths } from '../OverdueDeaths';
 import { useOverdueDeathsStore } from '../../../zustand/OverdueDeathsStore';
+import { useThemeStore } from '../../../zustand/useThemeStore';
 
 export const SecondaryTabView: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -14,6 +15,7 @@ export const SecondaryTabView: React.FC = () => {
   const { currentSport } = useSportStore();
   const { amount } = useDeathAmountStore();
   const { overdueDeathsList } = useOverdueDeathsStore();
+  const { theme } = useThemeStore();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -37,16 +39,73 @@ export const SecondaryTabView: React.FC = () => {
   if (!isXL) amountOfTabs += 1;
   if (currentOverdueDeaths) amountOfTabs += 1;
 
+  // simplified more intelligent version without tabs
+  if (theme.custom.themeName === 'custom') {
+    return null;
+  }
   return (
     <Fade in={amountOfTabs > 0} timeout={1000}>
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
           width: '100%',
           flexShrink: 1,
           flexGrow: 0,
-          alignItems: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            position: 'relative',
+            width: '100%',
+            justifyContent: 'center',
+            minHeight: 129,
+            overflow: 'hidden',
+          }}
+        >
+          {activeTab == 0 && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexGrow: '1',
+              }}
+            >
+              <OverdueDeaths />
+            </Box>
+          )}
+          {activeTab == 1 && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'end',
+                alignItems: 'end',
+                flexGrow: '1',
+              }}
+            >
+              {calculator.make_box(
+                currentSport.sport!,
+                currentSport.game!,
+                amount
+              )}
+            </Box>
+          )}
+        </Box>
+      </Box>
+    </Fade>
+  );
+  return (
+    <Fade in={amountOfTabs > 0} timeout={1000}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          flexShrink: 1,
+          flexGrow: 0,
         }}
       >
         <Tabs
@@ -54,28 +113,19 @@ export const SecondaryTabView: React.FC = () => {
           value={activeTab}
           textColor="primary"
           indicatorColor="primary"
+          orientation="vertical"
           centered
           sx={{
-            backgroundColor: alpha('#000000', 0.2),
-            borderRadius: '50px',
+            backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+            borderRadius: '16px',
             padding: '5px',
-            backdropFilter: 'blur(10px)',
-            p: 1,
-            px: 3,
+            backdropFilter: 'blur(16px)',
             width: 'fit-content',
           }}
         >
-          <Tab
-            label="Overdue Deaths"
-            sx={{ minWidth: isXL ? 150 : 100, width: 'auto' }}
-          />
+          <Tab label="Overdue Deaths" />
 
-          {!isXL ? (
-            <Tab
-              label="Calculation"
-              sx={{ minWidth: isXL ? 150 : 100, width: 'auto' }}
-            />
-          ) : null}
+          {!isXL ? <Tab label="Calculation" /> : null}
         </Tabs>
         <Box
           sx={{

@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  lighten,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { darken } from '@mui/material/styles';
 import { animated, useSpring } from '@react-spring/web';
 import { useThemeStore } from '../../zustand/useThemeStore';
+import { blendWithContrast } from '../../utils/blendWithContrast';
+import { CustomTheme } from '../../theme/customTheme';
 
 export interface GameItem {
   text: string;
@@ -61,6 +70,7 @@ const AnimatedThemeButton: React.FC<{
   onClick: () => void;
 }> = ({ item, isSelected, onClick }) => {
   // Animate opacity and scale on mount
+  const { theme } = useThemeStore();
   const spring = useSpring({
     from: { opacity: 0, transform: 'scale(0.7)' },
     to: { opacity: 1, transform: 'scale(1)' },
@@ -74,21 +84,26 @@ const AnimatedThemeButton: React.FC<{
       variant={isSelected ? 'contained' : 'outlined'}
       onClick={onClick}
       sx={{
-        fontSize: 'clamp(18px, 1.5vw, 40px)',
         padding: 2,
         border: '2px solid',
-        borderColor: 'secondary.main',
-        backgroundColor: isSelected ? undefined : 'transparent',
-        color: 'text.primary',
-        fontWeight: 'bold',
+        borderColor: 'primary.main',
         height: '100%',
         '&:hover': {
-          backgroundColor: (theme) => darken(theme.palette.primary.main, 0.2),
-          borderColor: (theme) => darken(theme.palette.secondary.main, 0.2),
+          backgroundColor: theme.palette.primary.main,
+          borderColor: 'inherit',
         },
       }}
     >
-      {item.text}
+      <Typography
+        variant="h5"
+        color={
+          isSelected
+            ? theme.palette.primary.contrastText
+            : theme.palette.text.primary
+        }
+      >
+        {item.text}
+      </Typography>
     </AnimatedButton>
   );
 };

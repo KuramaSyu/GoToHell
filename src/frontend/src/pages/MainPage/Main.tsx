@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { alpha, Box } from '@mui/material';
 
 import { useThemeStore } from '../../zustand/useThemeStore';
 import AppBackground from '../../components/AppBackground';
@@ -62,12 +62,10 @@ const MainPage: React.FC = () => {
           width: 'clamp(300px, 25%, 420px)',
           height: '100%',
           flex: '0 1 auto',
-          backgroundColor: `rgba(${hexToRgbString(
-            theme.palette.muted.dark
-          )}, 0.33)`,
-          borderTopRightRadius: 32,
-          borderBottomRightRadius: 32,
-          backdropFilter: 'blur(15px)',
+          backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+          borderTopRightRadius: 24,
+          borderBottomRightRadius: 24,
+          backdropFilter: 'blur(16px)',
           overflow: 'hidden', // Hide overflow on parent
           display: 'flex',
           flexDirection: 'column',
@@ -129,6 +127,7 @@ const MainPage: React.FC = () => {
         }}
       >
         {user !== null || isLoading ? (
+          // load main content
           <>
             <AppBackground></AppBackground>
 
@@ -138,6 +137,7 @@ const MainPage: React.FC = () => {
             </Box>
           </>
         ) : (
+          // load login page
           <>
             {console.log('render login page')}
             <LoginPage></LoginPage>

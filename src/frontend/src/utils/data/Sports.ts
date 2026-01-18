@@ -1,29 +1,33 @@
-import pushupSVG from '../../assets/sports-pushup.svg';
-import plankSVG from '../../assets/sports-plank.svg';
-import pilatesSVG from '../../assets/sports-pilates.svg';
-import squatsSVG from '../../assets/sports-squats.svg';
-import situpsSVG from '../../assets/sports-situps.svg';
-import russian_twistSVG from '../../assets/sports-russian_twist.svg';
-import dipSVG from '../../assets/sports-dip.svg';
-import legRaisesSVG from '../../assets/sports-leg_raises.svg';
-import lungesSVG from '../../assets/sports-lunges.svg';
-import glute_bridgesSVG from '../../assets/sports-glute_bridges.svg';
-import joggingSVG from '../../assets/sports-jogging.svg';
-import cyclingSVG from '../../assets/sports-cycling.svg';
-export const sportIconMap: Record<string, string> = {
-  pushup: pushupSVG,
-  plank: plankSVG,
-  pilates: pilatesSVG,
-  squats: squatsSVG,
-  situps: situpsSVG,
-  russian_twist: russian_twistSVG,
-  dip: dipSVG,
-  leg_raises: legRaisesSVG,
-  lunges: lungesSVG,
-  glute_bridges: glute_bridgesSVG,
-  jogging: joggingSVG,
-  workout: pilatesSVG,
-  cycling: cyclingSVG,
+import PushupIcon from '../../assets/variable/sports-pushup.svg?react';
+import PlankIcon from '../../assets/variable/sports-plank.svg?react';
+import PilatesIcon from '../../assets/variable/sports-pilates.svg?react';
+import SquatsIcon from '../../assets/variable/sports-squats.svg?react';
+import SitupsIcon from '../../assets/variable/sports-situps.svg?react';
+import RussianTwistIcon from '../../assets/variable/sports-russian_twist.svg?react';
+import DipIcon from '../../assets/variable/sports-dip.svg?react';
+import LegRaisesIcon from '../../assets/variable/sports-leg_raises.svg?react';
+import LungesIcon from '../../assets/variable/sports-lunges.svg?react';
+import GluteBridgesIcon from '../../assets/variable/sports-glute_bridges.svg?react';
+import JoggingIcon from '../../assets/variable/sports-jogging.svg?react';
+import CyclingIcon from '../../assets/variable/sports-cycling.svg?react';
+import type { FC, SVGProps } from 'react';
+
+export type SvgIconComponent = FC<SVGProps<SVGSVGElement>>;
+
+export const sportIconMap: Record<string, SvgIconComponent> = {
+  pushup: PushupIcon,
+  plank: PlankIcon,
+  pilates: PilatesIcon,
+  squats: SquatsIcon,
+  situps: SitupsIcon,
+  russian_twist: RussianTwistIcon,
+  dip: DipIcon,
+  leg_raises: LegRaisesIcon,
+  lunges: LungesIcon,
+  glute_bridges: GluteBridgesIcon,
+  jogging: JoggingIcon,
+  workout: PilatesIcon,
+  cycling: CyclingIcon,
 };
 
 // map for which is shown next to the score

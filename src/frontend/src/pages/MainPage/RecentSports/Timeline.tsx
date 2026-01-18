@@ -24,6 +24,7 @@ import { SportDialog } from './SportDialog';
 import { DiscordUserImpl } from '../../../components/DiscordLogin';
 import { UserInfo } from '../../../components/UserInfo';
 import { SportUserDialogWrapper } from './SportUserDialogWrapper';
+import { blendAgainstContrast } from '../../../utils/blendWithContrast';
 
 export interface UserSport {
   id: number;
@@ -151,7 +152,10 @@ export const SportsTimeline = () => {
             transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
             bgcolor:
               !selectedSport || selectedSport.id === sport.id
-                ? alpha(lighten(theme.palette.primary.light, 1 / 2), 1 / 4)
+                ? alpha(
+                    theme.blendAgainstContrast('secondaryLight', 0.25),
+                    0.25
+                  )
                 : undefined,
           },
         }}
@@ -168,7 +172,7 @@ export const SportsTimeline = () => {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineDot
-              color="primary"
+              color="secondary"
               sx={{
                 width: 60,
                 height: 60,
@@ -176,7 +180,7 @@ export const SportsTimeline = () => {
                 overflow: 'hidden',
                 position: 'relative',
                 margin: 'auto',
-                color: lighten(theme.palette.primary.main, 2 / 3),
+                //color: theme.palette.secondary.main,
               }}
             >
               <img
@@ -192,7 +196,7 @@ export const SportsTimeline = () => {
                 }}
               />
             </TimelineDot>
-            <TimelineConnector sx={{ bgcolor: 'primary.main' }} />
+            <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
           </TimelineSeparator>
           <TimelineContent>
             <SportTimelineEntry data={sport} />

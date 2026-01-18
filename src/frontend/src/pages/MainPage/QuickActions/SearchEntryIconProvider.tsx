@@ -1,23 +1,35 @@
 import { ReactElement } from 'react';
-import { GameEntry, SearchEntry, SportEntry } from './SearchEntry';
+import { SvgIcon } from '@mui/material';
 import { sportIconMap } from '../../../utils/data/Sports';
+import { GameEntry, SearchEntry, SportEntry } from './SearchEntry';
 
 export class SearchEntryIconProvider {
   static getIcon(
     entry: SearchEntry,
-    style: React.CSSProperties = {}
+    sx: object = {} // replace style with sx
   ): ReactElement | null {
     if (entry instanceof SportEntry) {
+      const IconComponent = sportIconMap[String(entry.name)];
+      if (!IconComponent) return null;
+
       return (
-        <img
-          src={sportIconMap[String(entry.name)]}
-          alt={String(entry.name)}
-          style={style}
+        <SvgIcon
+          component={IconComponent}
+          sx={{
+            color: (theme) => theme.palette.text.primary,
+            height: 42,
+            width: 42,
+            ...sx, // merge additional sx if passed
+          }}
+          inheritViewBox
         />
       );
-    } else if (entry instanceof GameEntry) {
+    }
+
+    if (entry instanceof GameEntry) {
       return null;
     }
+
     return null;
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, useMediaQuery } from '@mui/material';
+import { alpha, Box, Divider, useMediaQuery } from '@mui/material';
 import { GameSelector } from './GameSelect';
 import { NumberSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
@@ -108,7 +108,11 @@ const MainContent: React.FC = () => {
                 zIndex: 0,
               }}
             >
-              <NumberSlider withInput={theme.custom.themeName === 'custom'} />
+              <NumberSlider
+                withInput={
+                  theme.custom.themeName === 'custom' ? 'custom' : 'default'
+                }
+              />
             </Box>
             <Box
               sx={{
@@ -143,6 +147,7 @@ const MainContent: React.FC = () => {
         flexDirection: 'column',
         height: '92vh',
         justifyContent: 'space-between',
+        width: '100%',
       }}
     >
       {/* top row */}
@@ -155,7 +160,7 @@ const MainContent: React.FC = () => {
           justifyItems: 'center',
           px: 5,
           pt: 2,
-          maxHeight: 1 / 3,
+          height: '20%',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -172,10 +177,13 @@ const MainContent: React.FC = () => {
         sx={{
           position: 'relative',
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          width: '100%',
+          flexDirection: 'row',
           justifyContent: 'space-around',
-          // p: 2,
+          backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+          backdropFilter: 'blur(16px)',
+          mx: 2,
+          py: 2,
+          borderRadius: 4,
           minHeight: 0,
         }}
       >
@@ -188,6 +196,7 @@ const MainContent: React.FC = () => {
         >
           <GameSelector />
         </Box>
+        <Divider orientation="vertical" flexItem />
 
         {/* Death Slider and Upload */}
         <Box
@@ -199,7 +208,11 @@ const MainContent: React.FC = () => {
             gap: 1,
           }}
         >
-          <NumberSlider withInput={theme.custom.themeName === 'custom'} />
+          <NumberSlider
+            withInput={
+              theme.custom.themeName === 'custom' ? 'custom' : 'default'
+            }
+          />
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
@@ -225,6 +238,9 @@ const MainContent: React.FC = () => {
             </Box>
           </Box>
         </Box>
+        <Divider orientation="vertical" flexItem />
+
+        {/* Sport Selection */}
         <Box
           sx={{
             flex: 1,
@@ -246,7 +262,6 @@ const MainContent: React.FC = () => {
           alignContent: 'center',
           zIndex: 1,
           pb: 2,
-          // height: 1 / 4,
         }}
       >
         <RecentSports></RecentSports>

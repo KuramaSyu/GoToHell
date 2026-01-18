@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Box, Chip, Stack } from '@mui/material';
+import { Box, Chip, Stack, SvgIcon } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
 
 import { DynamicGameGrid } from './DynamicGrid';
@@ -100,20 +100,16 @@ export const HistoryPills: React.FC = () => {
           label={`${sportRow.amount} @ ${sportRow.game}`}
           onClick={() => handleChipClick(sportRow)}
           color={
-            SportRowMatchesCurrentSettings(sportRow) ? 'primary' : 'default'
+            SportRowMatchesCurrentSettings(sportRow) ? 'secondary' : 'default'
           }
-          avatar={
-            <img
-              src={sportIconMap[String(sportRow.kind)]}
-              alt={sportRow.kind}
-              width={24}
-              height={24}
-              style={{
-                backgroundColor: 'transparent',
-                filter: isDarkColored(theme, theme.palette.secondary.main)
-                  ? 'brightness(0) invert(0.8)'
-                  : 'none',
+          icon={
+            <SvgIcon
+              component={sportIconMap[String(sportRow.kind)]!}
+              sx={{
+                height: 32,
+                width: 32,
               }}
+              inheritViewBox
             />
           }
         />

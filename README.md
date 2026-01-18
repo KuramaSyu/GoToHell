@@ -39,10 +39,6 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
   - Sport.tsx: POST api/sports
 - [ ] REST documentation:
   - [ ] Friends
-- [ ] Timeline page:
-  - [ ] adjust timeline for mobile (improve modal spacing and use 100% width for timeline items)
-  - [ ] add a button, to show the streak overview
-  - [ ] rename timeline page to timeline for both desktop and mobile. Then add background and API requirements
 
 #### Features
 
@@ -55,10 +51,10 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 
 #### Fixes
 
-- [ ] Upload, Modal: Propagate error from snackbar to modal, by making a SportUploadBuilder as separate component, which returns the error as string
 - [ ] Modal adds value twice to input when adding a sport and directly after a number / other direction
   - [ ] Only use one InputBox for AmountModal and SearchModal. Always mount it in main view. Currently the textbox receives the input while it's fading out.
 - [ ] UploadAmount: unit is missing. Make a class for each sport which takes number as input and returns the number and the unit as output
+- [ ] Input in slider: better contrast; backgroundcolor
 
 #### QoL
 
@@ -68,6 +64,10 @@ Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.
 - [x] add time (seconds) parameter to setErrorMessage.
   - [ ] Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
 - [ ] OverdueDeaths: open a modal when clicking on it, which shows all overdueDeaths for all games
+- [ ] Coloring:
+  - [ ] Secondary: Topbar, Timeline, Multiplier
+  - [ ] Primary: Sport, Game, Amount
+  - [ ] Use warning colors?
 
 #### Perf
 

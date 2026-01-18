@@ -27,7 +27,7 @@ export const docsTheme = createTheme({
     themeName: 'docs',
     longName: 'Nord Theme Bright',
   },
-} as CustomTheme);
+}) as CustomTheme;
 
 // Define our available custom themes.
 export const customThemes: CustomThemeConfig[] = customThemeData;

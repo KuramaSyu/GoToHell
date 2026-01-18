@@ -242,16 +242,15 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         flexDirection: 'row',
         gap: 2,
         alignItems: 'center',
-        backdropFilter: 'blur(25px)',
+        backdropFilter: 'blur(16px)',
         padding: 3,
-        borderRadius: 5,
-        backgroundColor: `rgba(${hexToRgbString(
-          theme.palette.muted.dark
-        )}, 0.33)`,
+        borderRadius: 4,
+        backgroundColor: alpha(theme.palette.muted.dark, 0.33),
       }}
     >
       <OutlinedInput
         value={stringNumber ?? String(min)}
+        color="secondary"
         onChange={(e) => {
           setStringNumber(e.target.value);
           const value = handleStringNumber({
@@ -303,7 +302,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           onClick={() => setUsedMultiplierAndUpdateValue(null)}
           sx={{
             backgroundColor: getColor(null),
-            color: blendWithContrast(theme.palette.secondary.main, theme, 0.5),
+            color: theme.palette.secondary.contrastText,
             whiteSpace: 'nowrap', // Prevent text wrapping
             justifyContent: 'center',
           }}
@@ -313,7 +312,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         <Button
           sx={{
             backgroundColor: getColor(theme.custom.themeName),
-            color: blendWithContrast(theme.palette.secondary.main, theme, 0.5),
+            color: theme.palette.secondary.contrastText,
             whiteSpace: 'nowrap', // Prevent text wrapping
             justifyContent: 'center',
           }}
@@ -326,6 +325,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       </Box>
       <Slider
         size={isMobile ? 'small' : 'medium'}
+        color="secondary"
         value={sliderValue ?? min}
         marks={marks}
         onChange={(_e, value) => {
@@ -368,6 +368,7 @@ const PlusMinusCol: React.FC<PlusMinusColProps> = ({
   setSliderValue,
   setStringNumber,
 }: PlusMinusColProps) => {
+  const { theme } = useThemeStore();
   const updateSilderVlaueByStep = (step: number) => {
     var value = (sliderValue ?? 0) + step;
     // round value to .2f to prevent float issues
@@ -391,7 +392,8 @@ const PlusMinusCol: React.FC<PlusMinusColProps> = ({
     >
       <Button
         sx={{
-          backgroundColor: alpha('#000000', 0.2),
+          color: theme.palette.secondary.contrastText,
+          backgroundColor: theme.palette.secondary.main,
         }}
         onClick={() => updateSilderVlaueByStep(step)}
       >
@@ -400,7 +402,8 @@ const PlusMinusCol: React.FC<PlusMinusColProps> = ({
 
       <Button
         sx={{
-          backgroundColor: alpha('#000000', 0.2),
+          color: theme.palette.secondary.contrastText,
+          backgroundColor: theme.palette.secondary.main,
         }}
         onClick={() => updateSilderVlaueByStep(-step)}
       >
