@@ -7,6 +7,6 @@ type PersonalGoalsRepository interface {
 	InitRepo() error
 	Insert(goal *PersonalGoal) (*PersonalGoal, error)
 	Update(goal *PersonalGoal) (*PersonalGoal, error)
-	FetchByUserID(userID Snowflake) ([]PersonalGoal, error)
+	FetchByUserID(userID Snowflake, requester Snowflake) ([]PersonalGoal, error)
 	DeleteByID(goalID Snowflake) error
 }
