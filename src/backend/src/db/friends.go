@@ -14,7 +14,6 @@ type FriendshipRepository interface {
 	CreateFriendship(requesterID Snowflake, recipientID Snowflake, status FriendshipStatus) error
 	UpdateFriendship(friendshipID Snowflake, userID Snowflake, status FriendshipStatus) error
 	DeleteFriendship(friendshipID Snowflake) error
-	GetFriendshipForUsers(user1ID Snowflake, user2ID Snowflake) (*Friendships, error)
 }
 
 type GormFriendshipRepository struct {
@@ -100,18 +99,4 @@ func (r *GormFriendshipRepository) UpdateFriendship(friendshipID Snowflake, user
 // DeleteFriendship deletes a friendship record.
 func (r *GormFriendshipRepository) DeleteFriendship(friendshipID Snowflake) error {
 	return r.DB.Delete(&Friendships{}, friendshipID).Error
-}
-
-// Retrieves the friendship record between two users, if it exists. Theoretically one, but there
-// aren't any constrains in the gorm
-func (r *GormFriendshipRepository) GetFriendshipForUsers(user1ID Snowflake, user2ID Snowflake) ([]Friendships, error) {
-	var friendship []Friendships
-	err := r.DB.Where(
-		"(requester_id = ? AND recipient_id = ?) OR (requester_id = ? AND recipient_id = ?)",
-		user1ID, user2ID, user2ID, user1ID,
-	).Find(&friendship).Error
-	if err != nil {
-		return nil, err
-	}
-	return friendship, nil
 }
