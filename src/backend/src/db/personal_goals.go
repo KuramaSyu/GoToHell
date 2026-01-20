@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
+	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"gorm.io/gorm"
 )
@@ -45,14 +45,18 @@ func (r *GormPersonalGoalsRepository) Update(goal *PersonalGoal) (*PersonalGoal,
 // Fetches PersonalGoal by UserID
 func (r *GormPersonalGoalsRepository) FetchByUserID(userID Snowflake, requester Snowflake) ([]PersonalGoal, error) {
 	var goals []PersonalGoal
-	// check if requester asks for their own goals
-	var check = userID == requester
-	if !check {
-		// check if requester asks for a friend's goals
-		var friendship db.FriendshipRepository
-
-	}
-	err := r.DB.Where(&PersonalGoal{UserID: userID}).Find(&goals).Error
+	// make a request and ensure, that the request**ing** user is allowed to
+	// view request**ed** user
+	err := r.DB.Model(&PersonalGoal{}).
+		Where(&PersonalGoal{UserID: userID}).
+		Where(
+			"user_id = ? AND EXISTS (?)",
+			userID,
+			r.DB.Model(&models.Friendships{}).Where(
+				"requester_id = ? OR recipient_id = ? AND status = ?",
+				requester, requester, models.Accepted,
+			),
+		).Find(&goals).Error
 	if err != nil {
 		return nil, err
 	}
