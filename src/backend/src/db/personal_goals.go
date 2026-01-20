@@ -7,7 +7,7 @@ import (
 )
 
 // PersonalGoalsRepository defines the interface for managing personal goals in the database.
-func NewPersonalGoalsRepository(database *gorm.DB, friendship_repo *FriendshipRepository) *GormPersonalGoalsRepository {
+func NewPersonalGoalsRepository(database *gorm.DB) *GormPersonalGoalsRepository {
 	repo := &GormPersonalGoalsRepository{DB: database}
 	repo.InitRepo()
 	return repo
@@ -15,8 +15,7 @@ func NewPersonalGoalsRepository(database *gorm.DB, friendship_repo *FriendshipRe
 
 // Specific implementation of `OverdueDeathRepository` for GORM
 type GormPersonalGoalsRepository struct {
-	DB              *gorm.DB
-	friendship_repo *FriendshipRepository
+	DB *gorm.DB
 }
 
 // automigrates the OverdueDeaths GORM table
