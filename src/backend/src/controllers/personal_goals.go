@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
@@ -33,11 +35,19 @@ type PersonalGoalsController struct {
 // @Success 200 {object} GetPersonalGoalsReply
 // @Failure 400 {object} ErrorReply
 // @Router /{user_id}/goals [get]
-func (pgc *PersonalGoalsController) Get(c *gin.Context) {
-	requested_user_id := c.Param("user_id")
-	_, status, err := UserFromSession(c)
+func (self *PersonalGoalsController) Get(c *gin.Context) {
+	requested_user_id, err := NewSnowflakeFromString(c.Param("user_id"))
+	if err != nil {
+		SetGinError(c, http.StatusBadRequest, err)
+	}
+	requesting_user, status, err := UserFromSession(c)
 	if err != nil {
 		SetGinError(c, status, err)
 		return
 	}
+	goals, err := self.repo.FetchByUserID(requested_user_id, requesting_user.ID)
+	reply := GetPersonalGoalsReply{
+		Data: goals,
+	}
+	c.JSON(http.StatusOK, reply)
 }
