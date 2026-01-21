@@ -21,16 +21,10 @@ export const SwaggerDocs: React.FC = () => {
 
   useEffect(() => {
     async function init() {
-      await setTheme('docsTheme');
-    }
-    init();
-  }, [theme]);
-
-  useEffect(() => {
-    async function init() {
       await new ApiRequirementsBuilder()
         .add(ApiRequirement.User)
         .fetchIfNeeded();
+      await setTheme('docsTheme');
     }
     init();
   }, []);
