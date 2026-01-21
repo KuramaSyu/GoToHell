@@ -107,7 +107,7 @@ func (self *PersonalGoalsController) Patch(c *gin.Context) {
 // @Param request body PatchPutPersonalGoalsRequest true "Payload containing the personal goal details like id, amount, frequency and sport"
 // @Success 200 {object} GetPersonalGoalsReply
 // @Failure 400 {object} ErrorReply
-// @Router /api/{user_id}/goals [patch]
+// @Router /api/{user_id}/goals [put]
 func (self *PersonalGoalsController) Put(c *gin.Context) {
 	HandlePersonalGoalsModification(c, self.repo.Update)
 }

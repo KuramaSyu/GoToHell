@@ -524,6 +524,43 @@
             }
         },
         "/api/{user_id}/goals": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PersonalGoals"
+                ],
+                "summary": "Updates a personal goal",
+                "parameters": [
+                    {
+                        "description": "Payload containing the personal goal details like id, amount, frequency and sport",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PatchPutPersonalGoalsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"

@@ -407,6 +407,31 @@ paths:
       summary: Creates a personal goal
       tags:
       - PersonalGoals
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the personal goal details like id, amount,
+          frequency and sport
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PatchPutPersonalGoalsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: Updates a personal goal
+      tags:
+      - PersonalGoals
   /api/friends:
     get:
       consumes:
