@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
@@ -134,9 +135,20 @@ func HandlePersonalGoalsModification(
 	c *gin.Context,
 	method PersonalGoalsFunc,
 ) {
+	requested_user_id, err := NewSnowflakeFromString(c.Param("user_id"))
+	if err != nil {
+		SetGinError(c, http.StatusBadRequest, err)
+		return
+	}
+
 	user, status, err := UserFromSession(c)
 	if err != nil {
 		SetGinError(c, status, err)
+		return
+	}
+
+	if user.ID != requested_user_id {
+		SetGinError(c, http.StatusForbidden, fmt.Errorf("Cannot modify another user's personal goals"))
 		return
 	}
 	var req PostPersonalGoalsRequest
