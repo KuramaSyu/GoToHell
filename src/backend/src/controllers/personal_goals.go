@@ -51,3 +51,19 @@ func (self *PersonalGoalsController) Get(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, reply)
 }
+
+// @Summary Creates a personal goal
+// @Tags PersonalGoals
+// @Accept json
+// @Produce json
+// @Param request body PostPersonalGoalsRequest true "Payload containing the game and count"
+// @Success 200 {object} GetPersonalGoalsReply
+// @Failure 400 {object} ErrorReply
+// @Router /api/{user_id}/goals [post]
+func (self *PersonalGoalsController) Post(c *gin.Context) {
+	user, status, err := UserFromSession(c)
+	if err != nil {
+		SetGinError(c, status, err)
+		return
+	}
+}
