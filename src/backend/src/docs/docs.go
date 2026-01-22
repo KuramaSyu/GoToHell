@@ -837,7 +837,7 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.PersonalGoal"
+                        "$ref": "#/definitions/controllers.PersonalGoalData"
                     }
                 }
             }
@@ -937,6 +937,26 @@ const docTemplate = `{
                 "kind": {
                     "type": "string",
                     "example": "push-ups"
+                }
+            }
+        },
+        "controllers.PersonalGoalData": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/models.TimeFrequency"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sport": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1063,34 +1083,6 @@ const docTemplate = `{
                 "user_id": {
                     "type": "integer",
                     "example": 348922315062044675
-                }
-            }
-        },
-        "models.PersonalGoal": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "frequency": {
-                    "$ref": "#/definitions/models.TimeFrequency"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "sport": {
-                    "type": "string"
-                },
-                "user": {
-                    "description": "just a constraint to use UserID as foreign key",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/models.User"
-                        }
-                    ]
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },

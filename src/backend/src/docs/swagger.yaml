@@ -60,7 +60,7 @@ definitions:
     properties:
       data:
         items:
-          $ref: '#/definitions/models.PersonalGoal'
+          $ref: '#/definitions/controllers.PersonalGoalData'
         type: array
     type: object
   controllers.GetSportReply:
@@ -128,6 +128,19 @@ definitions:
         type: string
     required:
     - id
+    type: object
+  controllers.PersonalGoalData:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/models.TimeFrequency'
+      id:
+        type: integer
+      sport:
+        type: string
+      user_id:
+        type: integer
     type: object
   controllers.PostOverdueDeathsReply:
     properties:
@@ -212,23 +225,6 @@ definitions:
         type: string
       user_id:
         example: 348922315062044675
-        type: integer
-    type: object
-  models.PersonalGoal:
-    properties:
-      amount:
-        type: integer
-      frequency:
-        $ref: '#/definitions/models.TimeFrequency'
-      id:
-        type: integer
-      sport:
-        type: string
-      user:
-        allOf:
-        - $ref: '#/definitions/models.User'
-        description: just a constraint to use UserID as foreign key
-      user_id:
         type: integer
     type: object
   models.PostSportRequest:
