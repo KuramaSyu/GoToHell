@@ -11,10 +11,36 @@ import (
 	"gorm.io/gorm"
 )
 
+type PersonalGoalData struct {
+	ID        Snowflake     `gorm:"primaryKey" json:"id"`
+	UserID    Snowflake     `gorm:"not null;index" json:"user_id"`
+	Amount    int           `json:"amount"`
+	Frequency TimeFrequency `json:"frequency"`
+	Sport     string        `json:"sport"`
+}
+
+func PersonalGoalDataFrom(p *PersonalGoal) PersonalGoalData {
+	return PersonalGoalData{
+		ID:        p.ID,
+		UserID:    p.UserID,
+		Amount:    p.Amount,
+		Frequency: p.Frequency,
+		Sport:     p.Sport,
+	}
+}
+
+func PersonalGoalDataFromList(p_list []PersonalGoal) []PersonalGoalData {
+	var l = []PersonalGoalData{}
+	for _, p := range p_list {
+		l = append(l, PersonalGoalDataFrom(&p))
+	}
+	return l
+}
+
 // GetPersonalGoalsReply is the reply sent when doing [get] /{user_id}/goals
 // swagger:model GetPersonalGoalsReply
 type GetPersonalGoalsReply struct {
-	Data []PersonalGoal `json:"data"`
+	Data []PersonalGoalData `json:"data"`
 }
 
 // PostPersonalGoalsRequest is the request sent when doing [post] /{user_id}/goals
@@ -71,7 +97,7 @@ func (self *PersonalGoalsController) Get(c *gin.Context) {
 	}
 	goals, err := self.repo.FetchByUserID(requested_user_id, requesting_user.ID)
 	reply := GetPersonalGoalsReply{
-		Data: goals,
+		Data: PersonalGoalDataFromList(goals),
 	}
 	c.JSON(http.StatusOK, reply)
 }
@@ -168,7 +194,7 @@ func HandlePersonalGoalsModification(
 		return
 	}
 	reply := GetPersonalGoalsReply{
-		Data: []PersonalGoal{*createdGoal},
+		Data: []PersonalGoalData{PersonalGoalDataFrom(createdGoal)},
 	}
 	c.JSON(http.StatusOK, reply)
 }
