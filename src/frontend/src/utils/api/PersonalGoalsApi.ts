@@ -8,11 +8,18 @@ import {
 } from './responses/OverdueDeaths';
 import { PostOverdueDeathsRequest } from './requests/OverdueDeaths';
 import { BasicApi } from './OverdueDeathsApi';
+import { GetPersonalGoalsReply } from './responses/PersonalGoals';
+import { usePersonalGoalsStore } from '../../zustand/PersonalGoalsStore';
+import { PostPutPatchPersonalGoalsRequest } from './requests/PersonalGoals';
 
-export class PersonalGoalsApi extends BasicApi {
+/**
+ * The API Wrapper for /api/{user_id}/goals
+ * to modify Personal Goals.
+ */
+export class PersonalGoalApi extends BasicApi {
   /**
-   * posts an record of OverdueDeaths for logged in user
-   * to /api/overdue-deaths POST
+   * posts an record of PersonalGoals for logged in user
+   * to /api/{user_id}/goals POST
    *
    * @Note
    * updates the usePersonalGoalsStore Zustand for the posted personal goal
@@ -27,107 +34,153 @@ export class PersonalGoalsApi extends BasicApi {
    * PostOverdueDeathsReply | null: the Response or null if failed
    */
   async post(
-    game: string,
-    count: number,
-    incrementLogic: (currentCount: number, count: number) => number = (
-      currentCount,
-      count,
-    ) => currentCount + count,
+    sport: string,
+    amount: number,
+    frequency: 'daily' | 'weekly' | 'monthly',
     updateStores: boolean = true,
-  ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(
-      game,
-      count,
-      incrementLogic,
-      updateStores,
+  ): Promise<GetPersonalGoalsReply | null> {
+    return this.postPutPatchPersonalGoals(
+      sport,
+      amount,
+      frequency,
       'POST',
+      undefined,
+      true,
     );
   }
 
   /**
-   * puts an record of OverdueDeaths for logged in user (which updates or creates it)
-   * to /api/overdue-deaths PUT
+   * puts an record of PersonalGoalsData for logged in user (which updates or creates it)
+   * to /api/{user_id}/goals PUT
    *
    * @Note
-   * updates the useOverdueDeathsStore Zustand for the posted game
+   * updates the usePersonalGoalsStore Zustand for the posted game
    *
-   * @param game: the game name
-   * @param count: the count of overdue deaths to add
-   * @param incrementLogic: a callback function, for calculating the new count, using the current count and the passed count
+   * @param sport: the sport name
+   * @param amount: the amount of exercises of sport
+   * @param frequency: in which frequency the goal should be achieved
+   * @throws Error: if the fetch fails
+   *
+   * @returns
+   * GetPersonalGoalsReply | null: the Response or null if failed
+   */
+  async put(
+    id: string,
+    sport: string,
+    amount: number,
+    frequency: 'daily' | 'weekly' | 'monthly',
+    updateStores: boolean = true,
+  ): Promise<GetPersonalGoalsReply | null> {
+    return this.postPutPatchPersonalGoals(
+      sport,
+      amount,
+      frequency,
+      'PUT',
+      id,
+      updateStores,
+    );
+  }
+
+  /**
+   * deletes a PersonalGoal record for the logged in user
+   * to /api/{user_id}/goals DELETE
+   *
+   * @Note
+   * updates the usePersonalGoalsStore Zustand to remove the deleted personal goal
+   *
+   * @param id: the id of the personal goal to delete
    *
    * @throws Error: if the fetch fails
    *
    * @returns
-   * PostOverdueDeathsReply | null: the Response or null if failed
+   * boolean: true if successful, false otherwise
    */
-  async put(
-    game: string,
-    count: number,
-    incrementLogic: (currentCount: number, count: number) => number = (
-      currentCount,
-      count,
-    ) => currentCount + count,
-    updateStores: boolean = true,
-  ): Promise<PostOverdueDeathsReply | null> {
-    return this.postPutPatchOverdueDeaths(
-      game,
-      count,
-      incrementLogic,
-      updateStores,
-      'PUT',
-    );
+  async delete(id: string): Promise<boolean> {
+    // get user
+    const user = useUserStore.getState().user;
+
+    if (user === null) {
+      return false;
+    }
+
+    const API_ENDPOINT = `/api/${user.id}/goals`;
+    const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
+
+    try {
+      const response = await fetch(url, {
+        credentials: 'include',
+        method: 'DELETE',
+        body: JSON.stringify({ id: id }),
+      });
+
+      if (response.ok) {
+        // get zustand setter
+        const setter = usePersonalGoalsStore.getState().setPersonalGoals;
+
+        // update zustand by removing the deleted goal
+        setter(
+          usePersonalGoalsStore
+            .getState()
+            .personalGoalsList.filter((g) => g.id !== id),
+        );
+
+        return true;
+      } else {
+        const result = await response.json();
+        this.logError(API_ENDPOINT, result);
+      }
+      return false;
+    } catch (error) {
+      this.logError(API_ENDPOINT, error);
+      throw error;
+    }
   }
 
-  private async postPutPatchOverdueDeaths(
-    game: string,
-    count: number,
-    incrementLogic: (currentCount: number, count: number) => number = (
-      currentCount,
-      count,
-    ) => currentCount + count,
-    updateStores: boolean = true,
+  private async postPutPatchPersonalGoals(
+    sport: string,
+    amount: number,
+    frequency: 'daily' | 'weekly' | 'monthly',
     method: 'POST' | 'PUT' | 'PATCH',
-  ): Promise<PostOverdueDeathsReply | null> {
-    const API_ENDPOINT = '/api/overdue-deaths';
+    id: string | undefined = undefined,
+    updateStores: boolean = true,
+  ): Promise<GetPersonalGoalsReply | null> {
     // get user
     const user = useUserStore.getState().user;
 
     if (user === null) {
       return null;
     }
-    const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
-    // check current count or 0 if not found
-    const currentCount =
-      useOverdueDeathsStore
-        .getState()
-        .overdueDeathsList.find((x) => x.game === game)?.count || 0;
+    const API_ENDPOINT = `/api/${user.id}/goals`;
+    const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
     try {
       const response = await fetch(url, {
         credentials: 'include',
         method: method,
         body: JSON.stringify({
-          game: game,
-          count: incrementLogic(currentCount, count),
-        } as PostOverdueDeathsRequest),
+          sport: sport,
+          amount: amount,
+          frequency: frequency,
+          id: id,
+        } as PostPutPatchPersonalGoalsRequest),
       });
 
       const result = await response.json();
       if (response.ok) {
         // get zustand setter
-        const setOverdueDeaths =
-          useOverdueDeathsStore.getState().setOverdueDeaths;
+        const setter = usePersonalGoalsStore.getState().setPersonalGoals;
 
         // cast result
-        var reply = result as PostOverdueDeathsReply;
+        var reply = result as GetPersonalGoalsReply;
 
         if (updateStores) {
           // update zustand for the new game
-          const prev = useOverdueDeathsStore.getState().overdueDeathsList;
-          setOverdueDeaths([
-            ...prev.filter((p) => p.game !== reply.data.game),
-            reply.data,
+          setter([
+            ...usePersonalGoalsStore
+              .getState()
+              .personalGoalsList.filter((g) => g.id !== reply.data[0]?.id),
+            ...reply.data,
           ]);
         }
 
@@ -143,24 +196,20 @@ export class PersonalGoalsApi extends BasicApi {
   }
 
   /**
-   * fetches OverdueDeaths for logged in user
-   * from /api/overdue-deaths GET
+   * fetches PersonalGoals for the selected user
+   * from /api/{user_id}/goals GET
    *
    * @Note
-   * sets the useOverdueDeathsStore Zustand
+   * sets the usePersonalGoalsStore Zustand
    *
    * @throws Error: if the fetch fails
    *
    * @returns
-   * GetOverdueDeathsReply | null: the Response or null if failed
+   * GetPersonalGoalsReply | null: the Response or null if failed
    */
-  async get(): Promise<GetOverdueDeathsReply | null> {
-    const API_ENDPOINT = '/api/overdue-deaths';
-    // get user
-    const user = useUserStore.getState().user;
-    if (user === null) {
-      return null;
-    }
+  async get(user_id: string): Promise<GetPersonalGoalsReply | null> {
+    const API_ENDPOINT = `/api/${user_id}/goals`;
+
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
     try {
@@ -172,14 +221,14 @@ export class PersonalGoalsApi extends BasicApi {
       const result = await response.json();
       if (response.ok) {
         // get zustand setter
-        const setOverdueDeaths =
-          useOverdueDeathsStore.getState().setOverdueDeaths;
+        const setPersonalGoals =
+          usePersonalGoalsStore.getState().setPersonalGoals;
 
         // cast result
-        var reply = result as GetOverdueDeathsReply;
+        var reply = result as GetPersonalGoalsReply;
 
         // set zustand
-        setOverdueDeaths(reply.data);
+        setPersonalGoals(reply.data);
 
         return reply;
       } else {
