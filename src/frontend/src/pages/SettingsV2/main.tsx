@@ -36,14 +36,6 @@ import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar';
 import FlagIcon from '@mui/icons-material/Flag';
 import { PersonalGoalSettings } from './PersonalGoalSettings';
-// ---- Notes ----
-// 1) Replace the demo settings sections with your real forms/controls.
-// 2) If your app uses React Router, you can easily make the mobile drill-in navigable
-//    via routes like "/settings/:section" instead of component state.
-// 3) The left rail uses position:sticky to keep it fixed under your AppBar.
-//    Adjust the `top` value to match your AppBar height.
-// 4) The scroll sync uses IntersectionObserver tuned to favor the section near the top.
-// 5) The scrollMarginTop on each section ensures a nice offset when using scrollIntoView.
 
 /**
  *
@@ -150,6 +142,15 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const handlers = useSwipeable({
     onSwipedRight: () => navigate(Pages.FRIENDS),
+  });
+
+  useEffect(() => {
+    async function init() {
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.UserPersonalGoals)
+        .forceFetch();
+    }
+    init();
   });
 
   // Define your categories once
