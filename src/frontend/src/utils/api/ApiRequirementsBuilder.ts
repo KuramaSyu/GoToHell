@@ -1,6 +1,7 @@
 import { FriendshipReply } from '../../pages/friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../../userStore';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
+import { usePersonalGoalsStore } from '../../zustand/PersonalGoalsStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useStreakStore } from '../../zustand/StreakStore';
@@ -8,6 +9,7 @@ import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { loadPreferencesFromCookie } from '../cookiePreferences';
 import { UserApi } from './Api';
 import { OverdueDeathsApi } from './OverdueDeathsApi';
+import { PersonalGoalApi } from './PersonalGoalsApi';
 import { StreakApi } from './StreakApi';
 
 interface IApiReuqirement {
@@ -43,7 +45,7 @@ abstract class ApiRequirementABC implements IApiReuqirement {
     if (!ApiRequirementABC.instances.has(className)) {
       ApiRequirementABC.instances.set(
         className,
-        new this() as ApiRequirementABC
+        new this() as ApiRequirementABC,
       );
     }
     return ApiRequirementABC.instances.get(className) as T;
@@ -138,7 +140,7 @@ export class FriendsRequirement extends ApiRequirementABC {
     console.log(
       `DEBUG: Checking if friends need fetch: ${
         useUsersStore.getState().friendsLoaded === false
-      }`
+      }`,
     );
     return useUsersStore.getState().friendsLoaded === false;
   }
@@ -186,11 +188,11 @@ export class AllStreaksRequirement extends ApiRequirementABC {
   fetchPredicate(): Boolean {
     const isUserStreakNull = useUserStore.getState().user?.streak === null;
     const isAnyFriendStreakNull = Object.values(
-      useUsersStore.getState().users
+      useUsersStore.getState().users,
     ).some((u) => u.streak === null);
     const fetchPredicate = isUserStreakNull || isAnyFriendStreakNull;
     console.log(
-      `DEBUG: Checking if any streak needs fetch:  ${fetchPredicate}`
+      `DEBUG: Checking if any streak needs fetch:  ${fetchPredicate}`,
     );
     return fetchPredicate;
   }
@@ -199,7 +201,7 @@ export class AllStreaksRequirement extends ApiRequirementABC {
     console.log(`DEBUG: Fetching all streaks data`);
     const userId = useUserStore.getState().user!.id;
     const friendIds = Object.values(useUsersStore.getState().users).map(
-      (u) => u.id
+      (u) => u.id,
     );
     return await new StreakApi().get([userId, ...friendIds]);
   }
@@ -266,6 +268,29 @@ export class OverdueDeathsRequirement extends ApiRequirementABC {
   async doFetch(): Promise<any> {
     console.log(`DEBUG: Fetching OverdueDeaths`);
     return await new OverdueDeathsApi().get();
+  }
+}
+
+/**
+ * fetches the users personal goals
+ *
+ * @Note
+ * sets the usePersonalGoalsStore Zustand
+ */
+export class UserPersonalGoalsRequirement extends ApiRequirementABC {
+  fetchPredicate(): Boolean {
+    console.log(`DEBUG: Checking for personal goals`);
+    return usePersonalGoalsStore.getState().loaded === false;
+  }
+
+  async doFetch(): Promise<any> {
+    console.log(`DEBUG: Fetching personal goals`);
+    await UserRequirement.getInstance().fetchIfNeeded();
+    const user_id = useUserStore.getState().user?.id;
+    if (!user_id) {
+      throw new Error('User not logged in');
+    }
+    return await new PersonalGoalApi().get(user_id);
   }
 }
 
