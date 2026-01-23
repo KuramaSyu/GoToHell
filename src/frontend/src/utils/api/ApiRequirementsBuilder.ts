@@ -326,6 +326,7 @@ export enum ApiRequirement {
   YourRecentSports,
   Preferences,
   OverdueDeaths,
+  UserPersonalGoals,
 }
 
 export namespace ApiRequirement {
@@ -349,6 +350,8 @@ export namespace ApiRequirement {
         return OverdueDeathsRequirement.getInstance();
       case ApiRequirement.AllStreaks:
         return AllStreaksRequirement.getInstance();
+      case ApiRequirement.UserPersonalGoals:
+        return UserPersonalGoalsRequirement.getInstance();
       default:
         throw new Error(`Unknown ApiRequirement: ${req}`);
     }
