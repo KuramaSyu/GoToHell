@@ -34,7 +34,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar';
-
+import FlagIcon from '@mui/icons-material/Flag';
+import { PersonalGoalSettings } from './PersonalGoalSettings';
 // ---- Notes ----
 // 1) Replace the demo settings sections with your real forms/controls.
 // 2) If your app uses React Router, you can easily make the mobile drill-in navigable
@@ -72,24 +73,25 @@ export type SettingsSectionProps = {
 };
 
 // A simple section wrapper to give each section consistent spacing and an anchor target
-const SettingsSection = React.forwardRef<HTMLDivElement, SettingsSectionProps>(
-  ({ id, label, children }, ref) => (
-    <Box id={id} ref={ref} sx={{ scrollMarginTop: 80, mb: 6 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        {label}
-      </Typography>
-      <Box>{children}</Box>
-      <Divider sx={{ mt: 4 }} />
-    </Box>
-  )
-);
+export const SettingsSection = React.forwardRef<
+  HTMLDivElement,
+  SettingsSectionProps
+>(({ id, label, children }, ref) => (
+  <Box id={id} ref={ref} sx={{ scrollMarginTop: 80, mb: 6 }}>
+    <Typography variant='h6' sx={{ mb: 2 }}>
+      {label}
+    </Typography>
+    <Box>{children}</Box>
+    <Divider sx={{ mt: 4 }} />
+  </Box>
+));
 SettingsSection.displayName = 'SettingsSection';
 
 // ---- Demo content (replace with your real settings forms) ----
 function AccountSettings() {
   return (
     <Box>
-      <Typography variant="body1">
+      <Typography variant='body1'>
         Account details, email, password reset, two-factor auth, etc.
       </Typography>
       <Box sx={{ height: 400 }} />
@@ -100,7 +102,7 @@ function AccountSettings() {
 function SecuritySettings() {
   return (
     <Box>
-      <Typography variant="body1">
+      <Typography variant='body1'>
         Security options, sessions, devices.
       </Typography>
       <Box sx={{ height: 400 }} />
@@ -111,7 +113,7 @@ function SecuritySettings() {
 function NotificationsSettings() {
   return (
     <Box>
-      <Typography variant="body1">
+      <Typography variant='body1'>
         Notification preferences for email, push, and in-app.
       </Typography>
       <Box sx={{ height: 400 }} />
@@ -122,7 +124,7 @@ function NotificationsSettings() {
 function AppearanceSettings() {
   return (
     <Box>
-      <Typography variant="body1">Theme, density, and language.</Typography>
+      <Typography variant='body1'>Theme, density, and language.</Typography>
       <Box sx={{ height: 400 }} />
     </Box>
   );
@@ -131,7 +133,7 @@ function AppearanceSettings() {
 function ExcerciseOverrideSettings() {
   return (
     <Box>
-      <Typography variant="body1">
+      <Typography variant='body1'>
         Exercise-Amount overrides for games.
       </Typography>
       <GameOverrideSettings />
@@ -166,8 +168,9 @@ export default function SettingsPage() {
         icon: <NotificationsIcon />,
       },
       { id: 'appearance', label: 'Appearance', icon: <PaletteIcon /> },
+      { id: 'personal-goals', label: 'Personal Goals', icon: <FlagIcon /> },
     ],
-    []
+    [],
   );
 
   // Store refs for each section to support scrolling
@@ -212,7 +215,7 @@ export default function SettingsPage() {
         root: null,
         rootMargin: '-80px 0px -60% 0px', // favor the section near the top
         threshold: [0.1, 0.25, 0.5, 0.75, 1],
-      }
+      },
     );
 
     const nodes = categories
@@ -248,11 +251,11 @@ export default function SettingsPage() {
           display: { xs: 'none', md: 'block' },
           borderRight: 1,
           borderColor: 'divider',
-          bgcolor: theme.palette.muted.dark,
+          bgcolor: theme.palette.background.paper,
         }}
       >
         <Box sx={{ p: 2, position: 'sticky', top: 0 }}>
-          <Typography variant="h5" sx={{ mb: 1 }}>
+          <Typography variant='h5' sx={{ mb: 1 }}>
             Settings
           </Typography>
 
@@ -286,8 +289,8 @@ export default function SettingsPage() {
       >
         {/* All sections rendered in one flow */}
         <SettingsSection
-          id="account"
-          label="Account"
+          id='account'
+          label='Account'
           ref={(el) => {
             sectionRefs.current['account'] = el;
           }}
@@ -296,8 +299,8 @@ export default function SettingsPage() {
         </SettingsSection>
 
         <SettingsSection
-          id="excercise-overrides"
-          label="Excercise Overrides"
+          id='excercise-overrides'
+          label='Excercise Overrides'
           ref={(el) => {
             sectionRefs.current['exercise-overrides'] = el;
           }}
@@ -305,8 +308,8 @@ export default function SettingsPage() {
           <ExcerciseOverrideSettings />
         </SettingsSection>
         <SettingsSection
-          id="security"
-          label="Security"
+          id='security'
+          label='Security'
           ref={(el) => {
             sectionRefs.current['security'] = el;
           }}
@@ -314,8 +317,8 @@ export default function SettingsPage() {
           <SecuritySettings />
         </SettingsSection>
         <SettingsSection
-          id="notifications"
-          label="Notifications"
+          id='notifications'
+          label='Notifications'
           ref={(el) => {
             sectionRefs.current['notifications'] = el;
           }}
@@ -323,13 +326,22 @@ export default function SettingsPage() {
           <NotificationsSettings />
         </SettingsSection>
         <SettingsSection
-          id="appearance"
-          label="Appearance"
+          id='appearance'
+          label='Appearance'
           ref={(el) => {
             sectionRefs.current['appearance'] = el;
           }}
         >
           <AppearanceSettings />
+        </SettingsSection>
+        <SettingsSection
+          id='personal-goals'
+          label='Personal Goals'
+          ref={(el) => {
+            sectionRefs.current['personal-goals'] = el;
+          }}
+        >
+          <PersonalGoalSettings />
         </SettingsSection>
         <Box sx={{ height: 60 }} />
       </Grid>
@@ -339,7 +351,7 @@ export default function SettingsPage() {
   // ---- Mobile layout ----
   const MobileCategories = (
     <Box>
-      <Typography variant="h6" sx={{ px: 2, pb: 1 }}>
+      <Typography variant='h6' sx={{ px: 2, pb: 1 }}>
         Settings
       </Typography>
       <Divider />
@@ -357,40 +369,40 @@ export default function SettingsPage() {
   const MobileSection = (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', px: 1, py: 0.5 }}>
-        <IconButton aria-label="Back" onClick={() => setMobileOpenId(null)}>
+        <IconButton aria-label='Back' onClick={() => setMobileOpenId(null)}>
           <ArrowBackIcon />
         </IconButton>
-        <Typography variant="h6" sx={{ ml: 1 }}>
+        <Typography variant='h6' sx={{ ml: 1 }}>
           {categories.find((c) => c.id === mobileOpenId)?.label}
         </Typography>
       </Box>
       <Divider />
       <Box sx={{ px: 2, py: 2 }}>
         {mobileOpenId === 'account' && (
-          <SettingsSection id="account-mobile" label="Account">
+          <SettingsSection id='account-mobile' label='Account'>
             <AccountSettings />
           </SettingsSection>
         )}
         {mobileOpenId === 'exercise-overrides' && (
           <SettingsSection
-            id="exercise-overrides-mobile"
-            label="Exercise Overrides"
+            id='exercise-overrides-mobile'
+            label='Exercise Overrides'
           >
             <ExcerciseOverrideSettings />
           </SettingsSection>
         )}
         {mobileOpenId === 'security' && (
-          <SettingsSection id="security-mobile" label="Security">
+          <SettingsSection id='security-mobile' label='Security'>
             <SecuritySettings />
           </SettingsSection>
         )}
         {mobileOpenId === 'notifications' && (
-          <SettingsSection id="notifications-mobile" label="Notifications">
+          <SettingsSection id='notifications-mobile' label='Notifications'>
             <NotificationsSettings />
           </SettingsSection>
         )}
         {mobileOpenId === 'appearance' && (
-          <SettingsSection id="appearance-mobile" label="Appearance">
+          <SettingsSection id='appearance-mobile' label='Appearance'>
             <AppearanceSettings />
           </SettingsSection>
         )}
@@ -399,7 +411,14 @@ export default function SettingsPage() {
   );
 
   return (
-    <Box {...handlers} sx={{ width: '100%', height: '100%' }}>
+    <Box
+      {...handlers}
+      sx={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: theme.palette.background.default,
+      }}
+    >
       {isMobile
         ? mobileOpenId
           ? MobileSection
