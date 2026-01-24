@@ -46,18 +46,25 @@ func (r *GormPersonalGoalsRepository) Update(goal *PersonalGoal) (*PersonalGoal,
 // Fetches PersonalGoal by UserID
 func (r *GormPersonalGoalsRepository) FetchByUserID(userID Snowflake, requester Snowflake) ([]PersonalGoal, error) {
 	var goals []PersonalGoal
-	// make a request and ensure, that the request**ing** user is allowed to
-	// view request**ed** user
-	err := r.DB.Model(&PersonalGoal{}).
-		Where(&PersonalGoal{UserID: userID}).
-		Where(
-			"user_id = ? AND EXISTS (?)",
-			userID,
-			r.DB.Model(&models.Friendships{}).Where(
-				"requester_id = ? OR recipient_id = ? AND status = ?",
-				requester, requester, models.Accepted,
-			),
-		).Find(&goals).Error
+	var err error
+
+	if userID == requester {
+		// user fetches his own goals
+		err = r.DB.Model(&PersonalGoal{}).Where(&PersonalGoal{UserID: requester}).Find(&goals).Error
+	} else {
+		// ensure, that the requestING user is allowed to
+		// view requestED user
+		err = r.DB.Model(&PersonalGoal{}).
+			Where(&PersonalGoal{UserID: userID}).
+			Where(
+				"user_id = ? AND EXISTS (?)",
+				userID,
+				r.DB.Model(&models.Friendships{}).Where(
+					"requester_id = ? OR recipient_id = ? AND status = ?",
+					requester, requester, models.Accepted,
+				),
+			).Find(&goals).Error
+	}
 	if err != nil {
 		return nil, err
 	}
