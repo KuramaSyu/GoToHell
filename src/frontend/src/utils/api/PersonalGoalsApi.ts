@@ -12,6 +12,7 @@ import { GetPersonalGoalsReply } from './responses/PersonalGoals';
 import { usePersonalGoalsStore } from '../../zustand/PersonalGoalsStore';
 import { PostPutPatchPersonalGoalsRequest } from './requests/PersonalGoals';
 
+export type GoalFrequency = 'daily' | 'weekly' | 'monthly';
 /**
  * The API Wrapper for /api/{user_id}/goals
  * to modify Personal Goals.
@@ -68,7 +69,7 @@ export class PersonalGoalApi extends BasicApi {
     id: string,
     sport: string,
     amount: number,
-    frequency: 'daily' | 'weekly' | 'monthly',
+    frequency: GoalFrequency,
     updateStores: boolean = true,
   ): Promise<GetPersonalGoalsReply | null> {
     return this.postPutPatchPersonalGoals(
@@ -139,7 +140,7 @@ export class PersonalGoalApi extends BasicApi {
   private async postPutPatchPersonalGoals(
     sport: string,
     amount: number,
-    frequency: 'daily' | 'weekly' | 'monthly',
+    frequency: GoalFrequency,
     method: 'POST' | 'PUT' | 'PATCH',
     id: string | undefined = undefined,
     updateStores: boolean = true,
