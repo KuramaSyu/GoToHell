@@ -6,6 +6,7 @@ import {
 } from '../utils/PersonalGoalCalculator';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -26,6 +27,7 @@ import { en } from 'zod/v4/locales';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { BoxElevation1, BoxElevation2 } from '../theme/statics';
 import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 export const PersonalGoalBubble = () => {
   const { personalGoalsList } = usePersonalGoalsStore();
@@ -56,17 +58,24 @@ export const PersonalGoalBubble = () => {
         borderRadius: theme.shape.borderRadius,
       }}
     >
-      <Stack direction={'row'}>
-        {personalGoalsList.map((g) => (
-          <PersonalGoalCard
-            goal={g}
-            percentageDone={calculator.calculatePercentageDone(
-              g,
-              recentSports?.data ?? [],
-            )}
-            lastPossibleTime={calculator.getLastPossibleTime(g)}
-          />
-        ))}
+      <Stack direction={'column'} gap={2} alignItems={'center'}>
+        <Typography variant='h5' textTransform={'uppercase'}>
+          Goals
+        </Typography>
+        {personalGoalsList.length > 0 ? (
+          personalGoalsList.map((g) => (
+            <PersonalGoalCard
+              goal={g}
+              percentageDone={calculator.calculatePercentageDone(
+                g,
+                recentSports?.data ?? [],
+              )}
+              lastPossibleTime={calculator.getLastPossibleTime(g)}
+            />
+          ))
+        ) : (
+          <GoToSettingsButton />
+        )}
       </Stack>
     </Box>
   );
@@ -97,7 +106,10 @@ const PersonalGoalCard: React.FC<PersonalGoalCardProps> = ({
     return null;
   }
 
-  const icon = SearchEntryIconProvider.getIcon(entry);
+  const icon = SearchEntryIconProvider.getIcon(entry, {
+    height: 48,
+    width: 48,
+  });
 
   return (
     <Paper
@@ -109,18 +121,43 @@ const PersonalGoalCard: React.FC<PersonalGoalCardProps> = ({
         borderRadius: theme.shape.borderRadius,
       }}
     >
-      <Stack direction={'column'} alignItems={'center'}>
-        <Stack direction={'row'} gap={1}>
-          {icon}
-          <Typography variant='h6'></Typography>
-          <Typography variant='h6'>
-            {`${goal.amount} ${GameSelectionMap.get(goal.sport)} ${durationString[goal.frequency]}`}
+      <Stack direction={'row'} gap={2} alignItems={'center'}>
+        {icon}
+
+        <Stack direction={'column'} alignItems={'center'}>
+          <Stack direction={'row'} gap={1} alignItems={'center'}>
+            <Typography variant='h6'></Typography>
+            <Typography variant='h6'>
+              {`${goal.amount} ${GameSelectionMap.get(goal.sport)} ${durationString[goal.frequency]}`}
+            </Typography>
+          </Stack>
+          <Typography variant='body1'>
+            {`${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })} left`}
           </Typography>
         </Stack>
-        <Typography variant='body1'>
-          {`${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })} left`}
-        </Typography>
       </Stack>
     </Paper>
+  );
+};
+
+const GoToSettingsButton: React.FC = () => {
+  // add /settings-v2 navigation
+  const navigate = useNavigate();
+  const { theme } = useThemeStore();
+  return (
+    <Stack alignItems={'center'}>
+      <Typography variant='h6'>
+        {
+          "Seems like you haven't added any goals. Go to Settings -> Personal Goals"
+        }
+      </Typography>
+      {/* <Button
+        onClick={() => navigate('/settings-v2')}
+        variant='contained'
+        sx={{ fontSize: theme.typography.h5.fontSize, mt: 1 }}
+      >
+        Go to Settings
+      </Button> */}
+    </Stack>
   );
 };
