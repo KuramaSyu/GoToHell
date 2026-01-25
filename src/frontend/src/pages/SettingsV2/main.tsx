@@ -144,15 +144,6 @@ export default function SettingsPage() {
     onSwipedRight: () => navigate(Pages.FRIENDS),
   });
 
-  useEffect(() => {
-    async function init() {
-      await new ApiRequirementsBuilder()
-        .add(ApiRequirement.UserPersonalGoals)
-        .forceFetch();
-    }
-    init();
-  });
-
   // Define your categories once
   const categories = React.useMemo<SettingsCategory[]>(
     () => [
@@ -186,10 +177,14 @@ export default function SettingsPage() {
   // initally load api requirements
   useEffect(() => {
     async function init() {
-      new ApiRequirementsBuilder()
+      await new ApiRequirementsBuilder()
         .add(ApiRequirement.User)
         .add(ApiRequirement.Preferences)
         .fetchIfNeeded();
+
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.UserPersonalGoals)
+        .forceFetch();
     }
     init();
     setLoading(false);
