@@ -111,7 +111,7 @@ func (self *PersonalGoalsController) Get(c *gin.Context) {
 // @Failure 400 {object} ErrorReply
 // @Router /api/{user_id}/goals [post]
 func (self *PersonalGoalsController) Post(c *gin.Context) {
-	HandlePersonalGoalsModification(c, self.repo.Insert)
+	HandlePersonalGoalsModification(c, self.repo.Insert, nil)
 }
 
 // @Summary Updates a personal goal
@@ -123,7 +123,7 @@ func (self *PersonalGoalsController) Post(c *gin.Context) {
 // @Failure 400 {object} ErrorReply
 // @Router /api/{user_id}/goals [patch]
 func (self *PersonalGoalsController) Patch(c *gin.Context) {
-	HandlePersonalGoalsModification(c, self.repo.Update)
+	HandlePersonalGoalsModification(c, self.repo.Update, nil)
 }
 
 // @Summary Updates a personal goal
@@ -135,7 +135,7 @@ func (self *PersonalGoalsController) Patch(c *gin.Context) {
 // @Failure 400 {object} ErrorReply
 // @Router /api/{user_id}/goals [put]
 func (self *PersonalGoalsController) Put(c *gin.Context) {
-	HandlePersonalGoalsModification(c, self.repo.Update)
+	HandlePersonalGoalsModification(c, self.repo.Update, nil)
 }
 
 // @Summary Deletes a personal goal
@@ -149,7 +149,16 @@ func (self *PersonalGoalsController) Put(c *gin.Context) {
 func (self *PersonalGoalsController) Delete(c *gin.Context) {
 	// the user is extracted from the session and inserted as user into the goal. Based on this,
 	// checks will be done, if the user is allowed to delete the goal.
-	HandlePersonalGoalsModification(c, self.repo.DeleteByID)
+	var req DeletePersonalGoalsRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		SetGinError(c, http.StatusBadRequest, err)
+		return
+	}
+	// user id gets added later
+	goal := &PersonalGoal{
+		ID: req.ID,
+	}
+	HandlePersonalGoalsModification(c, self.repo.DeleteByID, goal)
 }
 
 // Define a function type matching the signature of the repo methods
@@ -160,6 +169,7 @@ type PersonalGoalsFunc func(*PersonalGoal) (*PersonalGoal, error)
 func HandlePersonalGoalsModification(
 	c *gin.Context,
 	method PersonalGoalsFunc,
+	goal *PersonalGoal,
 ) {
 	requested_user_id, err := NewSnowflakeFromString(c.Param("user_id"))
 	if err != nil {
@@ -177,17 +187,24 @@ func HandlePersonalGoalsModification(
 		SetGinError(c, http.StatusForbidden, fmt.Errorf("Cannot modify another user's personal goals"))
 		return
 	}
-	var req PostPersonalGoalsRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		SetGinError(c, http.StatusBadRequest, err)
-		return
+
+	if goal == nil {
+		var req PostPersonalGoalsRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			SetGinError(c, http.StatusBadRequest, err)
+			return
+		}
+		goal = &PersonalGoal{
+			UserID:    user.ID,
+			Amount:    req.Amount,
+			Frequency: req.Frequency,
+			Sport:     req.Sport,
+		}
+	} else {
+		// used when deleting, since it's deserialized on DeletePersonalGoalRequest
+		goal.UserID = user.ID
 	}
-	goal := &PersonalGoal{
-		UserID:    user.ID,
-		Amount:    req.Amount,
-		Frequency: req.Frequency,
-		Sport:     req.Sport,
-	}
+
 	createdGoal, err := method(goal)
 	if err != nil {
 		SetGinError(c, http.StatusInternalServerError, err)
