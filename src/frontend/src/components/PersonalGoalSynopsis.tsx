@@ -116,8 +116,8 @@ export const PersonalGoalSynopsis: React.FC<PersonalGoalSynopsisProps> = ({
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: 'transparent',
               boxShadow: 'none',
+              borderRadius: theme.shape.borderRadius,
             },
           },
         }}
