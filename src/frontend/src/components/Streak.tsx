@@ -89,25 +89,22 @@ export const Streak = () => {
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'row',
-        fontSize: '3rem',
+        fontSize: theme.typography.h3,
       }}
     >
-      <LocalFireDepartmentIcon fontSize="inherit" sx={{ mr: 1 }} />
-      <Typography
-        fontSize={'2.2rem'}
-        sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
-      >
+      <LocalFireDepartmentIcon fontSize='inherit' sx={{ mr: 1 }} />
+      <Typography>
         <PopNumber
           damping={50}
           mass={20}
           stiffness={40}
           value={streak ?? 0}
-          fontsize={'3rem'}
+          fontsize={undefined}
+          typographyVariant='h3'
           style={{
             fontWeight: 200,
           }}
         ></PopNumber>
-        {/* {streak} */}
       </Typography>
     </Box>
   );
