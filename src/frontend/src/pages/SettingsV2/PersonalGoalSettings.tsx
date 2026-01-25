@@ -38,6 +38,8 @@ export const PersonalGoalSettings: React.FC = () => {
   const [frequency, setFrequency] = useState<GoalFrequency>('daily');
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
   const { setMessage } = useInfoStore();
+
+  // sport entries to get display names
   const sportEntries: Map<string, SportEntry> = useMemo(() => {
     const sports = new Map();
 
@@ -47,10 +49,17 @@ export const PersonalGoalSettings: React.FC = () => {
     return sports;
   }, []);
 
+  /**
+   *
+   * @returns whether or not all 3 TextBoxes have valid content to uplaod a goal
+   */
   const isEverythingSelected = (): Boolean => {
     return Number(amountStr) > 0 && selectedSport !== null;
   };
 
+  /**
+   * uploads a goal with the current selections
+   */
   const uploadDailyGoal = () => {
     if (!isEverythingSelected()) {
       return;
@@ -77,6 +86,9 @@ export const PersonalGoalSettings: React.FC = () => {
       );
   };
 
+  /**
+   * Deletes a goal by id
+   */
   const deleteDailyGoal = (id: string) => {
     new PersonalGoalApi()
       .delete(id)
