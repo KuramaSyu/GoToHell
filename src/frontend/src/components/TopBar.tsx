@@ -43,7 +43,6 @@ import {
 } from '../utils/api/ApiRequirementsBuilder';
 import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
 import { BoxHoverPropsTopBar } from '../theme/statics';
-import { ToolTip } from './ToolTip';
 
 export enum Pages {
   HOME = '/',

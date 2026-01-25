@@ -5,7 +5,7 @@ import { SportScore } from '../../models/Sport';
 
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { useSportStore } from '../../useSportStore';
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { NUMBER_FONT } from '../../statics';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import {
@@ -54,5 +54,12 @@ export const TotalScoreDisplay = () => {
   const DisplayComponent = getDisplayComponent(currentSport.sport!);
 
   const bigNumber = GetScore(currentSport!.sport!, amounts);
-  return <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />;
+  return (
+    <Tooltip
+      title={`You have already done ${getSportDescription(currentSport.sport!, bigNumber)}`}
+      arrow
+    >
+      <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
+    </Tooltip>
+  );
 };
