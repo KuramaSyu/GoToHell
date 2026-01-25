@@ -23,6 +23,12 @@ export interface IPersonalGoalCalculator {
     goals: PersonalGoalData[],
     on_sports: Sport[],
   ): number;
+
+  /**
+   * @param goal the goal
+   * @returns the last possible time where sports can be counted towards the goal
+   */
+  getLastPossibleTime(goal: PersonalGoalData): Date;
 }
 
 export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
@@ -59,6 +65,32 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
       }
     }
     return earliest_valid_date;
+  }
+
+  getLastPossibleTime(goal: PersonalGoalData): Date {
+    const now = new Date();
+    switch (goal.frequency) {
+      case 'daily': {
+        const tomorrow = new Date(now);
+        tomorrow.setDate(now.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        return tomorrow;
+      }
+      case 'weekly': {
+        const next_monday = new Date(now);
+        next_monday.setDate(now.getDate() + ((8 - now.getDay()) % 7));
+        next_monday.setHours(0, 0, 0, 0);
+        return next_monday;
+      }
+      case 'monthly': {
+        const next_month = new Date(now);
+        next_month.setMonth(now.getMonth() + 1);
+        next_month.setDate(1);
+        next_month.setHours(0, 0, 0, 0);
+        return next_month;
+      }
+    }
+    return now;
   }
 
   calculatePercentageDone(goal: PersonalGoalData, on_sports: Sport[]): number {
