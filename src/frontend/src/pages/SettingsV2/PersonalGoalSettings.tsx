@@ -14,6 +14,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  IconButton,
 } from '@mui/material';
 import { usePersonalGoalsStore } from '../../zustand/PersonalGoalsStore';
 import { Grid4x4 } from '@mui/icons-material';
@@ -28,6 +29,7 @@ import {
   PersonalGoalApi,
 } from '../../utils/api/PersonalGoalsApi';
 import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const PersonalGoalSettings: React.FC = () => {
   const { personalGoalsList } = usePersonalGoalsStore();
@@ -74,6 +76,17 @@ export const PersonalGoalSettings: React.FC = () => {
         ),
       );
   };
+
+  const deleteDailyGoal = (id: string) => {
+    new PersonalGoalApi()
+      .delete(id)
+      .catch((e) =>
+        setMessage(
+          new SnackbarUpdateImpl(`Failed to delete Goal: ${JSON.stringify(e)}`),
+        ),
+      );
+  };
+
   return (
     <TableContainer component={Paper} elevation={0}>
       <Table>
@@ -92,7 +105,12 @@ export const PersonalGoalSettings: React.FC = () => {
         </TableHead>
         <TableBody>
           {personalGoalsList.map((goal) => (
-            <TableRow>
+            <TableRow
+              sx={{
+                '& .delete-button': { visibility: 'hidden' },
+                '&:hover .delete-button': { visibility: 'visible' },
+              }}
+            >
               <TableCell>
                 <Typography>{goal.amount}</Typography>
               </TableCell>
@@ -102,7 +120,22 @@ export const PersonalGoalSettings: React.FC = () => {
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography>{goal.frequency}</Typography>
+                <Stack
+                  direction='row'
+                  sx={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography>{goal.frequency}</Typography>
+                  <IconButton
+                    className='delete-button'
+                    color='error'
+                    onClick={() => deleteDailyGoal(goal.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Stack>
               </TableCell>
             </TableRow>
           ))}
