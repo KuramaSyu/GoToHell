@@ -25,7 +25,7 @@ import { useRecentSportsStore } from '../zustand/RecentSportsState';
 import { SearchEntryIconProvider } from '../pages/MainPage/QuickActions/SearchEntryIconProvider';
 import { en } from 'zod/v4/locales';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { BoxElevation1, BoxElevation2 } from '../theme/statics';
+import { BoxElevation0, BoxElevation1, BoxElevation2 } from '../theme/statics';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
@@ -50,15 +50,15 @@ export const PersonalGoalBubble = () => {
   }, [sportResponse, personalGoalsList]);
 
   return (
-    <Box
+    <Paper
       sx={{
-        ...BoxElevation1(theme),
         py: 2,
         px: 2,
-        borderRadius: theme.shape.borderRadius,
+        width: 'clamp(400px, 33vw, 600px)',
       }}
+      elevation={24}
     >
-      <Stack direction={'column'} gap={2} alignItems={'center'}>
+      <Stack direction={'column'} gap={2} alignItems={'center'} width={'100%'}>
         <Typography variant='h5' textTransform={'uppercase'}>
           Goals
         </Typography>
@@ -77,7 +77,7 @@ export const PersonalGoalBubble = () => {
           <GoToSettingsButton />
         )}
       </Stack>
-    </Box>
+    </Paper>
   );
 };
 
@@ -119,18 +119,16 @@ const PersonalGoalCard: React.FC<PersonalGoalCardProps> = ({
         px: 2,
         background: `linear-gradient(to right, ${theme.palette.secondary.main} ${percentageDone * 100}%, ${theme.palette.background.paper} ${percentageDone * 100}%)`,
         borderRadius: theme.shape.borderRadius,
+        width: '100%',
       }}
     >
-      <Stack direction={'row'} gap={2} alignItems={'center'}>
+      <Stack direction={'row'} gap={2} alignItems={'center'} width={'100%'}>
         {icon}
 
-        <Stack direction={'column'} alignItems={'center'}>
-          <Stack direction={'row'} gap={1} alignItems={'center'}>
-            <Typography variant='h6'></Typography>
-            <Typography variant='h6'>
-              {`${goal.amount} ${GameSelectionMap.get(goal.sport)} ${durationString[goal.frequency]}`}
-            </Typography>
-          </Stack>
+        <Stack direction={'column'} alignItems={'center'} flexGrow={1}>
+          <Typography variant='h6'>
+            {`${goal.amount} ${GameSelectionMap.get(goal.sport)} ${durationString[goal.frequency]}`}
+          </Typography>
           <Typography variant='body1'>
             {`${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })} left`}
           </Typography>
