@@ -14,6 +14,7 @@ import {
   Drawer,
   IconButton,
   Slide,
+  Stack,
   SwipeableDrawer,
   ToggleButton,
   ToggleButtonGroup,
@@ -39,6 +40,7 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
+import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
 
 export enum Pages {
   HOME = '/',
@@ -129,8 +131,8 @@ const TopBar: React.FC = () => {
                 src={user ? user.getAvatarUrl() : undefined}
                 alt={user ? user.username : ''}
               ></Avatar>
-              <Divider orientation="vertical"></Divider>
-              <Typography variant="h6">
+              <Divider orientation='vertical'></Divider>
+              <Typography variant='h6'>
                 {' '}
                 {user?.username ?? 'login'}{' '}
               </Typography>
@@ -141,8 +143,8 @@ const TopBar: React.FC = () => {
             <Box
               sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}
             >
-              <Typography variant="h6">Streak</Typography>
-              <Typography variant="subtitle2">
+              <Typography variant='h6'>Streak</Typography>
+              <Typography variant='subtitle2'>
                 Amount of days where sport was back to back done
               </Typography>
             </Box>
@@ -156,8 +158,8 @@ const TopBar: React.FC = () => {
                 alignContent: 'center',
               }}
             >
-              <Typography variant="h3">
-                <LocalFireDepartmentIcon fontSize="inherit" />
+              <Typography variant='h3'>
+                <LocalFireDepartmentIcon fontSize='inherit' />
                 {streak}
               </Typography>
             </Box>
@@ -172,7 +174,7 @@ const TopBar: React.FC = () => {
     return (
       <>
         <AppBar
-          position="fixed"
+          position='fixed'
           sx={{
             backgroundColor: theme.palette.muted.dark,
             top: 'auto', // top auto and bottom 0 to stick to bottom
@@ -210,7 +212,7 @@ const TopBar: React.FC = () => {
                   sx={{
                     gap: 1,
                   }}
-                  color="secondary"
+                  color='secondary'
                 >
                   <ToggleButton value={Pages.HISTORY}>
                     <HistoryIcon />
@@ -242,7 +244,7 @@ const TopBar: React.FC = () => {
 
         {/* Drawer which shows streak and user info */}
         <SwipeableDrawer
-          anchor="bottom"
+          anchor='bottom'
           onOpen={() => setUserDrawerOpen(true)}
           open={userDrawerOpen}
           onClose={() => setUserDrawerOpen(false)}
@@ -264,7 +266,7 @@ const TopBar: React.FC = () => {
   // Desktop view
   return (
     <AppBar
-      position="fixed"
+      position='fixed'
       sx={{
         backgroundColor: theme.palette.background.default,
         //color: theme.palette.primary.light,
@@ -291,7 +293,10 @@ const TopBar: React.FC = () => {
                 padding: '0px 8px',
                 textTransform: 'none', // Prevent uppercase transformation
                 '&:hover': {
-                  backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
+                  backgroundColor: alpha(
+                    theme.blendAgainstContrast('secondary', 0.2),
+                    0.8,
+                  ),
                 },
               }}
             >
@@ -300,9 +305,10 @@ const TopBar: React.FC = () => {
           </Box>
 
           {/* Streak */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Stack direction='row' gap={2}>
             <Streak />
-          </Box>
+            <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
+          </Stack>
 
           {/* Home, Friends, Settings, Discord Login or Profile */}
           <Box
@@ -316,21 +322,21 @@ const TopBar: React.FC = () => {
             <Button
               variant={containedIfSelected(Pages.HOME)}
               onClick={() => navigate(Pages.HOME)}
-              color="inherit"
+              color='inherit'
             >
               <HomeIcon />
             </Button>
             <Button
               variant={containedIfSelected(Pages.FRIENDS)}
               onClick={() => navigate(Pages.FRIENDS)}
-              color="inherit"
+              color='inherit'
             >
               <PeopleIcon />
             </Button>
             <Button
               variant={containedIfSelected(Pages.SETTINGSV2)}
               onClick={() => navigate(Pages.SETTINGSV2)}
-              color="inherit"
+              color='inherit'
             >
               <SettingsIcon />
             </Button>
