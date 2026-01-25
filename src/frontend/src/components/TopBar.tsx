@@ -18,6 +18,7 @@ import {
   SwipeableDrawer,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -41,6 +42,8 @@ import {
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
 import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
+import { BoxHoverPropsTopBar } from '../theme/statics';
+import { ToolTip } from './ToolTip';
 
 export enum Pages {
   HOME = '/',
@@ -281,32 +284,39 @@ const TopBar: React.FC = () => {
           }}
         >
           {/* Title */}
-          <Box>
-            <Button
-              startIcon={<LogoSvgComponent style={{ width: 60, height: 60 }} />}
-              onClick={() => navigate('/')}
-              sx={{
-                borderRadius: 6,
-                color: theme.palette.vibrant.light,
-                filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
-                fontSize: theme.typography.h3.fontSize,
-                padding: '0px 8px',
-                textTransform: 'none', // Prevent uppercase transformation
-                '&:hover': {
-                  backgroundColor: alpha(
-                    theme.blendAgainstContrast('secondary', 0.2),
-                    0.8,
-                  ),
-                },
-              }}
-            >
-              <Title theme={theme} />
-            </Button>
-          </Box>
+          <Tooltip title='Go to Main Page' arrow>
+            <Box>
+              <Button
+                startIcon={
+                  <LogoSvgComponent style={{ width: 60, height: 60 }} />
+                }
+                onClick={() => navigate('/')}
+                sx={{
+                  borderRadius: theme.shape.borderRadius,
+                  color: theme.palette.vibrant.light,
+                  fontSize: theme.typography.h3.fontSize,
+                  padding: '0px 8px',
+                  textTransform: 'none', // Prevent uppercase transformation
+                  ...BoxHoverPropsTopBar(theme),
+                }}
+              >
+                <Title theme={theme} />
+              </Button>
+            </Box>
+          </Tooltip>
 
           {/* Streak */}
           <Stack direction='row' gap={2}>
-            <Streak />
+            <Box
+              sx={{
+                ...BoxHoverPropsTopBar(theme),
+                borderRadius: theme.shape.borderRadius,
+                px: theme.spacing(2),
+                py: 0,
+              }}
+            >
+              <Streak />
+            </Box>
             <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
           </Stack>
 
