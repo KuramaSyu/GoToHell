@@ -27,7 +27,7 @@ import {
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
 import { PersonalGoalBubble } from './PersonalGoalBubble';
-import { BoxElevation1 } from '../theme/statics';
+import { BoxElevation1, BoxHoverPropsTopBar } from '../theme/statics';
 
 export interface PersonalGoalSynopsisProps {
   typographyVariant: TypographyVariant;
@@ -71,15 +71,12 @@ export const PersonalGoalSynopsis: React.FC<PersonalGoalSynopsisProps> = ({
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
         sx={{
-          padding: '6px 8px', // Default MUI button padding, adjust as needed
+          height: '100%',
+          display: 'flex',
+          px: theme.spacing(2),
           borderRadius: theme.shape.borderRadius,
           color: theme.palette.primary.light,
-          '&:hover': {
-            backgroundColor: alpha(
-              theme.blendAgainstContrast('secondary', 0.2),
-              0.8,
-            ),
-          },
+          ...BoxHoverPropsTopBar(theme),
         }}
       >
         <Typography
