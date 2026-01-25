@@ -1,6 +1,6 @@
 import { styled, Typography } from '@mui/material';
 import { motion, useMotionValueEvent, useSpring } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ComponentProps } from 'react';
 
 const FrostedChar = styled(motion.span)({
   display: 'inline-block',
@@ -33,13 +33,15 @@ export const PopNumber = ({
   zeroPadding,
   style,
   fontweight,
+  typographyVariant,
 }: {
   value: number;
   font?: string;
   damping: number;
   stiffness: number;
   mass: number;
-  fontsize?: string;
+  fontsize?: string | undefined;
+  typographyVariant?: ComponentProps<typeof Typography>['variant'];
   fontweight?: number;
   zeroPadding?: number;
   style?: React.CSSProperties;
@@ -74,6 +76,7 @@ export const PopNumber = ({
     <Typography
       component='span'
       color='textPrimary'
+      variant={typographyVariant}
       style={{
         fontFamily: font,
         display: 'inline-block',
@@ -83,7 +86,7 @@ export const PopNumber = ({
         <motion.span
           key={index}
           style={{
-            fontSize: fontsize ?? '12vh',
+            fontSize: fontsize ?? undefined,
             fontWeight: fontweight ?? undefined,
             ...style,
           }}
