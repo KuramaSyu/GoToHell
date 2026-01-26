@@ -182,11 +182,7 @@ export const AmountDisplay = () => {
   const DisplayComponent = getDisplayComponent(currentSport.sport);
   return (
     <Tooltip
-      title={calculator.make_box(
-        currentSport.sport,
-        currentSport.game,
-        computedValue,
-      )}
+      title={calculator.make_box(currentSport.sport, currentSport.game, amount)}
       slotProps={{
         tooltip: {
           sx: { backgroundColor: 'transparent' },

@@ -158,6 +158,8 @@ export class DefaultSportsCalculator implements SportsCalculator {
         {/* Tooltip Box */}
         <Tooltip
           title={`Game Base (${game_base}) x Sport Base (${sport_base}) = ${sport_times_game_base}`}
+          arrow
+          placement='top'
         >
           {/* Main Box */}
           <Box
