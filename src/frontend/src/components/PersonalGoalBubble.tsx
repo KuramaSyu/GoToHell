@@ -28,6 +28,8 @@ import { useThemeStore } from '../zustand/useThemeStore';
 import { BoxElevation0, BoxElevation1, BoxElevation2 } from '../theme/statics';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import SettingsIcon from '@mui/icons-material/Settings';
+import FlagIcon from '@mui/icons-material/Flag';
 
 export const PersonalGoalBubble = () => {
   const { personalGoalsList } = usePersonalGoalsStore();
@@ -145,9 +147,9 @@ const GoToSettingsButton: React.FC = () => {
   return (
     <Stack alignItems={'center'}>
       <Typography variant='h6'>
-        {
-          "Seems like you haven't added any goals. Go to Settings -> Personal Goals"
-        }
+        Seems like you haven't added any Goals. Go to <SettingsIcon /> Settings
+        &rarr; <FlagIcon />
+        Personal Goals
       </Typography>
       {/* <Button
         onClick={() => navigate('/settings-v2')}
