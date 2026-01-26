@@ -4,6 +4,7 @@ import {
   Box,
   Divider,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -243,14 +244,20 @@ const MainContent: React.FC = () => {
         }}
       >
         {/* Game Selection */}
-        <Box
-          sx={{
-            flex: 1,
-            maxWidth: 1 / 3,
-          }}
+        <Tooltip
+          title='What game do you play? Custom means real world'
+          arrow
+          placement='bottom'
         >
-          <GameSelector />
-        </Box>
+          <Box
+            sx={{
+              flex: 1,
+              maxWidth: 1 / 3,
+            }}
+          >
+            <GameSelector />
+          </Box>
+        </Tooltip>
         <Divider orientation='vertical' flexItem />
 
         {/* Death Slider and Upload */}
@@ -296,18 +303,20 @@ const MainContent: React.FC = () => {
         <Divider orientation='vertical' flexItem />
 
         {/* Sport Selection */}
-        <Box
-          sx={{
-            flex: 1,
-            maxWidth: 1 / 5,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <SportSelector />
-        </Box>
+        <Tooltip title='What sport do you want to do?' arrow placement='bottom'>
+          <Box
+            sx={{
+              flex: 1,
+              maxWidth: 1 / 5,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <SportSelector />
+          </Box>
+        </Tooltip>
       </Box>
       {/* Box for Multiplier / 3rd info */}
       <Box

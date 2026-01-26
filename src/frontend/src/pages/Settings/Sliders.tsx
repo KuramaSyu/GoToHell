@@ -5,23 +5,25 @@ import {
   Input,
   OutlinedInput,
   Slider,
-} from "@mui/material";
-import { GenerateMarks } from "../../utils/Marks";
-import { Add, Remove } from "@mui/icons-material";
-import { useThemeStore } from "../../zustand/useThemeStore";
-import { useEffect, useState } from "react";
-import { useUsedMultiplierStore } from "../../zustand/usedMultiplierStore";
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { GenerateMarks } from '../../utils/Marks';
+import { Add, Remove } from '@mui/icons-material';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import { useEffect, useState } from 'react';
+import { useUsedMultiplierStore } from '../../zustand/usedMultiplierStore';
 import {
   DefaultSportsCalculator,
   MultiplierDecorator,
-} from "../../utils/SportCalculator";
-import { useSportResponseStore } from "../../zustand/sportResponseStore";
-import usePreferenceStore from "../../zustand/PreferenceStore";
-import { handleStringNumber, StringNumberProps } from "../../utils/UserNumber";
-import { blendWithContrast } from "../../utils/blendWithContrast";
-import { useBreakpoint } from "../../hooks/useBreakpoint";
-import { hexToRgbString } from "../../utils/colors/hexToRgb";
-import { BoxElevation2 } from "../../theme/statics";
+} from '../../utils/SportCalculator';
+import { useSportResponseStore } from '../../zustand/sportResponseStore';
+import usePreferenceStore from '../../zustand/PreferenceStore';
+import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
+import { blendWithContrast } from '../../utils/blendWithContrast';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { hexToRgbString } from '../../utils/colors/hexToRgb';
+import { BoxElevation2 } from '../../theme/statics';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -58,19 +60,19 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "row",
+        display: 'flex',
+        flexDirection: 'row',
         gap: 5,
-        alignItems: "center",
-        backdropFilter: "blur(25px)",
+        alignItems: 'center',
+        backdropFilter: 'blur(25px)',
         padding: 3,
         borderRadius: 5,
-        backgroundColor: "rgba(0,0,0,0.2)",
+        backgroundColor: 'rgba(0,0,0,0.2)',
       }}
     >
       <OutlinedInput
         value={stringNumber ?? String(min)}
-        type="number"
+        type='number'
         onChange={(e) => {
           setStringNumber(e.target.value);
           const value = handleStringNumber({
@@ -83,19 +85,19 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
         inputProps={{
           step: step,
           style: {
-            textAlign: "center",
+            textAlign: 'center',
           },
         }}
         sx={{
-          fontSize: "24px",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "15%",
-          minWidth: "150px", // Minimum width of 20px
-          maxWidth: "400px", // Maximum width of 100px
+          fontSize: '24px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '15%',
+          minWidth: '150px', // Minimum width of 20px
+          maxWidth: '400px', // Maximum width of 100px
           display: {
-            xs: "none",
-            sm: "flex",
+            xs: 'none',
+            sm: 'flex',
           },
         }}
       />
@@ -111,7 +113,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
       />
 
       <Slider
-        size={isMobile ? "small" : "medium"}
+        size={isMobile ? 'small' : 'medium'}
         value={sliderValue ?? min}
         marks={marks}
         onChange={(_e, value) =>
@@ -194,7 +196,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       preferences.multipliers,
     );
     const multiplier = multiplierCalculator.get_multiplier(
-      "",
+      '',
       theme.custom.themeName,
     );
     return multiplier;
@@ -239,10 +241,10 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "row",
+        display: 'flex',
+        flexDirection: 'row',
         gap: 2,
-        alignItems: "center",
+        alignItems: 'center',
         padding: 3,
         borderRadius: 4,
         ...BoxElevation2(theme),
@@ -250,7 +252,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     >
       <OutlinedInput
         value={stringNumber ?? String(min)}
-        color="secondary"
+        color='secondary'
         onChange={(e) => {
           setStringNumber(e.target.value);
           const value = handleStringNumber({
@@ -262,19 +264,19 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         }}
         inputProps={{
           style: {
-            textAlign: "center",
+            textAlign: 'center',
           },
         }}
         sx={{
-          fontSize: "24px",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "10%", // Set width to 1/10
-          minWidth: "100px", // Minimum width of 20px
-          maxWidth: "300px", // Maximum width of 100px
+          fontSize: '24px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '10%', // Set width to 1/10
+          minWidth: '100px', // Minimum width of 20px
+          maxWidth: '300px', // Maximum width of 100px
           display: {
-            xs: "none",
-            sm: "flex",
+            xs: 'none',
+            sm: 'flex',
           },
         }}
       />
@@ -291,63 +293,83 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
       {/* Col for Global or Game Switch */}
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
           gap: 1,
-          xs: "block",
+          xs: 'block',
         }}
       >
-        <Button
-          onClick={() => setUsedMultiplierAndUpdateValue(null)}
-          sx={{
-            backgroundColor: getColor(null),
-            color: theme.palette.secondary.contrastText,
-            whiteSpace: "nowrap", // Prevent text wrapping
-            justifyContent: "center",
-          }}
+        <Tooltip
+          title='Global Multiplier to adjust all Games at once'
+          arrow
+          placement='right'
         >
-          Global
-        </Button>
-        <Button
-          sx={{
-            backgroundColor: getColor(theme.custom.themeName),
-            color: theme.palette.secondary.contrastText,
-            whiteSpace: "nowrap", // Prevent text wrapping
-            justifyContent: "center",
-          }}
-          onClick={() =>
-            setUsedMultiplierAndUpdateValue(theme.custom.themeName)
-          }
+          <Button
+            onClick={() => setUsedMultiplierAndUpdateValue(null)}
+            sx={{
+              backgroundColor: getColor(null),
+              color: theme.palette.secondary.contrastText,
+              whiteSpace: 'nowrap', // Prevent text wrapping
+              justifyContent: 'center',
+            }}
+          >
+            Global
+          </Button>
+        </Tooltip>
+        <Tooltip
+          title={`Multiplier just for ${theme.custom.themeName}. This won't effect other games`}
+          arrow
+          placement='right'
         >
-          {theme.custom.themeName}
-        </Button>
+          <Button
+            sx={{
+              backgroundColor: getColor(theme.custom.themeName),
+              color: theme.palette.secondary.contrastText,
+              whiteSpace: 'nowrap', // Prevent text wrapping
+              justifyContent: 'center',
+            }}
+            onClick={() =>
+              setUsedMultiplierAndUpdateValue(theme.custom.themeName)
+            }
+          >
+            {theme.custom.themeName}
+          </Button>
+        </Tooltip>
       </Box>
-      <Slider
-        size={isMobile ? "small" : "medium"}
-        color="secondary"
-        value={sliderValue ?? min}
-        marks={marks}
-        onChange={(_e, value) => {
-          handleStringNumber({
-            ...defaultProps,
-            overrideStringNumber: true,
-            number: value,
-          });
-        }}
-        onChangeCommitted={(_e, value) => {
-          handleStringNumber({
-            ...defaultProps,
-            overrideStringNumber: true,
-            number: value,
-          });
+      <Tooltip
+        title={
+          'Multiplier to increase (>1) or decrease (<1) the amount of exercises'
+        }
+        arrow
+        placement='top'
+      >
+        <Slider
+          size={isMobile ? 'small' : 'medium'}
+          color='secondary'
+          value={sliderValue ?? min}
+          marks={marks}
+          onChange={(_e, value) => {
+            handleStringNumber({
+              ...defaultProps,
+              overrideStringNumber: true,
+              number: value,
+            });
+          }}
+          onChangeCommitted={(_e, value) => {
+            handleStringNumber({
+              ...defaultProps,
+              overrideStringNumber: true,
+              number: value,
+            });
 
-          saveValue(usedMultiplier ?? null, value);
-        }}
-        min={min}
-        max={max}
-        step={step}
-      />
+            saveValue(usedMultiplier ?? null, value);
+          }}
+          min={min}
+          max={max}
+          step={step}
+        />
+      </Tooltip>
     </Box>
   );
 };
@@ -381,12 +403,12 @@ const PlusMinusCol: React.FC<PlusMinusColProps> = ({
   return (
     <Box
       sx={{
-        flexDirection: "column",
-        height: "100%",
+        flexDirection: 'column',
+        height: '100%',
         gap: 1,
         display: {
-          xs: "none", // dont show on mobile
-          sm: "flex",
+          xs: 'none', // dont show on mobile
+          sm: 'flex',
         },
       }}
     >
