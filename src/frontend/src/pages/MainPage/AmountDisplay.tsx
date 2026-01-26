@@ -1,4 +1,10 @@
-import { Box, lighten, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  lighten,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
 import { NUMBER_FONT } from '../../statics';
@@ -174,5 +180,27 @@ export const AmountDisplay = () => {
   );
 
   const DisplayComponent = getDisplayComponent(currentSport.sport);
-  return <DisplayComponent computedValue={computedValue} isMobile={isMobile} />;
+  return (
+    <Tooltip
+      title={calculator.make_box(
+        currentSport.sport,
+        currentSport.game,
+        computedValue,
+      )}
+      slotProps={{
+        tooltip: {
+          sx: { backgroundColor: 'transparent' },
+        },
+        arrow: {
+          sx: { color: 'transparent' },
+        },
+      }}
+      arrow
+      placement='left'
+    >
+      <Box>
+        <DisplayComponent computedValue={computedValue} isMobile={isMobile} />
+      </Box>
+    </Tooltip>
+  );
 };
