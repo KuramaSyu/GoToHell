@@ -56,10 +56,20 @@ export const TotalScoreDisplay = () => {
   const bigNumber = GetScore(currentSport!.sport!, amounts);
   return (
     <Tooltip
-      title={`You have already done ${getSportDescription(currentSport.sport!, bigNumber)}`}
+      title={
+        <>
+          <Typography>You have already done</Typography>
+          <Typography>
+            {bigNumber} {getSportDescription(currentSport.sport!, bigNumber)}
+          </Typography>
+        </>
+      }
       arrow
+      placement='right'
     >
-      <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
+      <Box>
+        <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
+      </Box>
     </Tooltip>
   );
 };
