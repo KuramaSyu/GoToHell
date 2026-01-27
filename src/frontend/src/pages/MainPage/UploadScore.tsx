@@ -150,7 +150,7 @@ export const UploadScore = () => {
               sx: {
                 backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.primary,
-                fontSize: theme.typography.h6.fontSize,
+                fontSize: theme.typography.body1.fontSize,
               },
             },
           }}
