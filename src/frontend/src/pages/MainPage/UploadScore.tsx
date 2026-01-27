@@ -7,6 +7,7 @@ import {
   darken,
   lighten,
   Fade,
+  Portal,
 } from '@mui/material';
 import { useSportStore } from '../../useSportStore';
 import { useDeathAmountStore } from './NumberSlider';
@@ -21,7 +22,9 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import useUploadStore from '../../zustand/UploadStore';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { UploadBuilder } from '../../utils/api/UploadBuilder';
-
+import { CustomTheme } from '../../theme/customTheme';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
 export const UploadScore = () => {
@@ -30,9 +33,6 @@ export const UploadScore = () => {
   const { user } = useUserStore();
   const { setMessage } = useInfoStore();
   const [snackbarState, setSnackbarState] = useState<SnackbarState>(null);
-  const { setAmounts, triggerRefresh: triggerScoreRefresh } =
-    useTotalScoreStore();
-  const { calculator } = useCalculatorStore();
   const { uploadTrigger } = useUploadStore();
   const { isMobile } = useBreakpoint();
   const { theme } = useThemeStore();
@@ -67,7 +67,7 @@ export const UploadScore = () => {
       // handle upload error - description is in error included
       setSnackbarState('failed');
       setMessage(
-        new SnackbarUpdateImpl(`Error uploading score: ${e}`, 'error')
+        new SnackbarUpdateImpl(`Error uploading score: ${e}`, 'error'),
       );
     }
 
@@ -114,57 +114,68 @@ export const UploadScore = () => {
     );
   }
   return (
-    <Fade in={DURATION !== 0} timeout={500}>
-      <Box>
-        <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
-          <Box
-            sx={{
-              px: 5,
-              py: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 2,
-              color:
-                DURATION !== 0
-                  ? lighten(theme.palette.primary.main, 2 / 3)
-                  : darken(theme.palette.primary.main, 1 / 3),
-            }}
-          >
-            <Typography sx={{ fontSize: '3vh' }} fontWeight="bold">
-              Upload
-            </Typography>
-            <SendIcon></SendIcon>
-          </Box>
-        </AnimatedButton>
+    <>
+      <Fade in={DURATION !== 0} timeout={500}>
+        <Box>
+          <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
+            <Box
+              sx={{
+                px: 5,
+                py: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 2,
+                color:
+                  DURATION !== 0
+                    ? lighten(theme.palette.primary.main, 2 / 3)
+                    : darken(theme.palette.primary.main, 1 / 3),
+              }}
+            >
+              <Typography sx={{ fontSize: '3vh' }} fontWeight='bold'>
+                Upload
+              </Typography>
+              <SendIcon></SendIcon>
+            </Box>
+          </AnimatedButton>
+        </Box>
+      </Fade>
+      <Portal>
         <Snackbar
           open={snackbarState != null}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ mt: 8 }} // padding to prevent clipping with top bar
           slotProps={{
             content: {
               sx: {
-                backgroundColor: (theme: any) =>
-                  alpha(theme.palette.secondary.main, 0.6),
-                color: (theme: any) => theme.palette.primary.contrastText,
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+                fontSize: theme.typography.h6.fontSize,
               },
             },
           }}
           message={
             snackbarState === 'uploading' ? (
-              <Box display="flex" alignItems="center">
+              <Box display='flex' alignItems='center'>
                 <CircularProgress size={30} sx={{ mr: 1 }} />
                 Uploading...
               </Box>
             ) : snackbarState === 'uploaded' ? (
-              'Uploaded!'
+              <Box display='flex' alignItems='center'>
+                <CheckCircleIcon sx={{ mr: 1, fontSize: 30 }} color='success' />
+                Uploaded
+              </Box>
             ) : snackbarState === null ? (
               ''
             ) : (
-              'Failed!'
+              <Box display='flex' alignItems='center'>
+                <CancelIcon sx={{ mr: 1, fontSize: 30 }} color='error' />
+                Failed
+              </Box>
             )
           }
         />
-      </Box>
-    </Fade>
+      </Portal>
+    </>
   );
 };
