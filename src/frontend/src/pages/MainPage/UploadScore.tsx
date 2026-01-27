@@ -88,30 +88,33 @@ export const UploadScore = () => {
 
   if (isMobile) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          justifyItems: 'center',
-          alignItems: 'stretch',
+      <>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            justifyItems: 'center',
+            alignItems: 'stretch',
 
-          height: 'fill',
-          aspectRatio: '1 / 1',
-          flexGrow: 1,
-          color:
-            DURATION !== 0
-              ? darken(theme.palette.primary.main, 0.1)
-              : darken(theme.palette.primary.main, 0.3),
-        }}
-      >
-        <AnimatedRoundBtn
-          onClick={OnUploadClick}
-          duration={DURATION}
-          edgeFade={0}
+            height: 'fill',
+            aspectRatio: '1 / 1',
+            flexGrow: 1,
+            color:
+              DURATION !== 0
+                ? darken(theme.palette.primary.main, 0.1)
+                : darken(theme.palette.primary.main, 0.3),
+          }}
         >
-          <SendIcon sx={{ fontSize: '2rem' }}></SendIcon>
-        </AnimatedRoundBtn>
-      </Box>
+          <AnimatedRoundBtn
+            onClick={OnUploadClick}
+            duration={DURATION}
+            edgeFade={0}
+          >
+            <SendIcon sx={{ fontSize: '2rem' }}></SendIcon>
+          </AnimatedRoundBtn>
+        </Box>
+        <UploadSnackbar snackbarState={snackbarState} />
+      </>
     );
   }
   return (
@@ -157,11 +160,11 @@ const UploadSnackbar: React.FC<UploadSnackbarProps> = ({ snackbarState }) => {
       <Snackbar
         open={snackbarState != null}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ mt: 8 }} // padding to prevent clipping with top bar
+        sx={{ mt: { xl: 8, m: 8, s: 0 } }} // padding to prevent clipping with top bar
         slotProps={{
           content: {
             sx: {
-              backgroundColor: theme.palette.background.paper,
+              backgroundColor: alpha(theme.palette.background.paper, 0.7),
               color: theme.palette.text.primary,
               fontSize: theme.typography.body1.fontSize,
             },
