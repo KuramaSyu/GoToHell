@@ -194,6 +194,55 @@ export class CustomThemeImpl extends Object implements CustomTheme {
         ),
       };
 
+      // recalculate success, info, warning, error colors
+      this.palette.success = {
+        ...this.palette.success,
+        main: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.primary.main),
+            hexToRgb(
+              this.palette.getContrastText(this.palette.background.default),
+            ),
+            0.3,
+          ),
+        ),
+      };
+
+      this.palette.info = {
+        ...this.palette.info,
+        main: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.secondary.main),
+            hexToRgb(
+              this.palette.getContrastText(this.palette.background.default),
+            ),
+            0.3,
+          ),
+        ),
+      };
+
+      this.palette.warning = {
+        ...this.palette.warning,
+        main: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.warning.main),
+            hexToRgb('#FFA500'), // orange
+            0.5,
+          ),
+        ),
+      };
+
+      this.palette.error = {
+        ...this.palette.error,
+        main: rgbToHex(
+          blendColors(
+            hexToRgb(this.palette.error.main),
+            hexToRgb('#FF0000'), // red
+            0.5,
+          ),
+        ),
+      };
+
       // Merge custom component overrides
       this.components = {
         ...this.components, // Spread existing component overrides
