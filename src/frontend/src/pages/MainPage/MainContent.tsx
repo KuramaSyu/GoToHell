@@ -241,6 +241,7 @@ const MainContent: React.FC = () => {
           py: 2,
           borderRadius: 4,
           minHeight: 0,
+          gap: 4,
         }}
       >
         {/* Game Selection */}
@@ -251,8 +252,10 @@ const MainContent: React.FC = () => {
         >
           <Box
             sx={{
-              flex: 1,
-              maxWidth: 1 / 3,
+              flexShrink: 0,
+              flexBasis: 'clamp(300px, 33%, 500px)',
+              minWidth: '300px',
+              maxWidth: '500px',
             }}
           >
             <GameSelector />
@@ -263,11 +266,12 @@ const MainContent: React.FC = () => {
         {/* Death Slider and Upload */}
         <Box
           sx={{
-            width: 1 / 3,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            gap: 1,
+            flexShrink: 0,
+            flexBasis: 'clamp(100px, 33%, 1000px)',
+            minWidth: '100px',
+            maxWidth: '1000px',
+            flexGrow: 1,
+            alignContent: 'center',
           }}
         >
           <NumberSlider
@@ -312,6 +316,7 @@ const MainContent: React.FC = () => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              pr: 2,
             }}
           >
             <SportSelector />
