@@ -267,9 +267,9 @@ const MainContent: React.FC = () => {
         <Box
           sx={{
             flexShrink: 0,
-            flexBasis: 'clamp(100px, 33%, 1000px)',
+            flexBasis: 'clamp(100px, 33%, 1300px)',
             minWidth: '100px',
-            maxWidth: '1000px',
+            maxWidth: '1300px',
             flexGrow: 1,
             alignContent: 'center',
           }}
@@ -310,12 +310,11 @@ const MainContent: React.FC = () => {
         <Tooltip title='What sport do you want to do?' arrow placement='bottom'>
           <Box
             sx={{
-              flex: 1,
-              maxWidth: 1 / 5,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexShrink: 1,
+              flexBasis: 'clamp(180px, 25%, 350px)',
+              minWidth: '180px',
+              maxWidth: '250px',
+              alignContent: 'center',
               pr: 2,
             }}
           >
