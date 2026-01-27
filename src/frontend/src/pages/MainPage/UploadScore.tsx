@@ -85,6 +85,7 @@ export const UploadScore = () => {
   }
 
   const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
+
   if (isMobile) {
     return (
       <Box
@@ -140,42 +141,53 @@ export const UploadScore = () => {
           </AnimatedButton>
         </Box>
       </Fade>
-      <Portal>
-        <Snackbar
-          open={snackbarState != null}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          sx={{ mt: 8 }} // padding to prevent clipping with top bar
-          slotProps={{
-            content: {
-              sx: {
-                backgroundColor: theme.palette.background.paper,
-                color: theme.palette.text.primary,
-                fontSize: theme.typography.body1.fontSize,
-              },
-            },
-          }}
-          message={
-            snackbarState === 'uploading' ? (
-              <Box display='flex' alignItems='center'>
-                <CircularProgress size={30} sx={{ mr: 1 }} />
-                Uploading...
-              </Box>
-            ) : snackbarState === 'uploaded' ? (
-              <Box display='flex' alignItems='center'>
-                <CheckCircleIcon sx={{ mr: 1, fontSize: 30 }} color='success' />
-                Uploaded
-              </Box>
-            ) : snackbarState === null ? (
-              ''
-            ) : (
-              <Box display='flex' alignItems='center'>
-                <CancelIcon sx={{ mr: 1, fontSize: 30 }} color='error' />
-                Failed
-              </Box>
-            )
-          }
-        />
-      </Portal>
+      <UploadSnackbar snackbarState={snackbarState} />
     </>
+  );
+};
+
+interface UploadSnackbarProps {
+  snackbarState: string | null;
+}
+
+const UploadSnackbar: React.FC<UploadSnackbarProps> = ({ snackbarState }) => {
+  const { theme } = useThemeStore();
+  return (
+    <Portal>
+      <Snackbar
+        open={snackbarState != null}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{ mt: 8 }} // padding to prevent clipping with top bar
+        slotProps={{
+          content: {
+            sx: {
+              backgroundColor: theme.palette.background.paper,
+              color: theme.palette.text.primary,
+              fontSize: theme.typography.body1.fontSize,
+            },
+          },
+        }}
+        message={
+          snackbarState === 'uploading' ? (
+            <Box display='flex' alignItems='center'>
+              <CircularProgress size={30} sx={{ mr: 1 }} />
+              Uploading...
+            </Box>
+          ) : snackbarState === 'uploaded' ? (
+            <Box display='flex' alignItems='center'>
+              <CheckCircleIcon sx={{ mr: 1, fontSize: 30 }} color='success' />
+              Uploaded
+            </Box>
+          ) : snackbarState === null ? (
+            ''
+          ) : (
+            <Box display='flex' alignItems='center'>
+              <CancelIcon sx={{ mr: 1, fontSize: 30 }} color='error' />
+              Failed
+            </Box>
+          )
+        }
+      />
+    </Portal>
   );
 };
