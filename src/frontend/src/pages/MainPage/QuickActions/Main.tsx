@@ -1,4 +1,4 @@
-import { alpha, Box, Button, Modal } from '@mui/material';
+import { alpha, Backdrop, Box, Button, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 
@@ -30,7 +30,7 @@ type OpenState = {
 export const handleInputChanged = (
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   setTyped: React.Dispatch<React.SetStateAction<string | null>>,
-  page: string | ModalPages
+  page: string | ModalPages,
 ) => {
   if (page !== ModalPages.SEARCH_MODAL) {
     return;
@@ -53,7 +53,7 @@ export const QuickActionMenu: React.FC = () => {
   const { theme } = useThemeStore();
   const [typed, setTyped] = useState<string | null>(null);
   const [page, setPage] = useState<ModalPages | string>(
-    ModalPages.SEARCH_MODAL
+    ModalPages.SEARCH_MODAL,
   );
   const { triggerUpload } = useUploadStore();
   const { preferences } = usePreferenceStore();
@@ -117,8 +117,8 @@ export const QuickActionMenu: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       console.log(
         `Key pressed: ${e.key}, alphanumeric: ${isAlphanumbericOrReturn(
-          e
-        )}, instant_open: ${INSTANT_OPEN}, open: ${open.open}`
+          e,
+        )}, instant_open: ${INSTANT_OPEN}, open: ${open.open}`,
       );
       // check if any input field is focused. If so, do not open the modal
       const active = document.activeElement;
@@ -227,7 +227,7 @@ export const QuickActionMenu: React.FC = () => {
 
   const exitButton = (
     <Button
-      variant="outlined"
+      variant='outlined'
       onClick={() => setOpen({ open: false })}
       sx={{
         display: 'flex',
@@ -250,7 +250,13 @@ export const QuickActionMenu: React.FC = () => {
     <Modal
       open={visible}
       onClose={() => setOpen({ open: false })}
-      sx={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.2)' } } }}
+      slots={{ backdrop: Backdrop }}
+      keepMounted
+      slotProps={{
+        backdrop: {
+          sx: { backgroundColor: alpha(theme.palette.background.default, 0.8) },
+        },
+      }}
     >
       {transitions((style, item) =>
         item ? (
@@ -327,7 +333,7 @@ export const QuickActionMenu: React.FC = () => {
               }}
             >
               <QuickActionsSearch
-                key="search"
+                key='search'
                 typed={typed}
                 setTyped={setTyped}
                 page={page}
@@ -335,7 +341,7 @@ export const QuickActionMenu: React.FC = () => {
               />
             </Box>
           </AnimatedBox>
-        ) : null
+        ) : null,
       )}
     </Modal>
   );
