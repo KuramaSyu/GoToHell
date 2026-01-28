@@ -80,14 +80,14 @@ const getImageProps = (isSelected: boolean, theme: CustomTheme) => {
 export const buildDecoratorStack = (
   sportResponse: GetSportsResponse,
   preferences: UserPreferences,
-  themeName: string
+  themeName: string,
 ): SportsCalculator => {
   const BASE_SETTINGS = sportResponse;
 
   // base for calculating default values with respecting the users overrides
   var base: SportsCalculator = new PreferenceRespectingDefaultSportsCalculator(
     BASE_SETTINGS,
-    preferences
+    preferences,
   );
 
   // custom per game per sport overrides
@@ -190,7 +190,7 @@ export const SportSelector = () => {
    */
   useEffect(() => {
     setCalculator(
-      buildDecoratorStack(sportResponse, preferences, theme.custom.themeName)
+      buildDecoratorStack(sportResponse, preferences, theme.custom.themeName),
     );
   }, [theme, currentSport, sportResponse, preferences, usedMultiplier]);
 
@@ -210,26 +210,25 @@ export const SportSelector = () => {
     console.log(sportResponse);
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
-  // on mount: set random sport as current sport (only displayed sports)
+  // on mount: set first sport as current sport (only displayed sports)
   useEffect(() => {
     new ApiRequirementsBuilder()
       .add(ApiRequirement.Preferences)
       .fetchIfNeeded()
       .then(() => {
-        // get random sport from preferences
+        // get first sport from preferences
         const preferredSports = preferences.ui.displayedSports?.filter(
-          (s) => s.isDisplayed && s.name !== 'show_all'
+          (s) => s.isDisplayed && s.name !== 'show_all',
         );
         if (preferredSports != null && preferredSports.length > 0) {
-          const randomSport =
-            preferredSports[Math.floor(Math.random() * preferredSports.length)];
+          const firstSport = preferredSports[0];
 
-          if (randomSport == null) return;
-          // Then use randomSport to set the sport
-          const multiplier = getSportMultiplier(randomSport.name);
+          if (firstSport == null) return;
+          // Then use firstSport to set the sport
+          const multiplier = getSportMultiplier(firstSport.name);
           setSport({
             ...currentSport,
-            sport: randomSport.name,
+            sport: firstSport.name,
             sport_multiplier: multiplier.multiplier,
           });
         }
@@ -321,10 +320,10 @@ export const SportSelector = () => {
     );
   }
   return (
-    <Box width="clamp(40px, 100%, 350px)">
+    <Box width='clamp(40px, 100%, 350px)'>
       {/* Vertical ButtonGroup for sports selection */}
       <ToggleButtonGroup
-        orientation="vertical"
+        orientation='vertical'
         fullWidth
         exclusive
         value={currentSport?.sport}
