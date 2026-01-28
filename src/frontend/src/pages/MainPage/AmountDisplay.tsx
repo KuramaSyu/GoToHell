@@ -58,6 +58,7 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
   isMobile,
 }) => {
   const { theme } = useThemeStore();
+  const { isDesktop } = useBreakpoint();
   return (
     <PopNumber
       value={computedValue}
@@ -69,7 +70,9 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
       key={'AnimatedNumber'}
       style={{
         color: theme.palette.text.primary,
-        textShadow: `5px 5px ${theme.palette.primary.dark}`,
+        textShadow: isDesktop
+          ? `5px 5px ${theme.palette.primary.dark}`
+          : `3.5px 3.5px ${theme.palette.primary.dark}`,
       }}
     />
   );
@@ -86,9 +89,12 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
   const biggestUnit = timedelta.biggestUnit();
   const numberKind = 'time';
   const { theme } = useThemeStore();
+  const { isDesktop } = useBreakpoint();
   const style = {
     color: theme.palette.text.primary,
-    textShadow: `4px 4px ${theme.palette.primary.dark}`,
+    textShadow: isDesktop
+      ? `4px 4px ${theme.palette.primary.dark}`
+      : `3px 3px ${theme.palette.primary.dark}`,
   };
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
