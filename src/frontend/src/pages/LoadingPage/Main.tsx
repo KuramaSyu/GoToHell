@@ -315,14 +315,20 @@ export const LoadingPage: React.FC = () => {
     init();
   }, []);
 
-  const getStatusIcon = (status: LoadingStatus) => {
+  const getStatusIcon = (status: LoadingStatus, size: number) => {
     switch (status) {
       case LoadingStatus.Success:
         return (
-          <CheckCircleIcon sx={{ color: defaultTheme.palette.success.main }} />
+          <CheckCircleIcon
+            sx={{ color: defaultTheme.palette.success.main, fontSize: size }}
+          />
         );
       case LoadingStatus.Error:
-        return <ErrorIcon sx={{ color: defaultTheme.palette.error.main }} />;
+        return (
+          <ErrorIcon
+            sx={{ color: defaultTheme.palette.error.main, fontSize: size }}
+          />
+        );
       case LoadingStatus.Skipped:
         return (
           <BlockIcon sx={{ color: defaultTheme.palette.secondary.main }} />
@@ -411,11 +417,12 @@ export const LoadingPage: React.FC = () => {
             borderRadius: 5,
             display: 'flex',
             width: isMobile ? '100%' : '33.33%',
-            maxHeight: isMobile ? '50%' : undefined,
-
+            maxHeight: isMobile ? '33%' : undefined,
             padding: isMobile ? 1 : 2,
+            mb: isMobile ? '3rem' : 0,
             zIndex: 5,
             border: `2px solid ${defaultTheme.palette.muted.light}`,
+            fontSize: defaultTheme.typography.subtitle1.fontSize,
           }}
         >
           <Table>
@@ -434,9 +441,9 @@ export const LoadingPage: React.FC = () => {
                     <TableCell align='center'>
                       <span>
                         {comp ? (
-                          getStatusIcon(comp.status)
+                          getStatusIcon(comp.status, isMobile ? 16 : 24)
                         ) : (
-                          <CircularProgress size={24} />
+                          <CircularProgress size={isMobile ? 14 : 24} />
                         )}
                       </span>
                     </TableCell>
