@@ -286,7 +286,7 @@ export const LoadingPage: React.FC = () => {
         }
 
         loadingComp.setStatus(LoadingStatus.Loading);
-        setLoadingMap((prev) => prev.set(key, loadingComp!));
+        setLoadingMap((prev) => new Map(prev.set(key, loadingComp!)));
 
         try {
           const _data = await new ApiRequirementsBuilder()
@@ -297,7 +297,7 @@ export const LoadingPage: React.FC = () => {
           loadingComp.setStatus(LoadingStatus.Error);
         } finally {
           loadingComp.time = Date.now() - startTime;
-          setLoadingMap((prev) => prev.set(key, loadingComp!));
+          setLoadingMap((prev) => new Map(prev.set(key, loadingComp!)));
         }
       }
 
@@ -311,7 +311,6 @@ export const LoadingPage: React.FC = () => {
           { key: 'goals', requirement: ApiRequirement.UserPersonalGoals },
         ].map(({ key, requirement }) => loadRequirement(requirement, key)),
       );
-      setLoadingMap((prev) => new Map(prev));
     };
     init();
   }, []);
