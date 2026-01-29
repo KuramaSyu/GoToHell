@@ -54,8 +54,8 @@ export const LogoSvgComponent: React.FC<LogoSvgComponentProps> = ({
 
   return (
     <img
-      src="/assets/GoToHell-Icon.svg"
-      alt="GoToHell Logo"
+      src='/assets/GoToHell-Icon.svg'
+      alt='GoToHell Logo'
       style={{
         width: '100%',
         height: '100%',
@@ -81,8 +81,8 @@ export const SmallLogoSvgComponent: React.FC<LogoSvgComponentProps> = ({
 
   return (
     <img
-      src="/assets/GoToHell-Icon-small.svg"
-      alt="GoToHell Logo"
+      src='/assets/GoToHell-Icon-small.svg'
+      alt='GoToHell Logo'
       style={{
         width: '100%',
         height: '100%',
@@ -105,19 +105,26 @@ enum LoadingStatus {
   Skipped,
 }
 class LoadingComponent {
+  name: string;
   loaded: boolean;
   time: number;
   status: LoadingStatus;
 
-  constructor(loaded: boolean, time: number, status?: LoadingStatus) {
+  constructor(
+    name: string,
+    loaded: boolean,
+    time: number,
+    status?: LoadingStatus,
+  ) {
+    this.name = name;
     this.loaded = loaded;
     this.time = time;
     this.status =
       status !== undefined
         ? status
         : loaded
-        ? LoadingStatus.Success
-        : LoadingStatus.Loading;
+          ? LoadingStatus.Success
+          : LoadingStatus.Loading;
   }
 
   setStatus(status: LoadingStatus) {
@@ -134,14 +141,15 @@ export const LoadingPage: React.FC = () => {
   const MIN_STARTUP_TIME = 750;
   const MIN_STARTUP_TIME_S = MIN_STARTUP_TIME / 1000;
   const initialLoadingMap = new Map<string, LoadingComponent>([
-    ['You', new LoadingComponent(false, 0)],
-    ['Your Friends', new LoadingComponent(false, 0)],
-    ['Streaks', new LoadingComponent(false, 0)],
-    ['History', new LoadingComponent(false, 0)],
-    ['Big Numbers', new LoadingComponent(false, 0)],
-    ['Your Settings', new LoadingComponent(false, 0)],
-    ['Overdue Deaths', new LoadingComponent(false, 0)],
-    ['Theme', new LoadingComponent(false, 0)],
+    ['You', new LoadingComponent('You', false, 0)],
+    ['Your Friends', new LoadingComponent('Your Friends', false, 0)],
+    ['Streaks', new LoadingComponent('Streaks', false, 0)],
+    ['History', new LoadingComponent('History', false, 0)],
+    ['Big Numbers', new LoadingComponent('Big Numbers', false, 0)],
+    ['Your Settings', new LoadingComponent('Your Settings', false, 0)],
+    ['goals', new LoadingComponent('Your Goals', false, 0)],
+    ['Overdue Deaths', new LoadingComponent('Overdue Deaths', false, 0)],
+    ['Theme', new LoadingComponent('Theme', false, 0)],
   ]);
   const [loadingMap, setLoadingMap] = React.useState(initialLoadingMap);
   const { isMobile } = useBreakpoint();
@@ -187,14 +195,17 @@ export const LoadingPage: React.FC = () => {
         (v) =>
           v.status === LoadingStatus.Success ||
           v.status === LoadingStatus.Skipped ||
-          v.status === LoadingStatus.Error
+          v.status === LoadingStatus.Error,
       )
       .every((loaded) => loaded === true);
     if (allLoaded) {
       const elapsedTime = Date.now() - startTime;
-      setTimeout(() => {
-        setLoading(false);
-      }, Math.max(MIN_STARTUP_TIME - elapsedTime, 125));
+      setTimeout(
+        () => {
+          setLoading(false);
+        },
+        Math.max(MIN_STARTUP_TIME - elapsedTime, 125),
+      );
     }
   }, [loadingMap]);
 
@@ -213,7 +224,7 @@ export const LoadingPage: React.FC = () => {
           comp.loaded = true;
           comp.time = Date.now() - startTime;
           comp.setStatus(
-            user === null ? LoadingStatus.Error : LoadingStatus.Success
+            user === null ? LoadingStatus.Error : LoadingStatus.Success,
           );
           prev.set('You', comp);
         }
@@ -263,56 +274,44 @@ export const LoadingPage: React.FC = () => {
         });
       }
 
-      // load streaks, history, big numbers, settings, overdue deaths
-      startTime = Date.now();
-      const _data = await new ApiRequirementsBuilder()
-        .add(ApiRequirement.AllStreaks)
-        .add(ApiRequirement.AllRecentSports)
-        .add(ApiRequirement.TotalScore)
-        .add(ApiRequirement.Preferences)
-        .add(ApiRequirement.OverdueDeaths)
-        .fetchIfNeeded();
+      async function loadRequirement(requirement: ApiRequirement, key: string) {
+        const startTime = Date.now();
 
-      const value = Math.round((Date.now() - startTime) / 5);
-      setLoadingMap((prev) => {
-        [
-          'Streaks',
-          'History',
-          'Big Numbers',
-          'Your Settings',
-          'Overdue Deaths',
-        ].forEach((key) => {
-          const comp = prev.get(key);
-          if (comp) {
-            comp.loaded = true;
-            comp.time = value;
-            comp.setStatus(LoadingStatus.Success);
-            prev.set(key, comp);
-          }
-        });
-        return new Map(prev);
-      });
+        var loadingComp = loadingMap.get(key);
+        if (loadingComp === undefined) {
+          console.error(
+            `Loading Page: requested key ${key} which does not exist`,
+          );
+          return;
+        }
 
-      if (useRecentSportsStore.getState().recentSports === null) {
-        // check if one failed to load -> set all other to failed too
-        // TODO: fetch Streak, History and so on, separately
-        setLoadingMap((prev) => {
-          [
-            'Streaks',
-            'History',
-            'Big Numbers',
-            'Your Settings',
-            'Overdue Deaths',
-          ].forEach((key) => {
-            const comp = prev.get(key);
-            if (comp) {
-              comp.setStatus(LoadingStatus.Error);
-              prev.set(key, comp);
-            }
-          });
-          return new Map(prev);
-        });
+        loadingComp.setStatus(LoadingStatus.Loading);
+        setLoadingMap((prev) => prev.set(key, loadingComp!));
+
+        try {
+          const _data = await new ApiRequirementsBuilder()
+            .add(requirement)
+            .fetchIfNeeded();
+          loadingComp.setStatus(LoadingStatus.Success);
+        } catch {
+          loadingComp.setStatus(LoadingStatus.Error);
+        } finally {
+          loadingComp.time = Date.now() - startTime;
+          setLoadingMap((prev) => prev.set(key, loadingComp!));
+        }
       }
+
+      await Promise.all(
+        [
+          { key: 'Streaks', requirement: ApiRequirement.AllStreaks },
+          { key: 'History', requirement: ApiRequirement.AllRecentSports },
+          { key: 'Big Numbers', requirement: ApiRequirement.TotalScore },
+          { key: 'Your Settings', requirement: ApiRequirement.Preferences },
+          { key: 'Overdue Deaths', requirement: ApiRequirement.OverdueDeaths },
+          { key: 'goals', requirement: ApiRequirement.UserPersonalGoals },
+        ].map(({ key, requirement }) => loadRequirement(requirement, key)),
+      );
+      setLoadingMap((prev) => new Map(prev));
     };
     init();
   }, []);
@@ -424,17 +423,16 @@ export const LoadingPage: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Component</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Load Time</TableCell>
+                <TableCell align='center'>Status</TableCell>
+                <TableCell align='center'>Load Time</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {Array.from(loadingMap.keys()).map((key) => {
-                const comp = loadingMap.get(key);
+              {Array.from(loadingMap.values()).map((comp) => {
                 return (
-                  <TableRow key={key}>
-                    <TableCell>{key}</TableCell>
-                    <TableCell align="center">
+                  <TableRow key={comp.name}>
+                    <TableCell>{comp.name}</TableCell>
+                    <TableCell align='center'>
                       <span>
                         {comp ? (
                           getStatusIcon(comp.status)
@@ -443,7 +441,7 @@ export const LoadingPage: React.FC = () => {
                         )}
                       </span>
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align='center'>
                       {comp && comp.time > 0 ? comp.time + ' ms' : '---'}
                     </TableCell>
                   </TableRow>
