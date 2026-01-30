@@ -15,7 +15,6 @@ const AnimatedBox = animated(Box);
 export const StreakTimeline: React.FC = () => {
   const { users } = useUsersStore();
   const { user } = useUserStore();
-  const { theme } = useThemeStore();
   const [isLoading, setIsLoading] = useState(true);
   const usersSorted: DiscordUserImpl[] = useMemo(() => {
     if (isLoading || user === null) return [];
@@ -25,7 +24,7 @@ export const StreakTimeline: React.FC = () => {
     ];
     allUsers.sort((a, b) => (b.streak ?? 0) - (a.streak ?? 0));
     return allUsers;
-  }, [isLoading]);
+  }, [isLoading, users, user]);
 
   useEffect(() => {
     const fetchData = async () => {
