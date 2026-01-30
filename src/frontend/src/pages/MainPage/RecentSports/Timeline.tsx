@@ -50,9 +50,6 @@ export const SportsTimeline = () => {
   const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } =
     useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
-  const [selectedUser, setSelectedUser] = useState<DiscordUserImpl | null>(
-    null,
-  );
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
