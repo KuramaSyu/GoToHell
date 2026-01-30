@@ -1,4 +1,11 @@
-import { useState, useEffect, ReactElement, useCallback, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  ReactElement,
+  useCallback,
+  useMemo,
+  memo,
+} from 'react';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -40,6 +47,11 @@ interface SportsApiResponse {
 }
 
 const AnimatedBox = animated(Box);
+
+// perf: memoize timeline items
+const MemoizedSportCardNumber = memo(SportCardNumber);
+const MemoizedSportTimelineEntry = memo(SportTimelineEntry);
+const MemoizedUserDialogWrapper = memo(SportUserDialogWrapper);
 
 export const SportsTimeline = () => {
   const { user } = useUserStore();
@@ -176,7 +188,7 @@ export const SportsTimeline = () => {
           }}
         >
           <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
-            <SportCardNumber data={sport}></SportCardNumber>
+            <MemoizedSportCardNumber data={sport} />
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineDot
@@ -207,7 +219,7 @@ export const SportsTimeline = () => {
             <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
           </TimelineSeparator>
           <TimelineContent>
-            <SportTimelineEntry data={sport} />
+            <MemoizedSportTimelineEntry data={sport} />
           </TimelineContent>
         </TimelineItem>
       </AnimatedBox>
@@ -236,10 +248,10 @@ export const SportsTimeline = () => {
         {timelineItems}
       </Timeline>
       {selectedSport !== null && (
-        <SportUserDialogWrapper
+        <MemoizedUserDialogWrapper
           selectedSport={selectedSport}
           setSelectedSport={setSelectedSport}
-        ></SportUserDialogWrapper>
+        />
       )}
     </Box>
   );
