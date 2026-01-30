@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -57,119 +57,118 @@ function containedIfSelected(page: Pages) {
   return location.pathname === page ? 'contained' : 'outlined';
 }
 
-const TopBar: React.FC = () => {
+const UserDrawerContents = memo(() => {
+  const { streak } = useStreakStore();
+  const { user } = useUserStore();
+  const { theme } = useThemeStore();
+  const [userDrawerOpen, setUserDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchStreak() {
+      if (!userDrawerOpen || !user) return;
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.Streak)
+        .forceFetch();
+    }
+    fetchStreak();
+  }, [userDrawerOpen]);
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      {/* Drag Handle */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          py: 1,
+          cursor: 'pointer',
+        }}
+        onClick={() => setUserDrawerOpen(false)}
+      >
+        <Box
+          sx={{
+            width: 40,
+            height: 4,
+            backgroundColor: alpha(theme.palette.text.primary, 0.3),
+            borderRadius: 2,
+            transition: 'background-color 0.2s ease',
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.text.primary, 0.5),
+            },
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          p: 2,
+          justifyContent: 'space-between',
+          height: '100%',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              p: 1,
+            }}
+          >
+            <Avatar
+              sx={{ width: 64, height: 64 }}
+              src={user ? user.getAvatarUrl() : undefined}
+              alt={user ? user.username : ''}
+            ></Avatar>
+            <Divider orientation='vertical'></Divider>
+            <Typography variant='h6'> {user?.username ?? 'login'} </Typography>
+          </Box>
+          <Divider></Divider>
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}>
+            <Typography variant='h6'>Streak</Typography>
+            <Typography variant='subtitle2'>
+              Amount of days where sport was back to back done
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              justifyItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant='h3'>
+              <LocalFireDepartmentIcon fontSize='inherit' />
+              {streak}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+});
+
+const MobileTopBar = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useThemeStore();
   const { isMobile } = useBreakpoint();
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
   const { user } = useUserStore();
-
-  const UserDrawerContents = () => {
-    const { streak } = useStreakStore();
-    useEffect(() => {
-      async function fetchStreak() {
-        if (!userDrawerOpen || !user) return;
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.Streak)
-          .forceFetch();
-      }
-      fetchStreak();
-    }, [userDrawerOpen]);
-
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-        }}
-      >
-        {/* Drag Handle */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            py: 1,
-            cursor: 'pointer',
-          }}
-          onClick={() => setUserDrawerOpen(false)}
-        >
-          <Box
-            sx={{
-              width: 40,
-              height: 4,
-              backgroundColor: alpha(theme.palette.text.primary, 0.3),
-              borderRadius: 2,
-              transition: 'background-color 0.2s ease',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.text.primary, 0.5),
-              },
-            }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            p: 2,
-            justifyContent: 'space-between',
-            height: '100%',
-          }}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                p: 1,
-              }}
-            >
-              <Avatar
-                sx={{ width: 64, height: 64 }}
-                src={user ? user.getAvatarUrl() : undefined}
-                alt={user ? user.username : ''}
-              ></Avatar>
-              <Divider orientation='vertical'></Divider>
-              <Typography variant='h6'>
-                {' '}
-                {user?.username ?? 'login'}{' '}
-              </Typography>
-            </Box>
-            <Divider></Divider>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-            <Box
-              sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}
-            >
-              <Typography variant='h6'>Streak</Typography>
-              <Typography variant='subtitle2'>
-                Amount of days where sport was back to back done
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                width: '50%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                justifyItems: 'center',
-                alignContent: 'center',
-              }}
-            >
-              <Typography variant='h3'>
-                <LocalFireDepartmentIcon fontSize='inherit' />
-                {streak}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-    );
-  };
 
   if (isMobile) {
     // Mobile view
@@ -264,8 +263,12 @@ const TopBar: React.FC = () => {
       </>
     );
   }
+});
 
-  // Desktop view
+const DesktopTopBar = memo(() => {
+  const navigate = useNavigate();
+  const { theme } = useThemeStore();
+
   return (
     <AppBar
       position='fixed'
@@ -357,6 +360,11 @@ const TopBar: React.FC = () => {
       </Toolbar>
     </AppBar>
   );
+});
+
+const TopBar: React.FC = () => {
+  const { isMobile } = useBreakpoint();
+  return isMobile ? <MobileTopBar /> : <DesktopTopBar />;
 };
 
 export default TopBar;
