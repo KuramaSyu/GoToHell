@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactElement, useCallback } from 'react';
+import { useState, useEffect, ReactElement, useCallback, useMemo } from 'react';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -105,23 +105,41 @@ export const SportsTimeline = () => {
 
   // animation for timeline items
   const itemsToAnimate = recentSports?.data.toReversed() || [];
-  const transition = useTransition(itemsToAnimate, {
-    key: (sport) => sport.id,
-    from: { opacity: 0, y: 20, scale: 0.3 },
-    enter: { opacity: 1, y: 0, scale: 1 },
-    leave: { opacity: 0, y: 20, scale: 0.3 },
-    config: config.default,
-    trail: 80,
 
-    onRest: (_result, _ctrl, item) => {
-      // after rendering the 15nth element, set
-      // mount to true, that animation
-      const index = Math.min(15, itemsToAnimate.length - 1);
-      if (item.id === itemsToAnimate[index]?.id) {
-        setIsMounted(true);
-      }
-    },
-  });
+  // perf: memoize transition config
+  const transitionConfig = useMemo(
+    () => ({
+      key: (sport) => sport.id,
+      from: { opacity: 0, y: 20, scale: 0.3 },
+      enter: { opacity: 1, y: 0, scale: 1 },
+      leave: { opacity: 0, y: 20, scale: 0.3 },
+      config: config.default,
+      trail: 80,
+
+      onRest: (_result, _ctrl, item) => {
+        // after rendering the 15nth element, set
+        // mount to true, that animation
+        const index = Math.min(15, itemsToAnimate.length - 1);
+        if (item.id === itemsToAnimate[index]?.id) {
+          setIsMounted(true);
+        }
+      },
+    }),
+    [itemsToAnimate.length],
+  );
+  const transition = useTransition(itemsToAnimate, transitionConfig);
+
+  // perf: memoize hover styles to prevent recreations
+  const getHoverStyles = useCallback(
+    (sport: UserSport) => ({
+      transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
+      bgcolor:
+        !selectedSport || selectedSport.id === sport.id
+          ? alpha(theme.blendAgainstContrast('secondaryLight', 0.25), 0.25)
+          : undefined,
+    }),
+    [selectedSport, theme],
+  );
 
   // early returns
   if (!user || !usersLoaded) return <Box />;
@@ -150,16 +168,7 @@ export const SportsTimeline = () => {
             ? 'opacity 0.7s ease-out, background-color 0.7s ease-out'
             : undefined,
           opacity: isFaded ? 0.3 : 1,
-          '&:hover': {
-            transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
-            bgcolor:
-              !selectedSport || selectedSport.id === sport.id
-                ? alpha(
-                    theme.blendAgainstContrast('secondaryLight', 0.25),
-                    0.25,
-                  )
-                : undefined,
-          },
+          '&:hover': getHoverStyles(sport),
         }}
       >
         <TimelineItem
