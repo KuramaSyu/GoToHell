@@ -86,19 +86,22 @@ export const SportsTimeline = () => {
       );
     }
   }, [user, usersLoaded, setMessage]);
+
   // hook for fetching sports
   useEffect(() => {
     if (!user || !usersLoaded) return;
 
     // call once directly
     fetchSports();
+
     // TODO: totally unefficient; should use websockets
     // call every 30 seconds
     const interval = setInterval(fetchSports, 30000);
 
     // cleanup
     return () => clearInterval(interval);
-  }, [users, ScoreRefreshTrigger, RecentSportsRefreshTrigger, user]);
+    // Update when Score increases, not when items change, since there is a artificial delay
+  }, [fetchSports, ScoreRefreshTrigger, RecentSportsRefreshTrigger, users]);
 
   // animation for timeline items
   const itemsToAnimate = recentSports?.data.toReversed() || [];
