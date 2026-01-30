@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, ReactElement, useCallback } from 'react';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -51,45 +51,44 @@ export const SportsTimeline = () => {
     useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
   const [selectedUser, setSelectedUser] = useState<DiscordUserImpl | null>(
-    null
+    null,
   );
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (!selectedSport || !recentSports) return;
     setSelectedSport(
-      recentSports.data.find((sport) => sport.id === selectedSport.id) || null
+      recentSports.data.find((sport) => sport.id === selectedSport.id) || null,
     );
   }, [recentSports]);
 
+  const fetchSports = useCallback(async () => {
+    if (!user || !usersLoaded) return;
+    try {
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .fetchIfNeeded();
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.AllRecentSports)
+        .forceFetch();
+      const fetchedData = useRecentSportsStore.getState().recentSports;
+      if (fetchedData === null) return;
+    } catch (error) {
+      console.error(
+        `Error fetching recent sports: ${error}`,
+        error instanceof Error ? error.message : '',
+      );
+      setMessage(
+        new SnackbarUpdateImpl(
+          `Error fetching recent sports: ${error}`,
+          'error',
+        ),
+      );
+    }
+  }, [user, usersLoaded, setMessage]);
   // hook for fetching sports
   useEffect(() => {
     if (!user || !usersLoaded) return;
-
-    const fetchSports = async () => {
-      if (!user || !usersLoaded) return;
-      try {
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.User)
-          .fetchIfNeeded();
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.AllRecentSports)
-          .forceFetch();
-        const fetchedData = useRecentSportsStore.getState().recentSports;
-        if (fetchedData === null) return;
-      } catch (error) {
-        console.error(
-          `Error fetching recent sports: ${error}`,
-          error instanceof Error ? error.message : ''
-        );
-        setMessage(
-          new SnackbarUpdateImpl(
-            `Error fetching recent sports: ${error}`,
-            'error'
-          )
-        );
-      }
-    };
 
     // call once directly
     fetchSports();
@@ -154,7 +153,7 @@ export const SportsTimeline = () => {
               !selectedSport || selectedSport.id === sport.id
                 ? alpha(
                     theme.blendAgainstContrast('secondaryLight', 0.25),
-                    0.25
+                    0.25,
                   )
                 : undefined,
           },
@@ -172,7 +171,7 @@ export const SportsTimeline = () => {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineDot
-              color="secondary"
+              color='secondary'
               sx={{
                 width: 60,
                 height: 60,
