@@ -25,6 +25,8 @@ import { HistoryPills } from './HistoryPills';
 import { BoxElevation2 } from '../../theme/statics';
 import { TotalScoreHeadline } from './TotalScoreHeadline';
 import { NUMBER_FONT } from '../../statics';
+import { CalculatorUpdater } from './CalculatorUpdater';
+import { MultiplierUpdater } from './MultiplierUpdater';
 
 interface MainContentProps {
   theme: any;
@@ -39,117 +41,140 @@ const MainContent: React.FC = () => {
     onSwipedRight: () => navigate(Pages.HISTORY),
   });
 
-  if (isMobile) {
-    return (
+  return (
+    <>
+      <CalculatorUpdater />
+      <MultiplierUpdater />
+      {isMobile ? <MainContentMobile /> : <MainContentDesktop />}
+    </>
+  );
+};
+
+export default MainContent;
+
+const MainContentMobile: React.FC = () => {
+  const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
+  const navigate = useNavigate();
+  const handlers = useSwipeable({
+    onSwipedLeft: () => navigate(Pages.FRIENDS),
+    onSwipedRight: () => navigate(Pages.HISTORY),
+  });
+
+  return (
+    <Box
+      {...handlers}
+      sx={{
+        flex: '1 1 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        height: isMobile ? '100%' : '92vh',
+        justifyContent: 'space-between',
+        touchAction: 'pan-y',
+      }}
+    >
+      {/* top row */}
       <Box
-        {...handlers}
         sx={{
-          flex: '1 1 auto',
+          position: 'relative',
           display: 'flex',
-          flexDirection: 'column',
-          height: isMobile ? '100%' : '92vh',
+          flexDirection: 'row',
           justifyContent: 'space-between',
-          touchAction: 'pan-y',
+          justifyItems: 'center',
+          px: 1,
+          height: 1 / 5,
         }}
       >
-        {/* top row */}
-        <Box
-          sx={{
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            justifyItems: 'center',
-            px: 1,
-            height: 1 / 5,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <TotalScoreDisplay />
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <AmountDisplay />
-          </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <TotalScoreDisplay />
         </Box>
 
-        {/* box for middle row */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <AmountDisplay />
+        </Box>
+      </Box>
+
+      {/* box for middle row */}
+      <Box
+        sx={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          flexGrow: 1,
+          justifyContent: 'space-around',
+        }}
+      >
+        {/* Game Selection */}
         <Box
           sx={{
-            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
-            flexGrow: 1,
-            justifyContent: 'space-around',
+            justifyContent: 'center',
           }}
         >
-          {/* Game Selection */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              justifyContent: 'center',
-            }}
-          >
-            <GameSelector />
-            <HistoryPills />
-          </Box>
+          <GameSelector />
+          <HistoryPills />
+        </Box>
 
-          {/* Death Slider and Upload */}
+        {/* Death Slider and Upload */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 1,
+            maxHeight: isMobile ? undefined : 1 / 5,
+            height: isMobile ? 1 / 7 : undefined,
+            mx: 3,
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
+              height: '100%',
               alignItems: 'center',
-              gap: 1,
-              maxHeight: isMobile ? undefined : 1 / 5,
-              height: isMobile ? 1 / 7 : undefined,
-              mx: 3,
+              width: isMobile ? 3 / 4 : 3 / 4,
+              zIndex: 0,
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                height: '100%',
-                alignItems: 'center',
-                width: isMobile ? 3 / 4 : 3 / 4,
-                zIndex: 0,
-              }}
-            >
-              <NumberSlider
-                withInput={
-                  theme.custom.themeName === 'custom' ? 'custom' : 'default'
-                }
-              />
-            </Box>
-            <Box
-              sx={{
-                width: isMobile ? 6 / 20 : 1 / 4,
-                display: 'flex',
-                alignItems: 'center',
-                zIndex: 1,
-              }}
-            >
-              <UploadScore />
-            </Box>
+            <NumberSlider
+              withInput={
+                theme.custom.themeName === 'custom' ? 'custom' : 'default'
+              }
+            />
           </Box>
           <Box
             sx={{
+              width: isMobile ? 6 / 20 : 1 / 4,
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
               alignItems: 'center',
+              zIndex: 1,
             }}
           >
-            <SportSelector />
+            <UploadScore />
           </Box>
         </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <SportSelector />
+        </Box>
       </Box>
-    );
-  }
+    </Box>
+  );
+};
+
+const MainContentDesktop: React.FC = () => {
+  const { theme } = useThemeStore();
+
   return (
     <Box
       sx={{
@@ -337,5 +362,3 @@ const MainContent: React.FC = () => {
     </Box>
   );
 };
-
-export default MainContent;
