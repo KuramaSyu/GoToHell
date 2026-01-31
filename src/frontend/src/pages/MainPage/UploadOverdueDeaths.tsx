@@ -73,7 +73,7 @@ export const UploadOverdueDeaths = () => {
                   : darken(theme.palette.primary.main, 1 / 3),
               }}
             >
-              <SnoozeIcon fontSize="inherit"></SnoozeIcon>
+              <SnoozeIcon fontSize='inherit'></SnoozeIcon>
             </Box>
           </AnimatedRoundBtn>
         </Box>

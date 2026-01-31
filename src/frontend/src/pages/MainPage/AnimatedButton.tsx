@@ -73,7 +73,6 @@ export const AnimatedRoundBtn = ({
   edgeFade = 0.1,
 }: AnimatedRoundBtnProps) => {
   const theme = useTheme();
-
   const isAnimationActive = duration !== 0;
 
   const spin = keyframes`
@@ -85,7 +84,7 @@ export const AnimatedRoundBtn = ({
     }
   `;
   const primaryColorRgb = hexToRgbString(
-    darken(theme.palette.primary.main, 1 / 3)
+    darken(theme.palette.primary.main, 1 / 3),
   );
 
   const RoundBtn = styled(motion.create(Button))({
