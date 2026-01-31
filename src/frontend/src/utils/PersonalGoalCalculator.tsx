@@ -107,7 +107,6 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
     );
     const done_amount_sum = relevant_sports.reduce(
       (accumulated, current_sport) => {
-        console.log(`acc: ${accumulated}`);
         return (accumulated += current_sport.amount);
       },
       0,
