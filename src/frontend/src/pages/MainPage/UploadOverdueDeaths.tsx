@@ -56,7 +56,7 @@ export const UploadOverdueDeaths = () => {
             width: '70px',
             height: '70px',
             //borderRadius: '50%',
-            // overflow: 'hidden',
+            overflow: 'hidden',
             // fontSize: '5rem',
           }}
         >
