@@ -38,28 +38,28 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
     switch (goal.frequency) {
       case 'daily': {
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        today.setUTCHours(0, 0, 0, 0);
         earliest_valid_date = today;
         break;
       }
       case 'weekly': {
         const today = new Date();
-        const day_of_week = today.getDay(); // 0 (Sun) - 6 (Sat)
+        const day_of_week = today.getUTCDay(); // 0 (Sun) - 6 (Sat)
         const diff_to_monday = (day_of_week + 6) % 7;
         const monday = new Date(today);
         monday.setDate(today.getDate() - diff_to_monday);
-        monday.setHours(0, 0, 0, 0);
+        monday.setUTCHours(0, 0, 0, 0);
         earliest_valid_date = monday;
         break;
       }
       case 'monthly': {
         const today = new Date();
         const first_of_month = new Date(
-          today.getFullYear(),
-          today.getMonth(),
+          today.getUTCFullYear(),
+          today.getUTCMonth(),
           1,
         );
-        first_of_month.setHours(0, 0, 0, 0);
+        first_of_month.setUTCHours(0, 0, 0, 0);
         earliest_valid_date = first_of_month;
         break;
       }
@@ -72,21 +72,21 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
     switch (goal.frequency) {
       case 'daily': {
         const tomorrow = new Date(now);
-        tomorrow.setDate(now.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
+        tomorrow.setUTCDate(now.getUTCDate() + 1);
+        tomorrow.setUTCHours(0, 0, 0, 0);
         return tomorrow;
       }
       case 'weekly': {
         const next_monday = new Date(now);
-        next_monday.setDate(now.getDate() + ((8 - now.getDay()) % 7));
-        next_monday.setHours(0, 0, 0, 0);
+        next_monday.setDate(now.getDate() + ((8 - now.getUTCDay()) % 7));
+        next_monday.setUTCHours(0, 0, 0, 0);
         return next_monday;
       }
       case 'monthly': {
         const next_month = new Date(now);
-        next_month.setMonth(now.getMonth() + 1);
-        next_month.setDate(1);
-        next_month.setHours(0, 0, 0, 0);
+        next_month.setUTCMonth(now.getUTCMonth() + 1);
+        next_month.setUTCDate(1);
+        next_month.setUTCHours(0, 0, 0, 0);
         return next_month;
       }
     }
