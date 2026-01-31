@@ -115,9 +115,15 @@ export const buildDecoratorStack = (
 // Select the sport kind with a button
 export const SportSelector = () => {
   const { theme } = useThemeStore();
-  const { currentSport, setSport } = useSportStore();
+  const currentSportName = useSportStore((state) => state.currentSport.sport);
+  const { setSport } = useSportStore();
   const { sportResponse, getSportMultiplier } = useSportResponseStore();
-  const { preferences, preferencesLoaded } = usePreferenceStore();
+  const preferencesSport = usePreferenceStore(
+    (state) => state.preferences.ui.displayedSports,
+  );
+  const preferencesLoaded = usePreferenceStore(
+    (state) => state.preferencesLoaded,
+  );
   const { isMobile } = useBreakpoint();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -131,9 +137,8 @@ export const SportSelector = () => {
 
     // Get the list of sports the user has explicitly chosen to display.
     const preferredSportNames =
-      preferences.ui.displayedSports
-        ?.filter((s) => s.isDisplayed)
-        .map((s) => s.name) ?? defaultSportKeys;
+      preferencesSport?.filter((s) => s.isDisplayed).map((s) => s.name) ??
+      defaultSportKeys;
 
     // Build the list of multipliers for the preferred sports.
     let sportPerferences = preferredSportNames.map((sport) => {
@@ -141,11 +146,12 @@ export const SportSelector = () => {
     });
 
     if (
-      currentSport.sport !== null &&
-      !sportPerferences.find((s) => s.sport === currentSport.sport)
+      currentSportName !== null &&
+      !sportPerferences.find((s) => s.sport === currentSportName)
     ) {
       // The currently selected sport is not in the preferred list (e.g., selected from a dialog).
       // Prepend it to the list so it's visible.
+      const currentSport = useSportStore.getState().currentSport;
       const multiplier: Multiplier = {
         game: null,
         multiplier: currentSport?.sport_multiplier ?? 1,
@@ -162,7 +168,7 @@ export const SportSelector = () => {
     });
 
     return sportPerferences;
-  }, [preferences, sportResponse, currentSport]);
+  }, [preferencesSport, sportResponse, currentSportName]);
 
   // on mount: set first sport as current sport (only displayed sports)
   useEffect(() => {
@@ -171,7 +177,7 @@ export const SportSelector = () => {
       .fetchIfNeeded()
       .then(() => {
         // get first sport from preferences
-        const preferredSports = preferences.ui.displayedSports?.filter(
+        const preferredSports = preferencesSport?.filter(
           (s) => s.isDisplayed && s.name !== 'show_all',
         );
         if (preferredSports != null && preferredSports.length > 0) {
@@ -181,7 +187,7 @@ export const SportSelector = () => {
           // Then use firstSport to set the sport
           const multiplier = getSportMultiplier(firstSport.name);
           setSport({
-            ...currentSport,
+            ...useSportStore.getState().currentSport,
             sport: firstSport.name,
             sport_multiplier: multiplier.multiplier,
           });
@@ -200,7 +206,7 @@ export const SportSelector = () => {
       setDialogOpen(true);
     } else {
       setSport({
-        ...currentSport,
+        ...useSportStore.getState().currentSport,
         sport: sport,
         sport_multiplier: multiplier,
       });
@@ -229,12 +235,12 @@ export const SportSelector = () => {
         }}
       >
         {displayedSports.map(({ sport, multiplier }) => {
-          const isSelected = sport === currentSport?.sport;
+          const isSelected = sport === currentSportName;
 
           return (
             <Button
               onClick={() => onButtonClick(sport, multiplier)}
-              variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
+              variant={sport === currentSportName ? 'contained' : 'outlined'}
               key={sport}
               sx={{
                 backgroundColor: isSelected
@@ -280,18 +286,18 @@ export const SportSelector = () => {
         orientation='vertical'
         fullWidth
         exclusive
-        value={currentSport?.sport}
+        value={currentSportName}
         //color="primary"
       >
         {displayedSports.map(({ sport, multiplier }, index) => {
-          const isSelected = sport === currentSport?.sport;
+          const isSelected = sport === currentSportName;
 
           return (
             <Grow
               in={preferencesLoaded}
               key={sport}
               style={{ transformOrigin: '0 0 0' }}
-              {...(preferencesLoaded ? { timeout: 300 + index * 100 } : {})}
+              {...(preferencesLoaded ? { timeout: 300 + index * 200 } : {})}
             >
               <ToggleButton
                 onClick={() => onButtonClick(sport, multiplier)}
