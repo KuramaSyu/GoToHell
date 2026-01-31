@@ -9,6 +9,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   SvgIcon,
+  Grow,
 } from '@mui/material';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useSportStore } from '../../useSportStore';
@@ -166,20 +167,6 @@ export const SportSelector = () => {
     return sportPerferences;
   }, [preferences, sportResponse, currentSport]);
 
-  // transition for button elements in button group
-  const transitions = useTransition(preferencesLoaded ? displayedSports : [], {
-    from: { opacity: 0, transform: 'scale(0.7) translateY(-20px)' },
-    enter: { opacity: 1, transform: 'scale(1) translateY(0px)' },
-    leave: {
-      opacity: 0,
-      transform: 'scale(0.7) translateY(20px)',
-      position: 'absolute',
-    },
-    keys: (item) => item.sport ?? 'none', // Use a unique key for each item
-    config: { tension: 220, friction: 12 },
-    trail: 120, // Optional: add a small delay between each item's animation
-  });
-
   /**
    * updates the DecoratorStack, when:
    *  - game changs
@@ -329,52 +316,58 @@ export const SportSelector = () => {
         value={currentSport?.sport}
         //color="primary"
       >
-        {transitions((style, { sport, multiplier }) => {
+        {displayedSports.map(({ sport, multiplier }, index) => {
           const isSelected = sport === currentSport?.sport;
 
           return (
-            <AnimatedToggleButton
-              style={style}
-              onClick={() => onButtonClick(sport, multiplier)}
-              value={sport ?? ''}
+            <Grow
+              in={preferencesLoaded}
               key={sport}
-              sx={{
-                gap: 3,
-                color: theme.palette.text.primary,
-                backgroundColor: 'transparent',
-                // Add selected state styling
-                '&.Mui-selected': {
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
+              style={{ transformOrigin: '0 0 0' }}
+              {...(preferencesLoaded ? { timeout: 300 + index * 100 } : {})}
+            >
+              <ToggleButton
+                onClick={() => onButtonClick(sport, multiplier)}
+                value={sport ?? ''}
+                key={sport}
+                sx={{
+                  gap: 3,
+                  color: theme.palette.text.primary,
+                  backgroundColor: 'transparent',
+                  // Add selected state styling
+                  '&.Mui-selected': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    '&:hover': {
+                      backgroundColor: theme.palette.primary.main,
+                    },
+                  },
+                  // Optional: add hover state for non-selected buttons
                   '&:hover': {
                     backgroundColor: theme.palette.primary.main,
                   },
-                },
-                // Optional: add hover state for non-selected buttons
-                '&:hover': {
-                  backgroundColor: theme.palette.primary.main,
-                },
-              }}
-            >
-              {sport !== 'show_all' ? (
-                sportIconMap[String(sport)] ? (
-                  <SvgIcon
-                    component={sportIconMap[String(sport)]!}
-                    sx={{
-                      color: isSelected
-                        ? theme.palette.primary.contrastText
-                        : theme.palette.text.primary,
-                      height: 42,
-                      width: 42,
-                    }}
-                    inheritViewBox
-                  />
-                ) : null
-              ) : (
-                <AppsIcon sx={getImageProps(isSelected, theme)} />
-              )}
-              <Typography>{String(sport).replace('_', ' ')}</Typography>
-            </AnimatedToggleButton>
+                }}
+              >
+                {sport !== 'show_all' ? (
+                  sportIconMap[String(sport)] ? (
+                    <SvgIcon
+                      component={sportIconMap[String(sport)]!}
+                      sx={{
+                        color: isSelected
+                          ? theme.palette.primary.contrastText
+                          : theme.palette.text.primary,
+                        height: 42,
+                        width: 42,
+                      }}
+                      inheritViewBox
+                    />
+                  ) : null
+                ) : (
+                  <AppsIcon sx={getImageProps(isSelected, theme)} />
+                )}
+                <Typography>{String(sport).replace('_', ' ')}</Typography>
+              </ToggleButton>
+            </Grow>
           );
         })}
       </ToggleButtonGroup>
