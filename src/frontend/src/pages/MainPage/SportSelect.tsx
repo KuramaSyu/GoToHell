@@ -117,10 +117,7 @@ export const SportSelector = () => {
   const { theme } = useThemeStore();
   const { currentSport, setSport } = useSportStore();
   const { sportResponse, getSportMultiplier } = useSportResponseStore();
-  const { setCalculator } = useCalculatorStore();
   const { preferences, preferencesLoaded } = usePreferenceStore();
-  const { usedMultiplier } = useUsedMultiplierStore();
-  const { setMessage: setErrorMessage } = useInfoStore();
   const { isMobile } = useBreakpoint();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -166,36 +163,6 @@ export const SportSelector = () => {
 
     return sportPerferences;
   }, [preferences, sportResponse, currentSport]);
-
-  /**
-   * updates the DecoratorStack, when:
-   *  - game changs
-   *  - selected sport changes
-   *  - sport response from backend changes
-   *  - preferences changes
-   *  - usedMultiplier changes
-   */
-  useEffect(() => {
-    setCalculator(
-      buildDecoratorStack(sportResponse, preferences, theme.custom.themeName),
-    );
-  }, [theme, currentSport, sportResponse, preferences, usedMultiplier]);
-
-  // when game changes: change game multiplier and maybe change currentSport
-  useEffect(() => {
-    if (sportResponse?.games && theme.custom.themeName != currentSport?.game) {
-      const gameMultiplierValue = sportResponse.games[theme.custom.themeName];
-
-      if (gameMultiplierValue != null) {
-        setSport({
-          ...currentSport,
-          game: theme.custom.themeName,
-          game_multiplier: gameMultiplierValue,
-        });
-      }
-    }
-    console.log(sportResponse);
-  }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
   // on mount: set first sport as current sport (only displayed sports)
   useEffect(() => {
