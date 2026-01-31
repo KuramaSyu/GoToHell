@@ -15,6 +15,14 @@ export interface IPersonalGoalCalculator {
 
   /**
    *
+   * @param goal the goal where we want to calcualte the percentage done
+   * @param on_sports the sports on which to calcuate
+   * @returns number; the amount of remaining exercises
+   */
+  calculateExercisesDone(goal: PersonalGoalData, on_sports: Sport[]): number;
+
+  /**
+   *
    * @param goals the goals where we want to calcualte the percentage done
    * @param on_sports the sports on which to calcuate
    * @returns 0 - inf; normally 0 - 1 for 0 - 100%, but it could be done more then 100%
@@ -93,24 +101,35 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
     return now;
   }
 
-  calculatePercentageDone(goal: PersonalGoalData, on_sports: Sport[]): number {
+  calculateExercisesDone(goal: PersonalGoalData, on_sports: Sport[]): number {
+    // get ealiest possbile date
     const earliest_valid_date = this.getEarliestValidDate(goal);
     if (earliest_valid_date === null) {
       return 0;
     }
 
+    // filter all sports, where:
+    // - user matches
+    // - sport matches
+    // - date is in range (older then earliest possible)
     const relevant_sports = on_sports.filter(
       (s) =>
         s.user_id === goal.user_id &&
         s.kind === goal.sport &&
         new Date(s.timedate) >= earliest_valid_date,
     );
+
+    // summarize sport exercises done
     const done_amount_sum = relevant_sports.reduce(
       (accumulated, current_sport) => {
         return (accumulated += current_sport.amount);
       },
       0,
     );
+    return done_amount_sum;
+  }
+  calculatePercentageDone(goal: PersonalGoalData, on_sports: Sport[]): number {
+    const done_amount_sum = this.calculateExercisesDone(goal, on_sports);
     return done_amount_sum / goal.amount;
   }
 

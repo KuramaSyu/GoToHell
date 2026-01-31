@@ -76,7 +76,7 @@ export const PersonalGoalBubble = () => {
               lastPossibleTime={calculator.getLastPossibleTime(g)}
               exercisesRemaining={
                 g.amount -
-                calculator.calculateDoneExercises(g, recentSports?.data ?? [])
+                calculator.calculateExercisesDone(g, recentSports?.data ?? [])
               }
             />
           ))
@@ -139,7 +139,7 @@ const PersonalGoalCard: React.FC<PersonalGoalCardProps> = ({
             {`${goal.amount} ${GameSelectionMap.get(goal.sport)} ${durationString[goal.frequency]}`}
           </Typography>
           <Typography variant='body1'>
-            {`${exercisesRemaining} ${GameSelectionMap.get(goal.sport)} in ${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })}`}
+            {`Remaining: ${exercisesRemaining} ${GameSelectionMap.get(goal.sport)} in ${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })}`}
           </Typography>
         </Stack>
       </Stack>
