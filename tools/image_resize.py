@@ -3,6 +3,7 @@
 import sys
 from pathlib import Path
 from PIL import Image
+from argparse import ArgumentParser
 
 SUPPORTED_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 TARGET_WIDTH = 1280
@@ -49,14 +50,9 @@ def process_images(files, output_dir: Path):
             print(f"Saved: {out_path}")
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python process_images.py <input_path> [output_dir]")
-        sys.exit(1)
-
-    input_path = Path(sys.argv[1])
-    output_dir = Path(sys.argv[2]) if len(sys.argv) >= 3 else Path("out")
-
+def main(args):
+    input_path = Path(args.input)
+    output_dir = Path(args.output)
     if input_path.is_file():
         if input_path.suffix.lower() not in SUPPORTED_EXTS:
             print("Unsupported file type")
@@ -80,4 +76,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser()
+    parser.add_argument("--input", type=str, default="in", help="Path to input image or directory")
+    parser.add_argument("--output", type=str, default="out", help="Output directory (default: out)")
+    args = parser.parse_args()
+    main(args)
