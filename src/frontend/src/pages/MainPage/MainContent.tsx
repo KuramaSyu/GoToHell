@@ -28,18 +28,8 @@ import { NUMBER_FONT } from '../../statics';
 import { CalculatorUpdater } from './CalculatorUpdater';
 import { MultiplierUpdater } from './MultiplierUpdater';
 
-interface MainContentProps {
-  theme: any;
-}
-
 const MainContent: React.FC = () => {
-  const { theme } = useThemeStore();
   const { isMobile } = useBreakpoint();
-  const navigate = useNavigate();
-  const handlers = useSwipeable({
-    onSwipedLeft: () => navigate(Pages.FRIENDS),
-    onSwipedRight: () => navigate(Pages.HISTORY),
-  });
 
   return (
     <>
