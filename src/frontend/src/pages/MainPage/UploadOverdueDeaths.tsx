@@ -55,9 +55,9 @@ export const UploadOverdueDeaths = () => {
           sx={{
             width: '70px',
             height: '70px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            fontSize: '5rem',
+            //borderRadius: '50%',
+            // overflow: 'hidden',
+            // fontSize: '5rem',
           }}
         >
           <AnimatedRoundBtn

@@ -70,7 +70,7 @@ export const AnimatedRoundBtn = ({
   children,
   onClick,
   duration = 10,
-  edgeFade = 0.1,
+  edgeFade = 0.01,
 }: AnimatedRoundBtnProps) => {
   const theme = useTheme();
   const isAnimationActive = duration !== 0;
