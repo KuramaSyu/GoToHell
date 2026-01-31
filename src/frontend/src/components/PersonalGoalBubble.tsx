@@ -30,6 +30,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
 import FlagIcon from '@mui/icons-material/Flag';
+import TimerIcon from '@mui/icons-material/Timer';
 
 export const PersonalGoalBubble = () => {
   const { personalGoalsList } = usePersonalGoalsStore();
@@ -56,7 +57,7 @@ export const PersonalGoalBubble = () => {
       sx={{
         py: 2,
         px: 2,
-        width: 'clamp(400px, 33vw, 600px)',
+        width: 'clamp(400px, 33vw, 700px)',
       }}
       elevation={24}
     >
@@ -73,6 +74,10 @@ export const PersonalGoalBubble = () => {
                 recentSports?.data ?? [],
               )}
               lastPossibleTime={calculator.getLastPossibleTime(g)}
+              exercisesRemaining={
+                g.amount -
+                calculator.calculateDoneExercises(g, recentSports?.data ?? [])
+              }
             />
           ))
         ) : (
@@ -87,11 +92,13 @@ interface PersonalGoalCardProps {
   goal: PersonalGoalData;
   percentageDone: number;
   lastPossibleTime: Date;
+  exercisesRemaining: number;
 }
 const PersonalGoalCard: React.FC<PersonalGoalCardProps> = ({
   goal,
   percentageDone,
   lastPossibleTime,
+  exercisesRemaining,
 }) => {
   const { theme } = useThemeStore();
   const durationString: Record<string, string> = {
@@ -132,7 +139,7 @@ const PersonalGoalCard: React.FC<PersonalGoalCardProps> = ({
             {`${goal.amount} ${GameSelectionMap.get(goal.sport)} ${durationString[goal.frequency]}`}
           </Typography>
           <Typography variant='body1'>
-            {`${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })} left`}
+            {`${exercisesRemaining} ${GameSelectionMap.get(goal.sport)} in ${formatDistanceToNow(lastPossibleTime, { includeSeconds: true })}`}
           </Typography>
         </Stack>
       </Stack>
