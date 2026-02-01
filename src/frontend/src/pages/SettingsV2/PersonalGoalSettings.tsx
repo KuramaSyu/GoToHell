@@ -124,6 +124,7 @@ export const PersonalGoalSettings: React.FC = () => {
           <TableBody>
             {personalGoalsList.map((goal) => (
               <TableRow
+                key={goal.id}
                 sx={{
                   '& .delete-button': { visibility: 'hidden' },
                   '&:hover .delete-button': { visibility: 'visible' },
