@@ -9,6 +9,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -137,15 +138,16 @@ function ExcerciseOverrideSettings() {
 }
 
 function SportAdjustmenteSettings() {
+  const { theme } = useThemeStore();
   return (
-    <Box>
+    <Stack direction={'column'} gap={theme.spacing(2)}>
       <Typography variant='body1'>
         You suck at Planks, but you are good at Push-Ups? Here you can Adjust
         the amount of exercises of a specific sport. For example you could lower
         the rating for Planks but increase it for Push-Ups
       </Typography>
       <SportAdjustments />
-    </Box>
+    </Stack>
   );
 }
 
