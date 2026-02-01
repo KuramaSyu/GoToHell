@@ -40,7 +40,11 @@ export const SportAdjustments: React.FC = () => {
     var preferences = usePreferenceStore.getState().preferences;
 
     const multipliers: Multiplier[] = [
-      { game: null, sport: sport, multiplier: calc.current.rate(rating) },
+      {
+        game: null,
+        sport: sport,
+        multiplier: Math.round(calc.current.rate(rating) * 100) / 100,
+      },
       ...preferences.multipliers.filter(
         (x) => !(x.game === null && x.sport == sport),
       ),
