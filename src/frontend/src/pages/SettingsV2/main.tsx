@@ -36,6 +36,8 @@ import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar';
 import FlagIcon from '@mui/icons-material/Flag';
 import { PersonalGoalSettings } from './PersonalGoalSettings';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { SportAdjustments } from './SportAdjustments';
 
 /**
  *
@@ -134,6 +136,19 @@ function ExcerciseOverrideSettings() {
   );
 }
 
+function SportAdjustmenteSettings() {
+  return (
+    <Box>
+      <Typography variant='body1'>
+        You suck at Planks, but you are good at Push-Ups? Here you can Adjust
+        the amount of exercises of a specific sport. For example you could lower
+        the rating for Planks but increase it for Push-Ups
+      </Typography>
+      <SportAdjustments />
+    </Box>
+  );
+}
+
 // ---- The main page component ----
 export default function SettingsPage() {
   const { theme } = useThemeStore();
@@ -161,6 +176,11 @@ export default function SettingsPage() {
       },
       { id: 'appearance', label: 'Appearance', icon: <PaletteIcon /> },
       { id: 'personal-goals', label: 'Personal Goals', icon: <FlagIcon /> },
+      {
+        id: 'sport-adjustments',
+        label: 'Sport Adjustments',
+        icon: <FitnessCenterIcon />,
+      },
     ],
     [],
   );
@@ -278,6 +298,7 @@ export default function SettingsPage() {
           ml: { md: 2 },
           px: { xs: 2, md: 4 },
           pt: 4,
+          pb: '50vh',
           height: '100vh',
           overflowY: 'auto',
           //width: '100%',
@@ -338,6 +359,15 @@ export default function SettingsPage() {
           }}
         >
           <PersonalGoalSettings />
+        </SettingsSection>
+        <SettingsSection
+          id='sport-adjustments'
+          label='Sport Adjustments'
+          ref={(el) => {
+            sectionRefs.current['sport-adjustments'] = el;
+          }}
+        >
+          <SportAdjustmenteSettings />
         </SettingsSection>
         <Box sx={{ height: 60 }} />
       </Grid>
