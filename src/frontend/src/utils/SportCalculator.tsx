@@ -212,9 +212,9 @@ export class PreferenceRespectingDefaultSportsCalculator extends DefaultSportsCa
    */
   get_sport_base(sport: string): number {
     return (
-      this.preferences.multipliers.filter(
+      (this.preferences.multipliers.filter(
         (m) => m.sport === sport && m.game === null,
-      )[0]?.multiplier ?? super.get_sport_base(sport)
+      )[0]?.multiplier ?? 1) * super.get_sport_base(sport)
     );
   }
 
