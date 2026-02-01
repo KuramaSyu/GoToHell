@@ -340,11 +340,10 @@ const MainContentDesktop: React.FC = () => {
       {/* Box for Multiplier / 3rd info */}
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
+          flexShrink: 0,
+          height: '150px',
+          // flexGrow: 1,
           alignContent: 'center',
-          zIndex: 1,
-          pb: 2,
         }}
       >
         <RecentSports></RecentSports>
