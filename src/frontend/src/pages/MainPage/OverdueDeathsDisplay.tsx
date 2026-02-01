@@ -41,7 +41,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
           px: 2,
           pt: 2, // padding to align the PopNumber vertically
 
-          backgroundColor: darken(theme.palette.secondary.main, 0.4),
+          backgroundColor: theme.blendAgainstContrast('secondary', 0.4),
           height: '11vh',
           overflow: 'hidden',
           borderRadius: '40px',
@@ -61,7 +61,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
           mass={1}
           fontsize={theme.typography.h1.fontSize}
           style={{
-            color: blendWithContrast(theme.palette.secondary.main, theme, 0.4),
+            color: theme.blendWithContrast('secondary', 0.4),
           }}
         ></PopNumber>
       </Box>
@@ -69,7 +69,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
         <Typography
           sx={{
             fontFamily: NUMBER_FONT,
-            fontSize: '2vh',
+            fontSize: theme.typography.h4.fontSize,
           }}
         >
           Overdue
@@ -77,10 +77,10 @@ export const OverdueDeathsDisplay: React.FC = () => {
         <Typography
           sx={{
             fontFamily: NUMBER_FONT,
-            fontSize: '2vh',
+            fontSize: theme.typography.h4.fontSize,
           }}
         >
-          deaths
+          Deaths
         </Typography>
       </Box>
     </Box>
