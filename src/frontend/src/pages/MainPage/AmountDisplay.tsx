@@ -42,10 +42,13 @@ export const AMOUNT_DISPLAY_CONTENT_BOX_SX = {
 };
 
 export function getAnimatedNumberSize(isMobile: boolean, numberKind: string) {
+  const theme = useThemeStore.getState().theme;
   if (numberKind === 'time') {
-    return isMobile ? '4vh' : '8vh';
+    return isMobile
+      ? theme.typography.h2.fontSize
+      : theme.typography.h1.fontSize;
   }
-  return isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP;
+  return isMobile ? theme.typography.h2.fontSize : theme.typography.h1.fontSize;
 }
 
 export interface SportServiceProps {
@@ -63,7 +66,7 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
     <PopNumber
       value={computedValue}
       font={NUMBER_FONT}
-      fontsize={isMobile ? BIG_NUMBER_SIZE_MOBILE : BIG_NUMBER_SIZE_DESKTOP}
+      fontsize={getAnimatedNumberSize(isMobile, 'number')}
       stiffness={1000}
       damping={300}
       mass={1}

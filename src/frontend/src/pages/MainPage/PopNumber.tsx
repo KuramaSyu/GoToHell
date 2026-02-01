@@ -40,7 +40,7 @@ export const PopNumber = ({
   damping: number;
   stiffness: number;
   mass: number;
-  fontsize?: string | undefined;
+  fontsize?: string | undefined | number;
   typographyVariant?: ComponentProps<typeof Typography>['variant'];
   fontweight?: number;
   zeroPadding?: number;

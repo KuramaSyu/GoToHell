@@ -13,8 +13,8 @@ import { hexToRgbString } from '../../utils/colors/hexToRgb';
 
 export const OverdueDeathsDisplay: React.FC = () => {
   const { theme } = useThemeStore();
-  const contrastColor = hexToRgbString(theme.palette.secondary.contrastText);
   const { overdueDeathsList } = useOverdueDeathsStore();
+
   useEffect(() => {
     async function init() {
       new ApiRequirementsBuilder()
@@ -24,6 +24,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
     }
     init();
   }, []);
+
   return (
     <Box
       sx={{
@@ -58,7 +59,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
           stiffness={1000}
           damping={300}
           mass={1}
-          fontsize='10vh'
+          fontsize={theme.typography.h1.fontSize}
           style={{
             color: blendWithContrast(theme.palette.secondary.main, theme, 0.4),
           }}

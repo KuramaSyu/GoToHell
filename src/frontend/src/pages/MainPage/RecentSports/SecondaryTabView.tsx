@@ -4,7 +4,7 @@ import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import useCalculatorStore from '../../../zustand/CalculatorStore';
 import { useSportStore } from '../../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
-import { OverdueDeathsDisplay } from '../OverdueDeaths';
+import { OverdueDeathsDisplay } from '../OverdueDeathsDisplay';
 import { useOverdueDeathsStore } from '../../../zustand/OverdueDeathsStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 
