@@ -179,11 +179,25 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
    * returns the color of the button, depending if it's selected or not
    * @param btn same as usedMultiplier
    */
-  const getColor = (btn: null | string) => {
-    if (btn == usedMultiplier) {
+  const getBackgroundColor = (btn: null | string) => {
+    const isSelected = btn == usedMultiplier;
+    if (isSelected) {
       return theme.palette.secondary.main;
     } else {
       return null;
+    }
+  };
+
+  /**
+   * returns the text color of the button, depending if it's selected or not
+   * @param btn same as usedMultiplier
+   */
+  const getTextColor = (btn: null | string) => {
+    const isSelected = btn == usedMultiplier;
+    if (isSelected) {
+      return theme.palette.secondary.contrastText;
+    } else {
+      return theme.palette.text.secondary;
     }
   };
 
@@ -308,8 +322,8 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           <Button
             onClick={() => setUsedMultiplierAndUpdateValue(null)}
             sx={{
-              backgroundColor: getColor(null),
-              color: theme.palette.secondary.contrastText,
+              backgroundColor: getBackgroundColor(null),
+              color: getTextColor(null),
               whiteSpace: 'nowrap', // Prevent text wrapping
               justifyContent: 'center',
             }}
@@ -324,8 +338,8 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         >
           <Button
             sx={{
-              backgroundColor: getColor(theme.custom.themeName),
-              color: theme.palette.secondary.contrastText,
+              backgroundColor: getBackgroundColor(theme.custom.themeName),
+              color: getTextColor(theme.custom.themeName),
               whiteSpace: 'nowrap', // Prevent text wrapping
               justifyContent: 'center',
             }}
