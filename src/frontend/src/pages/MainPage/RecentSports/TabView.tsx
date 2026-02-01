@@ -1,103 +1,55 @@
-import React, { useState } from "react";
-import { Tabs, Tab, Box } from "@mui/material";
-import { MultiplierSettings } from "../../../pages/Settings/Multiplier";
-import { useThemeStore } from "../../../zustand/useThemeStore";
-import { SecondaryTabView } from "./SecondaryTabView";
-import { hexToRgbString } from "../../../utils/colors/hexToRgb";
+import React, { useMemo, useState } from 'react';
+import { Tabs, Tab, Box, Stack } from '@mui/material';
+import { MultiplierSettings } from '../../../pages/Settings/Multiplier';
+import { useThemeStore } from '../../../zustand/useThemeStore';
+import { SecondaryTabView } from './SecondaryTabView';
+import { hexToRgbString } from '../../../utils/colors/hexToRgb';
+import { useOverdueDeathsStore } from '../../../zustand/OverdueDeathsStore';
 
-const SecondaryTabViewExists = (themeName: string) => {
+const SecondaryTabViewExists = (
+  themeName: string,
+  hasCurrentOverdueDeaths: boolean,
+) => {
   // simplified more intelligent version without tabs
-  if (themeName === "custom") {
-    return false;
-  }
-  return true;
+  return hasCurrentOverdueDeaths;
 };
 
 export const RecentSports = () => {
-  const [activeTab, setActiveTab] = useState(0);
   const { theme } = useThemeStore();
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
-  };
+  const { overdueDeathsList } = useOverdueDeathsStore();
+  const hasCurrentOverdueDeaths = useMemo(
+    () =>
+      overdueDeathsList.some(
+        (x) => x.game === theme.custom.themeName && x.count > 0,
+      ),
+    [overdueDeathsList, theme.custom.themeName],
+  );
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        justifyContent: "center",
-        alignContent: "stretch",
-        alignItems: "flex-end", // Add this to align children to bottom
-        gap: 1,
-        px: 2,
-      }}
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="left"
-        alignContent="flex-start"
+    <Stack direction={'row'} px={2} spacing={2} alignItems={'center'}>
+      <Stack
+        direction={'column'}
         sx={{
-          width: SecondaryTabViewExists(theme.custom.themeName)
-            ? "60%"
-            : "100%",
-          transition: "width 0.3s ease-in-out",
+          width: SecondaryTabViewExists(
+            theme.custom.themeName,
+            hasCurrentOverdueDeaths,
+          )
+            ? 2 / 3
+            : 1,
+          transition: 'width 0.3s ease-in-out',
         }}
       >
-        {/* <Box display="flex" justifyContent="center">
-          <Tabs
-            value={activeTab}
-            onChange={handleChange}
-            textColor="primary"
-            indicatorColor="primary"
-            sx={{
-              backgroundColor: `rgba(${hexToRgbString(
-                theme.palette.muted.dark
-              )}, 0.33)`,
-              borderRadius: '50px',
-              padding: '5px',
-              backdropFilter: 'blur(10px)',
-              p: 1,
-            }}
-          >
-            <Tab label="Multiplier" sx={{ minWidth: 150, width: 'auto' }} />
-          </Tabs>
-        </Box> */}
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            overflow: "hidden",
-          }}
-        >
-          {activeTab === 0 && (
-            <Box
-              sx={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <MultiplierSettings />
-            </Box>
-          )}
-        </Box>
-      </Box>
+        <MultiplierSettings />
+      </Stack>
 
-      {SecondaryTabViewExists(theme.custom.themeName) && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="left"
-          alignContent="flex-start"
-          flexShrink={1}
-          sx={{ width: 2 / 5 }}
-        >
-          <SecondaryTabView></SecondaryTabView>
+      {SecondaryTabViewExists(
+        theme.custom.themeName,
+        hasCurrentOverdueDeaths,
+      ) && (
+        <Box width={1 / 3} zIndex={1}>
+          <SecondaryTabView />
         </Box>
       )}
-    </Box>
+    </Stack>
   );
 };

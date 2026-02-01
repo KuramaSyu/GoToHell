@@ -42,7 +42,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
           pt: 2, // padding to align the PopNumber vertically
 
           backgroundColor: theme.blendAgainstContrast('secondary', 0.4),
-          height: '11vh',
+          height: '80%',
           overflow: 'hidden',
           borderRadius: '40px',
           display: 'flex',
