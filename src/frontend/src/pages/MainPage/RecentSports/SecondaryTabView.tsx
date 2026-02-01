@@ -4,7 +4,7 @@ import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import useCalculatorStore from '../../../zustand/CalculatorStore';
 import { useSportStore } from '../../../useSportStore';
 import { useDeathAmountStore } from '../NumberSlider';
-import { OverdueDeaths } from '../OverdueDeaths';
+import { OverdueDeathsDisplay } from '../OverdueDeaths';
 import { useOverdueDeathsStore } from '../../../zustand/OverdueDeathsStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 
@@ -32,7 +32,7 @@ export const SecondaryTabView: React.FC = () => {
   }, [currentSport, overdueDeathsList]);
   const currentOverdueDeaths =
     overdueDeathsList.find(
-      (x) => x.game === currentSport.game && x.count > 0
+      (x) => x.game === currentSport.game && x.count > 0,
     ) || null;
 
   var amountOfTabs = 0;
@@ -74,7 +74,7 @@ export const SecondaryTabView: React.FC = () => {
                 flexGrow: '1',
               }}
             >
-              <OverdueDeaths />
+              <OverdueDeathsDisplay />
             </Box>
           )}
           {activeTab == 1 && (
@@ -89,7 +89,7 @@ export const SecondaryTabView: React.FC = () => {
               {calculator.make_box(
                 currentSport.sport!,
                 currentSport.game!,
-                amount
+                amount,
               )}
             </Box>
           )}
@@ -111,9 +111,9 @@ export const SecondaryTabView: React.FC = () => {
         <Tabs
           onChange={handleChange}
           value={activeTab}
-          textColor="primary"
-          indicatorColor="primary"
-          orientation="vertical"
+          textColor='primary'
+          indicatorColor='primary'
+          orientation='vertical'
           centered
           sx={{
             backgroundColor: alpha(theme.palette.muted.dark, 0.33),
@@ -123,9 +123,9 @@ export const SecondaryTabView: React.FC = () => {
             width: 'fit-content',
           }}
         >
-          <Tab label="Overdue Deaths" />
+          <Tab label='Overdue Deaths' />
 
-          {!isXL ? <Tab label="Calculation" /> : null}
+          {!isXL ? <Tab label='Calculation' /> : null}
         </Tabs>
         <Box
           sx={{
@@ -147,7 +147,7 @@ export const SecondaryTabView: React.FC = () => {
                 flexGrow: '1',
               }}
             >
-              <OverdueDeaths />
+              <OverdueDeathsDisplay />
             </Box>
           )}
           {activeTab == 1 && (
@@ -162,7 +162,7 @@ export const SecondaryTabView: React.FC = () => {
               {calculator.make_box(
                 currentSport.sport!,
                 currentSport.game!,
-                amount
+                amount,
               )}
             </Box>
           )}

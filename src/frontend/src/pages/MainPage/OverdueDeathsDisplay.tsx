@@ -11,7 +11,7 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { hexToRgbString } from '../../utils/colors/hexToRgb';
 
-export const OverdueDeaths: React.FC = () => {
+export const OverdueDeathsDisplay: React.FC = () => {
   const { theme } = useThemeStore();
   const contrastColor = hexToRgbString(theme.palette.secondary.contrastText);
   const { overdueDeathsList } = useOverdueDeathsStore();
@@ -58,7 +58,7 @@ export const OverdueDeaths: React.FC = () => {
           stiffness={1000}
           damping={300}
           mass={1}
-          fontsize="10vh"
+          fontsize='10vh'
           style={{
             color: blendWithContrast(theme.palette.secondary.main, theme, 0.4),
           }}
