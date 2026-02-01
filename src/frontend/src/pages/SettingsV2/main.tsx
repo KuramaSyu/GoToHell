@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Box,
+  Button,
   Divider,
   Drawer,
   Grid,
@@ -11,6 +12,7 @@ import {
   ListItemText,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -27,7 +29,7 @@ import {
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
 import { useLoadingStore } from '../../zustand/loadingStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   GameOverrideList,
   GameOverrideSettings,
@@ -38,8 +40,11 @@ import { Pages } from '../../components/TopBar';
 import FlagIcon from '@mui/icons-material/Flag';
 import { PersonalGoalSettings } from './PersonalGoalSettings';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import { SportAdjustments } from './SportAdjustments';
-
+import {
+  ResetSportAdjustmentsLogic,
+  SportAdjustments,
+} from './SportAdjustments';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 /**
  *
  * SettingsPage
@@ -59,27 +64,48 @@ export type SettingsCategory = {
   id: string;
   label: string;
   icon?: React.ReactNode;
+  resetLogic?: () => void;
 };
 
 export type SettingsSectionProps = {
   id: string;
   label: string;
   children: React.ReactNode;
+  resetLogic?: () => void;
 };
 
 // A simple section wrapper to give each section consistent spacing and an anchor target
 export const SettingsSection = React.forwardRef<
   HTMLDivElement,
   SettingsSectionProps
->(({ id, label, children }, ref) => (
-  <Box id={id} ref={ref} sx={{ scrollMarginTop: 80, mb: 6 }}>
-    <Typography variant='h6' sx={{ mb: 2 }}>
-      {label}
-    </Typography>
-    <Box>{children}</Box>
-    <Divider sx={{ mt: 4 }} />
-  </Box>
-));
+>(({ id, label, children, resetLogic }, ref) => {
+  // to rerender children on reset
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleReset = () => {
+    if (resetLogic) {
+      resetLogic();
+      setResetKey((prevKey) => prevKey + 1);
+    }
+  };
+
+  return (
+    <Box id={id} ref={ref} sx={{ scrollMarginTop: 80, mb: 6 }}>
+      <Stack direction={'row'} justifyContent={'space-between'}>
+        <Typography variant='h6'>{label}</Typography>
+        {resetLogic && (
+          <Tooltip title={`Reset ${label} Settings`} arrow placement='top'>
+            <IconButton aria-label='reset settings' onClick={handleReset}>
+              <RestartAltIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Stack>
+      <Box key={resetKey}>{children}</Box>
+      <Divider sx={{ mt: 4 }} />
+    </Box>
+  );
+});
 SettingsSection.displayName = 'SettingsSection';
 
 // ---- Demo content (replace with your real settings forms) ----
@@ -182,6 +208,7 @@ export default function SettingsPage() {
         id: 'sport-adjustments',
         label: 'Sport Adjustments',
         icon: <FitnessCenterIcon />,
+        resetLogic: ResetSportAdjustmentsLogic,
       },
     ],
     [],
@@ -368,6 +395,9 @@ export default function SettingsPage() {
           ref={(el) => {
             sectionRefs.current['sport-adjustments'] = el;
           }}
+          resetLogic={
+            categories.find((c) => c.id === 'sport-adjustments')?.resetLogic
+          }
         >
           <SportAdjustmenteSettings />
         </SettingsSection>
