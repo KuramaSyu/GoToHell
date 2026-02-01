@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Typography from '@mui/material/Typography';
 import CircleIcon from '@mui/icons-material/Circle';
 import { useThemeStore } from '../../zustand/useThemeStore';
-import { Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import { SportEntry } from '../MainPage/QuickActions/SearchEntry';
 import { useRef, useState } from 'react';
@@ -20,8 +20,12 @@ import {
 export const SportAdjustments: React.FC = () => {
   const { sportResponse } = useSportResponseStore();
   const sportEntries = useSportResponseStore().getSportEntryMap();
-  const multipliers = usePreferenceStore().preferences.multipliers;
-  const { preferencesLoaded } = usePreferenceStore();
+  const multipliers = usePreferenceStore(
+    (state) => state.preferences.multipliers,
+  );
+  const preferencesLoaded = usePreferenceStore(
+    (state) => state.preferencesLoaded,
+  );
   const calc = useRef<IRatingCalculator>(new Rating0to3Calculator());
 
   const getPreferencesMultiplier = (sport: string): number | null => {
@@ -135,4 +139,15 @@ export const SingleSportAdjustment: React.FC<SingleSportAdjustmentProps> = ({
       </Grid>
     </>
   );
+};
+
+export const ResetSportAdjustmentsLogic = () => {
+  const preferences = usePreferenceStore.getState().preferences;
+  const multipliers: Multiplier[] = preferences.multipliers.filter(
+    (x) => x.game !== null || (x.game === null && x.sport == null),
+  );
+  usePreferenceStore.getState().setPreferences({
+    ...preferences,
+    multipliers: multipliers,
+  });
 };
