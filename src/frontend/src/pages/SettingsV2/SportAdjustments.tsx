@@ -80,34 +80,58 @@ export const SingleSportAdjustment: React.FC<SingleSportAdjustmentProps> = ({
 }) => {
   const { theme } = useThemeStore();
   const [value, setValue] = useState<number>(currentValue * 10);
+
+  const labels: { [index: string]: string } = {
+    1: 'Hate',
+    2: 'Dislike',
+    3: 'Bad',
+    4: 'Below Average',
+    5: 'Average',
+    6: 'Above Average',
+    7: 'Good',
+    8: 'Great',
+    9: 'Pro',
+    10: 'Olimpian',
+  };
+
+  /**
+   * return nearest label for rating
+   * @param value rating
+   */
+  const getLabel = (value: number) => {
+    const rounded = Math.round(value);
+    return labels[rounded] ?? '';
+  };
+
   return (
     <>
       <Grid size={3} key={`${sport.name}1`}>
         <Typography>{sport.displayName()}</Typography>
       </Grid>
       <Grid size={9} key={`${sport.name}2`}>
-        <Rating
-          value={value}
-          onChange={(_, newValue) => {
-            if (newValue === undefined || value === null) return;
-            setValue(newValue!);
-            onClick(sport.name, newValue! / 10); // onClick accepts a value from 0 - 1
-          }}
-          precision={0.5}
-          getLabelText={(value: number) =>
-            `${value} Starts${value !== 1 ? 's' : ''}`
-          }
-          max={10}
-          sx={{
-            '& .MuiRating-iconFilled': {
-              color: theme.palette.primary.main,
-            },
-            '& .MuiRating-iconHover': {
-              color: theme.palette.primary.light,
-            },
-          }}
-          size='large'
-        />
+        <Stack direction='row' alignItems='center' spacing={1}>
+          <Rating
+            value={value}
+            onChange={(_, newValue) => {
+              if (newValue === undefined || value === null) return;
+              setValue(newValue!);
+              onClick(sport.name, newValue! / 10); // onClick accepts a value from 0 - 1
+            }}
+            precision={0.5}
+            getLabelText={(value: number) => `${value}, ${getLabel(value)}`}
+            max={10}
+            sx={{
+              '& .MuiRating-iconFilled': {
+                color: theme.palette.primary.main,
+              },
+              '& .MuiRating-iconHover': {
+                color: theme.palette.primary.light,
+              },
+            }}
+            size='large'
+          />
+          {value !== null && <Box sx={{ ml: 2 }}>{getLabel(value)}</Box>}
+        </Stack>
       </Grid>
     </>
   );
