@@ -65,6 +65,7 @@ export type SettingsCategory = {
   label: string;
   icon?: React.ReactNode;
   resetLogic?: () => void;
+  settingsContent?: React.ReactNode;
 };
 
 export type SettingsSectionProps = {
@@ -95,7 +96,11 @@ export const SettingsSection = React.forwardRef<
         <Typography variant='h6'>{label}</Typography>
         {resetLogic && (
           <Tooltip title={`Reset ${label} Settings`} arrow placement='top'>
-            <IconButton aria-label='reset settings' onClick={handleReset}>
+            <IconButton
+              aria-label='reset settings'
+              onClick={handleReset}
+              color='warning'
+            >
               <RestartAltIcon />
             </IconButton>
           </Tooltip>
@@ -190,25 +195,31 @@ export default function SettingsPage() {
   // Define your categories once
   const categories = React.useMemo<SettingsCategory[]>(
     () => [
-      { id: 'account', label: 'Account', icon: <SettingsIcon /> },
+      // {
+      //   id: 'account',
+      //   label: 'Account',
+      //   icon: <SettingsIcon />,
+      //   settingsContent: <AccountSettings />,
+      // },
       {
         id: 'exercise-overrides',
         label: 'Exercise Overrides',
         icon: <SettingsIcon />,
+        settingsContent: <ExcerciseOverrideSettings />,
       },
-      { id: 'security', label: 'Security', icon: <SecurityIcon /> },
+
       {
-        id: 'notifications',
-        label: 'Notifications',
-        icon: <NotificationsIcon />,
+        id: 'personal-goals',
+        label: 'Personal Goals',
+        icon: <FlagIcon />,
+        settingsContent: <PersonalGoalSettings />,
       },
-      { id: 'appearance', label: 'Appearance', icon: <PaletteIcon /> },
-      { id: 'personal-goals', label: 'Personal Goals', icon: <FlagIcon /> },
       {
         id: 'sport-adjustments',
         label: 'Sport Adjustments',
         icon: <FitnessCenterIcon />,
         resetLogic: ResetSportAdjustmentsLogic,
+        settingsContent: <SportAdjustmenteSettings />,
       },
     ],
     [],
@@ -333,74 +344,19 @@ export default function SettingsPage() {
           //width: '100%',
         }}
       >
-        {/* All sections rendered in one flow */}
-        <SettingsSection
-          id='account'
-          label='Account'
-          ref={(el) => {
-            sectionRefs.current['account'] = el;
-          }}
-        >
-          <AccountSettings />
-        </SettingsSection>
+        {categories.map((c) => (
+          <SettingsSection
+            id={c.id}
+            label={c.label}
+            ref={(el) => {
+              sectionRefs.current[c.id] = el;
+            }}
+            resetLogic={c.resetLogic}
+          >
+            {c.settingsContent}
+          </SettingsSection>
+        ))}
 
-        <SettingsSection
-          id='excercise-overrides'
-          label='Excercise Overrides'
-          ref={(el) => {
-            sectionRefs.current['exercise-overrides'] = el;
-          }}
-        >
-          <ExcerciseOverrideSettings />
-        </SettingsSection>
-        <SettingsSection
-          id='security'
-          label='Security'
-          ref={(el) => {
-            sectionRefs.current['security'] = el;
-          }}
-        >
-          <SecuritySettings />
-        </SettingsSection>
-        <SettingsSection
-          id='notifications'
-          label='Notifications'
-          ref={(el) => {
-            sectionRefs.current['notifications'] = el;
-          }}
-        >
-          <NotificationsSettings />
-        </SettingsSection>
-        <SettingsSection
-          id='appearance'
-          label='Appearance'
-          ref={(el) => {
-            sectionRefs.current['appearance'] = el;
-          }}
-        >
-          <AppearanceSettings />
-        </SettingsSection>
-        <SettingsSection
-          id='personal-goals'
-          label='Personal Goals'
-          ref={(el) => {
-            sectionRefs.current['personal-goals'] = el;
-          }}
-        >
-          <PersonalGoalSettings />
-        </SettingsSection>
-        <SettingsSection
-          id='sport-adjustments'
-          label='Sport Adjustments'
-          ref={(el) => {
-            sectionRefs.current['sport-adjustments'] = el;
-          }}
-          resetLogic={
-            categories.find((c) => c.id === 'sport-adjustments')?.resetLogic
-          }
-        >
-          <SportAdjustmenteSettings />
-        </SettingsSection>
         <Box sx={{ height: 60 }} />
       </Grid>
     </Grid>
