@@ -7,14 +7,14 @@ export const UserPreferencesSchema = z.object({
       sport: z.string(),
       game: z.string(),
       amount: z.number(),
-    })
+    }),
   ),
   multipliers: z.array(
     z.object({
       game: z.string().nullable(),
-      sport: z.string().nullable(),
+      sport: z.string().nullable(), // null means it's used for all sports
       multiplier: z.number(),
-    })
+    }),
   ),
   sport_specific: z.object({
     plank: z.object({
@@ -27,7 +27,7 @@ export const UserPreferencesSchema = z.object({
         z.object({
           name: z.string(),
           isDisplayed: z.boolean(),
-        })
+        }),
       )
       .nullable(),
     displayedSports: z
@@ -35,7 +35,7 @@ export const UserPreferencesSchema = z.object({
         z.object({
           name: z.string(),
           isDisplayed: z.boolean(),
-        })
+        }),
       )
       .nullable(),
   }),
