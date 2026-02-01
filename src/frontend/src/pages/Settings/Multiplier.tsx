@@ -21,7 +21,7 @@ export const MultiplierSettings: React.FC = () => {
     // find global multiplier
     multipliers = preferences.multipliers;
     const globalMultiplier = multipliers.find(
-      (multiplier) => multiplier.game == GAME
+      (multiplier) => multiplier.game == GAME,
     );
 
     // set the value of this multiplier for the slider
@@ -40,7 +40,8 @@ export const MultiplierSettings: React.FC = () => {
           multiplier: value,
         },
         ...preferences.multipliers.filter(
-          (multiplier) => multiplier.game !== game
+          (multiplier) =>
+            !(multiplier.game === game && multiplier.sport === null),
         ),
       ],
     };
@@ -54,7 +55,6 @@ export const MultiplierSettings: React.FC = () => {
     setSliderValue(Number(value));
 
     setPreferences(newPreferences);
-    setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
 
   return (
