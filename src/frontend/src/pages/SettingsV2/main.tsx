@@ -392,34 +392,18 @@ export default function SettingsPage() {
       </Box>
       <Divider />
       <Box sx={{ px: 2, py: 2 }}>
-        {mobileOpenId === 'account' && (
-          <SettingsSection id='account-mobile' label='Account'>
-            <AccountSettings />
-          </SettingsSection>
-        )}
-        {mobileOpenId === 'exercise-overrides' && (
-          <SettingsSection
-            id='exercise-overrides-mobile'
-            label='Exercise Overrides'
-          >
-            <ExcerciseOverrideSettings />
-          </SettingsSection>
-        )}
-        {mobileOpenId === 'security' && (
-          <SettingsSection id='security-mobile' label='Security'>
-            <SecuritySettings />
-          </SettingsSection>
-        )}
-        {mobileOpenId === 'notifications' && (
-          <SettingsSection id='notifications-mobile' label='Notifications'>
-            <NotificationsSettings />
-          </SettingsSection>
-        )}
-        {mobileOpenId === 'appearance' && (
-          <SettingsSection id='appearance-mobile' label='Appearance'>
-            <AppearanceSettings />
-          </SettingsSection>
-        )}
+        {categories
+          .filter((c) => c.id === mobileOpenId)
+          .map((c) => (
+            <SettingsSection
+              key={`${c.id}-mobile`}
+              id={`${c.id}-mobile`}
+              label={c.label}
+              resetLogic={c.resetLogic}
+            >
+              {c.settingsContent}
+            </SettingsSection>
+          ))}
       </Box>
     </Box>
   );
