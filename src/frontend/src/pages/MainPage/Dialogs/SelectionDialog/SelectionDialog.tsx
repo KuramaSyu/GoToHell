@@ -56,7 +56,7 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
   const { isMobile } = useBreakpoint();
   const { theme } = useThemeStore();
   const [copyList, setCopyList] = useState<SearchEntry[]>(list);
-  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
+  const sensors = useSensors(useSensor(PointerSensor)); // no touch.
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -123,7 +123,7 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
                       entry={
                         // use a decorator for entry, which closes the dialog on select
                         new SelectAndCloseSeachEntry(entry, () =>
-                          setOpen(false)
+                          setOpen(false),
                         )
                       }
                       alterElement={alterElement}
@@ -141,7 +141,7 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
             saveChange(copyList);
             setOpen(false);
           }}
-          color="inherit"
+          color='inherit'
         >
           Save & Close
         </Button>
