@@ -10,7 +10,9 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   lighten,
+  Stack,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
@@ -36,6 +38,8 @@ import { SearchEntry } from '../../QuickActions/SearchEntry';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { SearchEntryIconProvider } from '../../QuickActions/SearchEntryIconProvider';
 import { blendWithContrast } from '../../../../utils/blendWithContrast';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 /**
  * A decorator for SearchEntry, which calls a close function after selecting
@@ -79,6 +83,7 @@ export const SelectionElement: React.FC<{
   alterElement: (entry: SearchEntry) => void;
 }> = ({ entry, alterElement }) => {
   const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
   const {
     attributes,
     listeners,
@@ -116,23 +121,34 @@ export const SelectionElement: React.FC<{
       }}
     >
       {/* Selection indicator and drag handle */}
-      <Box
-        sx={{
-          width: 40,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: alpha(theme.palette.primary.main, 0.33),
-          borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.4)}`,
-          cursor: 'grab',
-          userSelect: 'none',
-          color: blendWithContrast(theme.palette.primary.main, theme, 1 / 2),
-        }}
-        {...attributes}
-        {...listeners}
-      >
-        <DragIndicatorIcon color="inherit" />
-      </Box>
+      {isMobile ? (
+        <Stack direction='column' width={40}>
+          <IconButton>
+            <KeyboardArrowUpIcon />
+          </IconButton>
+          <IconButton>
+            <KeyboardArrowDownIcon />
+          </IconButton>
+        </Stack>
+      ) : (
+        <Box
+          sx={{
+            width: 40,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: alpha(theme.palette.primary.main, 0.33),
+            borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.4)}`,
+            cursor: 'grab',
+            userSelect: 'none',
+            color: blendWithContrast(theme.palette.primary.main, theme, 1 / 2),
+          }}
+          {...attributes}
+          {...listeners}
+        >
+          <DragIndicatorIcon color='inherit' />
+        </Box>
+      )}
       {/* Card content */}
       <CardContent
         onClick={() => entry.select()}
