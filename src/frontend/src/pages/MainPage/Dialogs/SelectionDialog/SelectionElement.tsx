@@ -213,7 +213,7 @@ export const SelectionElement: React.FC<{
           p: 1,
         }}
       >
-        <Stack direction='row' width={100} alignItems={'center'} zIndex={2}>
+        <Stack direction='row' alignItems={'center'} zIndex={2}>
           {isMobile && (
             <>
               <IconButton onClick={() => onElementToFirst(entry)}>
