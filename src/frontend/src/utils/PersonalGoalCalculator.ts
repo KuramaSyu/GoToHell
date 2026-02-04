@@ -104,6 +104,9 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
   calculateExercisesDone(goal: PersonalGoalData, on_sports: Sport[]): number {
     // get ealiest possbile date
     const earliest_valid_date = this.getEarliestValidDate(goal);
+
+    // get last possible date
+    const last_possible_date = this.getLastPossibleTime(goal);
     if (earliest_valid_date === null) {
       return 0;
     }
@@ -116,7 +119,8 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
       (s) =>
         s.user_id === goal.user_id &&
         s.kind === goal.sport &&
-        new Date(s.timedate) >= earliest_valid_date,
+        new Date(s.timedate) >= earliest_valid_date &&
+        new Date(s.timedate) <= last_possible_date,
     );
 
     // summarize sport exercises done
