@@ -128,6 +128,7 @@ export class DefaultPersonalGoalCalculator implements IPersonalGoalCalculator {
     );
     return done_amount_sum;
   }
+
   calculatePercentageDone(goal: PersonalGoalData, on_sports: Sport[]): number {
     const done_amount_sum = this.calculateExercisesDone(goal, on_sports);
     return done_amount_sum / goal.amount;
