@@ -62,6 +62,7 @@ export const StreakTimeline: React.FC = () => {
           justifyContent: 'space-evenly',
           alignItems: 'center',
           textTransform: 'uppercase',
+          zIndex: 3,
         }}
       >
         <Typography variant={'h6'}>Current Streaks</Typography>
