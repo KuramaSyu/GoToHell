@@ -341,12 +341,13 @@ const MainContentDesktop: React.FC = () => {
       <Box
         sx={{
           flexShrink: 0,
-          height: '150px',
+          height: 'fit-content',
+          minHeight: '100px',
           // flexGrow: 1,
           alignContent: 'center',
         }}
       >
-        <RecentSports></RecentSports>
+        <RecentSports />
       </Box>
     </Box>
   );

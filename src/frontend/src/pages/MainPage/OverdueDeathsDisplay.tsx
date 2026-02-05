@@ -1,4 +1,4 @@
-import { alpha, Box, darken, Typography } from '@mui/material';
+import { alpha, Box, darken, Stack, Typography } from '@mui/material';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { PopNumber } from './PopNumber';
 import { NUMBER_FONT } from '../../statics';
@@ -26,46 +26,44 @@ export const OverdueDeathsDisplay: React.FC = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: '11vh',
-        overflow: 'hidden',
-        gap: 2,
-      }}
-    >
+    <Stack direction={'row'} spacing={2} height={'100%'} alignItems={'center'}>
       <Box
         sx={{
           px: 2,
-          pt: 2, // padding to align the PopNumber vertically
-
+          py: 1,
           backgroundColor: theme.blendAgainstContrast('secondary', 0.4),
-          height: '80%',
-          overflow: 'hidden',
           borderRadius: '40px',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          flexDirection: 'column',
         }}
       >
-        <PopNumber
-          value={
-            overdueDeathsList.find((x) => x.game === theme.custom.themeName)
-              ?.count ?? 0
-          }
-          font={NUMBER_FONT}
-          stiffness={1000}
-          damping={300}
-          mass={1}
-          fontsize={theme.typography.h1.fontSize}
-          style={{
-            color: theme.blendWithContrast('secondary', 0.4),
+        <Box
+          sx={{
+            display: 'flex',
+            overflow: 'hidden',
+            height: '115px', // crafted to match the multiplier and pop number font + size combo, since it has a weird margin at the bottom
+            alignItems: 'center',
           }}
-        ></PopNumber>
+        >
+          <PopNumber
+            value={
+              overdueDeathsList.find((x) => x.game === theme.custom.themeName)
+                ?.count ?? 0
+            }
+            font={NUMBER_FONT}
+            stiffness={1000}
+            damping={300}
+            mass={1}
+            fontsize={theme.typography.h1.fontSize}
+            style={{
+              color: theme.blendWithContrast('secondary', 0.4),
+            }}
+          ></PopNumber>
+        </Box>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Stack direction={'column'}>
         <Typography
           sx={{
             fontFamily: NUMBER_FONT,
@@ -82,7 +80,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
         >
           Deaths
         </Typography>
-      </Box>
-    </Box>
+      </Stack>
+    </Stack>
   );
 };
