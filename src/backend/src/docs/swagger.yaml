@@ -7,6 +7,13 @@ definitions:
     required:
     - game
     type: object
+  controllers.DeletePersonalGoalsRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
   controllers.DeleteSportsReply:
     properties:
       message:
@@ -49,6 +56,13 @@ definitions:
           $ref: '#/definitions/models.OverdueDeaths'
         type: array
     type: object
+  controllers.GetPersonalGoalsReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/controllers.PersonalGoalData'
+        type: array
+    type: object
   controllers.GetSportReply:
     properties:
       data:
@@ -77,6 +91,22 @@ definitions:
         description: the response message
         type: string
     type: object
+  controllers.PatchPutPersonalGoalsRequest:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/models.TimeFrequency'
+      id:
+        description: post does not require ID, patch/put does
+        type: integer
+      sport:
+        type: string
+    required:
+    - amount
+    - frequency
+    - sport
+    type: object
   controllers.PatchSportReply:
     properties:
       message:
@@ -99,6 +129,19 @@ definitions:
     required:
     - id
     type: object
+  controllers.PersonalGoalData:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/models.TimeFrequency'
+      id:
+        type: integer
+      sport:
+        type: string
+      user_id:
+        type: integer
+    type: object
   controllers.PostOverdueDeathsReply:
     properties:
       data:
@@ -117,6 +160,19 @@ definitions:
         type: string
     required:
     - game
+    type: object
+  controllers.PostPersonalGoalsRequest:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/models.TimeFrequency'
+      sport:
+        type: string
+    required:
+    - amount
+    - frequency
+    - sport
     type: object
   controllers.PostSportReply:
     properties:
@@ -145,7 +201,7 @@ definitions:
     x-enum-varnames:
     - Pending
     - Accepted
-    - blocked
+    - Blocked
   models.Friendships:
     properties:
       created_at:
@@ -226,6 +282,16 @@ definitions:
         example: push-up
         type: string
     type: object
+  models.TimeFrequency:
+    enum:
+    - daily
+    - weekly
+    - monthly
+    type: string
+    x-enum-varnames:
+    - Daily
+    - Weekly
+    - Monthly
   models.User:
     properties:
       avatar:
@@ -244,6 +310,124 @@ info:
   description: Provides all methods to persist data for GoToHell
   title: GoToHell Gin REST API
 paths:
+  /{user_id}/goals:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: Get all PersonalGoal records for the requested user
+      tags:
+      - PersonalGoals
+  /api/{user_id}/goals:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the personal goal ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.DeletePersonalGoalsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: Deletes a personal goal
+      tags:
+      - PersonalGoals
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the personal goal details like id, amount,
+          frequency and sport
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PatchPutPersonalGoalsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: Updates a personal goal
+      tags:
+      - PersonalGoals
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the personal goal details like amount, frequency
+          and sport
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PostPersonalGoalsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: Creates a personal goal
+      tags:
+      - PersonalGoals
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload containing the personal goal details like id, amount,
+          frequency and sport
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PatchPutPersonalGoalsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: Updates a personal goal
+      tags:
+      - PersonalGoals
   /api/friends:
     get:
       consumes:

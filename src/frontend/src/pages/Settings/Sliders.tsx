@@ -5,6 +5,8 @@ import {
   Input,
   OutlinedInput,
   Slider,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { GenerateMarks } from '../../utils/Marks';
 import { Add, Remove } from '@mui/icons-material';
@@ -21,6 +23,7 @@ import { handleStringNumber, StringNumberProps } from '../../utils/UserNumber';
 import { blendWithContrast } from '../../utils/blendWithContrast';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { hexToRgbString } from '../../utils/colors/hexToRgb';
+import { BoxElevation2 } from '../../theme/statics';
 
 export interface SettingsSliderProperties {
   min: number;
@@ -69,7 +72,7 @@ export const SettingsSlider: React.FC<SettingsSliderProperties> = ({
     >
       <OutlinedInput
         value={stringNumber ?? String(min)}
-        type="number"
+        type='number'
         onChange={(e) => {
           setStringNumber(e.target.value);
           const value = handleStringNumber({
@@ -176,11 +179,25 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
    * returns the color of the button, depending if it's selected or not
    * @param btn same as usedMultiplier
    */
-  const getColor = (btn: null | string) => {
-    if (btn == usedMultiplier) {
+  const getBackgroundColor = (btn: null | string) => {
+    const isSelected = btn == usedMultiplier;
+    if (isSelected) {
       return theme.palette.secondary.main;
     } else {
       return null;
+    }
+  };
+
+  /**
+   * returns the text color of the button, depending if it's selected or not
+   * @param btn same as usedMultiplier
+   */
+  const getTextColor = (btn: null | string) => {
+    const isSelected = btn == usedMultiplier;
+    if (isSelected) {
+      return theme.palette.secondary.contrastText;
+    } else {
+      return theme.palette.text.secondary;
     }
   };
 
@@ -188,13 +205,13 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     const multiplierCalculator = new MultiplierDecorator(
       new DefaultSportsCalculator(
         useSportResponseStore.getState().sportResponse ??
-          useSportResponseStore.getState().emptySportsResponse()
+          useSportResponseStore.getState().emptySportsResponse(),
       ),
-      preferences.multipliers
+      preferences.multipliers,
     );
     const multiplier = multiplierCalculator.get_multiplier(
       '',
-      theme.custom.themeName
+      theme.custom.themeName,
     );
     return multiplier;
   };
@@ -220,7 +237,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
    * If the Decorator returns null, 1 will be used as value
    */
   const setUsedMultiplierAndUpdateValue = (
-    usedMultiplier: string | null | undefined
+    usedMultiplier: string | null | undefined,
   ) => {
     setUsedMultiplier(usedMultiplier);
     UpdateSliderValue();
@@ -242,15 +259,14 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         flexDirection: 'row',
         gap: 2,
         alignItems: 'center',
-        backdropFilter: 'blur(16px)',
         padding: 3,
         borderRadius: 4,
-        backgroundColor: alpha(theme.palette.muted.dark, 0.33),
+        ...BoxElevation2(theme),
       }}
     >
       <OutlinedInput
         value={stringNumber ?? String(min)}
-        color="secondary"
+        color='secondary'
         onChange={(e) => {
           setStringNumber(e.target.value);
           const value = handleStringNumber({
@@ -298,56 +314,76 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
           xs: 'block',
         }}
       >
-        <Button
-          onClick={() => setUsedMultiplierAndUpdateValue(null)}
-          sx={{
-            backgroundColor: getColor(null),
-            color: theme.palette.secondary.contrastText,
-            whiteSpace: 'nowrap', // Prevent text wrapping
-            justifyContent: 'center',
-          }}
+        <Tooltip
+          title='Global Multiplier to adjust all Games at once'
+          arrow
+          placement='right'
         >
-          Global
-        </Button>
-        <Button
-          sx={{
-            backgroundColor: getColor(theme.custom.themeName),
-            color: theme.palette.secondary.contrastText,
-            whiteSpace: 'nowrap', // Prevent text wrapping
-            justifyContent: 'center',
-          }}
-          onClick={() =>
-            setUsedMultiplierAndUpdateValue(theme.custom.themeName)
-          }
+          <Button
+            onClick={() => setUsedMultiplierAndUpdateValue(null)}
+            sx={{
+              backgroundColor: getBackgroundColor(null),
+              color: getTextColor(null),
+              whiteSpace: 'nowrap', // Prevent text wrapping
+              justifyContent: 'center',
+            }}
+          >
+            Global
+          </Button>
+        </Tooltip>
+        <Tooltip
+          title={`Multiplier just for ${theme.custom.themeName}. This won't effect other games`}
+          arrow
+          placement='right'
         >
-          {theme.custom.themeName}
-        </Button>
+          <Button
+            sx={{
+              backgroundColor: getBackgroundColor(theme.custom.themeName),
+              color: getTextColor(theme.custom.themeName),
+              whiteSpace: 'nowrap', // Prevent text wrapping
+              justifyContent: 'center',
+            }}
+            onClick={() =>
+              setUsedMultiplierAndUpdateValue(theme.custom.themeName)
+            }
+          >
+            {theme.custom.themeName}
+          </Button>
+        </Tooltip>
       </Box>
-      <Slider
-        size={isMobile ? 'small' : 'medium'}
-        color="secondary"
-        value={sliderValue ?? min}
-        marks={marks}
-        onChange={(_e, value) => {
-          handleStringNumber({
-            ...defaultProps,
-            overrideStringNumber: true,
-            number: value,
-          });
-        }}
-        onChangeCommitted={(_e, value) => {
-          handleStringNumber({
-            ...defaultProps,
-            overrideStringNumber: true,
-            number: value,
-          });
+      <Tooltip
+        title={
+          'Multiplier to increase (>1) or decrease (<1) the amount of exercises'
+        }
+        arrow
+        placement='top'
+      >
+        <Slider
+          size={isMobile ? 'small' : 'medium'}
+          color='secondary'
+          value={sliderValue ?? min}
+          marks={marks}
+          onChange={(_e, value) => {
+            handleStringNumber({
+              ...defaultProps,
+              overrideStringNumber: true,
+              number: value,
+            });
+          }}
+          onChangeCommitted={(_e, value) => {
+            handleStringNumber({
+              ...defaultProps,
+              overrideStringNumber: true,
+              number: value,
+            });
 
-          saveValue(usedMultiplier ?? null, value);
-        }}
-        min={min}
-        max={max}
-        step={step}
-      />
+            saveValue(usedMultiplier ?? null, value);
+          }}
+          min={min}
+          max={max}
+          step={step}
+        />
+      </Tooltip>
     </Box>
   );
 };

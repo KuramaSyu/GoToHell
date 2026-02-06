@@ -6,14 +6,13 @@ import {
   UserPreferences,
 } from '../models/Preferences';
 import { GetSportsResponse } from '../models/Sport';
-import { Box, darken, lighten, Typography } from '@mui/material';
+import { Box, darken, lighten, Tooltip, Typography } from '@mui/material';
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 import Hexagon from '../components/Shapes';
 import { useThemeStore } from '../zustand/useThemeStore';
 import { NUMBER_FONT } from '../statics';
 import { useUsedMultiplierStore } from '../zustand/usedMultiplierStore';
-import { ToolTip } from '../components/ToolTip';
 /**
  * A calculator for the amount of exercises of a given sport a user
  * has to do. This is effected by game and amount of deaths.
@@ -157,37 +156,38 @@ export class DefaultSportsCalculator implements SportsCalculator {
         }}
       >
         {/* Tooltip Box */}
-        <ToolTip>
-          Game Base ({game_base}) x Sport Base ({sport_base}) ={' '}
-          {sport_times_game_base}
-        </ToolTip>
-
-        {/* Main Box */}
-        <Box
-          sx={{
-            backgroundColor: theme.palette.background.paper,
-            color: theme.palette.text.secondary,
-            px: 5,
-            py: 1,
-            borderRadius: 8,
-            borderColor: theme.blendWithContrast(
-              theme.palette.background.paper,
-              0.2
-            ),
-            borderWidth: 1,
-            fontSize: 24,
-            fontFamily: NUMBER_FONT,
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'inline-flex',
-            flex: '0 1 auto',
-            flexShrink: 0,
-          }}
+        <Tooltip
+          title={`Game Base (${game_base}) x Sport Base (${sport_base}) = ${sport_times_game_base}`}
+          arrow
+          placement='top'
         >
-          <Latex>
-            {`$\\frac{\\overbrace{${game_base}\\ \\times \\ ${sport_base}}^{${sport_times_game_base}}}{death}$`}
-          </Latex>
-        </Box>
+          {/* Main Box */}
+          <Box
+            sx={{
+              backgroundColor: theme.palette.background.paper,
+              color: theme.palette.text.secondary,
+              px: 5,
+              py: 1,
+              borderRadius: 8,
+              borderColor: theme.blendWithContrast(
+                theme.palette.background.paper,
+                0.2,
+              ),
+              borderWidth: 1,
+              fontSize: 24,
+              fontFamily: NUMBER_FONT,
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'inline-flex',
+              flex: '0 1 auto',
+              flexShrink: 0,
+            }}
+          >
+            <Latex>
+              {`$\\frac{\\overbrace{${game_base}\\ \\times \\ ${sport_base}}^{${sport_times_game_base}}}{death}$`}
+            </Latex>
+          </Box>
+        </Tooltip>
       </Box>
     );
   }
@@ -198,7 +198,7 @@ export class PreferenceRespectingDefaultSportsCalculator extends DefaultSportsCa
 
   constructor(
     getSportsResposne: GetSportsResponse,
-    preferences: UserPreferences
+    preferences: UserPreferences,
   ) {
     super(getSportsResposne);
     this.preferences = preferences;
@@ -212,9 +212,9 @@ export class PreferenceRespectingDefaultSportsCalculator extends DefaultSportsCa
    */
   get_sport_base(sport: string): number {
     return (
-      this.preferences.multipliers.filter(
-        (m) => m.sport === sport && m.game === null
-      )[0]?.multiplier ?? super.get_sport_base(sport)
+      (this.preferences.multipliers.filter(
+        (m) => m.sport === sport && m.game === null,
+      )[0]?.multiplier ?? 1) * super.get_sport_base(sport)
     );
   }
 
@@ -297,7 +297,7 @@ export class MultiplierDecorator extends BaseSportsCalculatorDecorator {
 
     const getGlobalMultipliers = () =>
       this.multipliers.filter(
-        (entry) => entry.game === null && entry.sport === null
+        (entry) => entry.game === null && entry.sport === null,
       );
     const getGameSpecificMultipliers = () =>
       (multipliers = this.multipliers.filter((entry) => entry.game == game));
@@ -381,7 +381,7 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
   overrides: OverrideSportDefinition[];
   constructor(
     decorated: SportsCalculator,
-    overrides: OverrideSportDefinition[]
+    overrides: OverrideSportDefinition[],
   ) {
     super(decorated);
     this.overrides = overrides;
@@ -391,7 +391,7 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
     // search for a specific override for the game and sport
     const override =
       this.overrides.filter(
-        (entry) => entry.game == game && entry.sport == sport
+        (entry) => entry.game == game && entry.sport == sport,
       )[0] ?? null;
 
     return override;
@@ -427,34 +427,34 @@ export class OverrideSportDecorator extends BaseSportsCalculatorDecorator {
           }}
         >
           {/* Tooltip Box */}
-          <ToolTip>
-            Override for Game {game} and Sport {sport}: {override.amount}
-          </ToolTip>
-
-          {/* Main Box */}
-          <Box
-            sx={{
-              backgroundColor: theme.palette.background.paper,
-              px: 5,
-              py: 1,
-              borderRadius: 8,
-              borderColor: theme.blendWithContrast(
-                theme.palette.background.paper,
-                0.25
-              ),
-              borderWidth: 1,
-              fontSize: 22,
-              fontFamily: NUMBER_FONT,
-              color: text_color,
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'inline-flex',
-              flex: '0 1 auto',
-              flexShrink: 0,
-            }}
+          <Tooltip
+            title={`Override for Game ${game} and Sport ${sport}: ${override.amount}`}
           >
-            <Latex>{`$\\frac{${override.amount}}{death}$`}</Latex>
-          </Box>
+            {/* Main Box */}
+            <Box
+              sx={{
+                backgroundColor: theme.palette.background.paper,
+                px: 5,
+                py: 1,
+                borderRadius: 8,
+                borderColor: theme.blendWithContrast(
+                  theme.palette.background.paper,
+                  0.25,
+                ),
+                borderWidth: 1,
+                fontSize: 22,
+                fontFamily: NUMBER_FONT,
+                color: text_color,
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'inline-flex',
+                flex: '0 1 auto',
+                flexShrink: 0,
+              }}
+            >
+              <Latex>{`$\\frac{${override.amount}}{death}$`}</Latex>
+            </Box>
+          </Tooltip>
         </Box>
       );
     }
@@ -501,7 +501,7 @@ export class DeathDecorator extends BaseSportsCalculatorDecorator {
             borderRadius: 8,
             borderColor: theme.blendWithContrast(
               theme.palette.background.paper,
-              0.25
+              0.25,
             ),
             borderWidth: 1,
             fontSize: 18,
@@ -559,7 +559,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     game: string,
     sport: string,
     game_base: number | null,
-    multiplier: number | null
+    multiplier: number | null,
   ): number {
     game_base = game_base ?? this.get_game_base(game);
     multiplier =
@@ -577,7 +577,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
     if (sport == 'plank') {
       return Math.round(
         this.strength_factor(safeDeaths, game, sport) *
-          this.log_formula(safeDeaths, game, sport, null, null)
+          this.log_formula(safeDeaths, game, sport, null, null),
       );
     }
     return this.decorated.calculate_amount(sport, game, safeDeaths);
@@ -609,7 +609,7 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
       ? `\\overbrace{\\times\\ ${multiplier}}^{multiplier}`
       : ``;
     const game_base_latex = `\\underbrace{\\times \\ ${this.get_game_base(
-      game
+      game,
     )}}_{game base}`;
     return (
       <Box
@@ -625,41 +625,45 @@ export class HumanLockDecorator extends BaseSportsCalculatorDecorator {
         }}
       >
         {/* Tooltip Box */}
-        <ToolTip>
-          <Box>With 10 Deaths, and a game base of 1, </Box>
-          <Box>
-            you have to do {this.get_max_seconds_from_preferences()}s plank
+        <Tooltip
+          title={
+            <Box>
+              <Box>With 10 Deaths, and a game base of 1, </Box>
+              <Box>
+                you have to do {this.get_max_seconds_from_preferences()}s plank
+              </Box>
+            </Box>
+          }
+        >
+          {/* Main Box */}
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box
+              sx={{
+                backgroundColor: theme.palette.background.paper,
+                px: 1,
+                py: 1,
+                borderRadius: 8,
+                borderColor: theme.blendWithContrast(
+                  theme.palette.background.paper,
+                  0.25,
+                ),
+                borderWidth: 1,
+                fontSize: 20,
+                fontFamily: NUMBER_FONT,
+                color: text_color,
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'inline-flex',
+                flex: '0 1 auto',
+                flexShrink: 0,
+              }}
+            >
+              <Latex>{`$\\underbrace{${strength_factor.toFixed(
+                1,
+              )}\\ \\cdot}_{strength} log_{\\frac{7}{4}}{1 \\overbrace{+${deaths}}^{deaths} ${game_base_latex} ${multiplier_latex}}$`}</Latex>
+            </Box>
           </Box>
-        </ToolTip>
-
-        {/* Main Box */}
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Box
-            sx={{
-              backgroundColor: theme.palette.background.paper,
-              px: 1,
-              py: 1,
-              borderRadius: 8,
-              borderColor: theme.blendWithContrast(
-                theme.palette.background.paper,
-                0.25
-              ),
-              borderWidth: 1,
-              fontSize: 20,
-              fontFamily: NUMBER_FONT,
-              color: text_color,
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'inline-flex',
-              flex: '0 1 auto',
-              flexShrink: 0,
-            }}
-          >
-            <Latex>{`$\\underbrace{${strength_factor.toFixed(
-              1
-            )}\\ \\cdot}_{strength} log_{\\frac{7}{4}}{1 \\overbrace{+${deaths}}^{deaths} ${game_base_latex} ${multiplier_latex}}$`}</Latex>
-          </Box>
-        </Box>
+        </Tooltip>
       </Box>
     );
   }

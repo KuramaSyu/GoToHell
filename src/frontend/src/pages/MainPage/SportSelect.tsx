@@ -9,6 +9,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   SvgIcon,
+  Grow,
 } from '@mui/material';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { useSportStore } from '../../useSportStore';
@@ -80,14 +81,14 @@ const getImageProps = (isSelected: boolean, theme: CustomTheme) => {
 export const buildDecoratorStack = (
   sportResponse: GetSportsResponse,
   preferences: UserPreferences,
-  themeName: string
+  themeName: string,
 ): SportsCalculator => {
   const BASE_SETTINGS = sportResponse;
 
   // base for calculating default values with respecting the users overrides
   var base: SportsCalculator = new PreferenceRespectingDefaultSportsCalculator(
     BASE_SETTINGS,
-    preferences
+    preferences,
   );
 
   // custom per game per sport overrides
@@ -114,12 +115,15 @@ export const buildDecoratorStack = (
 // Select the sport kind with a button
 export const SportSelector = () => {
   const { theme } = useThemeStore();
-  const { currentSport, setSport } = useSportStore();
+  const currentSportName = useSportStore((state) => state.currentSport.sport);
+  const { setSport } = useSportStore();
   const { sportResponse, getSportMultiplier } = useSportResponseStore();
-  const { setCalculator } = useCalculatorStore();
-  const { preferences, preferencesLoaded } = usePreferenceStore();
-  const { usedMultiplier } = useUsedMultiplierStore();
-  const { setMessage: setErrorMessage } = useInfoStore();
+  const preferencesSport = usePreferenceStore(
+    (state) => state.preferences.ui.displayedSports,
+  );
+  const preferencesLoaded = usePreferenceStore(
+    (state) => state.preferencesLoaded,
+  );
   const { isMobile } = useBreakpoint();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -133,9 +137,8 @@ export const SportSelector = () => {
 
     // Get the list of sports the user has explicitly chosen to display.
     const preferredSportNames =
-      preferences.ui.displayedSports
-        ?.filter((s) => s.isDisplayed)
-        .map((s) => s.name) ?? defaultSportKeys;
+      preferencesSport?.filter((s) => s.isDisplayed).map((s) => s.name) ??
+      defaultSportKeys;
 
     // Build the list of multipliers for the preferred sports.
     let sportPerferences = preferredSportNames.map((sport) => {
@@ -143,11 +146,12 @@ export const SportSelector = () => {
     });
 
     if (
-      currentSport.sport !== null &&
-      !sportPerferences.find((s) => s.sport === currentSport.sport)
+      currentSportName !== null &&
+      !sportPerferences.find((s) => s.sport === currentSportName)
     ) {
       // The currently selected sport is not in the preferred list (e.g., selected from a dialog).
       // Prepend it to the list so it's visible.
+      const currentSport = useSportStore.getState().currentSport;
       const multiplier: Multiplier = {
         game: null,
         multiplier: currentSport?.sport_multiplier ?? 1,
@@ -164,72 +168,27 @@ export const SportSelector = () => {
     });
 
     return sportPerferences;
-  }, [preferences, sportResponse, currentSport]);
+  }, [preferencesSport, sportResponse, currentSportName]);
 
-  // transition for button elements in button group
-  const transitions = useTransition(preferencesLoaded ? displayedSports : [], {
-    from: { opacity: 0, transform: 'scale(0.7) translateY(-20px)' },
-    enter: { opacity: 1, transform: 'scale(1) translateY(0px)' },
-    leave: {
-      opacity: 0,
-      transform: 'scale(0.7) translateY(20px)',
-      position: 'absolute',
-    },
-    keys: (item) => item.sport ?? 'none', // Use a unique key for each item
-    config: { tension: 220, friction: 12 },
-    trail: 120, // Optional: add a small delay between each item's animation
-  });
-
-  /**
-   * updates the DecoratorStack, when:
-   *  - game changs
-   *  - selected sport changes
-   *  - sport response from backend changes
-   *  - preferences changes
-   *  - usedMultiplier changes
-   */
-  useEffect(() => {
-    setCalculator(
-      buildDecoratorStack(sportResponse, preferences, theme.custom.themeName)
-    );
-  }, [theme, currentSport, sportResponse, preferences, usedMultiplier]);
-
-  // when game changes: change game multiplier and maybe change currentSport
-  useEffect(() => {
-    if (sportResponse?.games && theme.custom.themeName != currentSport?.game) {
-      const gameMultiplierValue = sportResponse.games[theme.custom.themeName];
-
-      if (gameMultiplierValue != null) {
-        setSport({
-          ...currentSport,
-          game: theme.custom.themeName,
-          game_multiplier: gameMultiplierValue,
-        });
-      }
-    }
-    console.log(sportResponse);
-  }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
-
-  // on mount: set random sport as current sport (only displayed sports)
+  // on mount: set first sport as current sport (only displayed sports)
   useEffect(() => {
     new ApiRequirementsBuilder()
       .add(ApiRequirement.Preferences)
       .fetchIfNeeded()
       .then(() => {
-        // get random sport from preferences
-        const preferredSports = preferences.ui.displayedSports?.filter(
-          (s) => s.isDisplayed && s.name !== 'show_all'
+        // get first sport from preferences
+        const preferredSports = preferencesSport?.filter(
+          (s) => s.isDisplayed && s.name !== 'show_all',
         );
         if (preferredSports != null && preferredSports.length > 0) {
-          const randomSport =
-            preferredSports[Math.floor(Math.random() * preferredSports.length)];
+          const firstSport = preferredSports[0];
 
-          if (randomSport == null) return;
-          // Then use randomSport to set the sport
-          const multiplier = getSportMultiplier(randomSport.name);
+          if (firstSport == null) return;
+          // Then use firstSport to set the sport
+          const multiplier = getSportMultiplier(firstSport.name);
           setSport({
-            ...currentSport,
-            sport: randomSport.name,
+            ...useSportStore.getState().currentSport,
+            sport: firstSport.name,
             sport_multiplier: multiplier.multiplier,
           });
         }
@@ -247,7 +206,7 @@ export const SportSelector = () => {
       setDialogOpen(true);
     } else {
       setSport({
-        ...currentSport,
+        ...useSportStore.getState().currentSport,
         sport: sport,
         sport_multiplier: multiplier,
       });
@@ -276,12 +235,12 @@ export const SportSelector = () => {
         }}
       >
         {displayedSports.map(({ sport, multiplier }) => {
-          const isSelected = sport === currentSport?.sport;
+          const isSelected = sport === currentSportName;
 
           return (
             <Button
               onClick={() => onButtonClick(sport, multiplier)}
-              variant={sport === currentSport?.sport ? 'contained' : 'outlined'}
+              variant={sport === currentSportName ? 'contained' : 'outlined'}
               key={sport}
               sx={{
                 backgroundColor: isSelected
@@ -321,61 +280,67 @@ export const SportSelector = () => {
     );
   }
   return (
-    <Box width="clamp(40px, 100%, 350px)">
+    <Box width='clamp(40px, 100%, 350px)'>
       {/* Vertical ButtonGroup for sports selection */}
       <ToggleButtonGroup
-        orientation="vertical"
+        orientation='vertical'
         fullWidth
         exclusive
-        value={currentSport?.sport}
+        value={currentSportName}
         //color="primary"
       >
-        {transitions((style, { sport, multiplier }) => {
-          const isSelected = sport === currentSport?.sport;
+        {displayedSports.map(({ sport, multiplier }, index) => {
+          const isSelected = sport === currentSportName;
 
           return (
-            <AnimatedToggleButton
-              style={style}
-              onClick={() => onButtonClick(sport, multiplier)}
-              value={sport ?? ''}
+            <Grow
+              in={preferencesLoaded}
               key={sport}
-              sx={{
-                gap: 3,
-                color: theme.palette.text.primary,
-                backgroundColor: 'transparent',
-                // Add selected state styling
-                '&.Mui-selected': {
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
+              style={{ transformOrigin: '0 0 0' }}
+              {...(preferencesLoaded ? { timeout: 300 + index * 200 } : {})}
+            >
+              <ToggleButton
+                onClick={() => onButtonClick(sport, multiplier)}
+                value={sport ?? ''}
+                key={sport}
+                sx={{
+                  gap: 3,
+                  color: theme.palette.text.primary,
+                  backgroundColor: 'transparent',
+                  // Add selected state styling
+                  '&.Mui-selected': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    '&:hover': {
+                      backgroundColor: theme.palette.primary.main,
+                    },
+                  },
+                  // Optional: add hover state for non-selected buttons
                   '&:hover': {
                     backgroundColor: theme.palette.primary.main,
                   },
-                },
-                // Optional: add hover state for non-selected buttons
-                '&:hover': {
-                  backgroundColor: theme.palette.primary.main,
-                },
-              }}
-            >
-              {sport !== 'show_all' ? (
-                sportIconMap[String(sport)] ? (
-                  <SvgIcon
-                    component={sportIconMap[String(sport)]!}
-                    sx={{
-                      color: isSelected
-                        ? theme.palette.primary.contrastText
-                        : theme.palette.text.primary,
-                      height: 42,
-                      width: 42,
-                    }}
-                    inheritViewBox
-                  />
-                ) : null
-              ) : (
-                <AppsIcon sx={getImageProps(isSelected, theme)} />
-              )}
-              <Typography>{String(sport).replace('_', ' ')}</Typography>
-            </AnimatedToggleButton>
+                }}
+              >
+                {sport !== 'show_all' ? (
+                  sportIconMap[String(sport)] ? (
+                    <SvgIcon
+                      component={sportIconMap[String(sport)]!}
+                      sx={{
+                        color: isSelected
+                          ? theme.palette.primary.contrastText
+                          : theme.palette.text.primary,
+                        height: 42,
+                        width: 42,
+                      }}
+                      inheritViewBox
+                    />
+                  ) : null
+                ) : (
+                  <AppsIcon sx={getImageProps(isSelected, theme)} />
+                )}
+                <Typography>{String(sport).replace('_', ' ')}</Typography>
+              </ToggleButton>
+            </Grow>
           );
         })}
       </ToggleButtonGroup>

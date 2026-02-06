@@ -16,6 +16,7 @@ func SetupRouter(
 	friendController *controllers.FriendsController,
 	overdueDeathsController *controllers.OverdueDeathsController,
 	streakController *controllers.StreakController,
+	personalGoalsController *controllers.PersonalGoalsController,
 ) {
 
 	// API routes
@@ -53,6 +54,17 @@ func SetupRouter(
 		overdueDeaths.DELETE("", overdueDeathsController.Delete)
 		overdueDeaths.PATCH("", overdueDeathsController.Patch)
 		overdueDeaths.GET("", overdueDeathsController.Get)
+
+		// user scoped routes
+		user := api.Group("/:user_id")
+
+		// route for personal goals
+		personalGoals := user.Group("/goals")
+		personalGoals.GET("", personalGoalsController.Get)
+		personalGoals.POST("", personalGoalsController.Post)
+		personalGoals.PATCH("", personalGoalsController.Patch)
+		personalGoals.PUT("", personalGoalsController.Put)
+		personalGoals.DELETE("", personalGoalsController.Delete)
 
 		// route for swagger API docs
 		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

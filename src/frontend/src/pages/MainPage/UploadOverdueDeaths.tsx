@@ -55,9 +55,9 @@ export const UploadOverdueDeaths = () => {
           sx={{
             width: '70px',
             height: '70px',
-            borderRadius: '50%',
+            //borderRadius: '50%',
             overflow: 'hidden',
-            fontSize: '5rem',
+            // fontSize: '5rem',
           }}
         >
           <AnimatedRoundBtn
@@ -73,7 +73,7 @@ export const UploadOverdueDeaths = () => {
                   : darken(theme.palette.primary.main, 1 / 3),
               }}
             >
-              <SnoozeIcon fontSize="inherit"></SnoozeIcon>
+              <SnoozeIcon fontSize='inherit'></SnoozeIcon>
             </Box>
           </AnimatedRoundBtn>
         </Box>

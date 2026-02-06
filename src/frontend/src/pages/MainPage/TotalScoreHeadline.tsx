@@ -1,0 +1,59 @@
+import { useEffect } from 'react';
+
+import { useUserStore } from '../../userStore';
+import { SportScore } from '../../models/Sport';
+
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useSportStore } from '../../useSportStore';
+import { Box, Typography } from '@mui/material';
+import { NUMBER_FONT } from '../../statics';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import {
+  AMOUNT_DISPLAY_CONENT_SX,
+  AMOUNT_DISPLAY_CONTENT_BOX_SX,
+  AMOUNT_DISPLAY_TITLE_SX,
+  getDisplayComponent,
+} from './AmountDisplay';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
+import { getSportDescription } from '../../utils/DescriptionProvider';
+
+// returns the score of the kind
+// game does not matter, since it's summed up
+const GetScore = (kind: string, amounts: SportScore[]) => {
+  const score = amounts.find((score) => score.kind === kind);
+  return score?.amount || 0;
+};
+
+export const TotalScoreHeadline = () => {
+  const { currentSport } = useSportStore();
+  const { user } = useUserStore();
+  const { amounts, refreshTrigger } = useTotalScoreStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) {
+        return;
+      }
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .add(ApiRequirement.TotalScore)
+        .fetchIfNeeded();
+    };
+    fetchData();
+  }, [user, refreshTrigger]);
+
+  if (!currentSport || !user) {
+    return <Typography></Typography>;
+  }
+
+  const bigNumber = GetScore(currentSport!.sport!, amounts);
+  return (
+    <Typography variant='h2' fontFamily={'inherit'}>
+      {getSportDescription(currentSport.sport!, bigNumber)}
+    </Typography>
+  );
+};

@@ -9,7 +9,7 @@ type FriendshipStatus string
 const (
 	Pending  FriendshipStatus = "pending"
 	Accepted FriendshipStatus = "accepted"
-	blocked  FriendshipStatus = "blocked"
+	Blocked  FriendshipStatus = "blocked"
 )
 
 // SQL Table representing a friendship between person A <RequesterID> and person B <RecipientID>.

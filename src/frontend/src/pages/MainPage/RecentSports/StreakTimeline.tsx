@@ -1,4 +1,4 @@
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { animated, config, useTransition } from 'react-spring';
 import { useUsersStore, useUserStore } from '../../../userStore';
@@ -15,7 +15,6 @@ const AnimatedBox = animated(Box);
 export const StreakTimeline: React.FC = () => {
   const { users } = useUsersStore();
   const { user } = useUserStore();
-  const { theme } = useThemeStore();
   const [isLoading, setIsLoading] = useState(true);
   const usersSorted: DiscordUserImpl[] = useMemo(() => {
     if (isLoading || user === null) return [];
@@ -25,7 +24,7 @@ export const StreakTimeline: React.FC = () => {
     ];
     allUsers.sort((a, b) => (b.streak ?? 0) - (a.streak ?? 0));
     return allUsers;
-  }, [isLoading]);
+  }, [isLoading, users, user]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,32 +54,22 @@ export const StreakTimeline: React.FC = () => {
   });
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
-      <Box
+    <Stack direction='column' spacing={2}>
+      <Stack
+        direction={'column'}
         sx={{
-          height: 1 / 8,
-          display: 'flex',
-          flexDirection: 'column',
+          height: 'clamp(40px, 10vh, 100px)',
           justifyContent: 'space-evenly',
           alignItems: 'center',
           textTransform: 'uppercase',
+          zIndex: 3,
         }}
       >
-        <Box>
-          <Typography variant={'h6'}>Current Streaks</Typography>
-        </Box>
-        <Box sx={{ width: '100%' }}>
-          <Divider></Divider>
-        </Box>
-      </Box>
+        <Typography variant={'h6'}>Current Streaks</Typography>
+        <Divider flexItem />
+      </Stack>
 
       {timelineItems}
-    </Box>
+    </Stack>
   );
 };

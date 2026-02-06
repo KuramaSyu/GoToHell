@@ -1,4 +1,12 @@
-import { useState, useEffect, ReactElement } from 'react';
+import {
+  useState,
+  useEffect,
+  ReactElement,
+  useCallback,
+  useMemo,
+  memo,
+  useRef,
+} from 'react';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -25,6 +33,7 @@ import { DiscordUserImpl } from '../../../components/DiscordLogin';
 import { UserInfo } from '../../../components/UserInfo';
 import { SportUserDialogWrapper } from './SportUserDialogWrapper';
 import { blendAgainstContrast } from '../../../utils/blendWithContrast';
+import { UserApi } from '../../../utils/api/Api';
 
 export interface UserSport {
   id: number;
@@ -41,6 +50,11 @@ interface SportsApiResponse {
 
 const AnimatedBox = animated(Box);
 
+// perf: memoize timeline items
+const MemoizedSportCardNumber = memo(SportCardNumber);
+const MemoizedSportTimelineEntry = memo(SportTimelineEntry);
+const MemoizedUserDialogWrapper = memo(SportUserDialogWrapper);
+
 export const SportsTimeline = () => {
   const { user } = useUserStore();
   const { users, friendsLoaded: usersLoaded } = useUsersStore();
@@ -50,76 +64,147 @@ export const SportsTimeline = () => {
   const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } =
     useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
-  const [selectedUser, setSelectedUser] = useState<DiscordUserImpl | null>(
-    null
-  );
   const [isMounted, setIsMounted] = useState(false);
+  const timelineSentinelRef = useRef<HTMLDivElement>(null);
+  const currentOffset = useRef(0);
+  const isLoadingMoreItems = useRef(false);
 
   useEffect(() => {
     if (!selectedSport || !recentSports) return;
     setSelectedSport(
-      recentSports.data.find((sport) => sport.id === selectedSport.id) || null
+      recentSports.data.find((sport) => sport.id === selectedSport.id) || null,
     );
   }, [recentSports]);
+
+  // load more sports when end is reached
+  const onScrollToEnd = useCallback(() => {
+    const currentSports = useRecentSportsStore.getState().recentSports;
+    if (
+      isLoadingMoreItems.current === true &&
+      currentOffset.current < (recentSports?.data.length ?? 0)
+    ) {
+      console.log(`timeline end reached: already fetching`);
+      return;
+    }
+
+    isLoadingMoreItems.current = true;
+    // Get fresh data from store instead of using stale closure
+
+    currentOffset.current = currentSports?.data.length ?? 1;
+
+    console.log(
+      `timeline end reached: fetching sports with offset ${currentOffset.current}`,
+    );
+    new UserApi()
+      .fetchAllRecentSports(currentOffset.current, 100)
+      .finally(() => {
+        isLoadingMoreItems.current = false;
+      });
+  }, []);
+
+  // watch until end of timeline is reached
+  useEffect(() => {
+    const sentinel = timelineSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && entry.isIntersecting) {
+          onScrollToEnd();
+        }
+      },
+      {
+        threshold: 0.01, // Trigger when 1% of sentinel is visible
+        rootMargin: '0px 0px 50px 0px', // Trigger 50px before actual end
+      },
+    );
+
+    observer.observe(sentinel);
+
+    return () => {
+      observer.unobserve(sentinel);
+    };
+  }, [onScrollToEnd]);
+
+  const fetchSports = useCallback(async () => {
+    if (!user || !usersLoaded) return;
+    try {
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.User)
+        .fetchIfNeeded();
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.AllRecentSports)
+        .forceFetch();
+      const fetchedData = useRecentSportsStore.getState().recentSports;
+      if (fetchedData === null) return;
+    } catch (error) {
+      console.error(
+        `Error fetching recent sports: ${error}`,
+        error instanceof Error ? error.message : '',
+      );
+      setMessage(
+        new SnackbarUpdateImpl(
+          `Error fetching recent sports: ${error}`,
+          'error',
+        ),
+      );
+    }
+  }, [user, usersLoaded, setMessage]);
 
   // hook for fetching sports
   useEffect(() => {
     if (!user || !usersLoaded) return;
 
-    const fetchSports = async () => {
-      if (!user || !usersLoaded) return;
-      try {
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.User)
-          .fetchIfNeeded();
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.AllRecentSports)
-          .forceFetch();
-        const fetchedData = useRecentSportsStore.getState().recentSports;
-        if (fetchedData === null) return;
-      } catch (error) {
-        console.error(
-          `Error fetching recent sports: ${error}`,
-          error instanceof Error ? error.message : ''
-        );
-        setMessage(
-          new SnackbarUpdateImpl(
-            `Error fetching recent sports: ${error}`,
-            'error'
-          )
-        );
-      }
-    };
-
     // call once directly
     fetchSports();
+
     // TODO: totally unefficient; should use websockets
     // call every 30 seconds
     const interval = setInterval(fetchSports, 30000);
 
     // cleanup
     return () => clearInterval(interval);
-  }, [users, ScoreRefreshTrigger, RecentSportsRefreshTrigger, user]);
+    // Update when Score increases, not when items change, since there is a artificial delay
+  }, [fetchSports, ScoreRefreshTrigger, RecentSportsRefreshTrigger, users]);
 
   // animation for timeline items
   const itemsToAnimate = recentSports?.data.toReversed() || [];
-  const transition = useTransition(itemsToAnimate, {
-    key: (sport) => sport.id,
-    from: { opacity: 0, y: 20, scale: 0.3 },
-    enter: { opacity: 1, y: 0, scale: 1 },
-    leave: { opacity: 0, y: 20, scale: 0.3 },
-    config: config.default,
-    trail: 80,
 
-    onRest: (_result, _ctrl, item) => {
-      // after rendering the 15nth element, set
-      // mount to true, that animation
-      const index = Math.min(15, itemsToAnimate.length - 1);
-      if (item.id === itemsToAnimate[index]?.id) {
-        setIsMounted(true);
-      }
-    },
-  });
+  // perf: memoize transition config
+  const transitionConfig = useMemo(
+    () => ({
+      key: (sport) => sport.id,
+      from: { opacity: 0, y: 20, scale: 0.3 },
+      enter: { opacity: 1, y: 0, scale: 1 },
+      leave: { opacity: 0, y: 20, scale: 0.3 },
+      config: config.default,
+      trail: 80,
+
+      onRest: (_result, _ctrl, item) => {
+        // after rendering the 15nth element, set
+        // mount to true, that animation
+        const index = Math.min(15, itemsToAnimate.length - 1);
+        if (item.id === itemsToAnimate[index]?.id) {
+          setIsMounted(true);
+        }
+      },
+    }),
+    [itemsToAnimate.length],
+  );
+  const transition = useTransition(itemsToAnimate, transitionConfig);
+
+  // perf: memoize hover styles to prevent recreations
+  const getHoverStyles = useCallback(
+    (sport: UserSport) => ({
+      transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
+      bgcolor:
+        !selectedSport || selectedSport.id === sport.id
+          ? alpha(theme.blendAgainstContrast('secondaryLight', 0.25), 0.25)
+          : undefined,
+    }),
+    [selectedSport, theme],
+  );
 
   // early returns
   if (!user || !usersLoaded) return <Box />;
@@ -148,16 +233,7 @@ export const SportsTimeline = () => {
             ? 'opacity 0.7s ease-out, background-color 0.7s ease-out'
             : undefined,
           opacity: isFaded ? 0.3 : 1,
-          '&:hover': {
-            transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
-            bgcolor:
-              !selectedSport || selectedSport.id === sport.id
-                ? alpha(
-                    theme.blendAgainstContrast('secondaryLight', 0.25),
-                    0.25
-                  )
-                : undefined,
-          },
+          '&:hover': getHoverStyles(sport),
         }}
       >
         <TimelineItem
@@ -168,11 +244,11 @@ export const SportsTimeline = () => {
           }}
         >
           <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
-            <SportCardNumber data={sport}></SportCardNumber>
+            <MemoizedSportCardNumber data={sport} />
           </TimelineOppositeContent>
           <TimelineSeparator>
             <TimelineDot
-              color="secondary"
+              color='secondary'
               sx={{
                 width: 60,
                 height: 60,
@@ -199,7 +275,7 @@ export const SportsTimeline = () => {
             <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
           </TimelineSeparator>
           <TimelineContent>
-            <SportTimelineEntry data={sport} />
+            <MemoizedSportTimelineEntry data={sport} />
           </TimelineContent>
         </TimelineItem>
       </AnimatedBox>
@@ -226,12 +302,22 @@ export const SportsTimeline = () => {
         }}
       >
         {timelineItems}
+
+        {/* extra element which is a detector/sentinel to track the end of the timeline */}
+        <div
+          ref={timelineSentinelRef}
+          style={{
+            height: '1px',
+            backgroundColor: 'transparent',
+            width: '100%',
+          }}
+        />
       </Timeline>
       {selectedSport !== null && (
-        <SportUserDialogWrapper
+        <MemoizedUserDialogWrapper
           selectedSport={selectedSport}
           setSelectedSport={setSelectedSport}
-        ></SportUserDialogWrapper>
+        />
       )}
     </Box>
   );

@@ -14,6 +14,7 @@ import { set } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar';
+import { BoxElevation1 } from '../../theme/statics';
 
 export const TimelinePageMainComponent: React.FC = () => {
   const { theme } = useThemeStore();
@@ -47,7 +48,10 @@ export const TimelinePageMainComponent: React.FC = () => {
   return (
     <>
       <AppBackground />
-      <Box {...handlers} sx={{ height: '100%', overflowY: 'auto' }}>
+      <Box
+        {...handlers}
+        sx={{ height: '100%', overflowY: 'auto', ...BoxElevation1(theme) }}
+      >
         <TimelineWrapper />
       </Box>
     </>

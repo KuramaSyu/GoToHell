@@ -5,7 +5,7 @@ import { SportScore } from '../../models/Sport';
 
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { useSportStore } from '../../useSportStore';
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { NUMBER_FONT } from '../../statics';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import {
@@ -55,39 +55,21 @@ export const TotalScoreDisplay = () => {
 
   const bigNumber = GetScore(currentSport!.sport!, amounts);
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: {
-          xs: 'column',
-          md: 'column',
-          lg: 'row',
-        },
-        justifyItems: 'center',
-        alignItems: {
-          xs: 'left',
-          md: 'left',
-          lg: 'center',
-        },
-        fontFamily: NUMBER_FONT,
-      }}
+    <Tooltip
+      title={
+        <>
+          <Typography>You have already done</Typography>
+          <Typography>
+            {bigNumber} {getSportDescription(currentSport.sport!, bigNumber)}
+          </Typography>
+        </>
+      }
+      arrow
+      placement='right'
     >
-      <Box
-        sx={{
-          mr: 2,
-          //width: `calc(12vh * 0.6 * ${bigNumber.toString().length})`,
-        }}
-      >
+      <Box>
         <DisplayComponent computedValue={bigNumber} isMobile={isMobile} />
       </Box>
-      <Box sx={AMOUNT_DISPLAY_CONTENT_BOX_SX}>
-        <Typography sx={AMOUNT_DISPLAY_TITLE_SX} fontFamily={'inherit'}>
-          {getSportDescription(currentSport.sport!, bigNumber)}
-        </Typography>
-        <Typography sx={AMOUNT_DISPLAY_CONENT_SX} fontFamily={'inherit'}>
-          in total
-        </Typography>
-      </Box>
-    </Box>
+    </Tooltip>
   );
 };

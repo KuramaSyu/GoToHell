@@ -10,7 +10,9 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   lighten,
+  Stack,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
@@ -36,6 +38,10 @@ import { SearchEntry } from '../../QuickActions/SearchEntry';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { SearchEntryIconProvider } from '../../QuickActions/SearchEntryIconProvider';
 import { blendWithContrast } from '../../../../utils/blendWithContrast';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 
 /**
  * A decorator for SearchEntry, which calls a close function after selecting
@@ -77,8 +83,20 @@ export class SelectAndCloseSeachEntry implements SearchEntry {
 export const SelectionElement: React.FC<{
   entry: SearchEntry;
   alterElement: (entry: SearchEntry) => void;
-}> = ({ entry, alterElement }) => {
+  onElementUp: (e: SearchEntry) => void;
+  onElementDown: (e: SearchEntry) => void;
+  onElementToFirst: (e: SearchEntry) => void;
+  onElementToLast: (e: SearchEntry) => void;
+}> = ({
+  entry,
+  alterElement,
+  onElementUp,
+  onElementDown,
+  onElementToFirst,
+  onElementToLast,
+}) => {
   const { theme } = useThemeStore();
+  const { isMobile } = useBreakpoint();
   const {
     attributes,
     listeners,
@@ -99,6 +117,7 @@ export const SelectionElement: React.FC<{
     height: 40,
     filter: 'brightness(0) invert(0.8)',
   });
+
   return (
     <Card
       ref={setNodeRef}
@@ -116,23 +135,47 @@ export const SelectionElement: React.FC<{
       }}
     >
       {/* Selection indicator and drag handle */}
-      <Box
-        sx={{
-          width: 40,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: alpha(theme.palette.primary.main, 0.33),
-          borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.4)}`,
-          cursor: 'grab',
-          userSelect: 'none',
-          color: blendWithContrast(theme.palette.primary.main, theme, 1 / 2),
-        }}
-        {...attributes}
-        {...listeners}
-      >
-        <DragIndicatorIcon color="inherit" />
-      </Box>
+      {isMobile ? (
+        <Stack direction={'row'}>
+          <Stack
+            direction='column'
+            width={40}
+            justifyContent={'center'}
+            zIndex={2}
+            sx={{
+              backgroundColor: alpha(
+                theme.blendAgainstContrast('primary', 0.3),
+                0.2,
+              ),
+            }}
+          >
+            <IconButton onClick={() => onElementUp(entry)}>
+              <KeyboardArrowUpIcon />
+            </IconButton>
+            <IconButton onClick={() => onElementDown(entry)}>
+              <KeyboardArrowDownIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
+      ) : (
+        <Box
+          sx={{
+            width: 40,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: alpha(theme.palette.primary.main, 0.33),
+            borderRight: `2px solid ${alpha(theme.palette.primary.main, 0.4)}`,
+            cursor: 'grab',
+            userSelect: 'none',
+            color: blendWithContrast(theme.palette.primary.main, theme, 1 / 2),
+          }}
+          {...attributes}
+          {...listeners}
+        >
+          <DragIndicatorIcon color='inherit' />
+        </Box>
+      )}
       {/* Card content */}
       <CardContent
         onClick={() => entry.select()}
@@ -170,39 +213,52 @@ export const SelectionElement: React.FC<{
           p: 1,
         }}
       >
-        {entry.isDisplayed ? (
-          <PushPinIcon
-            sx={{
-              cursor: 'pointer',
-              transition: 'color 0.2s, background 0.2s',
-              '&:hover': {
-                color: lighten(theme.palette.primary.main, 0.5),
-                background: alpha(theme.palette.muted.main, 0.5),
-                borderRadius: '50%',
-              },
-            }}
-            onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
-            onClick={() => {
-              alterElement(entry.cloneWith({ isDisplayed: false }));
-            }}
-          />
-        ) : (
-          <PushPinOutlinedIcon
-            sx={{
-              cursor: 'pointer',
-              transition: 'color 0.2s, background 0.2s',
-              '&:hover': {
-                color: lighten(theme.palette.primary.main, 0.5),
-                background: alpha(theme.palette.muted.main, 0.5),
-                borderRadius: '50%',
-              },
-            }}
-            onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
-            onClick={() => {
-              alterElement(entry.cloneWith({ isDisplayed: true }));
-            }}
-          />
-        )}
+        <Stack direction='row' alignItems={'center'} zIndex={2}>
+          {isMobile && (
+            <>
+              <IconButton onClick={() => onElementToFirst(entry)}>
+                <KeyboardDoubleArrowUpIcon />
+              </IconButton>
+              <IconButton onClick={() => onElementToLast(entry)}>
+                <KeyboardDoubleArrowDownRoundedIcon />
+              </IconButton>
+            </>
+          )}
+
+          {entry.isDisplayed ? (
+            <PushPinIcon
+              sx={{
+                cursor: 'pointer',
+                transition: 'color 0.2s, background 0.2s',
+                '&:hover': {
+                  color: lighten(theme.palette.primary.main, 0.5),
+                  background: alpha(theme.palette.muted.main, 0.5),
+                  borderRadius: '50%',
+                },
+              }}
+              onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+              onClick={() => {
+                alterElement(entry.cloneWith({ isDisplayed: false }));
+              }}
+            />
+          ) : (
+            <PushPinOutlinedIcon
+              sx={{
+                cursor: 'pointer',
+                transition: 'color 0.2s, background 0.2s',
+                '&:hover': {
+                  color: lighten(theme.palette.primary.main, 0.5),
+                  background: alpha(theme.palette.muted.main, 0.5),
+                  borderRadius: '50%',
+                },
+              }}
+              onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+              onClick={() => {
+                alterElement(entry.cloneWith({ isDisplayed: true }));
+              }}
+            />
+          )}
+        </Stack>
       </Box>
     </Card>
   );

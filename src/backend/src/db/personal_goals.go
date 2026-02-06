@@ -1,0 +1,81 @@
+package db
+
+import (
+	"github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
+	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
+	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
+	"gorm.io/gorm"
+)
+
+// PersonalGoalsRepository defines the interface for managing personal goals in the database.
+func NewPersonalGoalsRepository(database *gorm.DB) repositories.PersonalGoalsRepository {
+	repo := &GormPersonalGoalsRepository{DB: database}
+	repo.InitRepo()
+	return repo
+}
+
+// Specific implementation of `OverdueDeathRepository` for GORM
+type GormPersonalGoalsRepository struct {
+	DB *gorm.DB
+}
+
+// automigrates the OverdueDeaths GORM table
+func (r *GormPersonalGoalsRepository) InitRepo() error {
+	return r.DB.AutoMigrate(&PersonalGoal{})
+}
+
+// Inserts or updates a PersonalGoal record in the DB.
+func (r *GormPersonalGoalsRepository) Insert(goal *PersonalGoal) (*PersonalGoal, error) {
+	goal.ID = 0 // ensure that GORM creates a new record
+	err := r.DB.Save(goal).Error
+	if err != nil {
+		return nil, err
+	}
+	return goal, err
+}
+
+// Updates a PersonalGoal record in the DB.
+func (r *GormPersonalGoalsRepository) Update(goal *PersonalGoal) (*PersonalGoal, error) {
+	err := r.DB.Where(PersonalGoal{}, &PersonalGoal{UserID: goal.UserID}).Updates(&goal).Error
+	if err != nil {
+		return nil, err
+	}
+	return goal, err
+}
+
+// Fetches PersonalGoal by UserID
+func (r *GormPersonalGoalsRepository) FetchByUserID(userID Snowflake, requester Snowflake) ([]PersonalGoal, error) {
+	var goals []PersonalGoal
+	var err error
+
+	if userID == requester {
+		// user fetches his own goals
+		err = r.DB.Model(&PersonalGoal{}).Where(&PersonalGoal{UserID: requester}).Find(&goals).Error
+	} else {
+		// ensure, that the requestING user is allowed to
+		// view requestED user
+		err = r.DB.Model(&PersonalGoal{}).
+			Where(&PersonalGoal{UserID: userID}).
+			Where(
+				"user_id = ? AND EXISTS (?)",
+				userID,
+				r.DB.Model(&models.Friendships{}).Where(
+					"requester_id = ? OR recipient_id = ? AND status = ?",
+					requester, requester, models.Accepted,
+				),
+			).Find(&goals).Error
+	}
+	if err != nil {
+		return nil, err
+	}
+	return goals, nil
+}
+
+// Deletes a PersonalGoal by its ID if the user owns it.
+func (r *GormPersonalGoalsRepository) DeleteByID(goal *PersonalGoal) (*PersonalGoal, error) {
+	err := r.DB.Where(&PersonalGoal{ID: goal.ID, UserID: goal.UserID}).Delete(&PersonalGoal{}).Error
+	if err != nil {
+		return nil, err
+	}
+	return goal, nil
+}

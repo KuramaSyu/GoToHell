@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useUserStore } from '../userStore';
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { NUMBER_FONT } from '../statics';
 
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -78,37 +78,34 @@ export const Streak = () => {
   }, [user, usersLastSport]);
 
   return (
-    <Box
-      sx={{
-        //filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))', // Apply drop shadow here
-
-        fontFamily: NUMBER_FONT,
-        color: theme.palette.primary.light,
-        width: '100%',
-        height: '100%',
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        fontSize: '3rem',
-      }}
-    >
-      <LocalFireDepartmentIcon fontSize="inherit" sx={{ mr: 1 }} />
-      <Typography
-        fontSize={'2.2rem'}
-        sx={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.4))' }}
+    <Tooltip title={`You have done sport ${streak} days in a row`} arrow>
+      <Box
+        sx={{
+          fontFamily: NUMBER_FONT,
+          color: theme.palette.primary.light,
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          fontSize: theme.typography.h3,
+        }}
       >
-        <PopNumber
-          damping={50}
-          mass={20}
-          stiffness={40}
-          value={streak ?? 0}
-          fontsize={'3rem'}
-          style={{
-            fontWeight: 200,
-          }}
-        ></PopNumber>
-        {/* {streak} */}
-      </Typography>
-    </Box>
+        <LocalFireDepartmentIcon fontSize='inherit' sx={{ mr: 1 }} />
+        <Typography>
+          <PopNumber
+            damping={50}
+            mass={20}
+            stiffness={40}
+            value={streak ?? 0}
+            fontsize={undefined}
+            typographyVariant='h3'
+            style={{
+              fontWeight: 200,
+            }}
+          ></PopNumber>
+        </Typography>
+      </Box>
+    </Tooltip>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,9 +14,11 @@ import {
   Drawer,
   IconButton,
   Slide,
+  Stack,
   SwipeableDrawer,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -39,6 +41,8 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../utils/api/ApiRequirementsBuilder';
+import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
+import { BoxHoverPropsTopBar } from '../theme/statics';
 
 export enum Pages {
   HOME = '/',
@@ -53,7 +57,112 @@ function containedIfSelected(page: Pages) {
   return location.pathname === page ? 'contained' : 'outlined';
 }
 
-const TopBar: React.FC = () => {
+const UserDrawerContents = memo(() => {
+  const { streak } = useStreakStore();
+  const { user } = useUserStore();
+  const { theme } = useThemeStore();
+  const [userDrawerOpen, setUserDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchStreak() {
+      if (!userDrawerOpen || !user) return;
+      await new ApiRequirementsBuilder()
+        .add(ApiRequirement.Streak)
+        .forceFetch();
+    }
+    fetchStreak();
+  }, [userDrawerOpen]);
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      {/* Drag Handle */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          py: 1,
+          cursor: 'pointer',
+        }}
+        onClick={() => setUserDrawerOpen(false)}
+      >
+        <Box
+          sx={{
+            width: 40,
+            height: 4,
+            backgroundColor: alpha(theme.palette.text.primary, 0.3),
+            borderRadius: 2,
+            transition: 'background-color 0.2s ease',
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.text.primary, 0.5),
+            },
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          p: 2,
+          justifyContent: 'space-between',
+          height: '100%',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              p: 1,
+            }}
+          >
+            <Avatar
+              sx={{ width: 64, height: 64 }}
+              src={user ? user.getAvatarUrl() : undefined}
+              alt={user ? user.username : ''}
+            ></Avatar>
+            <Divider orientation='vertical'></Divider>
+            <Typography variant='h6'> {user?.username ?? 'login'} </Typography>
+          </Box>
+          <Divider></Divider>
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}>
+            <Typography variant='h6'>Streak</Typography>
+            <Typography variant='subtitle2'>
+              Amount of days where sport was back to back done
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              justifyItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant='h3'>
+              <LocalFireDepartmentIcon fontSize='inherit' />
+              {streak}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+});
+
+const MobileTopBar = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useThemeStore();
@@ -61,118 +170,12 @@ const TopBar: React.FC = () => {
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
   const { user } = useUserStore();
 
-  const UserDrawerContents = () => {
-    const { streak } = useStreakStore();
-    useEffect(() => {
-      async function fetchStreak() {
-        if (!userDrawerOpen || !user) return;
-        await new ApiRequirementsBuilder()
-          .add(ApiRequirement.Streak)
-          .forceFetch();
-      }
-      fetchStreak();
-    }, [userDrawerOpen]);
-
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-        }}
-      >
-        {/* Drag Handle */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            py: 1,
-            cursor: 'pointer',
-          }}
-          onClick={() => setUserDrawerOpen(false)}
-        >
-          <Box
-            sx={{
-              width: 40,
-              height: 4,
-              backgroundColor: alpha(theme.palette.text.primary, 0.3),
-              borderRadius: 2,
-              transition: 'background-color 0.2s ease',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.text.primary, 0.5),
-              },
-            }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            p: 2,
-            justifyContent: 'space-between',
-            height: '100%',
-          }}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                p: 1,
-              }}
-            >
-              <Avatar
-                sx={{ width: 64, height: 64 }}
-                src={user ? user.getAvatarUrl() : undefined}
-                alt={user ? user.username : ''}
-              ></Avatar>
-              <Divider orientation="vertical"></Divider>
-              <Typography variant="h6">
-                {' '}
-                {user?.username ?? 'login'}{' '}
-              </Typography>
-            </Box>
-            <Divider></Divider>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-            <Box
-              sx={{ display: 'flex', flexDirection: 'column', width: '70%' }}
-            >
-              <Typography variant="h6">Streak</Typography>
-              <Typography variant="subtitle2">
-                Amount of days where sport was back to back done
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                width: '50%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                justifyItems: 'center',
-                alignContent: 'center',
-              }}
-            >
-              <Typography variant="h3">
-                <LocalFireDepartmentIcon fontSize="inherit" />
-                {streak}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-    );
-  };
-
   if (isMobile) {
     // Mobile view
     return (
       <>
         <AppBar
-          position="fixed"
+          position='fixed'
           sx={{
             backgroundColor: theme.palette.muted.dark,
             top: 'auto', // top auto and bottom 0 to stick to bottom
@@ -210,7 +213,7 @@ const TopBar: React.FC = () => {
                   sx={{
                     gap: 1,
                   }}
-                  color="secondary"
+                  color='secondary'
                 >
                   <ToggleButton value={Pages.HISTORY}>
                     <HistoryIcon />
@@ -242,7 +245,7 @@ const TopBar: React.FC = () => {
 
         {/* Drawer which shows streak and user info */}
         <SwipeableDrawer
-          anchor="bottom"
+          anchor='bottom'
           onOpen={() => setUserDrawerOpen(true)}
           open={userDrawerOpen}
           onClose={() => setUserDrawerOpen(false)}
@@ -260,11 +263,15 @@ const TopBar: React.FC = () => {
       </>
     );
   }
+});
 
-  // Desktop view
+const DesktopTopBar = memo(() => {
+  const navigate = useNavigate();
+  const { theme } = useThemeStore();
+
   return (
     <AppBar
-      position="fixed"
+      position='fixed'
       sx={{
         backgroundColor: theme.palette.background.default,
         //color: theme.palette.primary.light,
@@ -279,30 +286,41 @@ const TopBar: React.FC = () => {
           }}
         >
           {/* Title */}
-          <Box>
-            <Button
-              startIcon={<LogoSvgComponent style={{ width: 60, height: 60 }} />}
-              onClick={() => navigate('/')}
-              sx={{
-                borderRadius: 6,
-                color: theme.palette.vibrant.light,
-                filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.5))',
-                fontSize: theme.typography.h3.fontSize,
-                padding: '0px 8px',
-                textTransform: 'none', // Prevent uppercase transformation
-                '&:hover': {
-                  backgroundColor: alpha(theme.palette.vibrant.main, 0.3),
-                },
-              }}
-            >
-              <Title theme={theme} />
-            </Button>
-          </Box>
+          <Tooltip title='Go to Main Page' arrow>
+            <Box>
+              <Button
+                startIcon={
+                  <LogoSvgComponent style={{ width: 60, height: 60 }} />
+                }
+                onClick={() => navigate('/')}
+                sx={{
+                  borderRadius: theme.shape.borderRadius,
+                  color: theme.palette.vibrant.light,
+                  fontSize: theme.typography.h3.fontSize,
+                  padding: '0px 8px',
+                  textTransform: 'none', // Prevent uppercase transformation
+                  ...BoxHoverPropsTopBar(theme),
+                }}
+              >
+                <Title theme={theme} />
+              </Button>
+            </Box>
+          </Tooltip>
 
           {/* Streak */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Streak />
-          </Box>
+          <Stack direction='row' gap={2}>
+            <Box
+              sx={{
+                ...BoxHoverPropsTopBar(theme),
+                borderRadius: theme.shape.borderRadius,
+                px: theme.spacing(2),
+                py: 0,
+              }}
+            >
+              <Streak />
+            </Box>
+            <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
+          </Stack>
 
           {/* Home, Friends, Settings, Discord Login or Profile */}
           <Box
@@ -316,21 +334,21 @@ const TopBar: React.FC = () => {
             <Button
               variant={containedIfSelected(Pages.HOME)}
               onClick={() => navigate(Pages.HOME)}
-              color="inherit"
+              color='inherit'
             >
               <HomeIcon />
             </Button>
             <Button
               variant={containedIfSelected(Pages.FRIENDS)}
               onClick={() => navigate(Pages.FRIENDS)}
-              color="inherit"
+              color='inherit'
             >
               <PeopleIcon />
             </Button>
             <Button
               variant={containedIfSelected(Pages.SETTINGSV2)}
               onClick={() => navigate(Pages.SETTINGSV2)}
-              color="inherit"
+              color='inherit'
             >
               <SettingsIcon />
             </Button>
@@ -342,6 +360,11 @@ const TopBar: React.FC = () => {
       </Toolbar>
     </AppBar>
   );
+});
+
+const TopBar: React.FC = () => {
+  const { isMobile } = useBreakpoint();
+  return isMobile ? <MobileTopBar /> : <DesktopTopBar />;
 };
 
 export default TopBar;

@@ -95,7 +95,7 @@ const AnimatedThemeButton: React.FC<{
       }}
     >
       <Typography
-        variant="h5"
+        variant='h5'
         color={
           isSelected
             ? theme.palette.primary.contrastText
@@ -122,7 +122,7 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
 
   // state is used to be more responsive, since setTheme is async, and needs a bit time
   const [currentItem, setItem] = useState<String | null>(
-    theme.custom.themeName
+    theme.custom.themeName,
   );
 
   // when theme is changed from outside (modal), then adopt it
@@ -171,12 +171,12 @@ export const DynamicGameGrid: React.FC<DynamicGameGridProps> = ({
   const rows = computeRows(game_items, currentCapacity);
 
   return (
-    <Box width="100%" height="auto">
+    <Box width='100%' height='auto'>
       {rows.map((row, rowIndex) => {
         // Calculate the sum of sizes for the current row.
         const totalSize = row.reduce((sum, item) => sum + item.size, 0);
         return (
-          <Box key={`row-${rowIndex}`} display="flex" width="100%" mb={2}>
+          <Box key={`row-${rowIndex}`} display='flex' width='100%' mb={2}>
             {row.map((item) => {
               // Determine width percentage so that the row fills 100%.
               const widthPercent = (item.size / totalSize) * 100;

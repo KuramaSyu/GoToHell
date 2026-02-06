@@ -532,6 +532,156 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/{user_id}/goals": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PersonalGoals"
+                ],
+                "summary": "Updates a personal goal",
+                "parameters": [
+                    {
+                        "description": "Payload containing the personal goal details like id, amount, frequency and sport",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PatchPutPersonalGoalsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PersonalGoals"
+                ],
+                "summary": "Creates a personal goal",
+                "parameters": [
+                    {
+                        "description": "Payload containing the personal goal details like amount, frequency and sport",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostPersonalGoalsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PersonalGoals"
+                ],
+                "summary": "Deletes a personal goal",
+                "parameters": [
+                    {
+                        "description": "Payload containing the personal goal ID",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeletePersonalGoalsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PersonalGoals"
+                ],
+                "summary": "Updates a personal goal",
+                "parameters": [
+                    {
+                        "description": "Payload containing the personal goal details like id, amount, frequency and sport",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PatchPutPersonalGoalsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
         "/friends": {
             "post": {
                 "consumes": [
@@ -561,6 +711,34 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/{user_id}/goals": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PersonalGoals"
+                ],
+                "summary": "Get all PersonalGoal records for the requested user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -573,6 +751,17 @@ const docTemplate = `{
                 "game": {
                     "type": "string",
                     "example": "overwatch"
+                }
+            }
+        },
+        "controllers.DeletePersonalGoalsRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
                 }
             }
         },
@@ -642,6 +831,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetPersonalGoalsReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.PersonalGoalData"
+                    }
+                }
+            }
+        },
         "controllers.GetSportReply": {
             "type": "object",
             "properties": {
@@ -685,6 +885,29 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.PatchPutPersonalGoalsRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "frequency",
+                "sport"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/models.TimeFrequency"
+                },
+                "id": {
+                    "description": "post does not require ID, patch/put does",
+                    "type": "integer"
+                },
+                "sport": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.PatchSportReply": {
             "type": "object",
             "properties": {
@@ -717,6 +940,26 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.PersonalGoalData": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/models.TimeFrequency"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sport": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.PostOverdueDeathsReply": {
             "type": "object",
             "properties": {
@@ -744,6 +987,25 @@ const docTemplate = `{
                 "game": {
                     "type": "string",
                     "example": "overwatch"
+                }
+            }
+        },
+        "controllers.PostPersonalGoalsRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "frequency",
+                "sport"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/models.TimeFrequency"
+                },
+                "sport": {
+                    "type": "string"
                 }
             }
         },
@@ -784,7 +1046,7 @@ const docTemplate = `{
             "x-enum-varnames": [
                 "Pending",
                 "Accepted",
-                "blocked"
+                "Blocked"
             ]
         },
         "models.Friendships": {
@@ -898,6 +1160,19 @@ const docTemplate = `{
                     "example": "push-up"
                 }
             }
+        },
+        "models.TimeFrequency": {
+            "type": "string",
+            "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+            ],
+            "x-enum-varnames": [
+                "Daily",
+                "Weekly",
+                "Monthly"
+            ]
         },
         "models.User": {
             "type": "object",

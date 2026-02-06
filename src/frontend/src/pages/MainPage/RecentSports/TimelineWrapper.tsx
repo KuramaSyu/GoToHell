@@ -1,56 +1,69 @@
-import { Box, LinearProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, LinearProgress, Theme } from '@mui/material';
+import { ResponsiveStyleValue } from '@mui/system';
+import React, { memo, useEffect, useState } from 'react';
 import { StreakTimeline } from './StreakTimeline';
 import { SportsTimeline } from './Timeline';
-import { DurationCalculator } from '../../../utils/durationCalculator';
 
 const TOTAL_DURATION_MS = 5000;
-const WITHIN_X_STEPS = 25;
+const MemoStreakTimeline = memo(StreakTimeline);
+
 export const TimelineWrapper: React.FC = () => {
-  // progress from 0 to 100
-  const [progress, setProgress] = useState(
-    new DurationCalculator(TOTAL_DURATION_MS, WITHIN_X_STEPS)
-  );
+  // is set after 5s
+  const [progressCompleted, setProgressCompleted] = useState(false);
 
-  // constant ticking timer to make a smooth
-  // progress animation to show, when history
-  // timeline will be displayed instead of streak display
+  // and start 5 second timer to set progressCompleted to true
   useEffect(() => {
-    // timer which increases
-    const timer = window.setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress.is_completed()) {
-          clearInterval(timer);
-          return prevProgress;
-        }
-        // Clone object to get a new reference,
-        // so React detects the state change
-        const newProgress = Object.assign(
-          Object.create(Object.getPrototypeOf(prevProgress)),
-          prevProgress
-        );
-        // actually increment step
-        newProgress.next_step();
-        return newProgress;
-      });
-    }, progress.get_step_ms());
+    // Start new timer
+    var timer = window.setInterval(() => {
+      setProgressCompleted(true);
+    }, TOTAL_DURATION_MS);
 
+    // cleanup
     return () => clearInterval(timer);
   }, []);
+
   return (
     <Box>
-      {!progress.is_completed() ? (
+      {!progressCompleted ? (
         <Box>
-          <LinearProgress
-            variant="determinate"
-            value={progress.current_step.get_percentage()}
-            sx={{ height: 10 }}
-          ></LinearProgress>
-          <StreakTimeline></StreakTimeline>
+          <SimpleTimeBasedProgressBar durationMs={TOTAL_DURATION_MS} />
+          <MemoStreakTimeline />
         </Box>
       ) : (
         <SportsTimeline></SportsTimeline>
       )}
     </Box>
+  );
+};
+
+export interface SimpleTimeBasedProgressBarProps {
+  durationMs: number;
+  barColor?:
+    | ResponsiveStyleValue<string>
+    | ((theme: Theme) => ResponsiveStyleValue<string>)
+    | null;
+}
+
+/**
+ * Makes a simple progress bar from 0% width to 100% width
+ * over the given duration in milliseconds
+ * @param durationMs Duration in milliseconds
+ * @param backgroundColor Background color of the progress bar
+ */
+export const SimpleTimeBasedProgressBar: React.FC<
+  SimpleTimeBasedProgressBarProps
+> = ({ durationMs, barColor }) => {
+  return (
+    <Box
+      sx={{
+        height: 12,
+        width: '0%',
+        backgroundColor: barColor ?? 'primary.main',
+        animation: `progressBar ${durationMs}ms linear forwards`,
+        '@keyframes progressBar': {
+          to: { width: '100%' },
+        },
+      }}
+    ></Box>
   );
 };

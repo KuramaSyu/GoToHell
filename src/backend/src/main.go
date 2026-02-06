@@ -52,6 +52,7 @@ func main() {
 	friendsController := controllers.NewFriendsController(db)
 	overdueDeathController := controllers.NewOverdueDeathsController(db)
 	streakController := controllers.NewStreakController(db)
+	personalGoalsController := controllers.NewPersonalGoalsController(db)
 	// Setup routes
 	routes.SetupRouter(
 		r,
@@ -60,6 +61,7 @@ func main() {
 		friendsController,
 		overdueDeathController,
 		streakController,
+		personalGoalsController,
 	)
 
 	// Start the server
