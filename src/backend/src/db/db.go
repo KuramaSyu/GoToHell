@@ -14,7 +14,7 @@ import (
 // Updated SportRepository interface to include full CRUD operations using the Sport struct.
 type SportRepository interface {
 	InsertSport(sport Sport) error
-	GetSports(userIDs []Snowflake, limit int) ([]Sport, error)
+	GetSports(userIDs []Snowflake, limit int, offset int) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	PatchSport(sport Sport) error
 	DeleteSport(id Snowflake, userID Snowflake) error
@@ -49,12 +49,13 @@ func (r *OrmSportRepository) InsertSport(sport Sport) error {
 
 // GetSports retrieves Sport entries for any of the provided userIDs.
 // Now checks that user_id is any of the slice values and limits the result to 50.
-func (r *OrmSportRepository) GetSports(userIDs []Snowflake, limit int) ([]Sport, error) {
+func (r *OrmSportRepository) GetSports(userIDs []Snowflake, limit int, offset int) ([]Sport, error) {
 	var sports []Sport
 	result := r.DB.
 		Where("user_id IN (?)", userIDs).
 		Order("timedate desc").
 		Limit(limit).
+		Offset(offset).
 		Find(&sports)
 	return sports, result.Error
 }

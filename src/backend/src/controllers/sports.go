@@ -55,6 +55,8 @@ type GetSportsRequestQuery struct {
 	UserIDs models.SnowflakeArray `form:"user_ids" binding:"required"`
 	// Limit is the maximum number of sports to return.
 	Limit int `form:"limit" binding:"omitempty,gte=0"`
+	// offset to say where to start
+	Offset int `form:"offset" binding:"omitempty,gte=0"`
 }
 
 // swagger:response ErrorReply
@@ -144,7 +146,16 @@ func (sc *SportsController) GetSports(c *gin.Context) {
 	}
 	req.Limit = limit
 
-	sports, err := sc.repo.GetSports(req.UserIDs.IDs, req.Limit)
+	// Manually parse offset from query string
+	offsetStr := c.DefaultQuery("offset", "0") // Default to 0 if not present
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil {
+		SetGinError(c, http.StatusBadRequest, fmt.Errorf("invalid offset value: %w", err))
+		return
+	}
+	req.Offset = offset
+
+	sports, err := sc.repo.GetSports(req.UserIDs.IDs, req.Limit, req.Offset)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
