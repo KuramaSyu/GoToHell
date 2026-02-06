@@ -23,21 +23,28 @@ export interface UserApiInterface {
   fetchRecentSports(
     userIds: string[],
     limit: number,
-    zustand: RecentSportApi
+    zustand: RecentSportApi,
+    offset: number,
   ): Promise<SportsApiResponse | null>;
-  fetchYourRecentSports(): Promise<SportsApiResponse | null>;
-  fetchAllRecentSports(): Promise<SportsApiResponse | null>;
+  fetchYourRecentSports(
+    offset: number,
+    limit: number,
+  ): Promise<SportsApiResponse | null>;
+  fetchAllRecentSports(
+    offset: number,
+    limit: number,
+  ): Promise<SportsApiResponse | null>;
   deleteRecord(id: number): Promise<SportsApiResponse | null>;
   postSports(
     sports: SportRow[],
-    updateStores: boolean
+    updateStores: boolean,
   ): Promise<PostSportsResponse | null>;
   patchSport(
     id: number,
     kind: string,
     game: string,
     amount: number,
-    updateStores?: boolean
+    updateStores?: boolean,
   ): Promise<PatchSportResponse | null>;
 }
 
@@ -50,7 +57,7 @@ export class UserApi implements UserApiInterface {
   logError(url_part: string, error: any): void {
     console.error(
       `Error fetching ${BACKEND_BASE}${url_part}:`,
-      JSON.stringify(error)
+      JSON.stringify(error),
     );
   }
 
@@ -91,7 +98,6 @@ export class UserApi implements UserApiInterface {
         return null;
       });
       if (userData) setUser(new DiscordUserImpl(userData));
-
     } else {
       this.logError(`/api/auth/user`, response.json());
     }
@@ -132,6 +138,8 @@ export class UserApi implements UserApiInterface {
    *
    * @param userIds: string[]: the user ids to fetch sports for
    * @param limit: number | undefined: the limit of sports to fetch, defaults to 50
+   * @param zustand: RecentSportApi: the zustand store to set the recent sports to
+   * @param offset: number: the offset to start from
    *
    * @returns
    * SportsApiResponse | null: the Response (already sorted), or null if failed
@@ -139,7 +147,8 @@ export class UserApi implements UserApiInterface {
   async fetchRecentSports(
     userIds: string[],
     limit: number | undefined,
-    zustand: RecentSportApi
+    zustand: RecentSportApi,
+    offset: number = 0,
   ): Promise<SportsApiResponse | null> {
     limit = limit ?? 50;
     const API_ENDPOINT = '/api/sports';
@@ -151,7 +160,7 @@ export class UserApi implements UserApiInterface {
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
     url.searchParams.append('user_ids', userIds.join(','));
     url.searchParams.append('limit', limit.toString());
-
+    url.searchParams.append('offset', offset.toString());
     try {
       const response = await fetch(url, {
         credentials: 'include',
@@ -161,12 +170,24 @@ export class UserApi implements UserApiInterface {
       const result = await response.json();
       if (response.ok) {
         // get zustand setter
-        const setRecentSports = useRecentSportsStore.getState().setRecentSports;
+        const setRecentSports = zustand.getState().setRecentSports;
+        const currentSports = zustand.getState().recentSports;
 
         var reply = result as SportsApiResponse;
+
+        if (currentSports !== null) {
+          // only extend, don't override
+          reply.data = [
+            ...currentSports.data.filter(
+              (s1) => !reply.data.some((s2) => s2.id === s1.id),
+            ),
+            ...reply.data,
+          ];
+        }
+
         reply.data.sort(
           (a, b) =>
-            new Date(a.timedate).getTime() - new Date(b.timedate).getTime()
+            new Date(a.timedate).getTime() - new Date(b.timedate).getTime(),
         );
 
         setRecentSports(reply);
@@ -181,23 +202,35 @@ export class UserApi implements UserApiInterface {
     }
   }
 
-  async fetchYourRecentSports(): Promise<SportsApiResponse | null> {
+  async fetchYourRecentSports(
+    offset: number = 0,
+    limit: number = 50,
+  ): Promise<SportsApiResponse | null> {
     const user = useUserStore.getState().user;
     if (user === null) {
       return null;
     }
-    return this.fetchRecentSports([user.id], 25, useYourRecentSportsStore);
+    return this.fetchRecentSports(
+      [user.id],
+      25,
+      useYourRecentSportsStore,
+      offset,
+    );
   }
 
-  async fetchAllRecentSports(): Promise<SportsApiResponse | null> {
+  async fetchAllRecentSports(
+    offset: number = 0,
+    limit: number = 25,
+  ): Promise<SportsApiResponse | null> {
     const users = useUsersStore.getState().users;
     if (useUsersStore.getState().friendsLoaded === false) {
       return null;
     }
     return this.fetchRecentSports(
       Object.values(users).map((u) => u.id),
-      50,
-      useRecentSportsStore
+      limit,
+      useRecentSportsStore,
+      offset,
     );
   }
 
@@ -241,7 +274,7 @@ export class UserApi implements UserApiInterface {
    */
   async postSports(
     sports: SportRow[],
-    updateStores: boolean = false
+    updateStores: boolean = false,
   ): Promise<PostSportsResponse | null> {
     const API_ENDPOINT = '/api/sports';
     // get user
@@ -301,7 +334,7 @@ export class UserApi implements UserApiInterface {
     kind: string | null,
     game: string | null,
     amount: number | null,
-    updateStores?: boolean
+    updateStores?: boolean,
   ): Promise<PatchSportResponse | null> {
     const API_ENDPOINT = '/api/sports';
     // get user
