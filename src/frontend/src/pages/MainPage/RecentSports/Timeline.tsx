@@ -5,6 +5,7 @@ import {
   useCallback,
   useMemo,
   memo,
+  useRef,
 } from 'react';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
@@ -32,6 +33,7 @@ import { DiscordUserImpl } from '../../../components/DiscordLogin';
 import { UserInfo } from '../../../components/UserInfo';
 import { SportUserDialogWrapper } from './SportUserDialogWrapper';
 import { blendAgainstContrast } from '../../../utils/blendWithContrast';
+import { UserApi } from '../../../utils/api/Api';
 
 export interface UserSport {
   id: number;
@@ -63,6 +65,9 @@ export const SportsTimeline = () => {
     useRecentSportsStore();
   const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const timelineSentinelRef = useRef<HTMLDivElement>(null);
+  const currentOffset = useRef(0);
+  const isLoadingMoreItems = useRef(false);
 
   useEffect(() => {
     if (!selectedSport || !recentSports) return;
@@ -70,6 +75,57 @@ export const SportsTimeline = () => {
       recentSports.data.find((sport) => sport.id === selectedSport.id) || null,
     );
   }, [recentSports]);
+
+  // load more sports when end is reached
+  const onScrollToEnd = useCallback(() => {
+    const currentSports = useRecentSportsStore.getState().recentSports;
+    if (
+      isLoadingMoreItems.current === true &&
+      currentOffset.current < (recentSports?.data.length ?? 0)
+    ) {
+      console.log(`timeline end reached: already fetching`);
+      return;
+    }
+
+    isLoadingMoreItems.current = true;
+    // Get fresh data from store instead of using stale closure
+
+    currentOffset.current = currentSports?.data.length ?? 1;
+
+    console.log(
+      `timeline end reached: fetching sports with offset ${currentOffset.current}`,
+    );
+    new UserApi()
+      .fetchAllRecentSports(currentOffset.current, 100)
+      .finally(() => {
+        isLoadingMoreItems.current = false;
+      });
+  }, []);
+
+  // watch until end of timeline is reached
+  useEffect(() => {
+    const sentinel = timelineSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && entry.isIntersecting) {
+          onScrollToEnd();
+        }
+      },
+      {
+        threshold: 0.01, // Trigger when 1% of sentinel is visible
+        rootMargin: '0px 0px 50px 0px', // Trigger 50px before actual end
+      },
+    );
+
+    observer.observe(sentinel);
+
+    return () => {
+      observer.unobserve(sentinel);
+    };
+  }, [onScrollToEnd]);
 
   const fetchSports = useCallback(async () => {
     if (!user || !usersLoaded) return;
@@ -246,6 +302,16 @@ export const SportsTimeline = () => {
         }}
       >
         {timelineItems}
+
+        {/* extra element which is a detector/sentinel to track the end of the timeline */}
+        <div
+          ref={timelineSentinelRef}
+          style={{
+            height: '1px',
+            backgroundColor: 'transparent',
+            width: '100%',
+          }}
+        />
       </Timeline>
       {selectedSport !== null && (
         <MemoizedUserDialogWrapper
