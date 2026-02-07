@@ -90,6 +90,7 @@ export const PersonalGoalSynopsis: React.FC<PersonalGoalSynopsisProps> = ({
               mr: 1,
               fontSize: 'inherit',
               color: theme.palette.primary.light,
+              transition: theme.colorTransition.root.transition,
             }}
           />
           {Math.round(totalPercentage * 100)}%

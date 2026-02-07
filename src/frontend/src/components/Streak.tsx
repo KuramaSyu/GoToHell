@@ -91,7 +91,10 @@ export const Streak = () => {
           fontSize: theme.typography.h3,
         }}
       >
-        <LocalFireDepartmentIcon fontSize='inherit' sx={{ mr: 1 }} />
+        <LocalFireDepartmentIcon
+          fontSize='inherit'
+          sx={{ mr: 1, transition: theme.colorTransition.root.transition }}
+        />
         <Typography>
           <PopNumber
             damping={50}
