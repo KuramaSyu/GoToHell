@@ -5,6 +5,9 @@ import { CustomTheme, CustomThemeImpl } from '../theme/customTheme';
 export const defaultTheme = new CustomThemeImpl(
   createTheme({
     // https://www.nordtheme.com/
+    shape: {
+      borderRadius: 16,
+    },
     palette: {
       mode: 'dark',
       primary: { main: '#5E81AC', light: '#81A1C1', dark: '#4C688A' }, // Nord10, Nord9
@@ -27,5 +30,5 @@ export const defaultTheme = new CustomThemeImpl(
     },
   }) as CustomTheme,
   undefined,
-  false
+  false,
 );
