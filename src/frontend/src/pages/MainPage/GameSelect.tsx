@@ -7,6 +7,7 @@ import usePreferenceStore from '../../zustand/PreferenceStore';
 import { CustomTheme } from '../../theme/customTheme';
 import { GameSelectionDialog } from './Dialogs/SelectionDialog/GameSelectionDialog';
 import { UIElement } from '../../models/Preferences';
+import { useLoadingStore } from '../../zustand/loadingStore';
 
 /**
  *
@@ -18,7 +19,7 @@ import { UIElement } from '../../models/Preferences';
 export function getValidGames(
   preferences: UIElement[] | null,
   getThemeNames: () => string[],
-  currentTheme: CustomTheme
+  currentTheme: CustomTheme,
 ): string[] {
   var themes = getThemeNames();
   if (preferences !== null && preferences.length > 0) {
@@ -38,22 +39,22 @@ export const GameSelector = () => {
   const [validGames, setValidGames] = useState<string[]>([]);
   const OVERVIEW_NAME = 'all';
   const [modalOpen, setModalOpen] = useState(false);
+  const { isLoading } = useLoadingStore();
 
   useEffect(() => {
     var validGames = getValidGames(
       preferences.ui.displayedGames,
       getThemeNames,
-      theme
+      theme,
     );
     validGames.push(OVERVIEW_NAME);
     setValidGames(validGames);
   }, [preferences, theme]);
 
-  if (!preferencesLoaded || theme.custom.themeName === 'default') {
-    // the displayed games depend on preferences, so we wait until they are loaded
-    // which is done in the theme store
+  if (isLoading) {
     return null;
   }
+
   return (
     <Box
       sx={{
