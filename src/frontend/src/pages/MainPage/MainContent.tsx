@@ -194,7 +194,7 @@ const MainContentDesktop: React.FC = () => {
           sx={{
             ...BoxElevation2(theme),
             width: '100%',
-            borderRadius: 4,
+            borderRadius: 1,
             justifyContent: 'space-between',
             alignItems: 'center',
             fontFamily: NUMBER_FONT,
@@ -254,7 +254,7 @@ const MainContentDesktop: React.FC = () => {
           ...BoxElevation2(theme),
           mx: 2,
           py: 2,
-          borderRadius: 4,
+          borderRadius: 1,
           minHeight: 0,
           gap: 4,
         }}

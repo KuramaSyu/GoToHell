@@ -85,7 +85,8 @@ const AnimatedThemeButton: React.FC<{
       onClick={onClick}
       sx={{
         padding: 2,
-        border: '2px solid',
+        border: '3px solid',
+        // borderRadius: (theme) => theme.shape.borderRadius,
         borderColor: 'primary.main',
         height: '100%',
         '&:hover': {

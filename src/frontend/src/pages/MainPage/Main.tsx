@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { alpha, Box } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { alpha, Box } from '@mui/material';
 
-import { useThemeStore } from "../../zustand/useThemeStore";
-import AppBackground from "../../components/AppBackground";
-import MainContent from "./MainContent";
-import { useUsersStore, useUserStore } from "../../userStore";
-import { ThemeProvider } from "@emotion/react";
-import { QuickActionMenu } from "./QuickActions/Main";
-import { useBreakpoint } from "../../hooks/useBreakpoint";
+import { useThemeStore } from '../../zustand/useThemeStore';
+import AppBackground from '../../components/AppBackground';
+import MainContent from './MainContent';
+import { useUsersStore, useUserStore } from '../../userStore';
+import { ThemeProvider } from '@emotion/react';
+import { QuickActionMenu } from './QuickActions/Main';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from "../../utils/api/ApiRequirementsBuilder";
-import { TimelineWrapper } from "./RecentSports/TimelineWrapper";
-import { LoadingPage } from "../LoadingPage/Main";
-import { useLoadingStore } from "../../zustand/loadingStore";
-import { AnimatePresence, motion } from "framer-motion";
-import { hexToRgbString } from "../../utils/colors/hexToRgb";
-import { LoginPage } from "../LoginPage/Main";
-import { BoxElevation1 } from "../../theme/statics";
+} from '../../utils/api/ApiRequirementsBuilder';
+import { TimelineWrapper } from './RecentSports/TimelineWrapper';
+import { LoadingPage } from '../LoadingPage/Main';
+import { useLoadingStore } from '../../zustand/loadingStore';
+import { AnimatePresence, motion } from 'framer-motion';
+import { hexToRgbString } from '../../utils/colors/hexToRgb';
+import { LoginPage } from '../LoginPage/Main';
+import { BoxElevation1 } from '../../theme/statics';
 
 const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
@@ -41,7 +41,7 @@ const MainPage: React.FC = () => {
           .fetchIfNeeded();
       } catch (e) {
         console.info(
-          "Failed to fetch either user, friends or preferences. User probably not logged in.",
+          'Failed to fetch either user, friends or preferences. User probably not logged in.',
         );
       }
     })();
@@ -60,21 +60,21 @@ const MainPage: React.FC = () => {
     isMobile || isLoading ? null : (
       <Box
         sx={{
-          width: "clamp(300px, 25%, 420px)",
-          height: "100%",
-          flex: "0 1 auto",
-          borderTopRightRadius: 24,
-          borderBottomRightRadius: 24,
-          overflow: "hidden", // Hide overflow on parent
-          display: "flex",
-          flexDirection: "column",
+          width: 'clamp(300px, 25%, 420px)',
+          height: '100%',
+          flex: '0 1 auto',
+          borderTopRightRadius: (theme) => theme.shape.borderRadius,
+          borderBottomRightRadius: (theme) => theme.shape.borderRadius,
+          overflow: 'hidden', // Hide overflow on parent
+          display: 'flex',
+          flexDirection: 'column',
           ...BoxElevation1(theme),
         }}
       >
         <Box
           sx={{
-            height: "100%",
-            overflowY: "auto", // Scrollbar only on inner box
+            height: '100%',
+            overflowY: 'auto', // Scrollbar only on inner box
           }}
         >
           <TimelineWrapper />
@@ -91,7 +91,7 @@ const MainPage: React.FC = () => {
         {isLoading && (
           <motion.div
             initial={false}
-            animate={{ clipPath: "circle(100% at 50% 50%)" }}
+            animate={{ clipPath: 'circle(100% at 50% 50%)' }}
             exit={{
               clipPath: oneOrZero
                 ? `circle(0% at 100% ${exitPercentage}%)`
@@ -103,12 +103,12 @@ const MainPage: React.FC = () => {
               ease: [0.4, 0, 0.2, 1],
             }}
             style={{
-              position: "fixed",
+              position: 'fixed',
               zIndex: 9999,
               top: 0,
               left: 0,
-              width: "100vw",
-              height: "100vh",
+              width: '100vw',
+              height: '100vh',
             }}
           >
             <LoadingPage></LoadingPage>
@@ -119,11 +119,11 @@ const MainPage: React.FC = () => {
       {/* Box for either the Main App or Login Page, depending on user state */}
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "row",
-          height: "100%",
-          overflow: "hidden", // Prevents overflow
-          paddingTop: user !== null && !isMobile ? "6px" : undefined,
+          display: 'flex',
+          flexDirection: 'row',
+          height: '100%',
+          overflow: 'hidden', // Prevents overflow
+          paddingTop: user !== null && !isMobile ? '6px' : undefined,
         }}
       >
         {user !== null || isLoading ? (
@@ -132,14 +132,14 @@ const MainPage: React.FC = () => {
             <AppBackground></AppBackground>
 
             {TimelineBox}
-            <Box sx={{ flex: "1 1 auto", height: "100%", overflow: "hidden" }}>
+            <Box sx={{ flex: '1 1 auto', height: '100%', overflow: 'hidden' }}>
               {!isLoading && <MainContent />}
             </Box>
           </>
         ) : (
           // load login page
           <>
-            {console.log("render login page")}
+            {console.log('render login page')}
             <LoginPage></LoginPage>
           </>
         )}

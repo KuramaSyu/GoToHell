@@ -45,20 +45,20 @@ export const SportUserDialogWrapper: React.FC<SportDialogProps> = ({
       onClose={() => setSelectedSport(null)}
       fullScreen={isMobile}
       fullWidth
-      maxWidth="sm"
+      maxWidth='sm'
       slotProps={{
         paper: {
           sx: {
             backdropFilter: 'blur(8px)',
             backgroundColor: alpha(theme.palette.primary.dark, 0.7),
-            borderRadius: 8,
+            borderRadius: 1,
           },
         },
       }}
     >
       <Tabs value={tab} onChange={handleChange}>
-        <Tab label="Sport" />
-        <Tab label="User" />
+        <Tab label='Sport' />
+        <Tab label='User' />
       </Tabs>
       {tab === 0 ? (
         <SportDialog

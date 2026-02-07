@@ -49,7 +49,7 @@ export function buildCustomTheme(
   mutedHex: string,
   chosenBackground: string,
   config: { name: string; longName: string },
-  isDark: boolean
+  isDark: boolean,
 ): CustomTheme {
   return createTheme({
     palette: {
@@ -148,8 +148,8 @@ export class ThemeManager {
           .setMessage(
             new SnackbarUpdateImpl(
               `Loading image for theme ${themeName} takes longer then expected`,
-              'warning'
-            )
+              'warning',
+            ),
           );
       }, 1200);
       // Create a promise to wait for the image to load
@@ -166,8 +166,8 @@ export class ThemeManager {
             .setMessage(
               new SnackbarUpdateImpl(
                 `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`,
-                'error'
-              )
+                'error',
+              ),
             );
         };
         img.src = chosenBackground!;
@@ -176,7 +176,7 @@ export class ThemeManager {
       // Wait for the image to load, then process with Vibrant
       const loadedImg = await imageLoaded;
       extractedPalette = await Vibrant.from(
-        loadedImg as HTMLImageElement
+        loadedImg as HTMLImageElement,
       ).getPalette();
     } catch (err) {
       console.error('Error extracting colors with Node-Vibrant:', err);
@@ -206,6 +206,9 @@ export class ThemeManager {
 
     // Build and return the full MUI theme.
     var theme = createTheme({
+      shape: {
+        borderRadius: '16px',
+      },
       palette: {
         contrastThreshold: 3.5,
         mode: this.isDark ? 'dark' : 'light',

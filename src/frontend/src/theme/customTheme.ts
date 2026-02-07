@@ -258,6 +258,13 @@ export class CustomThemeImpl extends Object implements CustomTheme {
             },
           },
         },
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              // borderRadius: this.shape.borderRadius,
+            },
+          },
+        },
       };
 
       // bend text colors from primary and secondary colors

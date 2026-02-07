@@ -226,7 +226,7 @@ export const SportsTimeline = () => {
           width: '100%',
           padding: 0,
           margin: 0,
-          borderRadius: 5,
+          borderRadius: 1,
           cursor: 'pointer',
           // ease out: starts fast ands slow
           transition: isMounted

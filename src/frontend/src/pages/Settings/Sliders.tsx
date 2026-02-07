@@ -260,7 +260,7 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
         gap: 2,
         alignItems: 'center',
         padding: 3,
-        borderRadius: 4,
+        borderRadius: 1,
         ...BoxElevation2(theme),
       }}
     >

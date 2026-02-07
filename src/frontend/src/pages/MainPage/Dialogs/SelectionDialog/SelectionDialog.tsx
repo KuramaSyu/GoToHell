@@ -128,13 +128,14 @@ export const SelectionDialog: React.FC<SelectionDialogProps> = ({
           maxWidth: 'none',
           maxHeight: 'none',
         },
+        // borderRadius: 2,
       }}
       slotProps={{
         paper: {
           sx: {
             backdropFilter: 'blur(8px)',
             backgroundColor: alpha(theme.palette.muted.dark, 0.7),
-            borderRadius: 8,
+            borderRadius: 2,
           },
         },
       }}
