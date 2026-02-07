@@ -414,7 +414,7 @@ export const LoadingPage: React.FC = () => {
         <TableContainer
           // component={Paper}
           sx={{
-            borderRadius: 5,
+            borderRadius: 2,
             display: 'flex',
             width: isMobile ? '100%' : '33.33%',
             maxHeight: isMobile ? '33%' : undefined,
