@@ -27,3 +27,4 @@ src/backend/src/db/go-to-hell.db
 node_modules
 tools/img_out/*
 tools/img_in/*
+tools/out/*
