@@ -252,6 +252,7 @@ export class CustomThemeImpl extends Object implements CustomTheme {
               backgroundColor: this.palette.background.paper,
               color: this.palette.text.primary,
               fontSize: this.typography.body1.fontSize,
+              borderRadius: '8px',
             },
             arrow: {
               color: this.palette.background.paper,
