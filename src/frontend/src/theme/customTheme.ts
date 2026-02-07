@@ -32,6 +32,9 @@ export interface CustomTheme extends Theme {
       dark: string;
     };
   };
+  colorTransition: {
+    root: { transition: string; '&:hover'?: { transition: string } };
+  };
   custom: ThemeCustomExtension;
 
   /**
@@ -97,6 +100,9 @@ export class CustomThemeImpl extends Object implements CustomTheme {
   unstable_sxConfig!: Theme['unstable_sxConfig'];
   applyStyles!: Theme['applyStyles'];
   containerQueries!: Theme['containerQueries'];
+  colorTransition: {
+    root: { transition: string; '&:hover'?: { transition: string } };
+  };
 
   // Wrap the methods to match the Theme interface signature
   alpha: (color: string, value: string | number) => string;
@@ -139,6 +145,25 @@ export class CustomThemeImpl extends Object implements CustomTheme {
       const numCoef =
         typeof coefficient === 'string' ? parseFloat(coefficient) : coefficient;
       return darken(color, numCoef);
+    };
+
+    this.colorTransition = {
+      root: {
+        transition: this.transitions.create(
+          ['background-color', 'color', 'border-color'],
+          {
+            duration: this.transitions.duration.complex,
+          },
+        ),
+        '&:hover': {
+          transition: this.transitions.create(
+            ['background-color', 'color', 'border-color', 'transform'],
+            {
+              duration: this.transitions.duration.short,
+            },
+          ),
+        },
+      },
     };
 
     if (recalculateColors === true) {
@@ -261,9 +286,48 @@ export class CustomThemeImpl extends Object implements CustomTheme {
         },
         MuiButton: {
           styleOverrides: {
-            root: {
-              // borderRadius: this.shape.borderRadius,
-            },
+            ...this.colorTransition,
+          },
+        },
+        MuiButtonGroup: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+
+        MuiInputBase: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+        MuiPaper: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+        MuiSlider: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+        MuiButtonBase: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+        MuiTypography: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+        MuiToggleButton: {
+          styleOverrides: {
+            ...this.colorTransition,
+          },
+        },
+        MuiToggleButtonGroup: {
+          styleOverrides: {
+            ...this.colorTransition,
           },
         },
       };

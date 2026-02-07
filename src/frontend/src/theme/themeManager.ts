@@ -209,6 +209,11 @@ export class ThemeManager {
       shape: {
         borderRadius: '16px',
       },
+      transitions: {
+        duration: {
+          complex: 500,
+        },
+      },
       palette: {
         contrastThreshold: 3.5,
         mode: this.isDark ? 'dark' : 'light',

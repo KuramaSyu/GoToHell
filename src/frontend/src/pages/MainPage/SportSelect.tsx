@@ -216,6 +216,13 @@ export const SportSelector = () => {
     }
   };
 
+  const transitions = useTransition(displayedSports, {
+    keys: (item) => item.sport ?? '',
+    from: { opacity: 0, transform: 'translate3d(-100%,0,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+    trail: 150, // Stagger animation
+  });
+
   if (isLoading) {
     // the displayed sports depend on preferences, so we wait until they are loaded
     return <Box />;
@@ -288,16 +295,13 @@ export const SportSelector = () => {
         value={currentSportName}
         //color="primary"
       >
-        {displayedSports.map(({ sport, multiplier }, index) => {
-          const isSelected = sport === currentSportName;
+        {!isLoading &&
+          transitions((style, { sport, multiplier }, _, index) => {
+            const isSelected = sport === currentSportName;
+            const isFirst = index === 0;
+            const isLast = index === displayedSports.length - 1;
 
-          return (
-            <Grow
-              in={preferencesLoaded}
-              key={sport}
-              style={{ transformOrigin: '0 0 0' }}
-              {...(preferencesLoaded ? { timeout: 300 + index * 200 } : {})}
-            >
+            return (
               <ToggleButton
                 onClick={() => onButtonClick(sport, multiplier)}
                 value={sport ?? ''}
@@ -306,17 +310,27 @@ export const SportSelector = () => {
                   gap: 3,
                   color: theme.palette.text.primary,
                   backgroundColor: 'transparent',
+                  transition: theme.colorTransition.root.transition,
+                  // Manually apply borderRadius
+                  borderTopLeftRadius: isFirst ? theme.shape.borderRadius : 0,
+                  borderTopRightRadius: isFirst ? theme.shape.borderRadius : 0,
+                  borderBottomLeftRadius: isLast ? theme.shape.borderRadius : 0,
+                  borderBottomRightRadius: isLast
+                    ? theme.shape.borderRadius
+                    : 0,
                   // Add selected state styling
                   '&.Mui-selected': {
                     backgroundColor: theme.palette.primary.main,
                     color: theme.palette.primary.contrastText,
                     '&:hover': {
                       backgroundColor: theme.palette.primary.main,
+                      transition: theme.colorTransition.root.transition,
                     },
                   },
                   // Optional: add hover state for non-selected buttons
                   '&:hover': {
                     backgroundColor: theme.palette.primary.main,
+                    transition: theme.colorTransition.root['&:hover'],
                   },
                 }}
               >
@@ -330,6 +344,7 @@ export const SportSelector = () => {
                           : theme.palette.text.primary,
                         height: 42,
                         width: 42,
+                        transition: theme.colorTransition.root.transition,
                       }}
                       inheritViewBox
                     />
@@ -339,9 +354,8 @@ export const SportSelector = () => {
                 )}
                 <Typography>{String(sport).replace('_', ' ')}</Typography>
               </ToggleButton>
-            </Grow>
-          );
-        })}
+            );
+          })}
       </ToggleButtonGroup>
       {dialogOpen && (
         <SportSelectionDialog
