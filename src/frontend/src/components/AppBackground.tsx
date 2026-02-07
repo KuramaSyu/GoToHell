@@ -1,57 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
-import { ThemeProvider } from '@emotion/react';
-
-interface AppBackgroundProps {
-  theme: any;
-}
 
 const AppBackground: React.FC = () => {
   const { theme } = useThemeStore();
-  const backgroundImage = theme.custom.backgroundImage; // Safe access
-  const [loaded, setLoaded] = useState(false);
+  const backgroundImage = theme?.custom?.backgroundImage;
+
+  const [currentImage, setCurrentImage] = useState<string | null>(
+    backgroundImage,
+  );
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    if (
-      theme.custom.backgroundImage == undefined ||
-      theme.custom.backgroundImage == ''
-    ) {
-      setLoaded(false);
-    } else {
-      setLoaded(true); // Trigger fade-in after component mounts
+    if (backgroundImage && backgroundImage !== currentImage) {
+      // Trigger fade out/in effect
+      setIsTransitioning(true);
+
+      const timer = setTimeout(() => {
+        setCurrentImage(backgroundImage);
+        setIsTransitioning(false);
+      }, theme.transitions.duration.complex / 3); // Match this with your CSS transition time
+
+      return () => clearTimeout(timer);
     }
-  }, [theme]);
+  }, [backgroundImage, currentImage]);
 
   if (!backgroundImage) return null;
 
   return (
-    <Box>
-      <ThemeProvider theme={theme}>
-        {backgroundImage ? (
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              backgroundColor: theme.palette.background.default,
-              backgroundImage: backgroundImage
-                ? `url(${backgroundImage})`
-                : 'none',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: backgroundImage ? 'blur(9px)' : 'none',
-              opacity: loaded ? 1 : 0, // Start invisible, then fade in
-              transition: 'opacity 0.5s ease', // Smooth fade-in effect
-              zIndex: 0,
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          ></Box>
-        ) : null}
-      </ThemeProvider>
+    <Box
+      sx={{
+        position: 'fixed', // Fixed is usually better for app backgrounds
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0, // Keep it behind everything
+        backgroundColor: theme.palette.background.default, // Fallback color
+        overflow: 'hidden',
+      }}
+    >
+      {/* The Actual Background Image */}
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url(${currentImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(9px)',
+          // transition: 'opacity 300ms ease-in-out', // The CSS Magic
+          transition: theme.transitions.create('opacity', {
+            duration: 2 * (theme.transitions.duration.complex / 3),
+            // easing: theme.transitions.easing.easeOut,
+          }),
+          opacity: isTransitioning ? 0 : 1, // Fades out then back in
+        }}
+      />
     </Box>
   );
 };
