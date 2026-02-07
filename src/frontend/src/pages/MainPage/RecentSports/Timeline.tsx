@@ -246,7 +246,9 @@ export const SportsTimeline = () => {
           <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
             <MemoizedSportCardNumber data={sport} />
           </TimelineOppositeContent>
-          <TimelineSeparator>
+          <TimelineSeparator
+            sx={{ transition: theme.colorTransition.root.transition }}
+          >
             <TimelineDot
               color='secondary'
               sx={{
@@ -256,6 +258,7 @@ export const SportsTimeline = () => {
                 overflow: 'hidden',
                 position: 'relative',
                 margin: 'auto',
+                transition: theme.colorTransition.root.transition,
                 //color: theme.palette.secondary.main,
               }}
             >
