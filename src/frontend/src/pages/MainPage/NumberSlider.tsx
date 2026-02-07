@@ -21,6 +21,7 @@ import {
 } from '../../utils/blendWithContrast';
 import { useSportStore } from '../../useSportStore';
 import { GameSelectionMap } from '../../utils/data/Sports';
+import { useLoadingStore } from '../../zustand/loadingStore';
 
 interface DeathAmountState {
   amount: number;
@@ -54,16 +55,15 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
 
   // string for input box (so that .0 or something like this can be typed)
   const [localAmount, setLocalAmount] = useState<string | null>(
-    amount.toString()
+    amount.toString(),
   );
-
   const { preferencesLoaded } = usePreferenceStore();
   const { theme } = useThemeStore();
-
-  const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const { isMobile } = useBreakpoint();
   const { currentSport } = useSportStore();
+  const { isLoading } = useLoadingStore();
 
+  const selectableMax = 2 ** 20; // 2 ** 11 was default, but there are cases where more is needed3000
   const INPUT_STRATEGIES: Record<InputVariant, React.FC<InputStrategyProps>> = {
     default: SliderInput,
     custom: CustomSliderInput,
@@ -109,7 +109,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     }
   };
 
-  if (!preferencesLoaded || theme.custom.themeName === 'default') {
+  if (isLoading) {
     // the displayed games depend on preferences, so we wait until they are loaded
     // which is done in the theme store
     return null;
@@ -131,7 +131,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
   const customInput = withInput ? (
     <OutlinedInput
       value={localAmount}
-      placeholder="Amount"
+      placeholder='Amount'
       onChange={handleInputChange}
       error={isNaN(Number(localAmount))}
       inputProps={{
@@ -155,7 +155,7 @@ export const NumberSlider: React.FC<NumberSliderProps> = ({ withInput }) => {
     <Box sx={{ position: 'relative', height: '100%', ml: 3 }}>
       <OutlinedInput
         value={localAmount}
-        placeholder="Amount"
+        placeholder='Amount'
         onChange={handleInputChange}
         error={isNaN(Number(localAmount))}
         inputProps={{
@@ -303,7 +303,7 @@ const SliderInput: React.FC<InputStrategyProps> = ({
       min={min}
       max={max}
       step={step}
-      aria-labelledby="number-slider"
+      aria-labelledby='number-slider'
       marks={marks}
     ></Slider>
   );
@@ -327,7 +327,7 @@ const CustomSliderInput: React.FC<InputStrategyProps> = ({
       min={min}
       max={max}
       step={5}
-      aria-labelledby="number-slider"
+      aria-labelledby='number-slider'
       marks={marks}
     ></Slider>
   );
@@ -349,7 +349,7 @@ const AddButton: React.FC<AddRemoveButtonProps> = ({
 
   return (
     <Button
-      variant="contained"
+      variant='contained'
       onClick={() => onChange(amount + stepValue)}
       sx={{
         borderRadius: '50%',
@@ -380,7 +380,7 @@ const RemoveButton: React.FC<AddRemoveButtonProps> = ({
 
   return (
     <Button
-      variant="contained"
+      variant='contained'
       onClick={() => onChange(amount - stepValue)}
       sx={{
         borderRadius: '50%',

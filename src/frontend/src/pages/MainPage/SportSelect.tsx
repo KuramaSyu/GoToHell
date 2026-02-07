@@ -45,6 +45,7 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
+import { useLoadingStore } from '../../zustand/loadingStore';
 
 const AnimatedToggleButton = animated(ToggleButton);
 
@@ -118,14 +119,16 @@ export const SportSelector = () => {
   const currentSportName = useSportStore((state) => state.currentSport.sport);
   const { setSport } = useSportStore();
   const { sportResponse, getSportMultiplier } = useSportResponseStore();
+  const { isLoading } = useLoadingStore();
+  const { isMobile } = useBreakpoint();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const preferencesSport = usePreferenceStore(
     (state) => state.preferences.ui.displayedSports,
   );
   const preferencesLoaded = usePreferenceStore(
     (state) => state.preferencesLoaded,
   );
-  const { isMobile } = useBreakpoint();
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const displayedSports = useMemo((): Multiplier[] => {
     if (sportResponse?.sports === undefined) {
@@ -213,11 +216,7 @@ export const SportSelector = () => {
     }
   };
 
-  if (
-    sportResponse === null ||
-    !preferencesLoaded ||
-    theme.custom.themeName === 'default'
-  ) {
+  if (isLoading) {
     // the displayed sports depend on preferences, so we wait until they are loaded
     return <Box />;
   }
@@ -246,7 +245,7 @@ export const SportSelector = () => {
                 backgroundColor: isSelected
                   ? null
                   : alpha(theme.palette.muted.dark, 0.2),
-                borderRadius: 3,
+                borderRadius: 1,
                 borderWidth: 3,
                 textShadow: isSelected
                   ? null
