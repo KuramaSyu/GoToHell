@@ -5,7 +5,7 @@ import '@mui/material/styles';
 //import './App.css';
 import MainPage from './pages/MainPage/Main';
 import FriendOverview from './pages/friends/FriendOverview';
-import TopBar from './components/TopBar';
+import TopBar from './components/TopBar/TopBar';
 import { Box, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
 import { useThemeStore } from './zustand/useThemeStore';
 import InfoDisplay from './pages/MainPage/InfoDisplay';
@@ -56,13 +56,13 @@ const App: React.FC = () => {
             }}
           >
             <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/login-success" element={<MainPage />} />
-              <Route path="/friends" element={<FriendOverview />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="/docs/*" element={<SwaggerDocs />} />
-              <Route path="/settings-v2" element={<SettingsPage />} />
-              <Route path="/history" element={<TimelinePageMainComponent />} />
+              <Route path='/' element={<MainPage />} />
+              <Route path='/login-success' element={<MainPage />} />
+              <Route path='/friends' element={<FriendOverview />} />
+              <Route path='settings' element={<Settings />} />
+              <Route path='/docs/*' element={<SwaggerDocs />} />
+              <Route path='/settings-v2' element={<SettingsPage />} />
+              <Route path='/history' element={<TimelinePageMainComponent />} />
             </Routes>
           </Box>
 

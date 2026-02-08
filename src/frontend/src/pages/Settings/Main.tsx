@@ -19,7 +19,7 @@ import {
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
 import { useSwipeable } from 'react-swipeable';
-import { Pages } from '../../components/TopBar';
+import { Pages } from '../../components/TopBar/TopBar';
 
 const SettingsBoxSX = {
   display: 'flex',
@@ -97,7 +97,7 @@ export const Settings: React.FC = () => {
         {/* Grid with overrides */}
 
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4" sx={{ zIndex: 1 }}>
+          <Typography variant='h4' sx={{ zIndex: 1 }}>
             Overrides
           </Typography>
           <Box sx={RoundedBlurBoxSX}>
@@ -108,7 +108,7 @@ export const Settings: React.FC = () => {
 
         {/* Grid with game multipliers */}
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4" sx={{ zIndex: 1 }}>
+          <Typography variant='h4' sx={{ zIndex: 1 }}>
             Multipliers
           </Typography>
           <MultiplierSettings />
@@ -116,17 +116,17 @@ export const Settings: React.FC = () => {
 
         {/* Table with Sport Base Multipliers */}
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4">Sport Bases</Typography>
+          <Typography variant='h4'>Sport Bases</Typography>
           <Box sx={{ ...RoundedBlurBoxSX, p: 2 }}>
             <MultiplierTable></MultiplierTable>
           </Box>
         </Box>
         {/* Plank Seconds */}
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4" sx={{ zIndex: 1 }}>
+          <Typography variant='h4' sx={{ zIndex: 1 }}>
             Plank Settings
           </Typography>
-          <Typography variant="subtitle1" sx={{ zIndex: 1 }}>
+          <Typography variant='subtitle1' sx={{ zIndex: 1 }}>
             How many seconds plank is the maximum, you are able to? Usually 2 -
             4 Minutes
           </Typography>
@@ -134,24 +134,24 @@ export const Settings: React.FC = () => {
         </Box>
         {/* Sport Select */}
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4" sx={{ zIndex: 1 }}>
+          <Typography variant='h4' sx={{ zIndex: 1 }}>
             Sport Select
           </Typography>
           <SportDragDrop></SportDragDrop>
         </Box>
         {/* Game Select */}
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4" sx={{ zIndex: 1 }}>
+          <Typography variant='h4' sx={{ zIndex: 1 }}>
             Game Select
           </Typography>
           <GameDragDrop></GameDragDrop>
         </Box>
         {/* reset button */}
         <Box sx={{ ...SettingsBoxSX, ...FullWidthOnMobile() }}>
-          <Typography variant="h4" sx={{ zIndex: 1 }}>
+          <Typography variant='h4' sx={{ zIndex: 1 }}>
             Reset Settings
           </Typography>
-          <Typography variant="subtitle1" sx={{ zIndex: 1 }}>
+          <Typography variant='subtitle1' sx={{ zIndex: 1 }}>
             This will reset all your settings to default. You can also do this
             in the settings menu.
           </Typography>

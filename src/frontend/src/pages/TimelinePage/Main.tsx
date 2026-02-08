@@ -13,7 +13,7 @@ import { useLoadingStore } from '../../zustand/loadingStore';
 import { set } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { Pages } from '../../components/TopBar';
+import { Pages } from '../../components/TopBar/TopBar';
 import { BoxElevation1 } from '../../theme/statics';
 
 export const TimelinePageMainComponent: React.FC = () => {

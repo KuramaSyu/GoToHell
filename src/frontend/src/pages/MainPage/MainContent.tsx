@@ -20,7 +20,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { UploadOverdueDeaths } from './UploadOverdueDeaths';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { Pages } from '../../components/TopBar';
+import { Pages } from '../../components/TopBar/TopBar';
 import { HistoryPills } from './HistoryPills';
 import { BoxElevation2 } from '../../theme/statics';
 import { TotalScoreHeadline } from './TotalScoreHeadline';

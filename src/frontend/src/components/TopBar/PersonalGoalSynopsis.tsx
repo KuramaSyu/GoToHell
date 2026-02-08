@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { usePersonalGoalsStore } from '../zustand/PersonalGoalsStore';
+import { usePersonalGoalsStore } from '../../zustand/PersonalGoalsStore';
 import {
   DefaultPersonalGoalCalculator,
   IPersonalGoalCalculator,
-} from '../utils/PersonalGoalCalculator';
+} from '../../utils/PersonalGoalCalculator';
 import {
   useRecentSportsStore,
   useYourRecentSportsStore,
-} from '../zustand/RecentSportsState';
+} from '../../zustand/RecentSportsState';
 import {
   alpha,
   Box,
@@ -20,14 +20,14 @@ import {
   TypographyVariant,
 } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
-import { useThemeStore } from '../zustand/useThemeStore';
-import { NUMBER_FONT } from '../statics';
+import { useThemeStore } from '../../zustand/useThemeStore';
+import { NUMBER_FONT } from '../../statics';
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../utils/api/ApiRequirementsBuilder';
-import { PersonalGoalBubble } from './PersonalGoalBubble';
-import { BoxElevation1, BoxHoverPropsTopBar } from '../theme/statics';
+} from '../../utils/api/ApiRequirementsBuilder';
+import { PersonalGoalBubble } from '../PersonalGoalBubble';
+import { BoxElevation1, BoxHoverPropsTopBar } from '../../theme/statics';
 
 export interface PersonalGoalSynopsisProps {
   typographyVariant: TypographyVariant;

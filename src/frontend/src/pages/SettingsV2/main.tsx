@@ -36,7 +36,7 @@ import {
 } from '../Settings/GameOverride';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { Pages } from '../../components/TopBar';
+import { Pages } from '../../components/TopBar/TopBar';
 import FlagIcon from '@mui/icons-material/Flag';
 import { PersonalGoalSettings } from './PersonalGoalSettings';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';

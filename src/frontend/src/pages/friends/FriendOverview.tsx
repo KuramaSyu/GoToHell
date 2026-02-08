@@ -27,7 +27,7 @@ import { UserApi } from '../../utils/api/Api';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
-import { Pages } from '../../components/TopBar';
+import { Pages } from '../../components/TopBar/TopBar';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface FriendShip {
@@ -164,7 +164,7 @@ export const FriendOverview: React.FC = () => {
   });
 
   return (
-    <Box {...handlers} width="100%">
+    <Box {...handlers} width='100%'>
       {backgroundImage && (
         <Box
           sx={{
@@ -198,17 +198,17 @@ export const FriendOverview: React.FC = () => {
           <Box
             sx={{ display: 'flex', minWidth: 1 / 4, flexDirection: 'column' }}
           >
-            <Typography variant="h4" gutterBottom>
+            <Typography variant='h4' gutterBottom>
               Friend Overview
             </Typography>
             <Tabs
               value={activeTab}
               onChange={(_e, newValue) => setActiveTab(newValue)}
-              indicatorColor="primary"
-              textColor="primary"
+              indicatorColor='primary'
+              textColor='primary'
             >
-              <Tab label="Existing" value={TabIndex.Overview} />
-              <Tab label="Incoming" value={TabIndex.Incoming} />
+              <Tab label='Existing' value={TabIndex.Overview} />
+              <Tab label='Incoming' value={TabIndex.Incoming} />
             </Tabs>
             {isLoading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -229,16 +229,16 @@ export const FriendOverview: React.FC = () => {
                     {activeTab === TabIndex.Incoming && (
                       <Box>
                         <Button
-                          variant="contained"
-                          color="success"
+                          variant='contained'
+                          color='success'
                           onClick={() => handleUpdateStatus(fr.id, 'accepted')}
                           sx={{ mr: 1 }}
                         >
                           Accept
                         </Button>
                         <Button
-                          variant="contained"
-                          color="error"
+                          variant='contained'
+                          color='error'
                           onClick={() => handleDelete(fr.id)}
                         >
                           Reject
@@ -248,8 +248,8 @@ export const FriendOverview: React.FC = () => {
                     {activeTab === TabIndex.Overview && (
                       <Box>
                         <Button
-                          variant="outlined"
-                          color="error"
+                          variant='outlined'
+                          color='error'
                           onClick={() => handleDelete(fr.id)}
                           sx={{ mr: 1 }}
                         >
@@ -266,7 +266,7 @@ export const FriendOverview: React.FC = () => {
                     {activeTab === TabIndex.Blocked && (
                       <Box>
                         <Button
-                          variant="outlined"
+                          variant='outlined'
                           onClick={() => handleUpdateStatus(fr.id, 'accepted')}
                         >
                           Unblock
@@ -278,7 +278,7 @@ export const FriendOverview: React.FC = () => {
               </List>
             )}
             {error && (
-              <Typography color="error" sx={{ mt: 2 }}>
+              <Typography color='error' sx={{ mt: 2 }}>
                 {error}
               </Typography>
             )}

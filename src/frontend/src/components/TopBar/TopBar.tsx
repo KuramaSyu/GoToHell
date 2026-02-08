@@ -2,9 +2,9 @@ import React, { memo, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
-import DiscordLogin from './DiscordLogin';
+import DiscordLogin from './../DiscordLogin';
 import Box from '@mui/material/Box';
-import { useThemeStore } from '../zustand/useThemeStore';
+import { useThemeStore } from '../../zustand/useThemeStore';
 import {
   alpha,
   Avatar,
@@ -27,22 +27,22 @@ import { Streak } from './Streak';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useBreakpoint } from '../hooks/useBreakpoint';
-import { LogoSvgComponent } from '../pages/LoadingPage/Main';
-import { Title } from '../pages/LoadingPage/Title';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { LogoSvgComponent } from '../../pages/LoadingPage/Main';
+import { Title } from '../../pages/LoadingPage/Title';
 import HomeIcon from '@mui/icons-material/Home';
 import { ThemeProvider } from '@emotion/react';
-import { useUserStore } from '../userStore';
-import { useStreakStore } from '../zustand/StreakStore';
+import { useUserStore } from '../../userStore';
+import { useStreakStore } from '../../zustand/StreakStore';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import HistoryIcon from '@mui/icons-material/History';
 
 import {
   ApiRequirement,
   ApiRequirementsBuilder,
-} from '../utils/api/ApiRequirementsBuilder';
+} from '../../utils/api/ApiRequirementsBuilder';
 import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
-import { BoxHoverPropsTopBar } from '../theme/statics';
+import { BoxHoverPropsTopBar } from '../../theme/statics';
 
 export enum Pages {
   HOME = '/',
