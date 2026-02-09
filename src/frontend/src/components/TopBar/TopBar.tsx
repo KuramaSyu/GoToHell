@@ -268,97 +268,129 @@ const MobileTopBar = memo(() => {
 const DesktopTopBar = memo(() => {
   const navigate = useNavigate();
   const { theme } = useThemeStore();
+  const [userDrawerOpen, setUserDrawerOpen] = useState(false);
+  const { user } = useUserStore();
 
   return (
-    <AppBar
-      position='fixed'
-      sx={{
-        backgroundColor: theme.palette.background.default,
-        //color: theme.palette.primary.light,
-      }}
-    >
-      <Toolbar>
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          {/* Title */}
-          <Tooltip title='Go to Main Page' arrow>
-            <Box>
-              <Button
-                startIcon={
-                  <LogoSvgComponent style={{ width: 60, height: 60 }} />
-                }
-                onClick={() => navigate('/')}
-                sx={{
-                  borderRadius: theme.shape.borderRadius,
-                  color: theme.palette.vibrant.light,
-                  fontSize: theme.typography.h3.fontSize,
-                  padding: '0px 8px',
-                  textTransform: 'none', // Prevent uppercase transformation
-                  ...BoxHoverPropsTopBar(theme),
-                }}
-              >
-                <Title theme={theme} />
-              </Button>
-            </Box>
-          </Tooltip>
-
-          {/* Streak */}
-          <Stack direction='row' gap={2}>
-            <Box
-              sx={{
-                ...BoxHoverPropsTopBar(theme),
-                borderRadius: theme.shape.borderRadius,
-                px: theme.spacing(2),
-                py: 0,
-              }}
-            >
-              <Streak />
-            </Box>
-            <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
-          </Stack>
-
-          {/* Home, Friends, Settings, Discord Login or Profile */}
+    <>
+      <AppBar
+        position='fixed'
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          //color: theme.palette.primary.light,
+        }}
+      >
+        <Toolbar>
           <Box
             sx={{
-              gap: 1,
+              flexGrow: 1,
               display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
-            <Button
-              variant={containedIfSelected(Pages.HOME)}
-              onClick={() => navigate(Pages.HOME)}
-              color='inherit'
+            {/* Title */}
+            <Tooltip title='Go to Main Page' arrow>
+              <Box>
+                <Button
+                  startIcon={
+                    <LogoSvgComponent style={{ width: 60, height: 60 }} />
+                  }
+                  onClick={() => navigate('/')}
+                  sx={{
+                    borderRadius: theme.shape.borderRadius,
+                    color: theme.palette.vibrant.light,
+                    fontSize: theme.typography.h3.fontSize,
+                    padding: '0px 8px',
+                    textTransform: 'none', // Prevent uppercase transformation
+                    ...BoxHoverPropsTopBar(theme),
+                  }}
+                >
+                  <Title theme={theme} />
+                </Button>
+              </Box>
+            </Tooltip>
+
+            {/* Streak */}
+            <Stack direction='row' gap={2}>
+              <Box
+                sx={{
+                  ...BoxHoverPropsTopBar(theme),
+                  borderRadius: theme.shape.borderRadius,
+                  px: theme.spacing(2),
+                  py: 0,
+                }}
+              >
+                <Streak />
+              </Box>
+              <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
+            </Stack>
+
+            {/* Home, Friends, Settings, Discord Login or Profile */}
+            <Box
+              sx={{
+                gap: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
             >
-              <HomeIcon />
-            </Button>
-            <Button
-              variant={containedIfSelected(Pages.FRIENDS)}
-              onClick={() => navigate(Pages.FRIENDS)}
-              color='inherit'
-            >
-              <PeopleIcon />
-            </Button>
-            <Button
-              variant={containedIfSelected(Pages.SETTINGSV2)}
-              onClick={() => navigate(Pages.SETTINGSV2)}
-              color='inherit'
-            >
-              <SettingsIcon />
-            </Button>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                variant={containedIfSelected(Pages.HOME)}
+                onClick={() => navigate(Pages.HOME)}
+                color='inherit'
+              >
+                <HomeIcon />
+              </Button>
+              <Button
+                variant={containedIfSelected(Pages.FRIENDS)}
+                onClick={() => navigate(Pages.FRIENDS)}
+                color='inherit'
+              >
+                <PeopleIcon />
+              </Button>
+              <Button
+                variant={containedIfSelected(Pages.SETTINGSV2)}
+                onClick={() => navigate(Pages.SETTINGSV2)}
+                color='inherit'
+              >
+                <SettingsIcon />
+              </Button>
               <DiscordLogin />
+              <IconButton onClick={() => setUserDrawerOpen(true)}>
+                <Avatar
+                  src={user ? user.getAvatarUrl() : ''}
+                  alt={user ? user.username : ''}
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.3))',
+                  }}
+                />
+              </IconButton>
             </Box>
           </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+
+      {/* Drawer which shows streak and user info */}
+      <SwipeableDrawer
+        anchor='right'
+        onOpen={() => {}}
+        open={userDrawerOpen}
+        onClose={() => setUserDrawerOpen(false)}
+        onBlur={() => setUserDrawerOpen(false)}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: 1 / 3,
+            borderTopLeftRadius: theme.shape.borderRadius,
+            borderTopRightRadius: theme.shape.borderRadius,
+            backgroundColor: alpha(theme.palette.muted.dark, 9 / 10),
+          },
+        }}
+      >
+        <UserDrawerContents />
+      </SwipeableDrawer>
+    </>
   );
 });
 
