@@ -1,7 +1,7 @@
-import { UserProfileProps } from './Main';
+import { UserProfileMain, UserProfileProps } from './Main';
 
 export const UserProfileDesktopDrawer: React.FC<UserProfileProps> = ({
   user,
 }) => {
-  return null;
+  return <UserProfileMain user={user}></UserProfileMain>;
 };
