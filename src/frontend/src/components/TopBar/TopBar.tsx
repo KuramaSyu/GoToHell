@@ -43,6 +43,7 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
 import { BoxHoverPropsTopBar } from '../../theme/statics';
+import { UserProfileDesktopDrawer } from '../UserProfile/DrawerWrapper';
 
 export enum Pages {
   HOME = '/',
@@ -373,23 +374,23 @@ const DesktopTopBar = memo(() => {
       </AppBar>
 
       {/* Drawer which shows streak and user info */}
-      <SwipeableDrawer
+      <Drawer
         anchor='right'
-        onOpen={() => {}}
+        // onOpen={() => {}}
         open={userDrawerOpen}
         onClose={() => setUserDrawerOpen(false)}
-        onBlur={() => setUserDrawerOpen(false)}
+        // onBlur={() => setUserDrawerOpen(false)}
         sx={{
           '& .MuiDrawer-paper': {
             width: 1 / 3,
             borderTopLeftRadius: theme.shape.borderRadius,
-            borderTopRightRadius: theme.shape.borderRadius,
+            borderBottomLeftRadius: theme.shape.borderRadius,
             backgroundColor: alpha(theme.palette.muted.dark, 9 / 10),
           },
         }}
       >
-        <UserDrawerContents />
-      </SwipeableDrawer>
+        <UserProfileDesktopDrawer user={user} />
+      </Drawer>
     </>
   );
 });
