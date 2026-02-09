@@ -83,7 +83,6 @@ export const Streak = () => {
         sx={{
           fontFamily: NUMBER_FONT,
           color: theme.palette.primary.light,
-          width: '100%',
           height: '100%',
           alignItems: 'center',
           display: 'flex',
