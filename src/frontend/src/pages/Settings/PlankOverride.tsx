@@ -31,7 +31,6 @@ export const PlankOverride: React.FC = () => {
       },
     };
     setPreferences(newPreferences);
-    setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
 
   return (

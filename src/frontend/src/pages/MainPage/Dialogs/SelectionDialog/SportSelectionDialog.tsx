@@ -4,7 +4,6 @@ import { DialogStateProps, SelectionDialog } from './SelectionDialog';
 import { SearchEntry, SportEntry } from '../../QuickActions/SearchEntry';
 import { UserPreferences } from '../../../../models/Preferences';
 import usePreferenceStore from '../../../../zustand/PreferenceStore';
-import { setCookie } from '../../../../utils/cookies';
 
 export interface SportSelectionDialogProps {
   state: DialogStateProps;
@@ -19,7 +18,7 @@ export const SportSelectionDialog: React.FC<SportSelectionDialogProps> = ({
     if (!sportResponse || !sportResponse.sports) return [];
     var basicEntries =
       preferences.ui.displayedSports?.map(
-        (s) => new SportEntry(s.name, s.isDisplayed)
+        (s) => new SportEntry(s.name, s.isDisplayed),
       ) ?? [];
     const notSelected = Object.keys(sportResponse.sports)
       .filter((sport) => !basicEntries.some((entry) => entry.name === sport))
@@ -39,12 +38,11 @@ export const SportSelectionDialog: React.FC<SportSelectionDialogProps> = ({
       },
     };
     setPreferences(newPreferences);
-    setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
 
   return (
     <SelectionDialog
-      title="Select Sports"
+      title='Select Sports'
       list={sports}
       saveChange={saveListsToCookies}
       state={{ open, setOpen }}

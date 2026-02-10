@@ -10,7 +10,7 @@ import { SportDragDrop } from './SportDragDrop';
 import { GameDragDrop } from './GameDragDrop';
 import useUploadStore from '../../zustand/UploadStore';
 import { useNavigate } from 'react-router-dom';
-import { defaultPreferences, savePreferences } from '../../models/Preferences';
+import { defaultPreferences } from '../../models/Preferences';
 import { BaseMultiplierModifier } from './BaseMultiplierModifier';
 import { MultiplierTable } from './MultiplierTable';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -157,7 +157,6 @@ export const Settings: React.FC = () => {
           </Typography>
           <button
             onClick={() => {
-              savePreferences(defaultPreferences());
               setPreferences(defaultPreferences());
             }}
           >

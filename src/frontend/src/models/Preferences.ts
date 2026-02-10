@@ -128,6 +128,6 @@ export function defaultPreferences(): UserPreferences {
   };
 }
 
-export function savePreferences(p: UserPreferences): void {
-  setCookie('preferences', JSON.stringify(p), 9999);
-}
+// export function savePreferences(p: UserPreferences): void {
+//   setCookie('preferences', JSON.stringify(p), 9999);
+// }

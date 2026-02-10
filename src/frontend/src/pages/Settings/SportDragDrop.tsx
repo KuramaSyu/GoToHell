@@ -22,7 +22,6 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import { TwoListDnD } from './TwoListDnD';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { UIElement, UserPreferences } from '../../models/Preferences';
-import { setCookie } from '../../utils/cookies';
 
 export const SportDragDrop = () => {
   const { sportResponse } = useSportResponseStore();
@@ -32,15 +31,15 @@ export const SportDragDrop = () => {
   const [listB, setListB] = useState<string[]>(
     preferences.ui.displayedSports?.map((s) => s.name) ??
       (Object.keys(sportResponse?.sports ?? {}) as string[]) ??
-      []
+      [],
   );
   const [listA, setListA] = useState(
-    Object.keys(sportResponse?.sports ?? {}).filter((v) => !listB.includes(v))
+    Object.keys(sportResponse?.sports ?? {}).filter((v) => !listB.includes(v)),
   );
 
   const saveListsToCookies = (
     _selectionList: string[],
-    targetList: string[]
+    targetList: string[],
   ) => {
     const uiList = targetList.length > 0 ? targetList : null;
 
@@ -49,12 +48,11 @@ export const SportDragDrop = () => {
       ui: {
         ...preferences.ui,
         displayedSports:
-          uiList?.map((name) => ({ name, isDisplayed: true } as UIElement)) ??
+          uiList?.map((name) => ({ name, isDisplayed: true }) as UIElement) ??
           null,
       },
     };
     setPreferences(newPreferences);
-    setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
   return (
     <TwoListDnD
@@ -63,8 +61,8 @@ export const SportDragDrop = () => {
       setListA={setListA}
       setListB={setListB}
       saveChange={saveListsToCookies}
-      nameA="Hidden Sports"
-      nameB="Shown Sports"
+      nameA='Hidden Sports'
+      nameB='Shown Sports'
     ></TwoListDnD>
   );
 };

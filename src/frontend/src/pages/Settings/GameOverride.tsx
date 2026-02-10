@@ -5,9 +5,7 @@ import { getThemeNames } from '../../zustand/useThemeStore';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
 import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 import { Add, Remove } from '@mui/icons-material';
-import { setCookie } from '../../utils/cookies';
 import { CustomSelect } from './CustomSelect';
-import { transform } from 'framer-motion';
 
 type GameOverrideProps = {
   game: string;
@@ -40,18 +38,17 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
   const removeItem = (game: string, sport: string, amount: number) => {
     const index = preferences.game_overrides.findIndex(
       (item) =>
-        item.game === game && item.sport === sport && item.amount === amount
+        item.game === game && item.sport === sport && item.amount === amount,
     );
     if (index !== -1) {
       preferences.game_overrides.splice(index, 1);
-      setCookie('preferences', JSON.stringify(preferences), 999);
       setPreferences(preferences);
     } else {
       setMessage(
         new SnackbarUpdateImpl(
           'Could not find the game override to remove. Please try again.',
-          'error'
-        )
+          'error',
+        ),
       );
     }
   };
@@ -71,7 +68,7 @@ export const GameOverrideViewmodel: React.FC<GameOverrideProps> = ({
       <Box sx={SX_TABLE_ENTRY}>{sport}</Box>
       <Box sx={SX_TABLE_ENTRY}>{amount}</Box>
       <Button
-        variant="contained"
+        variant='contained'
         sx={{ flex: '0 1 auto', maxWidth: 1 / 10, borderRadius: 10 }}
         onClick={() => removeItem(game, sport, amount)}
       >
@@ -111,7 +108,7 @@ export const GameOverrideList: React.FC = () => {
       <Box sx={SX_TABLE_HEADER_ENTRY}>Sport</Box>
       <Box sx={SX_TABLE_HEADER_ENTRY}>Exercises per death</Box>
       <Button
-        variant="contained"
+        variant='contained'
         sx={{
           flex: '0 1 auto',
           maxWidth: 1 / 10,
@@ -150,19 +147,19 @@ export const GameOverrideSettings: React.FC = () => {
   const add = () => {
     if (game === null) {
       return setMessage(
-        new SnackbarUpdateImpl('You need to select a game', 'error')
+        new SnackbarUpdateImpl('You need to select a game', 'error'),
       );
     }
 
     if (sport === null) {
       return setMessage(
-        new SnackbarUpdateImpl('You need to select a sport', 'error')
+        new SnackbarUpdateImpl('You need to select a sport', 'error'),
       );
     }
 
     if (exerciseAmount === null) {
       return setMessage(
-        new SnackbarUpdateImpl('Well, how many exerpices per death?', 'error')
+        new SnackbarUpdateImpl('Well, how many exerpices per death?', 'error'),
       );
     }
     preferences.game_overrides.push({
@@ -170,7 +167,6 @@ export const GameOverrideSettings: React.FC = () => {
       sport: sport,
       amount: exerciseAmount,
     });
-    setCookie('preferences', JSON.stringify(preferences), 999);
     setPreferences(preferences);
   };
 
@@ -180,10 +176,13 @@ export const GameOverrideSettings: React.FC = () => {
 
   // make a map[str: str] for the sports
   const sports = sportResponse.sports
-    ? Object.keys(sportResponse.sports).reduce((prev, current) => {
-        prev[current] = current;
-        return prev;
-      }, {} as Record<string, string>)
+    ? Object.keys(sportResponse.sports).reduce(
+        (prev, current) => {
+          prev[current] = current;
+          return prev;
+        },
+        {} as Record<string, string>,
+      )
     : {};
 
   return (
@@ -198,25 +197,28 @@ export const GameOverrideSettings: React.FC = () => {
       }}
     >
       <CustomSelect
-        items={getThemeNames().reduce((prev, current) => {
-          prev[current] = current;
-          return prev;
-        }, {} as Record<string, string>)}
-        label="Game"
+        items={getThemeNames().reduce(
+          (prev, current) => {
+            prev[current] = current;
+            return prev;
+          },
+          {} as Record<string, string>,
+        )}
+        label='Game'
         value={game ?? ''}
         onChange={setGame}
       ></CustomSelect>
       <CustomSelect
         items={sports}
-        label="Sport"
+        label='Sport'
         value={sport ?? ''}
         onChange={setSport}
       ></CustomSelect>
       <TextField
         sx={{ flex: 1 }}
-        variant="outlined"
-        type="number"
-        label="Exercises per death"
+        variant='outlined'
+        type='number'
+        label='Exercises per death'
         value={exerciseAmount}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
@@ -229,7 +231,7 @@ export const GameOverrideSettings: React.FC = () => {
       ></TextField>
       <Button
         onClick={add}
-        variant="contained"
+        variant='contained'
         sx={{ flex: '0 1 auto', maxWidth: 1 / 10 }}
       >
         <Add />

@@ -8,7 +8,6 @@ import {
 } from '../../QuickActions/SearchEntry';
 import { UserPreferences } from '../../../../models/Preferences';
 import usePreferenceStore from '../../../../zustand/PreferenceStore';
-import { setCookie } from '../../../../utils/cookies';
 import { getValidGames } from '../../GameSelect';
 import { getThemeNames } from '../../../../zustand/useThemeStore';
 
@@ -23,7 +22,7 @@ export const GameSelectionDialog: React.FC<GameSelectionDialogProps> = ({
   const games: GameEntry[] = useMemo(() => {
     var preferredEntries =
       preferences.ui.displayedGames?.map(
-        (s) => new GameEntry(s.name, s.isDisplayed)
+        (s) => new GameEntry(s.name, s.isDisplayed),
       ) ?? [];
 
     const notSelected = getThemeNames()
@@ -44,12 +43,11 @@ export const GameSelectionDialog: React.FC<GameSelectionDialogProps> = ({
       },
     };
     setPreferences(newPreferences);
-    setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
 
   return (
     <SelectionDialog
-      title="Game Overview"
+      title='Game Overview'
       list={games}
       saveChange={saveListsToCookies}
       state={{ open, setOpen }}

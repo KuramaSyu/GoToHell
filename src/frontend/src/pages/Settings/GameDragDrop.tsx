@@ -22,21 +22,20 @@ import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
 import { TwoListDnD } from './TwoListDnD';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { UserPreferences } from '../../models/Preferences';
-import { setCookie } from '../../utils/cookies';
 
 export const GameDragDrop = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   // use preferred games, or in case of null, all games
   const [shownGames, setShownGames] = useState<string[]>(
-    preferences.ui.displayedGames?.map((game) => game.name) ?? getThemeNames()
+    preferences.ui.displayedGames?.map((game) => game.name) ?? getThemeNames(),
   );
   const [hiddenGames, setHiddenGames] = useState(
-    getThemeNames().filter((v) => !shownGames.includes(v))
+    getThemeNames().filter((v) => !shownGames.includes(v)),
   );
 
   const saveListsToCookies = (
     _selectionList: string[],
-    targetList: string[]
+    targetList: string[],
   ) => {
     const uiList = targetList.length > 0 ? targetList : null;
 
@@ -49,7 +48,6 @@ export const GameDragDrop = () => {
       },
     };
     setPreferences(newPreferences);
-    setCookie('preferences', JSON.stringify(newPreferences), 999);
   };
   return (
     <TwoListDnD
@@ -58,8 +56,8 @@ export const GameDragDrop = () => {
       setListA={setHiddenGames}
       setListB={setShownGames}
       saveChange={saveListsToCookies}
-      nameA="Hidden Games"
-      nameB="Shown Games"
+      nameA='Hidden Games'
+      nameB='Shown Games'
     ></TwoListDnD>
   );
 };

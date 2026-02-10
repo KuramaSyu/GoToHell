@@ -2,7 +2,6 @@ import { Box, CssBaseline, Input, OutlinedInput, Slider } from '@mui/material';
 import React, { useEffect } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import AppBackground from '../../components/AppBackground';
-import { getCookie, setCookie } from '../../utils/cookies';
 import { GameOverrideList, GameOverrideSettings } from './GameOverride';
 import { Multiplier, UserPreferences } from '../../models/Preferences';
 import { GenerateMarks } from '../../utils/Marks';
