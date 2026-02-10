@@ -13,7 +13,7 @@ const usePreferenceStore = create<PreferencesState>((set) => ({
   preferencesLoaded: false,
   setPreferences: (preferences) => {
     set({ preferences: preferences, preferencesLoaded: true });
-    setCookie('preferences', JSON.stringify(preferences), 999);
+    setCookie('preferences', JSON.stringify(preferences), 9999);
   },
 }));
 
