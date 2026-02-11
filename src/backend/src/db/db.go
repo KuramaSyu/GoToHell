@@ -11,6 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type StreakType int
+
+const (
+	CurrentStreak StreakType = iota
+	LongestStreak
+)
+
 // Updated SportRepository interface to include full CRUD operations using the Sport struct.
 type SportRepository interface {
 	InsertSport(sport Sport) error
@@ -93,8 +100,17 @@ func (r *OrmSportRepository) DeleteSport(id Snowflake, userID Snowflake) error {
 	return result.Error
 }
 
+// GetLongestDayStreak returns the longest streak in days the user ever had
+func (r *OrmSportRepository) GetLongestDayStreak(userID Snowflake) (DayStreak, error) {
+	return r.getStreakAlgorithm(userID, LongestStreak)
+}
+
 // GetDayStreak retrieves the amount of days a user has been active back to back.
 func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
+	return r.getStreakAlgorithm(userID, CurrentStreak)
+}
+
+func (r *OrmSportRepository) getStreakAlgorithm(userID Snowflake, streakType StreakType) (DayStreak, error) {
 	var dayStreak DayStreak
 	var activityDates []string
 
@@ -112,6 +128,7 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 
 	// count the days from now
 	streak := 0
+	longestStreak := 0
 	dayOffset := 0
 	for i, dateStr := range activityDates {
 		// parse `dateStr` from format `YYYY-MM-DD` to time.Time
@@ -140,18 +157,44 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 		} else {
 			// recordDate is out of sync with offsetDate
 			// -> break of streak
-			break
+			if streakType == CurrentStreak {
+				longestStreak = streak
+				break
+			} else {
+				// update longest streak
+				if streak > longestStreak {
+					longestStreak = streak
+				}
+				// reset streak and adjust offset
+				streak = 1
+				dayOffset = getDateOffset(recordDate)
+				dayOffset++
+			}
 		}
 	}
 
 	dayStreak.UserID = userID
-	dayStreak.Days = streak
+	dayStreak.Days = longestStreak
 	return dayStreak, nil
 }
 
 // Get the date by offset from today
 func getDateByOffset(offset int) time.Time {
 	return time.Now().AddDate(0, 0, -offset)
+}
+
+func getDateOffset(date time.Time) int {
+	now := time.Now()
+
+	// tuncate to midnight to only compare dates
+	now = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	date = time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
+
+	// calculate difference in days
+	duration := now.Sub(date)
+	days := int(duration.Hours() / 24)
+
+	return days
 }
 
 // Whether or not the Year and YearDay of `a` and `b` are similar
