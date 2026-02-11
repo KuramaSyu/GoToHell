@@ -102,16 +102,32 @@ func (r *OrmSportRepository) DeleteSport(id Snowflake, userID Snowflake) error {
 
 // GetLongestDayStreak returns the longest streak in days the user ever had
 func (r *OrmSportRepository) GetLongestDayStreak(userID Snowflake) (DayStreak, error) {
-	return r.getStreakAlgorithm(userID, LongestStreak)
+	activityDates, err := r.getActicityDates(userID)
+	if err != nil {
+		return DayStreak{}, err
+	}
+	streakDurationDays, err := r.getStreakAlgorithm(activityDates, LongestStreak)
+	if err != nil {
+		return DayStreak{}, err
+	}
+	return DayStreak{UserID: userID, Days: streakDurationDays}, nil
 }
 
 // GetDayStreak retrieves the amount of days a user has been active back to back.
 func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
-	return r.getStreakAlgorithm(userID, CurrentStreak)
+	activityDates, err := r.getActicityDates(userID)
+	if err != nil {
+		return DayStreak{}, err
+	}
+	streakDurationDays, err := r.getStreakAlgorithm(activityDates, CurrentStreak)
+	if err != nil {
+		return DayStreak{}, err
+	}
+	return DayStreak{UserID: userID, Days: streakDurationDays}, nil
 }
 
-func (r *OrmSportRepository) getStreakAlgorithm(userID Snowflake, streakType StreakType) (DayStreak, error) {
-	var dayStreak DayStreak
+// returns an array of distinct dates in order, where user with id <userID> was active
+func (r *OrmSportRepository) getActicityDates(userID Snowflake) ([]string, error) {
 	var activityDates []string
 
 	// SQL query, which filters out the dates (without time, only date)
@@ -123,8 +139,14 @@ func (r *OrmSportRepository) getStreakAlgorithm(userID Snowflake, streakType Str
 		Pluck("date", &activityDates)
 
 	if result.Error != nil {
-		return dayStreak, result.Error
+		return make([]string, 0), result.Error
 	}
+	return activityDates, nil
+}
+
+// calculates the streak with the given type of the given activity sequence. The sequence needs to
+// be in sorted order
+func (r *OrmSportRepository) getStreakAlgorithm(activityDates []string, streakType StreakType) (int, error) {
 
 	// count the days from now
 	streak := 0
@@ -134,7 +156,7 @@ func (r *OrmSportRepository) getStreakAlgorithm(userID Snowflake, streakType Str
 		// parse `dateStr` from format `YYYY-MM-DD` to time.Time
 		recordDate, err := time.Parse("2006-01-02", dateStr)
 		if err != nil {
-			return dayStreak, err
+			return 0, err
 		}
 
 		if i == 0 {
@@ -173,9 +195,7 @@ func (r *OrmSportRepository) getStreakAlgorithm(userID Snowflake, streakType Str
 		}
 	}
 
-	dayStreak.UserID = userID
-	dayStreak.Days = longestStreak
-	return dayStreak, nil
+	return longestStreak, nil
 }
 
 // Get the date by offset from today
