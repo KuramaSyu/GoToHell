@@ -3,19 +3,11 @@ package db
 import (
 	"fmt"
 	"log"
-	"time"
 
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-)
-
-type StreakType int
-
-const (
-	CurrentStreak StreakType = iota
-	LongestStreak
 )
 
 // Updated SportRepository interface to include full CRUD operations using the Sport struct.
@@ -26,7 +18,7 @@ type SportRepository interface {
 	PatchSport(sport Sport) error
 	DeleteSport(id Snowflake, userID Snowflake) error
 	GetTotalAmounts(userID Snowflake) ([]SportAmount, error)
-	GetDayStreak(userID Snowflake) (DayStreak, error)
+	GetActicityDates(userID Snowflake) ([]string, error)
 }
 
 // Define OrmSportRepository using GORM.
@@ -144,80 +136,20 @@ func (r *OrmSportRepository) getActicityDates(userID Snowflake) ([]string, error
 	return activityDates, nil
 }
 
-// calculates the streak with the given type of the given activity sequence. The sequence needs to
-// be in sorted order
-func (r *OrmSportRepository) getStreakAlgorithm(activityDates []string, streakType StreakType) (int, error) {
+// returns an array of distinct dates in order, where user with id <userID> was active
+func (r *OrmSportRepository) GetActicityDates(userID Snowflake) ([]string, error) {
+	var activityDates []string
 
-	// count the days from now
-	streak := 0
-	longestStreak := 0
-	dayOffset := 0
-	for i, dateStr := range activityDates {
-		// parse `dateStr` from format `YYYY-MM-DD` to time.Time
-		recordDate, err := time.Parse("2006-01-02", dateStr)
-		if err != nil {
-			return 0, err
-		}
+	// SQL query, which filters out the dates (without time, only date)
+	// where the user has done sports. These will be loaded into `activityDates`
+	result := r.DB.Model(&Sport{}).
+		Select("DISTINCT DATE(timedate) as date").
+		Where("user_id = ? AND timedate IS NOT NULL AND timedate > ?", userID, "2000-01-01").
+		Order("DATE(timedate) DESC").
+		Pluck("date", &activityDates)
 
-		if i == 0 {
-			// check if date is today, since a streak is considered
-			// active, even if the user haven't done sport yet
-			if isEqualDate(recordDate, time.Now()) {
-				streak++
-				dayOffset++
-				continue
-			}
-			dayOffset++
-		}
-		offsetDate := getDateByOffset(dayOffset)
-
-		// check all other days and break when the streak is broken
-		if isEqualDate(recordDate, offsetDate) {
-			streak++
-			dayOffset++
-			continue
-		} else {
-			// recordDate is out of sync with offsetDate
-			// -> break of streak
-			if streakType == CurrentStreak {
-				longestStreak = streak
-				break
-			} else {
-				// update longest streak
-				if streak > longestStreak {
-					longestStreak = streak
-				}
-				// reset streak and adjust offset
-				streak = 1
-				dayOffset = getDateOffset(recordDate)
-				dayOffset++
-			}
-		}
+	if result.Error != nil {
+		return make([]string, 0), result.Error
 	}
-
-	return longestStreak, nil
-}
-
-// Get the date by offset from today
-func getDateByOffset(offset int) time.Time {
-	return time.Now().AddDate(0, 0, -offset)
-}
-
-func getDateOffset(date time.Time) int {
-	now := time.Now()
-
-	// tuncate to midnight to only compare dates
-	now = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-	date = time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
-
-	// calculate difference in days
-	duration := now.Sub(date)
-	days := int(duration.Hours() / 24)
-
-	return days
-}
-
-// Whether or not the Year and YearDay of `a` and `b` are similar
-func isEqualDate(a time.Time, b time.Time) bool {
-	return a.Year() == b.Year() && a.YearDay() == b.YearDay()
+	return activityDates, nil
 }
