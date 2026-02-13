@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"log"
+	"time"
 
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
@@ -18,16 +19,19 @@ type SportRepository interface {
 	PatchSport(sport Sport) error
 	DeleteSport(id Snowflake, userID Snowflake) error
 	GetTotalAmounts(userID Snowflake) ([]SportAmount, error)
-	GetActicityDates(userID Snowflake) ([]string, error)
+	GetActicityDates(userID Snowflake) ([]time.Time, error)
+	GetCurrentStreak(userID Snowflake) (DayStreak, error)
+	GetLongestStreak(userID Snowflake) (DayStreak, error)
 }
 
 // Define OrmSportRepository using GORM.
 type OrmSportRepository struct {
-	DB *gorm.DB
+	DB            *gorm.DB
+	StreakService IStreakService
 }
 
 // InitORMRepository initializes GORM DB connection and auto-migrates the Sport model.
-func InitORMRepository() (*OrmSportRepository, *gorm.DB) {
+func InitORMRepository(Now func() time.Time) (*OrmSportRepository, *gorm.DB) {
 	db, err := gorm.Open(sqlite.Open("./db/go-to-hell.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
@@ -37,7 +41,7 @@ func InitORMRepository() (*OrmSportRepository, *gorm.DB) {
 		log.Fatal("failed to migrate:", err)
 	}
 	fmt.Println("ORM Database initialized and migrated.")
-	return &OrmSportRepository{DB: db}, db
+	return &OrmSportRepository{DB: db, StreakService: NewStreakService(Now)}, db
 }
 
 // InsertSport adds a new Sport entry using ORM.
@@ -93,12 +97,12 @@ func (r *OrmSportRepository) DeleteSport(id Snowflake, userID Snowflake) error {
 }
 
 // GetLongestDayStreak returns the longest streak in days the user ever had
-func (r *OrmSportRepository) GetLongestDayStreak(userID Snowflake) (DayStreak, error) {
-	activityDates, err := r.getActicityDates(userID)
+func (r *OrmSportRepository) GetLongestStreak(userID Snowflake) (DayStreak, error) {
+	activityDates, err := r.GetActicityDates(userID)
 	if err != nil {
 		return DayStreak{}, err
 	}
-	streakDurationDays, err := r.getStreakAlgorithm(activityDates, LongestStreak)
+	streakDurationDays, err := r.StreakService.GetLongestStreak(activityDates)
 	if err != nil {
 		return DayStreak{}, err
 	}
@@ -106,12 +110,12 @@ func (r *OrmSportRepository) GetLongestDayStreak(userID Snowflake) (DayStreak, e
 }
 
 // GetDayStreak retrieves the amount of days a user has been active back to back.
-func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
-	activityDates, err := r.getActicityDates(userID)
+func (r *OrmSportRepository) GetCurrentStreak(userID Snowflake) (DayStreak, error) {
+	activityDates, err := r.GetActicityDates(userID)
 	if err != nil {
 		return DayStreak{}, err
 	}
-	streakDurationDays, err := r.getStreakAlgorithm(activityDates, CurrentStreak)
+	streakDurationDays, err := r.StreakService.GetCurrentStreak(activityDates)
 	if err != nil {
 		return DayStreak{}, err
 	}
@@ -119,7 +123,7 @@ func (r *OrmSportRepository) GetDayStreak(userID Snowflake) (DayStreak, error) {
 }
 
 // returns an array of distinct dates in order, where user with id <userID> was active
-func (r *OrmSportRepository) getActicityDates(userID Snowflake) ([]string, error) {
+func (r *OrmSportRepository) GetActicityDates(userID Snowflake) ([]time.Time, error) {
 	var activityDates []string
 
 	// SQL query, which filters out the dates (without time, only date)
@@ -131,25 +135,11 @@ func (r *OrmSportRepository) getActicityDates(userID Snowflake) ([]string, error
 		Pluck("date", &activityDates)
 
 	if result.Error != nil {
-		return make([]string, 0), result.Error
+		return make([]time.Time, 0), result.Error
 	}
-	return activityDates, nil
-}
-
-// returns an array of distinct dates in order, where user with id <userID> was active
-func (r *OrmSportRepository) GetActicityDates(userID Snowflake) ([]string, error) {
-	var activityDates []string
-
-	// SQL query, which filters out the dates (without time, only date)
-	// where the user has done sports. These will be loaded into `activityDates`
-	result := r.DB.Model(&Sport{}).
-		Select("DISTINCT DATE(timedate) as date").
-		Where("user_id = ? AND timedate IS NOT NULL AND timedate > ?", userID, "2000-01-01").
-		Order("DATE(timedate) DESC").
-		Pluck("date", &activityDates)
-
-	if result.Error != nil {
-		return make([]string, 0), result.Error
+	parsedDates, err := r.StreakService.ParseDates(activityDates)
+	if err != nil {
+		return make([]time.Time, 0), err
 	}
-	return activityDates, nil
+	return parsedDates, nil
 }
