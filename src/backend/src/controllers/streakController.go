@@ -69,7 +69,7 @@ func (sc *StreakController) Get(c *gin.Context) {
 
 	streaks := make([]models.DayStreak, len(req.UserIDs.IDs))
 	for i, id := range req.UserIDs.IDs {
-		streak, err := sc.repo.GetDayStreak(id)
+		streak, err := sc.repo.GetCurrentStreak(id)
 		if err != nil {
 			SetGinError(c, http.StatusInternalServerError, fmt.Errorf("failed to get streak for user %d: %w", id, err))
 			return
