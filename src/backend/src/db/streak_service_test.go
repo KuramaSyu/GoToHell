@@ -1,154 +1,69 @@
 package db
 
 import (
+	"reflect"
 	"testing"
 	"time"
-
-	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 )
 
-// Mock OrmSportRepository for testing
-type mockSportRepo struct {
-	activityDates []string
-	err           error
-}
-
-func (m *mockSportRepo) GetActicityDates(userID Snowflake) ([]string, error) {
-	return m.activityDates, m.err
-}
-
-func (m *mockSportRepo) getActicityDates(userID Snowflake) ([]string, error) {
-	return m.activityDates, m.err
-}
-
-func (m *mockSportRepo) getStreakAlgorithm(activityDates []string, streakType StreakType) (int, error) {
-	repo := &OrmSportRepository{}
-	return repo.getStreakAlgorithm(activityDates, streakType)
-}
-
-func TestGetCurrentStreak(t *testing.T) {
-	today := time.Now().Format("2006-01-02")
-	yesterday := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
-	twoDaysAgo := time.Now().AddDate(0, 0, -2).Format("2006-01-02")
-
-	tests := []struct {
-		name          string
-		activityDates []string
-		expectedDays  int
+func TestTableCurrentStreak(t *testing.T) {
+	// Defining the columns of the table
+	var tests = []struct {
+		name  string
+		input []string
+		want  int
 	}{
-		{
-			name:          "No activity",
-			activityDates: []string{},
-			expectedDays:  0,
-		},
-		{
-			name:          "Single day today",
-			activityDates: []string{today},
-			expectedDays:  1,
-		},
-		{
-			name:          "Three consecutive days",
-			activityDates: []string{today, yesterday, twoDaysAgo},
-			expectedDays:  3,
-		},
-		{
-			name:          "Broken streak",
-			activityDates: []string{yesterday, twoDaysAgo, time.Now().AddDate(0, 0, -5).Format("2006-01-02")},
-			expectedDays:  2,
-		},
+		// the table itself
+		{"No activities should be 0", make([]string, 0), 0},
+		{"One activity should be 1", []string{"2023-01-06"}, 1},
+		{"Two activities on the same day should be 1", []string{"2023-01-06", "2023-01-06"}, 1},
+		{"Two activities on consecutive days should be 2", []string{"2023-01-06", "2023-01-05"}, 2},
+		{"A broken streak of 3 and a current streak of 2 should be 2", []string{"2023-01-06", "2023-01-05", "2023-01-03", "2023-01-02", "2023-01-01"}, 2},
+		{"A streak of 3 from yesterday should count as 3", []string{"2023-01-05", "2023-01-04", "2023-01-03", "2023-01-01"}, 3},
+		{"A streak of 3 from two days ago should count as 0", []string{"2023-01-04", "2023-01-03", "2023-01-02"}, 0},
 	}
 
+	// define service with current date time of 2023-01-06, 23:00:00, so that the test results are deterministic
+	var streakService IStreakService = NewStreakService(func() time.Time {
+		return time.Date(2023, 1, 6, 23, 0, 0, 0, time.UTC)
+	})
+	// The execution loop
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockRepo := &mockSportRepo{activityDates: tt.activityDates}
-			service := &StreakService{SportRepo: (*OrmSportRepository)(mockRepo)}
-
-			result, err := service.GetCurrentStreak(Snowflake(123))
+			dates, _ := streakService.ParseDates(tt.input)
+			t.Logf("Parsed dates: %v", dates)
+			ans, err := streakService.GetCurrentStreak(dates)
 			if err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			if result.Days != tt.expectedDays {
-				t.Errorf("expected %d days, got %d", tt.expectedDays, result.Days)
+				t.Errorf("%s failed with error: %s", tt.name, err.Error())
+			} else if ans != tt.want {
+				t.Errorf("got %v, want %v", ans, tt.want)
 			}
 		})
 	}
 }
 
-func TestGetLongestStreak(t *testing.T) {
-	today := time.Now().Format("2006-01-02")
-	yesterday := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
-	twoDaysAgo := time.Now().AddDate(0, 0, -2).Format("2006-01-02")
-	weekAgo := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
-	eightDaysAgo := time.Now().AddDate(0, 0, -8).Format("2006-01-02")
-
-	tests := []struct {
-		name          string
-		activityDates []string
-		expectedDays  int
+func TestTableDateParsing(t *testing.T) {
+	// Defining the columns of the table
+	var tests = []struct {
+		name  string
+		input []string
+		want  []time.Time
 	}{
-		{
-			name:          "No activity",
-			activityDates: []string{},
-			expectedDays:  0,
-		},
-		{
-			name:          "Single streak",
-			activityDates: []string{today, yesterday, twoDaysAgo},
-			expectedDays:  3,
-		},
-		{
-			name:          "Multiple streaks - longest is current",
-			activityDates: []string{today, yesterday, twoDaysAgo, time.Now().AddDate(0, 0, -5).Format("2006-01-02")},
-			expectedDays:  3,
-		},
-		{
-			name:          "Multiple streaks - longest is past",
-			activityDates: []string{yesterday, time.Now().AddDate(0, 0, -5).Format("2006-01-02"), time.Now().AddDate(0, 0, -6).Format("2006-01-02"), time.Now().AddDate(0, 0, -7).Format("2006-01-02")},
-			expectedDays:  3,
-		},
+		// the table itself
+		{"Correctly parsing an iso date YYYY-MM-DD should return a time", []string{"2001-02-03"}, []time.Time{time.Date(2001, 2, 3, 0, 0, 0, 0, time.UTC)}},
 	}
 
+	// define service; time does not matter for this test
+	var streakService IStreakService = NewStreakService(time.Now)
+	// The execution loop
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockRepo := &mockSportRepo{activityDates: tt.activityDates}
-			service := &StreakService{SportRepo: (*OrmSportRepository)(mockRepo)}
-
-			result, err := service.GetLongestStreak(Snowflake(123))
+			ans, err := streakService.ParseDates(tt.input)
 			if err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			if result.Days != tt.expectedDays {
-				t.Errorf("expected %d days, got %d", tt.expectedDays, result.Days)
+				t.Errorf("%s failed with error: %s", tt.name, err.Error())
+			} else if !reflect.DeepEqual(ans, tt.want) {
+				t.Errorf("got %s, want %v", ans, tt.want)
 			}
 		})
-	}
-}
-
-func TestIsEqualDate(t *testing.T) {
-	date1 := time.Date(2024, 1, 15, 10, 30, 0, 0, time.UTC)
-	date2 := time.Date(2024, 1, 15, 20, 45, 0, 0, time.UTC)
-	date3 := time.Date(2024, 1, 16, 10, 30, 0, 0, time.UTC)
-
-	if !isEqualDate(date1, date2) {
-		t.Error("expected dates with same day to be equal")
-	}
-	if isEqualDate(date1, date3) {
-		t.Error("expected dates with different days to not be equal")
-	}
-}
-
-func TestGetDateOffset(t *testing.T) {
-	today := time.Now()
-	yesterday := today.AddDate(0, 0, -1)
-	twoDaysAgo := today.AddDate(0, 0, -2)
-
-	if offset := getDateOffset(today); offset != 0 {
-		t.Errorf("expected offset 0 for today, got %d", offset)
-	}
-	if offset := getDateOffset(yesterday); offset != 1 {
-		t.Errorf("expected offset 1 for yesterday, got %d", offset)
-	}
-	if offset := getDateOffset(twoDaysAgo); offset != 2 {
-		t.Errorf("expected offset 2 for two days ago, got %d", offset)
 	}
 }
