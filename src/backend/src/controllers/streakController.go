@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
@@ -28,8 +29,8 @@ type StreakController struct {
 
 // NewStreakController creates a new StreakController instance
 // TODO: use separate repo
-func NewStreakController(DB *gorm.DB) *StreakController {
-	repo := &db.OrmSportRepository{DB: DB}
+func NewStreakController(DB *gorm.DB, Now func() time.Time) *StreakController {
+	repo := &db.OrmSportRepository{DB: DB, StreakService: db.NewStreakService(Now)}
 	return &StreakController{repo: repo}
 }
 

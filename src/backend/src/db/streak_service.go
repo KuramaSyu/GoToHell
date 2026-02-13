@@ -37,7 +37,7 @@ func NewStreakService(Now func() time.Time) *StreakService {
 
 // Parses an array with date strings in type of `YYYY-MM-DD` to an array of time.Time
 func (r *StreakService) ParseDates(activityDates []string) (convertedDates []time.Time, err error) {
-	convertedDates = make([]time.Time, 0, len(convertedDates))
+	convertedDates = make([]time.Time, 0, len(activityDates))
 	for _, dateStr := range activityDates {
 		// parse `dateStr` from format `YYYY-MM-DD` to time.Time
 		recordDate, err := time.Parse("2006-01-02", dateStr)
