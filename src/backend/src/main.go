@@ -10,6 +10,7 @@ package main
 import (
 	"encoding/gob"
 	"log"
+	"time"
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/controllers"
@@ -46,8 +47,11 @@ func main() {
 	store := cookie.NewStore([]byte(appConfig.SessionSecret))
 	r.Use(sessions.Sessions("discord_auth", store))
 
+	// Setup dependencies
+	Now := time.Now
+
 	// Initialize controllers
-	sportsController, db := controllers.NewSportsController()
+	sportsController, db := controllers.NewSportsController(Now)
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, db)
 	friendsController := controllers.NewFriendsController(db)
 	overdueDeathController := controllers.NewOverdueDeathsController(db)
