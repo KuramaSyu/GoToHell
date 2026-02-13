@@ -71,8 +71,8 @@ type SportsController struct {
 
 // NewSportsController creates a new auth controller
 // and initializes the gorm repository.
-func NewSportsController() (*SportsController, *gorm.DB) {
-	repo, db := db.InitORMRepository()
+func NewSportsController(Now func() time.Time) (*SportsController, *gorm.DB) {
+	repo, db := db.InitORMRepository(Now)
 	return &SportsController{repo: repo}, db
 }
 
@@ -354,7 +354,7 @@ func (sc *SportsController) GetDayStreak(c *gin.Context) {
 		return
 	}
 
-	streak, err := sc.repo.GetDayStreak(id)
+	streak, err := sc.repo.GetCurrentStreak(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
