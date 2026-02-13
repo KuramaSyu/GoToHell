@@ -20,7 +20,6 @@ export const MultiplierUpdater = () => {
         });
       }
     }
-    console.log(sportResponse);
   }, [sportResponse, theme.custom.themeName, currentSport, setSport]);
 
   return null;

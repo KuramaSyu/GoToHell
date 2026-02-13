@@ -11,23 +11,6 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 export const MultiplierSettings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
   const [sliderValue, setSliderValue] = React.useState<number | null>(1);
-  const { theme } = useThemeStore();
-  var multipliers: Multiplier[] = [];
-  const GAME = null; // null means global
-
-  // load multiplier value from perferences
-  useEffect(() => {
-    // find global multiplier
-    multipliers = preferences.multipliers;
-    const globalMultiplier = multipliers.find(
-      (multiplier) => multiplier.game == GAME,
-    );
-
-    // set the value of this multiplier for the slider
-    if (globalMultiplier) {
-      setSliderValue(globalMultiplier.multiplier);
-    }
-  }, []);
 
   const saveMultiplier = (game: string | null, value: number) => {
     var newPreferences: UserPreferences = {

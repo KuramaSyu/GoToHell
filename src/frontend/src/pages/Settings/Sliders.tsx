@@ -170,11 +170,6 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
     setUsedMultiplierAndUpdateValue(actualMultiplier?.game);
   }, [theme]);
 
-  // when selecting, set from undefined to null
-  useEffect(() => {
-    setUsedMultiplierAndUpdateValue(undefined);
-  }, []);
-
   /**
    * returns the color of the button, depending if it's selected or not
    * @param btn same as usedMultiplier
@@ -241,15 +236,6 @@ export const MultiplierSlieder: React.FC<SettingsSliderProperties> = ({
   ) => {
     setUsedMultiplier(usedMultiplier);
     UpdateSliderValue();
-  };
-
-  const updateSilderVlaueByStep = (step: number) => {
-    var value = (sliderValue ?? 0) + step;
-    // round value to .2f to prevent float issues
-    value = Math.round(value * 100) / 100;
-    saveValue(usedMultiplier ?? null, value);
-    setSliderValue(value);
-    setStringNumber(String(value));
   };
 
   return (
