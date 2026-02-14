@@ -71,6 +71,7 @@ export const UploadOverdueDeaths = () => {
                 color: isAnimationActive
                   ? lighten(theme.palette.primary.main, 2 / 3)
                   : darken(theme.palette.primary.main, 1 / 3),
+                display: 'flex',
               }}
             >
               <SnoozeIcon fontSize='inherit'></SnoozeIcon>
