@@ -43,7 +43,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
           sx={{
             display: 'flex',
             overflow: 'hidden',
-            height: '115px', // crafted to match the multiplier and pop number font + size combo, since it has a weird margin at the bottom
+            height: '110px', // crafted to match the multiplier and pop number font + size combo, since it has a weird margin at the bottom
             alignItems: 'center',
           }}
         >
