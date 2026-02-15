@@ -26,6 +26,34 @@ services:
     env_file:
       - .env
 
+  chevereto:
+    image: lscr.io/linuxserver/chevereto
+    container_name: chevereto
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    volumes:
+      - ./data/chevereto/config:/config
+      - ./data/chevereto/data:/data
+    ports:
+      - 8082:80
+      # - 443:443
+    restart: unless-stopped
+    depends_on:
+      - chevereto-db
 
-volumes:
-  db_data:
+  chevereto-db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: chevereto-db
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: UTC
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: chevereto
+      MYSQL_USER: chevereto
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./chevereto_db/config:/config
+    restart: unless-stopped
