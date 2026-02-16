@@ -14,7 +14,7 @@ type UserDetailsData struct {
 	Sport     string        `json:"sport"`
 }
 
-func NewPersonalDetailsController(repo db.UserDetailsFacade) *PersonalDetailsController {
+func NewPersonalDetailsController(repo db.IUserDetailsFacade) *PersonalDetailsController {
 	return &PersonalDetailsController{
 		repo: repo,
 	}
@@ -22,7 +22,7 @@ func NewPersonalDetailsController(repo db.UserDetailsFacade) *PersonalDetailsCon
 
 // PersonalDetailsController manages personal details endpoints.
 type PersonalDetailsController struct {
-	repo db.UserDetailsFacade
+	repo db.IUserDetailsFacade
 }
 
 // returns a user with deeper insights

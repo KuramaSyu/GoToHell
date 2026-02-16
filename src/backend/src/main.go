@@ -64,6 +64,7 @@ func main() {
 		StreakService: streakService,
 	}
 	personalGoalRepo := db.NewPersonalGoalsRepository(database)
+	userDetailsFacade := db.NewUserDetailsFacade(&sportRepo, userRepo, personalGoalRepo)
 
 	// Initialize controllers
 	sportsController := controllers.NewSportsController(sportRepository, Now)
@@ -72,6 +73,8 @@ func main() {
 	overdueDeathController := controllers.NewOverdueDeathsController(overdueDeathRepo)
 	streakController := controllers.NewStreakController(&sportRepo, Now)
 	personalGoalsController := controllers.NewPersonalGoalsController(personalGoalRepo)
+	userDetailsController := controllers.NewPersonalDetailsController(userDetailsFacade)
+
 	// Setup routes
 	routes.SetupRouter(
 		r,
@@ -81,8 +84,8 @@ func main() {
 		overdueDeathController,
 		streakController,
 		personalGoalsController,
+		userDetailsController,
 	)
-
 	// Start the server
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
