@@ -50,6 +50,7 @@ func main() {
 
 	// Setup dependencies
 	Now := time.Now
+	streakService := db.NewStreakService(Now)
 	sportRepository, err := db.InitORMRepository(Now)
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
@@ -58,13 +59,18 @@ func main() {
 	userRepo := db.NewGormUserRepository(database)
 	friendshipRepo := db.NewGormFriendshipRepository(database)
 	overdueDeathRepo := db.NewGormOverdueDeathsRepository(database)
+	sportRepo := db.OrmSportRepository{
+		DB:            database,
+		StreakService: streakService,
+	}
+	// personalGoalRepo := db.NewPersonalGoalsRepository(database)
 
 	// Initialize controllers
 	sportsController := controllers.NewSportsController(sportRepository, Now)
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, userRepo)
 	friendsController := controllers.NewFriendsController(userRepo, friendshipRepo)
 	overdueDeathController := controllers.NewOverdueDeathsController(overdueDeathRepo)
-	streakController := controllers.NewStreakController(database, Now)
+	streakController := controllers.NewStreakController(&sportRepo, Now)
 	personalGoalsController := controllers.NewPersonalGoalsController(database)
 	// Setup routes
 	routes.SetupRouter(

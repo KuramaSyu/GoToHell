@@ -8,7 +8,6 @@ import (
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 // swagger:parameters GetStreakQuery
@@ -29,9 +28,9 @@ type StreakController struct {
 
 // NewStreakController creates a new StreakController instance
 // TODO: use separate repo
-func NewStreakController(DB *gorm.DB, Now func() time.Time) *StreakController {
-	repo := &db.OrmSportRepository{DB: DB, StreakService: db.NewStreakService(Now)}
-	return &StreakController{repo: repo}
+func NewStreakController(sportRepo db.SportRepository, Now func() time.Time) *StreakController {
+	// repo := &db.OrmSportRepository{DB: DB, StreakService: db.NewStreakService(Now)}
+	return &StreakController{repo: sportRepo}
 }
 
 // @Summary retrieves the number of days a user has been active back to back
