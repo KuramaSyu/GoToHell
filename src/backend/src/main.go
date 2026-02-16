@@ -57,12 +57,13 @@ func main() {
 	database := sportRepository.DB
 	userRepo := db.NewGormUserRepository(database)
 	friendshipRepo := db.NewGormFriendshipRepository(database)
+	overdueDeathRepo := db.NewGormOverdueDeathsRepository(database)
 
 	// Initialize controllers
 	sportsController := controllers.NewSportsController(sportRepository, Now)
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, userRepo)
 	friendsController := controllers.NewFriendsController(userRepo, friendshipRepo)
-	overdueDeathController := controllers.NewOverdueDeathsController(database)
+	overdueDeathController := controllers.NewOverdueDeathsController(overdueDeathRepo)
 	streakController := controllers.NewStreakController(database, Now)
 	personalGoalsController := controllers.NewPersonalGoalsController(database)
 	// Setup routes

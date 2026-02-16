@@ -5,10 +5,8 @@ import (
 	"net/http"
 
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
-	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 // GetOverdueDeathsReply is the reply sent when doing [get] /overdue-deaths
@@ -41,8 +39,8 @@ type OverdueDeathsController struct {
 	repo OverdueDeathRepository
 }
 
-func NewOverdueDeathsController(database *gorm.DB) *OverdueDeathsController {
-	return &OverdueDeathsController{repo: db.NewGormOverdueDeathsRepository(database)}
+func NewOverdueDeathsController(overdueDeathRepo OverdueDeathRepository) *OverdueDeathsController {
+	return &OverdueDeathsController{repo: overdueDeathRepo}
 }
 
 // returns all OverdueDeaths records for the user
