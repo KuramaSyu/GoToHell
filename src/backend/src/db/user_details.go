@@ -15,11 +15,16 @@ type UserDetailsFacade struct {
 	PersonalGoalsRepo repositories.PersonalGoalsRepository
 }
 
+func (f *UserDetailsFacade) GetDetails(userID models.Snowflake, requestingUserID models.Snowflake) ([]models.GetUserDetailsReply, error) {
+
+	return []models.GetUserDetailsReply{}, nil
+}
+
 func NewUserDetailsFacade(
 	sportRepo SportRepository,
 	userRepo UserRepository,
 	personalGoalsRepo repositories.PersonalGoalsRepository,
-) *UserDetailsFacade {
+) IUserDetailsFacade {
 	return &UserDetailsFacade{
 		SportRepo:         sportRepo,
 		UserRepo:          userRepo,
