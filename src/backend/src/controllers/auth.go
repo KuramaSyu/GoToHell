@@ -11,7 +11,6 @@ import (
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
-	"gorm.io/gorm"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -25,10 +24,10 @@ type AuthController struct {
 }
 
 // NewAuthController creates a new auth controller
-func NewAuthController(oauthConfig *oauth2.Config, database *gorm.DB) *AuthController {
+func NewAuthController(oauthConfig *oauth2.Config, userRepo db.UserRepository) *AuthController {
 	return &AuthController{
 		OAuthConfig: oauthConfig,
-		userRepo:    db.NewGormUserRepository(database),
+		userRepo:    userRepo,
 	}
 }
 

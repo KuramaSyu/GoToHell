@@ -60,7 +60,7 @@ func main() {
 
 	// Initialize controllers
 	sportsController := controllers.NewSportsController(sportRepository, Now)
-	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, database)
+	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, userRepo)
 	friendsController := controllers.NewFriendsController(userRepo, friendshipRepo)
 	overdueDeathController := controllers.NewOverdueDeathsController(database)
 	streakController := controllers.NewStreakController(database, Now)
