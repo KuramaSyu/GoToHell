@@ -12,7 +12,6 @@ import (
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 // swagger:response PostSportReply
@@ -71,9 +70,8 @@ type SportsController struct {
 
 // NewSportsController creates a new auth controller
 // and initializes the gorm repository.
-func NewSportsController(Now func() time.Time) (*SportsController, *gorm.DB) {
-	repo, db := db.InitORMRepository(Now)
-	return &SportsController{repo: repo}, db
+func NewSportsController(SportsRepo db.SportRepository, Now func() time.Time) *SportsController {
+	return &SportsController{repo: SportsRepo}
 }
 
 // Default returns a list of Sports structs based on the default CSV.

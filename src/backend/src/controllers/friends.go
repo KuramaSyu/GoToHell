@@ -6,7 +6,6 @@ import (
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 // represents a gin response with has a string message field
@@ -30,10 +29,8 @@ type GetFriendshipReply struct {
 }
 
 // NewFriendsController initializes a new FriendsController.
-func NewFriendsController(database *gorm.DB) *FriendsController {
-	repo := db.NewGormFriendshipRepository(database)
-	userRepo := db.NewGormUserRepository(database)
-	return &FriendsController{repo: repo, userRepo: userRepo}
+func NewFriendsController(userRepo db.UserRepository, friendshipRepo db.FriendshipRepository) *FriendsController {
+	return &FriendsController{repo: friendshipRepo, userRepo: userRepo}
 }
 
 // FriendRequest is the expected payload when creating a friendship.

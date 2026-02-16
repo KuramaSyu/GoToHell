@@ -14,6 +14,7 @@ import (
 
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/controllers"
+	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/routes"
 
@@ -49,14 +50,21 @@ func main() {
 
 	// Setup dependencies
 	Now := time.Now
+	sportRepository, err := db.InitORMRepository(Now)
+	if err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+	database := sportRepository.DB
+	userRepo := db.NewGormUserRepository(database)
+	friendshipRepo := db.NewGormFriendshipRepository(database)
 
 	// Initialize controllers
-	sportsController, db := controllers.NewSportsController(Now)
-	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, db)
-	friendsController := controllers.NewFriendsController(db)
-	overdueDeathController := controllers.NewOverdueDeathsController(db)
-	streakController := controllers.NewStreakController(db, Now)
-	personalGoalsController := controllers.NewPersonalGoalsController(db)
+	sportsController := controllers.NewSportsController(sportRepository, Now)
+	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, database)
+	friendsController := controllers.NewFriendsController(userRepo, friendshipRepo)
+	overdueDeathController := controllers.NewOverdueDeathsController(database)
+	streakController := controllers.NewStreakController(database, Now)
+	personalGoalsController := controllers.NewPersonalGoalsController(database)
 	// Setup routes
 	routes.SetupRouter(
 		r,
