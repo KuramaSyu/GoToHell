@@ -63,7 +63,7 @@ func main() {
 		DB:            database,
 		StreakService: streakService,
 	}
-	// personalGoalRepo := db.NewPersonalGoalsRepository(database)
+	personalGoalRepo := db.NewPersonalGoalsRepository(database)
 
 	// Initialize controllers
 	sportsController := controllers.NewSportsController(sportRepository, Now)
@@ -71,7 +71,7 @@ func main() {
 	friendsController := controllers.NewFriendsController(userRepo, friendshipRepo)
 	overdueDeathController := controllers.NewOverdueDeathsController(overdueDeathRepo)
 	streakController := controllers.NewStreakController(&sportRepo, Now)
-	personalGoalsController := controllers.NewPersonalGoalsController(database)
+	personalGoalsController := controllers.NewPersonalGoalsController(personalGoalRepo)
 	// Setup routes
 	routes.SetupRouter(
 		r,

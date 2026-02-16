@@ -5,10 +5,8 @@ import (
 	"net/http"
 
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
-	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	. "github.com/KuramaSyu/GoToHell/src/backend/src/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type PersonalGoalData struct {
@@ -66,9 +64,9 @@ type DeletePersonalGoalsRequest struct {
 	ID Snowflake `json:"id" binding:"required"`
 }
 
-func NewPersonalGoalsController(database *gorm.DB) *PersonalGoalsController {
+func NewPersonalGoalsController(personalGoalsRepo PersonalGoalsRepository) *PersonalGoalsController {
 	return &PersonalGoalsController{
-		repo: db.NewPersonalGoalsRepository(database),
+		repo: personalGoalsRepo,
 	}
 }
 
