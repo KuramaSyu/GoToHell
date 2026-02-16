@@ -17,6 +17,7 @@ func SetupRouter(
 	overdueDeathsController *controllers.OverdueDeathsController,
 	streakController *controllers.StreakController,
 	personalGoalsController *controllers.PersonalGoalsController,
+	userDetailsController *controllers.PersonalDetailsController,
 ) {
 
 	// API routes
@@ -65,6 +66,9 @@ func SetupRouter(
 		personalGoals.PATCH("", personalGoalsController.Patch)
 		personalGoals.PUT("", personalGoalsController.Put)
 		personalGoals.DELETE("", personalGoalsController.Delete)
+
+		// route for retrieving details
+		user.GET("/details", userDetailsController.Get)
 
 		// route for swagger API docs
 		api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
