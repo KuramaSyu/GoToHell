@@ -7,7 +7,7 @@ type GetUserDetailsReply struct {
 	Discriminator  string         `json:"discriminator"`
 	Avatar         string         `json:"avatar"`
 	Goals          []PersonalGoal `json:"goals"`
-	CurrentStreak  []DayStreak    `json:"current_streak"`
-	LongestStreak  []DayStreak    `json:"longest_streak"`
+	CurrentStreak  DayStreak      `json:"current_streak"`
+	LongestStreak  DayStreak      `json:"longest_streak"`
 	LastActivities []Sport        `json:"last_activities"`
 }
