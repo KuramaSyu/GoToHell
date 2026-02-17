@@ -64,7 +64,7 @@ func main() {
 		StreakService: streakService,
 	}
 	personalGoalRepo := db.NewPersonalGoalsRepository(database)
-	userDetailsFacade := db.NewUserDetailsFacade(&sportRepo, userRepo, personalGoalRepo)
+	userDetailsFacade := db.NewUserDetailsFacade(&sportRepo, userRepo, personalGoalRepo, friendshipRepo)
 
 	// Initialize controllers
 	sportsController := controllers.NewSportsController(sportRepository, Now)
