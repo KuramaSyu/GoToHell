@@ -75,10 +75,13 @@ func NewUserDetailsFacade(
 	sportRepo SportRepository,
 	userRepo UserRepository,
 	personalGoalsRepo repositories.PersonalGoalsRepository,
+	friendshipRepo FriendshipRepository,
+
 ) IUserDetailsFacade {
 	return &UserDetailsFacade{
 		SportRepo:         sportRepo,
 		UserRepo:          userRepo,
 		PersonalGoalsRepo: personalGoalsRepo,
+		FriendshipRepo:    friendshipRepo,
 	}
 }
