@@ -14,6 +14,7 @@ type FriendshipRepository interface {
 	CreateFriendship(requesterID Snowflake, recipientID Snowflake, status FriendshipStatus) error
 	UpdateFriendship(friendshipID Snowflake, userID Snowflake, status FriendshipStatus) error
 	DeleteFriendship(friendshipID Snowflake) error
+	HavePositiveFriendshipStatus(userA Snowflake, userB Snowflake) (bool, error)
 }
 
 type GormFriendshipRepository struct {
@@ -29,6 +30,27 @@ func NewGormFriendshipRepository(db *gorm.DB) FriendshipRepository {
 // InitRepo performs auto migration for the Friendships model.
 func (r *GormFriendshipRepository) InitRepo() error {
 	return r.DB.AutoMigrate(&Friendships{})
+}
+
+// returns whether or not there is an accepted friendship between userA and userB
+func (r *GormFriendshipRepository) HavePositiveFriendshipStatus(userA Snowflake, userB Snowflake) (bool, error) {
+	existingFriendship := Friendships{}
+	err := r.DB.Where(
+		"((requester_id = ? AND recipient_id = ?) OR (requester_id = ? AND recipient_id = ?)) AND status = ?",
+		userA, userB, userB, userA, Accepted,
+	).First(&existingFriendship).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			// no record found -> no friendship
+			return false, nil
+		} else {
+			// some other error
+			return false, err
+		}
+	}
+	// a record was found
+	return true, nil
 }
 
 // GetFriendships retrieves all friendships where the given user is involved.
