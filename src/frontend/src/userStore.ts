@@ -16,7 +16,7 @@ export interface UsersState {
   friendsLoaded: boolean;
 
   /**
-   * appends a user to the existing ones
+   * appends a user to the existing ones or overrides
    * @param user - the user to add
    * @returns
    */
@@ -56,7 +56,7 @@ export const useUsersStore = create<UsersState>((set) => ({
           acc[user.id] = user;
           return acc;
         },
-        { ...state.users }
+        { ...state.users },
       ),
       friendsLoaded: true,
     })),

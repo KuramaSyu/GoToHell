@@ -14,11 +14,16 @@ import {
 import { GetOverdueDeathsReply } from './responses/OverdueDeaths';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
 import { PatchSportResponse, PostSportsResponse } from './responses/Sport';
+import { GetUserDetailsResponse } from './responses/UserDetails';
 
 export interface BackendApiInterface {}
 export interface UserApiInterface {
   fetchTotalScore(): Promise<Response>;
   fetchUser(): Promise<Response>;
+  fetchUserDetails(
+    user_id: string,
+    updateStores?: boolean,
+  ): Promise<GetUserDetailsResponse | null>;
   fetchFriends(): Promise<FriendshipReply | null>;
   fetchRecentSports(
     userIds: string[],
@@ -102,6 +107,52 @@ export class UserApi implements UserApiInterface {
       this.logError(`/api/auth/user`, response.json());
     }
     return response;
+  }
+
+  /**
+   * Fetches detailed information for a specific user.
+   *
+   *
+   * @note this does not perform a check if details are already fetched. Do that within the component, checking the store!
+   * @param user_id: string: the user id to fetch details for
+   * @param updateStores: boolean: if true, updates the useUsersStore with the fetched details
+   * @returns GetUserDetailsResponse | null: the user details, or null if failed
+   */
+  async fetchUserDetails(
+    user_id: string,
+    updateStores: boolean = false,
+  ): Promise<GetUserDetailsResponse | null> {
+    const API_ENDPOINT = `/api/user/${user_id}/details`;
+    const response = await fetch(`${BACKEND_BASE}${API_ENDPOINT}`, {
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      const result = await response.json().catch((e) => {
+        this.logError(API_ENDPOINT, e);
+        return null;
+      });
+      const details = result as GetUserDetailsResponse;
+
+      if (updateStores && details) {
+        const users = useUsersStore.getState().users;
+        const user = users[user_id];
+        if (user) {
+          user.details = {
+            current_streak: details.current_streak,
+            longest_streak: details.longest_streak,
+            goals: details.goals,
+            last_activities: details.last_activities,
+          };
+          useUsersStore.getState().addUser(user);
+        }
+      }
+
+      return details;
+    } else {
+      this.logError(API_ENDPOINT, await response.json());
+    }
+    return null;
   }
 
   /**
