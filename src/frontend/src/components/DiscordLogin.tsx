@@ -18,6 +18,7 @@ import { useTotalScoreStore } from '../zustand/TotalScoreStore';
 import { UserApi } from '../utils/api/Api';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { ApiRequirementsBuilder } from '../utils/api/ApiRequirementsBuilder';
+import { UserDetails } from '../utils/api/responses/UserDetails';
 
 // Define TypeScript interface for Discord user data
 interface DiscordUser {
@@ -39,6 +40,9 @@ class DiscordUserImpl implements DiscordUser {
   // the users streak - this is not part of the DiscordUser interface
   streak: number | null;
 
+  // user details fetched from /userid/details
+  details: UserDetails | null;
+
   constructor(data: {
     id: string;
     username: string;
@@ -52,6 +56,7 @@ class DiscordUserImpl implements DiscordUser {
     this.avatar = data.avatar;
     this.email = data.email;
     this.streak = null;
+    this.details = null;
   }
 
   getAvatarUrl(): string {
