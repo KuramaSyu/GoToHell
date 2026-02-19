@@ -215,6 +215,29 @@ definitions:
       status:
         $ref: '#/definitions/models.FriendshipStatus'
     type: object
+  models.GetUserDetailsReply:
+    properties:
+      avatar:
+        type: string
+      current_streak:
+        $ref: '#/definitions/models.DayStreak'
+      discriminator:
+        type: string
+      goals:
+        items:
+          $ref: '#/definitions/models.PersonalGoal'
+        type: array
+      id:
+        type: integer
+      last_activities:
+        items:
+          $ref: '#/definitions/models.Sport'
+        type: array
+      longest_streak:
+        $ref: '#/definitions/models.DayStreak'
+      username:
+        type: string
+    type: object
   models.OverdueDeaths:
     properties:
       count:
@@ -225,6 +248,23 @@ definitions:
         type: string
       user_id:
         example: 348922315062044675
+        type: integer
+    type: object
+  models.PersonalGoal:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/models.TimeFrequency'
+      id:
+        type: integer
+      sport:
+        type: string
+      user:
+        allOf:
+        - $ref: '#/definitions/models.User'
+        description: just a constraint to use UserID as foreign key
+      user_id:
         type: integer
     type: object
   models.PostSportRequest:
@@ -310,6 +350,22 @@ info:
   description: Provides all methods to persist data for GoToHell
   title: GoToHell Gin REST API
 paths:
+  /{user_id}/details:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetUserDetailsReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      summary: A user with sport, streak and goal data
   /{user_id}/goals:
     get:
       consumes:

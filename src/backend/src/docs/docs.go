@@ -712,6 +712,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/{user_id}/details": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "A user with sport, streak and goal data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetUserDetailsReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
         "/{user_id}/goals": {
             "get": {
                 "consumes": [
@@ -1069,6 +1094,41 @@ const docTemplate = `{
                 }
             }
         },
+        "models.GetUserDetailsReply": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "current_streak": {
+                    "$ref": "#/definitions/models.DayStreak"
+                },
+                "discriminator": {
+                    "type": "string"
+                },
+                "goals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PersonalGoal"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_activities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Sport"
+                    }
+                },
+                "longest_streak": {
+                    "$ref": "#/definitions/models.DayStreak"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.OverdueDeaths": {
             "type": "object",
             "properties": {
@@ -1083,6 +1143,34 @@ const docTemplate = `{
                 "user_id": {
                     "type": "integer",
                     "example": 348922315062044675
+                }
+            }
+        },
+        "models.PersonalGoal": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/models.TimeFrequency"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sport": {
+                    "type": "string"
+                },
+                "user": {
+                    "description": "just a constraint to use UserID as foreign key",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    ]
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
