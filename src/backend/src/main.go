@@ -50,12 +50,8 @@ func main() {
 
 	// Setup dependencies
 	Now := time.Now
+	sportRepository, database := db.InitORMRepository(Now)
 	streakService := db.NewStreakService(Now)
-	sportRepository, err := db.InitORMRepository(Now)
-	if err != nil {
-		log.Fatalf("Failed to initialize database: %v", err)
-	}
-	database := sportRepository.DB
 	userRepo := db.NewGormUserRepository(database)
 	friendshipRepo := db.NewGormFriendshipRepository(database)
 	overdueDeathRepo := db.NewGormOverdueDeathsRepository(database)
