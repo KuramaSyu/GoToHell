@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserStore } from '../../userStore';
 import {
   ApiRequirement,
@@ -14,30 +14,40 @@ import {
   Typography,
   Box,
   Tooltip,
+  alpha,
+  StackProps,
 } from '@mui/material';
 import { LocalFireDepartment } from '@mui/icons-material';
 import { PersonalGoalSynopsis } from '../TopBar/PersonalGoalSynopsis';
 import { Streak } from '../TopBar/Streak';
+import { UserApi } from '../../utils/api/Api';
+import { GetUserDetailsResponse } from '../../utils/api/responses/UserDetails';
+import { TitleValuePill } from '../TitleValuePill';
 
 export interface UserProfileProps {
   user: DiscordUserImpl | null; // to make it easier to reuse for other users
 }
 export const UserProfileMain: React.FC<UserProfileProps> = ({ user }) => {
-  const { streak } = useStreakStore();
+  const [userDetails, setUserDetails] = useState<GetUserDetailsResponse | null>(
+    null,
+  );
   const { theme } = useThemeStore();
 
   useEffect(() => {
     async function fetchStreak() {
       if (!user) return;
-      await new ApiRequirementsBuilder()
-        .add(ApiRequirement.Streak)
-        .forceFetch();
+      const details = await new UserApi().fetchUserDetails(user.id, true);
+      setUserDetails(details);
     }
     fetchStreak();
   }, [user]);
 
+  if (!userDetails) {
+    return null;
+  }
+
   return (
-    <Stack direction={'column'}>
+    <Stack direction={'column'} gap={theme.spacing(2)} px={theme.spacing(2)}>
       <Stack
         direction={'row'}
         sx={{
@@ -57,16 +67,40 @@ export const UserProfileMain: React.FC<UserProfileProps> = ({ user }) => {
         <Typography variant='h6'> {user?.username ?? 'login'} </Typography>
       </Stack>
       <Divider orientation='horizontal' flexItem />
-      <Stack
-        direction={'row'}
-        fontSize={theme.typography.h3.fontSize}
-        justifyContent={'center'}
-        spacing={theme.spacing(2)}
-      >
-        <Streak />
-        <Divider orientation='vertical' flexItem />
-        <PersonalGoalSynopsis typographyVariant={'h3'} />
-      </Stack>
+      <StyledRowStack>
+        <Typography fontSize='inherit'>Streak:</Typography>
+        <Typography fontSize='inherit'>
+          {userDetails!.current_streak.days} Days
+        </Typography>
+      </StyledRowStack>
+      <StyledRowStack>
+        <Typography fontSize='inherit'>Longest Streak:</Typography>
+        <Typography fontSize='inherit'>
+          {userDetails!.longest_streak.days} Days
+        </Typography>
+      </StyledRowStack>
     </Stack>
   );
 };
+
+function StyledRowStack({ children, sx, ...props }: StackProps) {
+  const { theme } = useThemeStore();
+  const StackBackgroundSx = {
+    backgroundColor: alpha(theme.palette.background.paper, 0.33),
+    borderRadius: theme.shape.borderRadius,
+    px: theme.spacing(4),
+    py: theme.spacing(2),
+  };
+
+  return (
+    <Stack
+      direction={'row'}
+      fontSize={theme.typography.h6.fontSize}
+      justifyContent={'space-between'}
+      sx={{ ...StackBackgroundSx, ...sx }}
+      {...props}
+    >
+      {children}
+    </Stack>
+  );
+}
