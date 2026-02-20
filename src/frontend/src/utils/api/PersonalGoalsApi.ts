@@ -14,13 +14,13 @@ import { PostPutPatchPersonalGoalsRequest } from './requests/PersonalGoals';
 
 export type GoalFrequency = 'daily' | 'weekly' | 'monthly';
 /**
- * The API Wrapper for /api/{user_id}/goals
+ * The API Wrapper for /api/user/{user_id}/goals
  * to modify Personal Goals.
  */
 export class PersonalGoalApi extends BasicApi {
   /**
    * posts an record of PersonalGoals for logged in user
-   * to /api/{user_id}/goals POST
+   * to /api/user/{user_id}/goals POST
    *
    * @Note
    * updates the usePersonalGoalsStore Zustand for the posted personal goal
@@ -52,7 +52,7 @@ export class PersonalGoalApi extends BasicApi {
 
   /**
    * puts an record of PersonalGoalsData for logged in user (which updates or creates it)
-   * to /api/{user_id}/goals PUT
+   * to /api/user/{user_id}/goals PUT
    *
    * @Note
    * updates the usePersonalGoalsStore Zustand for the posted game
@@ -84,7 +84,7 @@ export class PersonalGoalApi extends BasicApi {
 
   /**
    * deletes a PersonalGoal record for the logged in user
-   * to /api/{user_id}/goals DELETE
+   * to /api/user/{user_id}/goals DELETE
    *
    * @Note
    * updates the usePersonalGoalsStore Zustand to remove the deleted personal goal
@@ -104,7 +104,7 @@ export class PersonalGoalApi extends BasicApi {
       return false;
     }
 
-    const API_ENDPOINT = `/api/${user.id}/goals`;
+    const API_ENDPOINT = `/api/user/${user.id}/goals`;
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
     try {
@@ -152,7 +152,7 @@ export class PersonalGoalApi extends BasicApi {
       return null;
     }
 
-    const API_ENDPOINT = `/api/${user.id}/goals`;
+    const API_ENDPOINT = `/api/user/${user.id}/goals`;
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
     try {
@@ -198,7 +198,7 @@ export class PersonalGoalApi extends BasicApi {
 
   /**
    * fetches PersonalGoals for the selected user
-   * from /api/{user_id}/goals GET
+   * from /api/user/{user_id}/goals GET
    *
    * @Note
    * sets the usePersonalGoalsStore Zustand
@@ -209,7 +209,7 @@ export class PersonalGoalApi extends BasicApi {
    * GetPersonalGoalsReply | null: the Response or null if failed
    */
   async get(user_id: string): Promise<GetPersonalGoalsReply | null> {
-    const API_ENDPOINT = `/api/${user_id}/goals`;
+    const API_ENDPOINT = `/api/user/${user_id}/goals`;
 
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
