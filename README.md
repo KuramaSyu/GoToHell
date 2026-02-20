@@ -172,6 +172,10 @@ GameSelectionMap.set('plank', 'Seconds Plank');
 
 ## Installation & Start
 
+### Start via docker-compose
+Create a `.env` file with the contents like in `.example-env` within the root dir. This will then be used by docker compose
+for both frontend and backend
+
 ### Install Dependencies
 
 ```
@@ -182,7 +186,7 @@ npm install
 
 Either use the arg `BACKEND_URL` in the docker container or set a `.env` in the `src/frontend` directory with
 contents like in `src/frontend/.example-env`. It's important to add a `VITE_` to the ENV vars, if not set
-via docker
+via docker (hence when running locally)
 
 ### Starting Website:
 
