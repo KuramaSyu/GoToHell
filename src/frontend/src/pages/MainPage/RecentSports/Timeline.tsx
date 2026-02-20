@@ -30,7 +30,6 @@ import {
 } from '../../../utils/api/ApiRequirementsBuilder';
 import { SportDialog } from './SportDialog';
 import { DiscordUserImpl } from '../../../components/DiscordLogin';
-import { UserInfo } from '../../../components/UserInfo';
 import { SportUserDialogWrapper } from './SportUserDialogWrapper';
 import { blendAgainstContrast } from '../../../utils/blendWithContrast';
 import { UserApi } from '../../../utils/api/Api';

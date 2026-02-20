@@ -16,6 +16,7 @@ import {
   Tooltip,
   alpha,
   StackProps,
+  Skeleton,
 } from '@mui/material';
 import { LocalFireDepartment } from '@mui/icons-material';
 import { PersonalGoalSynopsis } from '../TopBar/PersonalGoalSynopsis';
@@ -43,7 +44,38 @@ export const UserProfileMain: React.FC<UserProfileProps> = ({ user }) => {
   }, [user]);
 
   if (!userDetails) {
-    return null;
+    return (
+      <Stack
+        direction={'column'}
+        gap={theme.spacing(2)}
+        px={theme.spacing(2)}
+        py={theme.spacing(2)}
+      >
+        <Stack
+          direction={'row'}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            p: 1,
+          }}
+        >
+          <Skeleton variant='circular' width={64} height={64} />
+          <Divider orientation='vertical' />
+          <Skeleton variant='text' width={100} />
+        </Stack>
+        <Divider orientation='horizontal' flexItem />
+        <StyledRowStack>
+          <Skeleton variant='text' width={'40%'} />
+          <Skeleton variant='text' width={'20%'} />
+        </StyledRowStack>
+        <StyledRowStack>
+          <Skeleton variant='text' width={'40%'} />
+          <Skeleton variant='text' width={'20%'} />
+        </StyledRowStack>
+      </Stack>
+    );
   }
 
   return (
