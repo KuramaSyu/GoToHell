@@ -34,6 +34,11 @@ func (r *GormFriendshipRepository) InitRepo() error {
 
 // returns whether or not there is an accepted friendship between userA and userB
 func (r *GormFriendshipRepository) HavePositiveFriendshipStatus(userA Snowflake, userB Snowflake) (bool, error) {
+	if userA == userB {
+		// same user
+		return true, nil
+	}
+
 	existingFriendship := Friendships{}
 	err := r.DB.Where(
 		"((requester_id = ? AND recipient_id = ?) OR (requester_id = ? AND recipient_id = ?)) AND status = ?",
