@@ -57,7 +57,7 @@ func SetupRouter(
 		overdueDeaths.GET("", overdueDeathsController.Get)
 
 		// user scoped routes
-		user := api.Group("/:user_id")
+		user := api.Group("/user/:user_id")
 
 		// route for personal goals
 		personalGoals := user.Group("/goals")
