@@ -22,9 +22,9 @@ import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 import { SportDialog, SportDialogProps } from './SportDialog';
-import { UserInfo } from '../../../components/UserInfo';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { useThemeStore } from '../../../zustand/useThemeStore';
+import { UserProfileMain } from '../../../components/UserProfile/Main';
 
 export const SportUserDialogWrapper: React.FC<SportDialogProps> = ({
   selectedSport,
@@ -66,7 +66,9 @@ export const SportUserDialogWrapper: React.FC<SportDialogProps> = ({
           setSelectedSport={setSelectedSport}
         />
       ) : tab === 1 ? (
-        <UserInfo user={users[selectedSport?.user_id!]!}></UserInfo>
+        <UserProfileMain
+          user={users[selectedSport?.user_id!]!}
+        ></UserProfileMain>
       ) : null}
     </Dialog>
   );

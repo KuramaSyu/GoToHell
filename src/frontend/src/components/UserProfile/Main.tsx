@@ -47,7 +47,12 @@ export const UserProfileMain: React.FC<UserProfileProps> = ({ user }) => {
   }
 
   return (
-    <Stack direction={'column'} gap={theme.spacing(2)} px={theme.spacing(2)}>
+    <Stack
+      direction={'column'}
+      gap={theme.spacing(2)}
+      px={theme.spacing(2)}
+      py={theme.spacing(2)}
+    >
       <Stack
         direction={'row'}
         sx={{
