@@ -6,6 +6,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Dialog,
   Modal,
   Typography,
 } from '@mui/material';
@@ -24,21 +25,21 @@ export const ConfirmationModal = ({
   open: boolean;
 }) => {
   return (
-    <Modal open={open}>
+    <Dialog open={open}>
       <Card>
         <CardHeader title={title} />
         <CardContent>
           <Typography variant='body1'>{message}</Typography>
         </CardContent>
         <CardActions>
-          <Button variant='contained' color='warning' onClick={onConfirm}>
+          <Button variant='contained' color='error' onClick={onConfirm}>
             Yes
           </Button>
-          <Button variant='outlined' color='secondary' onClick={onCancel}>
+          <Button variant='contained' color='primary' onClick={onCancel}>
             No
           </Button>
         </CardActions>
       </Card>
-    </Modal>
+    </Dialog>
   );
 };
