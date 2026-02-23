@@ -35,7 +35,7 @@ export const ConfirmationModal = ({
           <Button variant='contained' color='error' onClick={onConfirm}>
             Yes
           </Button>
-          <Button variant='contained' color='primary' onClick={onCancel}>
+          <Button variant='contained' color='success' onClick={onCancel}>
             No
           </Button>
         </CardActions>
