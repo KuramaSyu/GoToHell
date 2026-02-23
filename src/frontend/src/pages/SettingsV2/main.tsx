@@ -45,6 +45,7 @@ import {
   SportAdjustments,
 } from './SportAdjustments';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { ConfirmationModal } from './ConfirmationModal';
 /**
  *
  * SettingsPage
@@ -82,6 +83,7 @@ export const SettingsSection = React.forwardRef<
 >(({ id, label, children, resetLogic }, ref) => {
   // to rerender children on reset
   const [resetKey, setResetKey] = useState(0);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleReset = () => {
     if (resetLogic) {
@@ -96,13 +98,25 @@ export const SettingsSection = React.forwardRef<
         <Typography variant='h6'>{label}</Typography>
         {resetLogic && (
           <Tooltip title={`Reset ${label} Settings`} arrow placement='top'>
-            <IconButton
-              aria-label='reset settings'
-              onClick={handleReset}
-              color='warning'
-            >
-              <RestartAltIcon />
-            </IconButton>
+            <>
+              <IconButton
+                aria-label='reset settings'
+                onClick={() => setConfirmOpen(true)}
+                color='warning'
+              >
+                <RestartAltIcon />
+              </IconButton>
+              <ConfirmationModal
+                title='Are you sure?'
+                message={`This will reset all settings of ${label}`}
+                onCancel={() => setConfirmOpen(false)}
+                onConfirm={() => {
+                  handleReset();
+                  setConfirmOpen(false);
+                }}
+                open={confirmOpen}
+              />
+            </>
           </Tooltip>
         )}
       </Stack>
