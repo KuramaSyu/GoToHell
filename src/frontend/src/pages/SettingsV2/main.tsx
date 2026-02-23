@@ -113,49 +113,6 @@ export const SettingsSection = React.forwardRef<
 });
 SettingsSection.displayName = 'SettingsSection';
 
-// ---- Demo content (replace with your real settings forms) ----
-function AccountSettings() {
-  return (
-    <Box>
-      <Typography variant='body1'>
-        Account details, email, password reset, two-factor auth, etc.
-      </Typography>
-      <Box sx={{ height: 400 }} />
-    </Box>
-  );
-}
-
-function SecuritySettings() {
-  return (
-    <Box>
-      <Typography variant='body1'>
-        Security options, sessions, devices.
-      </Typography>
-      <Box sx={{ height: 400 }} />
-    </Box>
-  );
-}
-
-function NotificationsSettings() {
-  return (
-    <Box>
-      <Typography variant='body1'>
-        Notification preferences for email, push, and in-app.
-      </Typography>
-      <Box sx={{ height: 400 }} />
-    </Box>
-  );
-}
-
-function AppearanceSettings() {
-  return (
-    <Box>
-      <Typography variant='body1'>Theme, density, and language.</Typography>
-      <Box sx={{ height: 400 }} />
-    </Box>
-  );
-}
-
 function ExcerciseOverrideSettings() {
   return (
     <Box>
