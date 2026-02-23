@@ -25,35 +25,24 @@ services:
       - "5173:80"
     env_file:
       - .env
-
-  chevereto:
-    image: lscr.io/linuxserver/chevereto
-    container_name: chevereto
+  slink:
+    image: anirdev/slink:latest
+    container_name: slink
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=UTC
+      - ORIGIN=${SLINK_URL:-http://localhost:3001}
+      - STORAGE_PROVIDER=local  # smb | local | s3
+      - USER_APPROVAL_REQUIRED=true
+      - IMAGE_MAX_SIZE=15M
+      - USER_ALLOW_REGISTRATION=false
+      - IMAGE_FORCE_FORMAT_CONVERSION=true
+      - IMAGE_TARGET_FORMAT=webp
+      - ADMIN_USERNAME=${SLINK_ADMIN_USERNAME}
+      - ADMIN_EMAIL=${SLINK_ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${SLINK_ADMIN_PASSWORD}
     volumes:
-      - ./data/chevereto/config:/config
-      - ./data/chevereto/data:/data
+      # Only need to persist the database when using SMB storage
+      - ./data/slink/var/data:/app/var/data
+      - ./data/slink/images:/app/slink/images
     ports:
-      - 8082:80
-      # - 443:443
-    restart: unless-stopped
-    depends_on:
-      - chevereto-db
-
-  chevereto-db:
-    image: lscr.io/linuxserver/mariadb
-    container_name: chevereto-db
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: UTC
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: chevereto
-      MYSQL_USER: chevereto
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - ./chevereto_db/config:/config
-    restart: unless-stopped
+      - '3001:3000'
