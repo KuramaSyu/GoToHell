@@ -91,7 +91,7 @@ export function buildCustomTheme(
 export class ThemeManager {
   private themes: Map<string, CustomThemeConfig>;
   private static instance: ThemeManager | undefined;
-  private readonly THEME_LOADING_WARNING_TIMEOUT_MS = 3000;
+  private readonly THEME_LOADING_WARNING_TIMEOUT_MS = 4000;
   // For now, we use a constant to choose dark mode; later this can be dynamically set.
   private readonly isDark: boolean = true;
 
@@ -139,11 +139,9 @@ export class ThemeManager {
     // Always extract the palette using Vibrant.
     let extractedPalette;
     try {
-      // Load the image first, then process with Vibrant
-      const img = new Image();
-      img.crossOrigin = 'Anonymous'; // Needed for CORS if images are on different domain
-
-      // display timer after too much loading time
+      // 1 - fetch image as blob to ensure CORS is handled correctly
+      const abortController = new AbortController(); // to cancel fetch() if needed
+      // warn ofter given time
       const warningTimer = setTimeout(() => {
         useInfoStore
           .getState()
@@ -154,7 +152,38 @@ export class ThemeManager {
             ),
           );
       }, this.THEME_LOADING_WARNING_TIMEOUT_MS);
-      // Create a promise to wait for the image to load
+      // timer to allert controller after given time
+      const timeoutId = setTimeout(() => {
+        abortController.abort();
+        useInfoStore
+          .getState()
+          .setMessage(
+            new SnackbarUpdateImpl(
+              `Failed to load image for theme ${themeName} with URL "${chosenBackground}". Using default Theme`,
+              'error',
+            ),
+          );
+      }, this.THEME_LOADING_WARNING_TIMEOUT_MS * 10);
+      // actually execute the request
+      const response = await fetch(chosenBackground!, {
+        mode: 'cors',
+        redirect: 'follow',
+        signal: abortController.signal,
+      });
+      clearTimeout(timeoutId); // clear timer
+
+      // 2 - convert response to blob
+      const blob = await response.blob();
+
+      // 3 - create object URL from blob for Vibrant
+      const objectUrl = URL.createObjectURL(blob);
+
+      // 4 - create image and asign object URL as source for Vibrant
+      const img = new Image();
+      img.crossOrigin = 'Anonymous'; // Needed for CORS if images are on different domain
+      img.src = objectUrl;
+
+      // 5 - process image with vibrant to extract palette
       const imageLoaded = new Promise((resolve, reject) => {
         img.onload = () => {
           clearTimeout(warningTimer);
@@ -172,7 +201,6 @@ export class ThemeManager {
               ),
             );
         };
-        img.src = chosenBackground!;
       });
 
       // Wait for the image to load, then process with Vibrant
