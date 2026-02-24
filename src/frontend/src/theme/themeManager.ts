@@ -91,11 +91,13 @@ export function buildCustomTheme(
 export class ThemeManager {
   private themes: Map<string, CustomThemeConfig>;
   private static instance: ThemeManager | undefined;
+  private readonly THEME_LOADING_WARNING_TIMEOUT_MS = 3000;
   // For now, we use a constant to choose dark mode; later this can be dynamically set.
   private readonly isDark: boolean = true;
 
   private constructor(configs: CustomThemeConfig[]) {
     this.themes = new Map();
+
     configs.forEach((config) => this.themes.set(config.name, config));
   }
 
@@ -151,7 +153,7 @@ export class ThemeManager {
               'warning',
             ),
           );
-      }, 1200);
+      }, this.THEME_LOADING_WARNING_TIMEOUT_MS);
       // Create a promise to wait for the image to load
       const imageLoaded = new Promise((resolve, reject) => {
         img.onload = () => {
