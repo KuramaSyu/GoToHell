@@ -28,6 +28,21 @@ import { TitleValuePill } from '../TitleValuePill';
 export interface UserProfileProps {
   user: DiscordUserImpl | null; // to make it easier to reuse for other users
 }
+
+/**
+ * Renders the main content of a user's profile page.
+ *
+ * This component displays key user information, including their avatar, username,
+ * current daily streak, and longest daily streak. It fetches the user's details
+ * asynchronously when the component mounts or when the `user` prop changes.
+ *
+ * While the data is being fetched, it displays a skeleton loading state
+ * to provide a better user experience.
+ *
+ * @param {UserProfileProps} props - The component props.
+ * @param {User | null | undefined} props.user - The user object containing basic information like ID, username, and avatar URL.
+ * @returns {React.ReactElement} The rendered user profile main section.
+ */
 export const UserProfileMain: React.FC<UserProfileProps> = ({ user }) => {
   const [userDetails, setUserDetails] = useState<GetUserDetailsResponse | null>(
     null,
