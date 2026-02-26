@@ -25,24 +25,14 @@ services:
       - "5173:80"
     env_file:
       - .env
-  slink:
-    image: anirdev/slink:latest
-    container_name: slink
-    environment:
-      - TZ=UTC
-      - ORIGIN=${SLINK_URL:-http://localhost:3001}
-      - STORAGE_PROVIDER=local  # smb | local | s3
-      - USER_APPROVAL_REQUIRED=true
-      - IMAGE_MAX_SIZE=15M
-      - USER_ALLOW_REGISTRATION=false
-      - IMAGE_FORCE_FORMAT_CONVERSION=true
-      - IMAGE_TARGET_FORMAT=webp
-      - ADMIN_USERNAME=${SLINK_ADMIN_USERNAME}
-      - ADMIN_EMAIL=${SLINK_ADMIN_EMAIL}
-      - ADMIN_PASSWORD=${SLINK_ADMIN_PASSWORD}
-    volumes:
-      # Only need to persist the database when using SMB storage
-      - ./data/slink/var/data:/app/var/data
-      - ./data/slink/images:/app/slink/images
+  openinary:
+    image: openinary/openinary:latest
+    platform: linux/amd64
     ports:
-      - '3001:3000'
+      - "3001:3000"
+    environment:
+      BETTER_AUTH_URL: "http://localhost:3001"
+    volumes:
+      - ./data/openinary/cache:/app/apps/api/cache
+      - ./data/openinary/public:/app/apps/api/public
+      - ./data/openinary/db:/app/data
