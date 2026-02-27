@@ -174,6 +174,7 @@ const MainContentDesktop: React.FC = () => {
         height: '92vh',
         justifyContent: 'space-between',
         width: '100%',
+        gap: 2,
       }}
     >
       {/* top row */}
@@ -327,6 +328,7 @@ const MainContentDesktop: React.FC = () => {
             sx={{
               flexShrink: 1,
               flexBasis: 'clamp(180px, 25%, 350px)',
+              overflowY: 'scroll',
               minWidth: '180px',
               maxWidth: '250px',
               alignContent: 'center',
