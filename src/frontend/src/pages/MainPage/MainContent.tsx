@@ -164,6 +164,7 @@ const MainContentMobile: React.FC = () => {
 
 const MainContentDesktop: React.FC = () => {
   const { theme } = useThemeStore();
+  const { isTablet } = useBreakpoint();
 
   return (
     <Box
@@ -258,6 +259,14 @@ const MainContentDesktop: React.FC = () => {
           borderRadius: 1,
           minHeight: 0,
           gap: 4,
+          height: {
+            xs: '20%',
+            md: '50%',
+            // BUT, if the screen is short (vertically), force it to 20%
+            '@media (max-height: 700px)': {
+              height: '40%',
+            },
+          },
         }}
       >
         {/* Game Selection */}
