@@ -1,7 +1,5 @@
 import { Timeline } from '@mui/icons-material';
 import { useThemeStore } from '../../zustand/useThemeStore';
-import { SportsTimeline } from '../MainPage/RecentSports/Timeline';
-import { TimelineWrapper } from '../MainPage/RecentSports/TimelineWrapper';
 import AppBackground from '../../components/AppBackground';
 import { useEffect } from 'react';
 import {
@@ -15,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar/TopBar';
 import { BoxElevation1 } from '../../theme/statics';
+import { TimelineWrapper } from '../MainPage/Timeline/TimelineWrapper';
 
 export const TimelinePageMainComponent: React.FC = () => {
   const { theme } = useThemeStore();

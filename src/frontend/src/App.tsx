@@ -16,8 +16,7 @@ import { useUserStore } from './userStore';
 import SettingsPage from './pages/SettingsV2/main';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { TimelinePageMainComponent } from './pages/TimelinePage/Main';
-import { SportsTimeline } from './pages/MainPage/RecentSports/Timeline';
-import { TimelineWrapper } from './pages/MainPage/RecentSports/TimelineWrapper';
+
 // Import other components as needed
 
 const App: React.FC = () => {

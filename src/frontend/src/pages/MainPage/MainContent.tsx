@@ -13,7 +13,6 @@ import { NumberSlider } from './NumberSlider';
 import { UploadScore } from './UploadScore';
 import { TotalScoreDisplay } from './TotalScoreDisplay';
 import { SportSelector } from './SportSelect';
-import { RecentSports } from './RecentSports/TabView';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { AmountDisplay } from './AmountDisplay';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -27,6 +26,7 @@ import { TotalScoreHeadline } from './TotalScoreHeadline';
 import { NUMBER_FONT } from '../../statics';
 import { CalculatorUpdater } from './CalculatorUpdater';
 import { MultiplierUpdater } from './MultiplierUpdater';
+import { RecentSports } from './TImeline/TabView';
 
 const MainContent: React.FC = () => {
   const { isMobile } = useBreakpoint();

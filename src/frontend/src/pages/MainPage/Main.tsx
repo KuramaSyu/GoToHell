@@ -12,13 +12,13 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
-import { TimelineWrapper } from './RecentSports/TimelineWrapper';
 import { LoadingPage } from '../LoadingPage/Main';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { hexToRgbString } from '../../utils/colors/hexToRgb';
 import { LoginPage } from '../LoginPage/Main';
 import { BoxElevation1 } from '../../theme/statics';
+import { TimelineWrapper } from './Timeline/TimelineWrapper';
 
 const MainPage: React.FC = () => {
   const { theme } = useThemeStore();
