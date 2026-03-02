@@ -26,7 +26,7 @@ import { TotalScoreHeadline } from './TotalScoreHeadline';
 import { NUMBER_FONT } from '../../statics';
 import { CalculatorUpdater } from './CalculatorUpdater';
 import { MultiplierUpdater } from './MultiplierUpdater';
-import { RecentSports } from './TImeline/TabView';
+import { RecentSports } from './Timeline/TabView';
 
 const MainContent: React.FC = () => {
   const { isMobile } = useBreakpoint();
