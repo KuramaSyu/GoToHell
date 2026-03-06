@@ -31,7 +31,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      BETTER_AUTH_URL: "http://localhost:3001"
+      BETTER_AUTH_URL: ${OPENINARY_URL}
     volumes:
       - ./data/openinary/cache:/app/apps/api/cache
       - ./data/openinary/public:/app/apps/api/public
