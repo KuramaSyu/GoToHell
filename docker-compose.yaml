@@ -28,11 +28,11 @@ services:
   openinary:
     image: openinary/openinary:latest
     platform: linux/amd64
-    ports:
-      - "3001:3000"
+    # ports:
+    #   - "3000:3000"
     environment:
       BETTER_AUTH_URL: ${OPENINARY_URL}
-      CORS_ORIGIN: http://localhost:5173,https://gotohell.inu-the-bot.com
+      CORS_ORIGIN: ${OPENINARY_CORS_ORIGIN:-"http://localhost:5173,https://gotohell.inu-the-bot.com"}
     volumes:
       - ./data/openinary/cache:/app/apps/api/cache
       - ./data/openinary/public:/app/apps/api/public
