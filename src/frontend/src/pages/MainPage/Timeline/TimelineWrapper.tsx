@@ -3,6 +3,7 @@ import { ResponsiveStyleValue } from '@mui/system';
 import React, { memo, useEffect, useState } from 'react';
 import { StreakTimeline } from './StreakTimeline';
 import { SportsTimeline } from './Timeline';
+import { Feature } from '../../../components/Feature';
 
 const TOTAL_DURATION_MS = 5000;
 const MemoStreakTimeline = memo(StreakTimeline);
@@ -24,14 +25,16 @@ export const TimelineWrapper: React.FC = () => {
 
   return (
     <Box>
-      {!progressCompleted ? (
-        <Box>
-          <SimpleTimeBasedProgressBar durationMs={TOTAL_DURATION_MS} />
-          <MemoStreakTimeline />
-        </Box>
-      ) : (
-        <SportsTimeline></SportsTimeline>
-      )}
+      <Feature name='StartupStreaks' fallback={<SportsTimeline />}>
+        {!progressCompleted ? (
+          <Box>
+            <SimpleTimeBasedProgressBar durationMs={TOTAL_DURATION_MS} />
+            <MemoStreakTimeline />
+          </Box>
+        ) : (
+          <SportsTimeline></SportsTimeline>
+        )}
+      </Feature>
     </Box>
   );
 };
