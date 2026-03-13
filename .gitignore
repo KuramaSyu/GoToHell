@@ -29,3 +29,4 @@ tools/img_out/*
 tools/img_in/*
 tools/out/*
 data/
+tools/.sync_state.json
