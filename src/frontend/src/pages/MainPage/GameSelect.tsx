@@ -61,8 +61,11 @@ export const GameSelector = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        height: '100%',
+        minHeight: '100%',
         width: '100%',
+        '@media (max-height: 700px)': {
+          justifyContent: 'flex-start',
+        },
       }}
     >
       <DynamicGameGrid

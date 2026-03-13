@@ -262,7 +262,7 @@ const MainContentDesktop: React.FC = () => {
           height: {
             xs: '20%',
             md: '50%',
-            // BUT, if the screen is short (vertically), force it to 20%
+            // BUT, if the screen is short (vertically), force it to 40%
             '@media (max-height: 700px)': {
               height: '40%',
             },
@@ -279,8 +279,11 @@ const MainContentDesktop: React.FC = () => {
             sx={{
               flexShrink: 0,
               flexBasis: 'clamp(300px, 33%, 500px)',
+              minHeight: 0,
               minWidth: '300px',
               maxWidth: '500px',
+              overflowY: 'auto',
+              pr: 2,
             }}
           >
             <GameSelector />
