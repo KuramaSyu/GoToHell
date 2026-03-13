@@ -276,7 +276,12 @@ async def sync(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Sync GoToHell-Backgrounds to Openinary")
+    parser = argparse.ArgumentParser(description="""
+Sync GoToHell-Backgrounds to Openinary. 
+Locally a .sync_state.json is stored, which tracks the SHA-256 
+checksums of previously uploaded files. On subsequent runs, 
+only new or changed files are uploaded."""
+)
     parser.add_argument(
         "--url",
         required=True,
