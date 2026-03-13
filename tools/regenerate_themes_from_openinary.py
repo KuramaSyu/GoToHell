@@ -9,8 +9,10 @@ with URLs generated from files in that folder.
 By default, themes without a strong folder match are left unchanged.
 
 Examples:
-    python regenerate_themes_from_openinary.py
-    python regenerate_themes_from_openinary.py --base-url http://localhost:3001
+    OPENINARY_API_KEY=<key> python regenerate_themes_from_openinary.py
+    python regenerate_themes_from_openinary.py --api-key-file /run/secrets/openinary_api_key
+    cat /run/secrets/openinary_api_key | python regenerate_themes_from_openinary.py --api-key-stdin
+    python regenerate_themes_from_openinary.py --api-key <key> --base-url http://localhost:3001
     python regenerate_themes_from_openinary.py --output /tmp/themes.updated.json
     python regenerate_themes_from_openinary.py --min-score 0.62 --dry-run
     python regenerate_themes_from_openinary.py --cleanup-legacy-flat
@@ -20,7 +22,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import requests
+import sys
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -124,6 +129,80 @@ def discover_folder_images(public_dir: Path) -> dict[str, list[str]]:
     return folder_images
 
 
+def discover_folder_images_from_tree(tree_data: list[dict]) -> dict[str, list[str]]:
+    """
+    Build a folder -> files map from /api/storage response.
+
+    Expected shape:
+    [
+      {"id": "Terraria", "name": "Terraria", "children": [...]},
+      ...
+    ]
+    """
+    folder_images: dict[str, list[str]] = {}
+
+    def collect_files(children: list[dict], prefix: str, out: list[str]) -> None:
+        for child in children:
+            name = str(child.get("name", "")).strip()
+            if not name:
+                continue
+            grand_children = child.get("children")
+            if isinstance(grand_children, list) and grand_children:
+                collect_files(grand_children, f"{prefix}{name}/", out)
+            else:
+                out.append(f"{prefix}{name}")
+
+    for node in tree_data:
+        folder_name = str(node.get("name", "")).strip()
+        children = node.get("children")
+        # Only treat nodes with children as folders.
+        if not folder_name or not isinstance(children, list):
+            continue
+
+        files: list[str] = []
+        collect_files(children, "", files)
+        if files:
+            folder_images[folder_name] = sorted(files, key=natural_key)
+
+    return folder_images
+
+
+def fetch_storage_tree(openinary_url: str, api_key: str, timeout: float) -> list[dict]:
+    endpoint = f"{openinary_url.rstrip('/')}/api/storage"
+    headers = {"Authorization": f"Bearer {api_key}"}
+
+    try:
+        response = requests.get(endpoint, headers=headers, timeout=timeout, allow_redirects=False)
+    except requests.RequestException as exc:
+        raise SystemExit(f"failed to call Openinary storage API: {exc}") from exc
+
+    if response.status_code in {301, 302, 307, 308}:
+        location = response.headers.get("Location", "")
+        raise SystemExit(
+            f"storage API redirected ({response.status_code}) to {location!r}. "
+            "This usually means auth failed or endpoint is not proxied correctly."
+        )
+
+    if response.status_code != 200:
+        snippet = response.text[:300]
+        raise SystemExit(
+            f"storage API failed: HTTP {response.status_code}. Response: {snippet}"
+        )
+
+    try:
+        payload = response.json()
+    except ValueError as exc:
+        raise SystemExit(
+            "storage API returned non-JSON data. "
+            f"Response starts with: {response.text[:300]}"
+        ) from exc
+
+    if not isinstance(payload, list):
+        raise SystemExit(f"unexpected storage API response shape: {type(payload).__name__}")
+
+    return payload
+
+
 def find_legacy_flat_files(public_dir: Path) -> list[Path]:
     """
     Find root-level files like "Terraria%2F05.webp" that came from a broken
@@ -192,12 +271,51 @@ def resolve_themes_path(user_path: Path | None) -> Path:
     )
 
 
+def resolve_api_key(
+    api_key: str | None,
+    api_key_file: Path | None,
+    api_key_stdin: bool,
+) -> str | None:
+    """
+    Resolve API key from one configured source, then OPENINARY_API_KEY fallback.
+    """
+    explicit_sources = int(bool(api_key)) + int(bool(api_key_file)) + int(api_key_stdin)
+    if explicit_sources > 1:
+        raise SystemExit(
+            "Use only one of --api-key, --api-key-file, or --api-key-stdin."
+        )
+
+    if api_key:
+        value = api_key.strip()
+        if not value:
+            raise SystemExit("--api-key was provided but is empty")
+        return value
+
+    if api_key_file is not None:
+        key_path = api_key_file.expanduser().resolve()
+        if not key_path.is_file():
+            raise SystemExit(f"api key file not found: {key_path}")
+        value = key_path.read_text(encoding="utf-8").strip()
+        if not value:
+            raise SystemExit(f"api key file is empty: {key_path}")
+        return value
+
+    if api_key_stdin:
+        value = sys.stdin.read().strip()
+        if not value:
+            raise SystemExit("--api-key-stdin was set but stdin is empty")
+        return value
+
+    value = os.environ.get("OPENINARY_API_KEY", "").strip()
+    return value or None
+
+
 def main() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     default_public = repo_root / "data/openinary/public"
 
     parser = argparse.ArgumentParser(
-        description="Regenerate theme backgrounds from Openinary folders",
+        description="Regenerate theme backgrounds from Openinary folders via API",
     )
     parser.add_argument(
         "--themes",
@@ -206,10 +324,49 @@ def main() -> None:
         help="Path to input themes JSON (auto-detected when omitted)",
     )
     parser.add_argument(
+        "--source",
+        choices=["api", "local"],
+        default="api",
+        help="Folder discovery source (default: api)",
+    )
+    parser.add_argument(
+        "--openinary-url",
+        default="http://localhost:3001",
+        help="Openinary base URL used for API requests (default: http://localhost:3001)",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=None,
+        help=(
+            "Openinary API key (less secure in CI process lists). "
+            "Prefer OPENINARY_API_KEY, --api-key-file, or --api-key-stdin"
+        ),
+    )
+    parser.add_argument(
+        "--api-key-file",
+        type=Path,
+        default=None,
+        help="Read API key from file (recommended for CI secret mounts)",
+    )
+    parser.add_argument(
+        "--api-key-stdin",
+        action="store_true",
+        help="Read API key from stdin",
+    )
+    parser.add_argument(
+        "--api-timeout",
+        type=float,
+        default=20.0,
+        help="HTTP timeout in seconds for API calls (default: 20)",
+    )
+    parser.add_argument(
         "--openinary-public",
         type=Path,
         default=default_public,
-        help=f"Path to Openinary public dir (default: {default_public})",
+        help=(
+            "Path to Openinary public dir for --source local and optional cleanup "
+            f"(default: {default_public})"
+        ),
     )
     parser.add_argument(
         "--base-url",
@@ -244,11 +401,14 @@ def main() -> None:
     public_dir = args.openinary_public.resolve()
     out_path = args.output.resolve() if args.output else themes_path
     base_url = args.base_url.rstrip("/")
+    openinary_url = args.openinary_url.rstrip("/")
+    resolved_api_key = resolve_api_key(args.api_key, args.api_key_file, args.api_key_stdin)
 
     if args.themes is None:
         print(f"[auto] using themes file: {themes_path}")
-    if not public_dir.exists() or not public_dir.is_dir():
-        raise SystemExit(f"openinary public directory not found: {public_dir}")
+    if args.source == "local" or args.cleanup_legacy_flat:
+        if not public_dir.exists() or not public_dir.is_dir():
+            raise SystemExit(f"openinary public directory not found: {public_dir}")
 
     with themes_path.open("r", encoding="utf-8") as f:
         themes = json.load(f)
@@ -256,7 +416,17 @@ def main() -> None:
     if not isinstance(themes, list):
         raise SystemExit("themes JSON must be a list")
 
-    folder_images = discover_folder_images(public_dir)
+    if args.source == "api":
+        if not resolved_api_key:
+            raise SystemExit(
+                "API key is required for --source api. Provide one of: "
+                "--api-key, --api-key-file, --api-key-stdin, or OPENINARY_API_KEY"
+            )
+        tree_data = fetch_storage_tree(openinary_url, resolved_api_key, args.api_timeout)
+        folder_images = discover_folder_images_from_tree(tree_data)
+    else:
+        folder_images = discover_folder_images(public_dir)
+
     folder_names = list(folder_images.keys())
 
     if not folder_names:

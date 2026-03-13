@@ -7,10 +7,12 @@ A local .sync_state.json tracks SHA-256 checksums so only new or changed
 files are uploaded on subsequent runs.
 
 Usage:
-    python sync_to_openinary.py --url http://localhost:3001 --api-key <key>
+    OPENINARY_API_KEY=<key> python sync_to_openinary.py --url http://localhost:3001
+    python sync_to_openinary.py --url http://localhost:3001 --api-key-file /run/secrets/openinary_api_key
+    cat /run/secrets/openinary_api_key | python sync_to_openinary.py --url http://localhost:3001 --api-key-stdin
     python sync_to_openinary.py --url http://localhost:3001 --api-key <key> --force
-    python sync_to_openinary.py --url http://localhost:3001 --api-key <key> --dry-run
-    python sync_to_openinary.py --url http://localhost:3001 --api-key <key> --concurrency 8
+    python sync_to_openinary.py --url http://localhost:3001 --dry-run
+    python sync_to_openinary.py --url http://localhost:3001 --concurrency 8
 """
 
 import argparse
@@ -21,7 +23,6 @@ import os
 import sys
 from pathlib import Path
 from typing import Optional
-import os
 
 import aiohttp
 
@@ -50,6 +51,45 @@ MIME_MAP = {
     ".tif":  "image/tiff",
     ".svg":  "image/svg+xml",
 }
+
+
+def resolve_api_key(
+    api_key: str | None,
+    api_key_file: Path | None,
+    api_key_stdin: bool,
+) -> str | None:
+    """
+    Resolve API key from one configured source, then OPENINARY_API_KEY fallback.
+    """
+    explicit_sources = int(bool(api_key)) + int(bool(api_key_file)) + int(api_key_stdin)
+    if explicit_sources > 1:
+        raise SystemExit(
+            "Use only one of --api-key, --api-key-file, or --api-key-stdin."
+        )
+
+    if api_key:
+        value = api_key.strip()
+        if not value:
+            raise SystemExit("--api-key was provided but is empty")
+        return value
+
+    if api_key_file is not None:
+        key_path = api_key_file.expanduser().resolve()
+        if not key_path.is_file():
+            raise SystemExit(f"api key file not found: {key_path}")
+        value = key_path.read_text(encoding="utf-8").strip()
+        if not value:
+            raise SystemExit(f"api key file is empty: {key_path}")
+        return value
+
+    if api_key_stdin:
+        value = sys.stdin.read().strip()
+        if not value:
+            raise SystemExit("--api-key-stdin was set but stdin is empty")
+        return value
+
+    value = os.environ.get("OPENINARY_API_KEY", "").strip()
+    return value or None
 
 # ---------------------------------------------------------------------------
 # State helpers
@@ -277,10 +317,15 @@ async def sync(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""
-Sync GoToHell-Backgrounds to Openinary. 
+Sync GoToHell-Backgrounds to Openinary.
 Locally a .sync_state.json is stored, which tracks the SHA-256 
 checksums of previously uploaded files. On subsequent runs, 
-only new or changed files are uploaded."""
+only new or changed files are uploaded.
+
+API key sources (in priority order):
+--api-key, --api-key-file, --api-key-stdin, OPENINARY_API_KEY env var.
+For CI, prefer --api-key-file or OPENINARY_API_KEY over --api-key.
+"""
 )
     parser.add_argument(
         "--url",
@@ -289,8 +334,22 @@ only new or changed files are uploaded."""
     )
     parser.add_argument(
         "--api-key",
-        required=True,
-        help="Openinary API key (Bearer token)",
+        default=None,
+        help=(
+            "Openinary API key (less secure in CI process lists). "
+            "Prefer OPENINARY_API_KEY, --api-key-file, or --api-key-stdin"
+        ),
+    )
+    parser.add_argument(
+        "--api-key-file",
+        type=Path,
+        default=None,
+        help="Read API key from file (recommended for CI secret mounts)",
+    )
+    parser.add_argument(
+        "--api-key-stdin",
+        action="store_true",
+        help="Read API key from stdin",
     )
     parser.add_argument(
         "--force",
@@ -309,9 +368,16 @@ only new or changed files are uploaded."""
         help="Maximum number of concurrent uploads (default: 4)",
     )
     args = parser.parse_args()
+    resolved_api_key = resolve_api_key(args.api_key, args.api_key_file, args.api_key_stdin)
+    if not resolved_api_key:
+        raise SystemExit(
+            "API key is required. Provide one of: --api-key, --api-key-file, "
+            "--api-key-stdin, or OPENINARY_API_KEY"
+        )
+
     asyncio.run(sync(
         openinary_url=args.url.rstrip("/"),
-        api_key=args.api_key,
+        api_key=resolved_api_key,
         force=args.force,
         dry_run=args.dry_run,
         concurrency=args.concurrency,
