@@ -46,6 +46,10 @@ import {
 } from './SportAdjustments';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { ConfirmationModal } from './ConfirmationModal';
+import {
+  AppearenceSettings,
+  ResetAppearenceSettingsLogic,
+} from './AppearenceSettings';
 /**
  *
  * SettingsPage
@@ -166,19 +170,19 @@ export default function SettingsPage() {
   // Define your categories once
   const categories = React.useMemo<SettingsCategory[]>(
     () => [
-      // {
-      //   id: 'account',
-      //   label: 'Account',
-      //   icon: <SettingsIcon />,
-      //   settingsContent: <AccountSettings />,
-      // },
       {
         id: 'exercise-overrides',
         label: 'Exercise Overrides',
         icon: <SettingsIcon />,
         settingsContent: <ExcerciseOverrideSettings />,
       },
-
+      {
+        id: 'appearence',
+        label: 'Look and Feel',
+        icon: <PaletteIcon />,
+        resetLogic: ResetAppearenceSettingsLogic,
+        settingsContent: <AppearenceSettings />,
+      },
       {
         id: 'personal-goals',
         label: 'Personal Goals',

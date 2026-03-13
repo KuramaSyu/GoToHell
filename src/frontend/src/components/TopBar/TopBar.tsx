@@ -44,6 +44,7 @@ import {
 import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
 import { BoxHoverPropsTopBar } from '../../theme/statics';
 import { UserProfileDesktopDrawer } from '../UserProfile/DrawerWrapper';
+import { Feature } from '../Feature';
 
 export enum Pages {
   HOME = '/',
@@ -335,7 +336,9 @@ const DesktopTopBar = memo<TopBarProps>(
                 >
                   <Streak />
                 </Box>
-                <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
+                <Feature name='PersonalGoals'>
+                  <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
+                </Feature>
               </Stack>
 
               {/* Home, Friends, Settings, Discord Login or Profile */}
