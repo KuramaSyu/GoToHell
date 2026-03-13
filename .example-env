@@ -18,8 +18,8 @@ FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:8080
 
 # ---------------------
-# Slink image hosting 
+# Openinary image hosting 
 # ---------------------
-SLINK_ADMIN_USERNAME=gotohell
-SLINK_ADMIN_EMAIL=gotohell_mail@gmail.com
-SLINK_ADMIN_PASSWORD=oversized-multiply-prong
+OPENINARY_URL=https://openinary.inu-the-bot.com
+OPENINARY_CORS_ORIGIN=https://gotohell.inu-the-bot.com
+OPENINARY_API_KEY=xxxx
