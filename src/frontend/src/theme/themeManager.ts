@@ -25,7 +25,7 @@ function isLocalOpeninaryBackground(url: string): boolean {
     return (
       parsedUrl.protocol === 'http:' &&
       parsedUrl.hostname === 'localhost' &&
-      parsedUrl.port === '3000'
+      parsedUrl.port === '3001'
     );
   } catch {
     return false;
