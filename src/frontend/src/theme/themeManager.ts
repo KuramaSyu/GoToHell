@@ -19,6 +19,29 @@ import {
 } from '../utils/blendWithContrast';
 import { th } from 'zod/v4/locales/index.cjs';
 
+function isLocalOpeninaryBackground(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    return (
+      parsedUrl.protocol === 'http:' &&
+      parsedUrl.hostname === 'localhost' &&
+      parsedUrl.port === '3000'
+    );
+  } catch {
+    return false;
+  }
+}
+
+function buildPaletteRequestUrl(url: string): string {
+  if (!import.meta.env.DEV || !isLocalOpeninaryBackground(url)) {
+    return url;
+  }
+
+  const parsedUrl = new URL(url);
+  parsedUrl.searchParams.set('_theme_cache_bust', Date.now().toString());
+  return parsedUrl.toString();
+}
+
 // Augment MUI's Theme to include extra custom properties.
 declare module '@mui/material/styles' {
   interface Theme {
@@ -135,6 +158,7 @@ export class ThemeManager {
     }
     const randomIndex = Math.floor(Math.random() * backgrounds.length);
     const chosenBackground = backgrounds[randomIndex];
+    const paletteRequestUrl = buildPaletteRequestUrl(chosenBackground!);
 
     // Always extract the palette using Vibrant.
     let extractedPalette;
@@ -165,7 +189,11 @@ export class ThemeManager {
           );
       }, this.THEME_LOADING_WARNING_TIMEOUT_MS * 10);
       // actually execute the request
-      const response = await fetch(chosenBackground!, {
+      const response = await fetch(paletteRequestUrl, {
+        cache:
+          import.meta.env.DEV && isLocalOpeninaryBackground(chosenBackground!)
+            ? 'no-store'
+            : 'default',
         mode: 'cors',
         redirect: 'follow',
         signal: abortController.signal,
