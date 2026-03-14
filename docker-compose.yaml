@@ -28,8 +28,10 @@ services:
   openinary:
     image: openinary/openinary:latest
     platform: linux/amd64
-    ports:
-      - "3001:3000"
+    #ports:
+    #  - "3000:3000"
+    # it seems like 3 ports are used: 3001 for web, 3002 for api and 3000 as proxy for both
+    # hence forward port 3000 with traeffik
     environment:
       BETTER_AUTH_URL: ${OPENINARY_URL}
       CORS_ORIGIN: ${OPENINARY_CORS_ORIGIN:-http://localhost:5173}
