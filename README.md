@@ -106,12 +106,11 @@ GameSelectionMap.set('plank', 'Seconds Plank');
 
 # Development
 
-## Installation & Start
-
-### Start via docker-compose
+## Start via docker-compose
 Create a `.env` file with the contents like in `.example-env` within the root dir. This will then be used by docker compose
-for both frontend and backend
+for both frontend and backend. This env will provide Parameters to all 3 used containers.
 
+## Frontend
 ### Install Dependencies
 
 ```
@@ -121,8 +120,8 @@ npm install
 ### Set frontend config:
 
 Either use the arg `BACKEND_URL` in the docker container or set a `.env` in the `src/frontend` directory with
-contents like in `src/frontend/.example-env`. It's important to add a `VITE_` to the ENV vars, if not set
-via docker (hence when running locally)
+contents like in `src/frontend/.example-env`. When running it locally bare metal (no docker) it's important to add a `VITE_` to the ENV vars. If the parameter is provided via the ´docker-compose.yaml´ file, 
+this prefix is not needed
 
 ### Starting Website:
 
@@ -138,7 +137,7 @@ via docker (hence when running locally)
   ```
 
 ### Set backend `.env` file
-
+Only needed when 
 use the `.example-env` as template and fill out
 
 ### Building swagger docs out of Go comments:
