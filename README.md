@@ -16,70 +16,6 @@ Yes, it's currently running here: [gotohell.inu-the-bot.com](https://gotohell.in
 
 Can be found here: [gotohell.inu-the-bot.com/docs](https://gotohell.inu-the-bot.com/docs)
 
-### TODO:
-
-#### Done
-
-- [x] make plank formula changeable in settings.
-- [x] Games and Sports selectable via a 2-sided drag and drop, so that sorting is also possible. For adding, selecting it should be sufficient
-- [x] 2 Buttons for Multiplier; one global one local
-- [x] Display sports in order
-- [x] Keyboard Shortcuts:
-  - ESC to exit settings to /
-  - Quick Action Modal for:
-    - Number, to set deaths
-    - Letter, to set games and sports
-    - Enter, to upload
-- [x] Overdue Deaths
-
-#### Ongoing
-
-- [ ] move API calls to utils/API
-  - standard.tsx: DELETE api/sports
-  - Sport.tsx: POST api/sports
-- [ ] REST documentation:
-  - [ ] Friends
-
-#### Features
-
-- [ ] update script: make a backup of db in same folder under backups/iso-date.sql
-- [ ] Presets, which set plank seconds and multiplier asking the user how many sports he wants to do
-- [ ] box for dragging workouts in. Upload multiple things at once
-- [ ] when auto opend modal, close it after 10 seconds of inactivity
-- [ ] Page: where you can enter a sport afterwards, but you have to ask 2 friends, to sign that you did this sport
-- [ ] Calculator/Converter: Take body weight optionally into account
-
-#### Fixes
-
-- [ ] Modal adds value twice to input when adding a sport and directly after a number / other direction
-  - [ ] Only use one InputBox for AmountModal and SearchModal. Always mount it in main view. Currently the textbox receives the input while it's fading out.
-- [ ] UploadAmount: unit is missing. Make a class for each sport which takes number as input and returns the number and the unit as output
-- [ ] Input in slider: better contrast; backgroundcolor
-
-#### QoL
-
-- [ ] Settings Menu v2 structured like immichs settings
-  - [ ] Show all multipliers in the settings
-- [ ] better animate TimeDisplay
-- [x] add time (seconds) parameter to setErrorMessage.
-  - [ ] Maybe implement a queue for multiple errors where each error has fields (title, description, timeout)
-- [ ] OverdueDeaths: open a modal when clicking on it, which shows all overdueDeaths for all games
-- [ ] Coloring:
-  - [ ] Secondary: Topbar, Timeline, Multiplier
-  - [ ] Primary: Sport, Game, Amount
-  - [ ] Use warning colors?
-
-#### Perf
-
-#### Ideas
-
-- [ ] Go Loading icon
-- [ ] Linking, who invited who, displaying a tree of all users, showing you, how you probably get here
-- [ ] Websocket connection, saying when timeline got an update (api request -> Observer -> listener for ongoing connections (maybe even directly send data?))
-- [ ] CI/CD:
-  - Setup branch dev which gets auto-updated when CI is positive
-  - Make backend redeploy when dev changes
-- [ ] separate login screen if user is not logged in
 
 ### Things required to add a game:
 
@@ -224,3 +160,4 @@ swag init
 - For Controllers: `[ModelName]Controller`
 - For Controller methods: pain `Get()`, `Post()`, `Put()`, `Delete()`
 - For API routes: `kebab-case`
+
