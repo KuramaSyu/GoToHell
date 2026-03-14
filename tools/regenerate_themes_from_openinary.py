@@ -369,9 +369,9 @@ def main() -> None:
         ),
     )
     parser.add_argument(
-        "--base-url",
-        default="http://localhost:3001",
-        help="Base URL used for generated background URLs (default: http://localhost:3001)",
+        "--external-access-url",
+        default=None,
+        help="Base URL used for generated background URLs (default: Same as --url)",
     )
     parser.add_argument(
         "--output",
@@ -400,7 +400,7 @@ def main() -> None:
     themes_path = resolve_themes_path(args.themes)
     public_dir = args.openinary_public.resolve()
     out_path = args.output.resolve() if args.output else themes_path
-    base_url = args.base_url.rstrip("/")
+    base_url = args.external_access_url.rstrip("/") if args.external_access_url else args.url.rstrip("/")
     openinary_url = args.url.rstrip("/")
     resolved_api_key = resolve_api_key(args.api_key, args.api_key_file, args.api_key_stdin)
 
