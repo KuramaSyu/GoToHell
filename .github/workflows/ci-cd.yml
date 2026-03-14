@@ -62,7 +62,7 @@ jobs:
         run: go build -o server
 
   deploy-dev:
-    name: Deploy to Dev VPS
+    name: Deploy to Server
     runs-on: ubuntu-latest
     needs:
       - frontend-ci
@@ -108,7 +108,7 @@ jobs:
 
               # Use the server-local env file (outside git checkout) as the source of secrets.
               if [ ! -f ../.env ]; then
-                echo "Missing server-local env file: ../.env"
+                echo "Missing server-local env file: ../.env (current directory: $(pwd))"
                 exit 1
               fi
 
@@ -180,9 +180,13 @@ jobs:
               fi
 
               # Ensure Python deps are available
-              python3 -m venv tools/.venv
+              if [[ ! -d tools/.venv ]]; then
+                echo "Creating Python virtual environment"
+                python3 -m venv tools/.venv
+              fi
               tools/.venv/bin/pip install -q -r tools/requirements.txt
 
+              echo "Syncing backgrounds to Openinary at ${OPENINARY_URL} with tools/sync_to_openinary.py"
               OPENINARY_API_KEY="${OPENINARY_API_KEY}" \
                 tools/.venv/bin/python tools/sync_to_openinary.py \
                   --url "${OPENINARY_URL}"
@@ -199,10 +203,10 @@ jobs:
               . ../.env
               set +a
 
+              echo "Regenerating themes.json with tools/regenerate_themes_from_openinary.py"
               OPENINARY_API_KEY="${OPENINARY_API_KEY}" \
                 tools/.venv/bin/python tools/regenerate_themes_from_openinary.py \
-                  --openinary-url "${OPENINARY_URL}" \
-                  --base-url "${OPENINARY_URL}"
+                  --url "${OPENINARY_URL}"
           EOF
 
       - name: Restart frontend container
