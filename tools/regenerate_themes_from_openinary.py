@@ -401,7 +401,7 @@ def main() -> None:
     public_dir = args.openinary_public.resolve()
     out_path = args.output.resolve() if args.output else themes_path
     base_url = args.base_url.rstrip("/")
-    openinary_url = args.openinary_url.rstrip("/")
+    openinary_url = args.url.rstrip("/")
     resolved_api_key = resolve_api_key(args.api_key, args.api_key_file, args.api_key_stdin)
 
     if args.themes is None:
