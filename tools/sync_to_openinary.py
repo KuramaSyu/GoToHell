@@ -52,6 +52,27 @@ MIME_MAP = {
     ".svg":  "image/svg+xml",
 }
 
+DIRECTORY_RENAMES = {
+    "Hollow_Knight": "HollowKnight",
+}
+
+
+def build_remote_filename(img_path: Path) -> str:
+    """
+    renames directories like 'Hollow_Knight' -> 'HollowKnight' 
+    but preserves the file name and relative path
+    
+    This is done, because openinary seems to fail (404, probably a bug) when accessing files in a directory
+    with '_' in its name
+    """
+    parts = list(img_path.relative_to(REPO_DIR).parts)
+
+    # Rename known directory segments while preserving the file name.
+    for i in range(len(parts) - 1):
+        parts[i] = DIRECTORY_RENAMES.get(parts[i], parts[i])
+
+    return "/".join(parts)
+
 
 def resolve_api_key(
     api_key: str | None,
@@ -253,7 +274,7 @@ async def sync(
     new_state: dict = {}
 
     for img_path in images:
-        remote_filename = img_path.relative_to(REPO_DIR).as_posix()
+        remote_filename = build_remote_filename(img_path)
         checksum = sha256_file(img_path)
         prev = state.get(remote_filename, {})
 
