@@ -330,7 +330,7 @@ def main() -> None:
         help="Folder discovery source (default: api)",
     )
     parser.add_argument(
-        "--openinary-url",
+        "--url",
         default="http://localhost:3001",
         help="Openinary base URL used for API requests (default: http://localhost:3001)",
     )
