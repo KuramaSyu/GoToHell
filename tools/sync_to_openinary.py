@@ -52,10 +52,6 @@ MIME_MAP = {
     ".svg":  "image/svg+xml",
 }
 
-DIRECTORY_RENAMES = {
-    "Hollow_Knight": "HollowKnight",
-}
-
 
 def build_remote_filename(img_path: Path) -> str:
     """
@@ -68,10 +64,19 @@ def build_remote_filename(img_path: Path) -> str:
     parts = list(img_path.relative_to(REPO_DIR).parts)
 
     # Rename known directory segments while preserving the file name.
-    for i in range(len(parts) - 1):
-        parts[i] = DIRECTORY_RENAMES.get(parts[i], parts[i])
+    new_parts = []
+    for part in parts[:-1]:  # all but the last part (file name)
+        if "_" in part:
+            # set next letter to uppercase and remove the underscore
+            new_part = "".join(
+                word.capitalize() for word in part.split("_")
+            )
+            new_parts.append(new_part)
+        else:
+            new_parts.append(part)
+    new_parts.append(parts[-1])  # add the file name unchanged
 
-    return "/".join(parts)
+    return "/".join(new_parts)
 
 
 def resolve_api_key(
