@@ -28,5 +28,6 @@ node_modules
 tools/img_out/*
 tools/img_in/*
 tools/out/*
+tools/in/*
 data/
 tools/.sync_state.json
