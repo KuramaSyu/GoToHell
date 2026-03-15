@@ -435,6 +435,9 @@ def main() -> None:
     matched = 0
     unmatched = 0
 
+    # iterate themes in JSON and find best matching folder
+    # comparing both "name" and "longName" to folder names 
+    # with a fuzzy scoring function
     for theme in themes:
         if not isinstance(theme, dict):
             continue
