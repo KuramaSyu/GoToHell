@@ -1,105 +1,122 @@
 #!/usr/bin/env python3
-# filepath: install.py
+from datetime import datetime
 import os
-import sys
 import shutil
 import subprocess
+import sys
+from pathlib import Path
 
-# ANSI escape codes for colors
 CYAN = "\033[96m"
 GREEN = "\033[92m"
 RED = "\033[91m"
 RESET = "\033[0m"
 
-REPO_URL = "https://github.com/KuramaSyu/GoToHell.git"
-REPO_DIR = "GoToHell"
+BRANCH = "dev"
+THEMES_REL = Path("src/frontend/src/theme/themes.json")
+BACKUP_DATE = datetime.now().strftime("%Y%m%d-%H%M%S")
+THEMES_BACKUP = Path(f"/tmp/gotohell-themes-{BACKUP_DATE}.json.backup")
 
-def print_stage(stage):
+
+def print_stage(stage: str) -> None:
     print(f"{CYAN}[+] {stage}{RESET}")
 
-def print_info(info):
+
+def print_info(info: str) -> None:
     print(f"{GREEN}[*] {info}{RESET}")
 
-def print_error(error):
+
+def print_error(error: str) -> None:
     print(f"{RED}[!] {error}{RESET}")
 
-def main():
-    # Stage 1: Remove existing repository folder if it exists
-    print_stage("Stage 1: Checking and removing existing repository folder")
-    if os.path.isdir(REPO_DIR):
-        print_info(f"Directory '{REPO_DIR}' exists; removing it.")
-        try:
-            shutil.rmtree(REPO_DIR)
-        except Exception as e:
-            print_error(f"Failed to remove directory '{REPO_DIR}': {e}")
-            sys.exit(1)
-    else:
-        print_info(f"Directory '{REPO_DIR}' not found, proceeding with clone.")
 
-    # Stage 2: Clone the repository
-    print_stage("Stage 2: Cloning repository")
+def run(cmd: list[str], cwd: Path | None = None) -> None:
+    subprocess.run(cmd, check=True, cwd=str(cwd) if cwd else None)
+
+
+def detect_repo_root() -> Path:
     try:
-        subprocess.run([
-            "git", "clone",
-            "--branch", "dev",       # ← pull down dev
-            "--single-branch",       # ← only dev, not whole history
-            REPO_URL
-        ], check=True)
-        print_info("Repository (branch dev) cloned successfully.")
-    except subprocess.CalledProcessError:
-        print_error("Failed to clone repository.")
-        sys.exit(1)
-    os.chdir(REPO_DIR)
-    subprocess.run(["git", "checkout", "dev"], check=True)
-    os.chdir(original_dir)
+        output = subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True)
+        return Path(output.strip()).resolve()
+    except subprocess.CalledProcessError as exc:
+        raise SystemExit("This script must be run inside the GoToHell git repository.") from exc
 
-    # Stage 3: Copy .env file from the parent directory into the cloned repository
-    print_stage("Stage 3: Copying .env file")
-    parent_env = os.path.join(".", ".env")
-    target_env = os.path.join(REPO_DIR, ".env")
-    if os.path.isfile(parent_env):
-        try:
-            shutil.copy(parent_env, target_env)
-            print_info(f".env file copied to '{target_env}'.")
-        except Exception as e:
-            print_error(f"Failed to copy .env file: {e}")
-            sys.exit(1)
+
+def ensure_server_files(repo_root: Path) -> tuple[Path, Path]:
+    env_file = (repo_root / ".." / ".env").resolve()
+    compose_file = (repo_root / ".." / "docker-compose.yaml").resolve()
+
+    if not env_file.is_file():
+        raise SystemExit(f"Missing server-local env file: {env_file}")
+    if not compose_file.is_file():
+        raise SystemExit(f"Missing server-local compose file: {compose_file}")
+
+    return env_file, compose_file
+
+
+def backup_themes(repo_root: Path) -> None:
+    themes_path = repo_root / THEMES_REL
+    if themes_path.is_file():
+        shutil.copy2(themes_path, THEMES_BACKUP)
+        print_info(f"Backed up {themes_path} -> {THEMES_BACKUP}")
     else:
-        print_info(".env file not found in parent directory; skipping.")
+        print_info(f"No existing {themes_path} found to back up")
 
-    # Stage 4: Copy docker-compose.yaml from parent directory into the cloned repository (override if exists)
-    print_stage("Stage 4: Copying docker-compose.yaml file")
-    parent_compose = os.path.join(".", "docker-compose.yaml")
-    target_compose = os.path.join(REPO_DIR, "docker-compose.yaml")
-    if os.path.isfile(parent_compose):
-        try:
-            shutil.copy(parent_compose, target_compose)
-            print_info("docker-compose.yaml copied into the repository.")
-        except Exception as e:
-            print_error(f"Failed to copy docker-compose.yaml: {e}")
-            sys.exit(1)
-    else:
-        print_info("docker-compose.yaml not found in parent directory; skipping.")
 
-    # Stage 5: Change directory into the repo and run Docker Compose commands
-    print_stage("Stage 5: Starting Docker Compose")
-    original_dir = os.getcwd()
+def restore_themes(repo_root: Path) -> None:
+    if not THEMES_BACKUP.is_file():
+        return
+
+    themes_path = repo_root / THEMES_REL
+    themes_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(THEMES_BACKUP, themes_path)
+    THEMES_BACKUP.unlink(missing_ok=True)
+    print_info(f"Restored {themes_path} from backup")
+
+
+def relink_env(repo_root: Path, env_file: Path) -> None:
+    target = repo_root / ".env"
+    if target.exists() or target.is_symlink():
+        target.unlink()
+
     try:
-        original_dir = os.getcwd()
-        os.chdir(REPO_DIR)
-        print_info("Running 'docker compose up --build -d'")
-        subprocess.run(["docker", "compose", "up", "--build", "-d"], check=True)
-        print_info("Docker Compose services started.")
-        print_info("Attaching to Docker Compose logs (press Ctrl+C to exit)...")
-        subprocess.run(["docker", "compose", "logs", "-f"], check=True)
-    except subprocess.CalledProcessError as e:
-        print_error(f"Docker Compose command failed: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print_error(f"Unexpected error: {e}")
-        sys.exit(1)
-    finally:
-        os.chdir(original_dir)
+        target.symlink_to(env_file)
+        print_info(f"Linked {target} -> {env_file}")
+    except OSError:
+        shutil.copy2(env_file, target)
+        print_info(f"Symlink failed, copied env file to {target}")
+
+
+def main() -> None:
+    repo_root = detect_repo_root()
+    env_file, compose_file = ensure_server_files(repo_root)
+
+    print_stage("Stage 1: Back up themes.json")
+    backup_themes(repo_root)
+
+    print_stage("Stage 2: Update repository to origin/dev")
+    run(["git", "fetch", "origin", BRANCH], cwd=repo_root)
+    run(["git", "reset", "--hard", f"origin/{BRANCH}"], cwd=repo_root)
+
+    print_stage("Stage 3: Restore themes.json")
+    restore_themes(repo_root)
+
+    print_stage("Stage 4: Copy docker-compose.yaml from parent")
+    shutil.copy2(compose_file, repo_root / "docker-compose.yaml")
+    print_info("docker-compose.yaml copied into repository")
+
+    print_stage("Stage 5: Configure env and restart containers")
+    relink_env(repo_root, env_file)
+    run(["docker", "compose", "--env-file", str(env_file), "down"], cwd=repo_root)
+    run(["docker", "compose", "--env-file", str(env_file), "up", "--build", "-d"], cwd=repo_root)
+    print_info("Deploy complete")
+
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except subprocess.CalledProcessError as exc:
+        print_error(f"Command failed: {exc}")
+        sys.exit(1)
+    except Exception as exc:
+        print_error(str(exc))
+        sys.exit(1)
