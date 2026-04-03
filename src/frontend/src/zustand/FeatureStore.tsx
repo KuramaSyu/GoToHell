@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-export type FeatureFlagName = 'StartupStreaks' | 'PersonalGoals';
-
 /**
  * Serializable shape for a feature flag.
  *
@@ -72,33 +70,54 @@ class SimpleFeatureFlag implements IFeatureFlag {
   }
 }
 
+/**
+ * Enum with all feature flag names for autocompletion
+ */
+export enum FeatureFlagName {
+  StartupStreaks = 'StartupStreaks',
+  PersonalGoals = 'PersonalGoals',
+  SwapBackgroundOnUpload = 'SwapBackgroundOnUpload',
+}
+
 type FeatureFlags = Record<FeatureFlagName, IFeatureFlag>;
 
 /**
  * Defaults as plain records. These are the source of truth for reset/hydration.
  */
-const DEFAULT_FEATURE_FLAG_RECORDS: Record<string, IFeatureFlag> = {
-  StartupStreaks: SimpleFeatureFlag.fromRecord({
-    name: 'Startup Streaks',
-    description: 'Show the sidecard with streaks when opening the page',
-    enabled: true,
-  }),
-  PersonalGoals: SimpleFeatureFlag.fromRecord({
-    name: 'Personal Goals',
-    description: 'Show the Personal Goals icon in the App Bar',
-    enabled: false,
-  }),
-};
+const DEFAULT_FEATURE_FLAG_RECORDS: Record<FeatureFlagName, FeatureFlagRecord> =
+  {
+    [FeatureFlagName.StartupStreaks]: {
+      name: 'Startup Streaks',
+      description: 'Show the sidecard with streaks when opening the page',
+      enabled: true,
+    },
+    [FeatureFlagName.PersonalGoals]: {
+      name: 'Personal Goals',
+      description: 'Show the Personal Goals icon in the App Bar',
+      enabled: false,
+    },
+    [FeatureFlagName.SwapBackgroundOnUpload]: {
+      name: 'Swap Background On Upload',
+      description:
+        'When playing for a longer period of time, the same background gets quite annoying. Hence this feature, to automatically swap the background, when clicking Upload',
+      enabled: true,
+    },
+  };
+
+export const FeatureFlagNames = Object.values(FeatureFlagName);
 
 /**
  * Returns fresh runtime feature flag instances from defaults.
  */
 const getDefaultFeatureFlags = (): FeatureFlags => ({
-  StartupStreaks: SimpleFeatureFlag.fromRecord(
-    DEFAULT_FEATURE_FLAG_RECORDS.StartupStreaks!,
+  [FeatureFlagName.StartupStreaks]: SimpleFeatureFlag.fromRecord(
+    DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.StartupStreaks],
   ),
-  PersonalGoals: SimpleFeatureFlag.fromRecord(
-    DEFAULT_FEATURE_FLAG_RECORDS.PersonalGoals!,
+  [FeatureFlagName.PersonalGoals]: SimpleFeatureFlag.fromRecord(
+    DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.PersonalGoals],
+  ),
+  [FeatureFlagName.SwapBackgroundOnUpload]: SimpleFeatureFlag.fromRecord(
+    DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.SwapBackgroundOnUpload],
   ),
 });
 
@@ -107,15 +126,19 @@ const getDefaultFeatureFlags = (): FeatureFlags => ({
  * for missing fields.
  */
 const hydrateFeatureFlags = (
-  persistedFlags?: Partial<Record<string, Partial<FeatureFlagRecord>>>,
+  persistedFlags?: Partial<Record<FeatureFlagName, Partial<FeatureFlagRecord>>>,
 ): FeatureFlags => ({
-  StartupStreaks: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS.StartupStreaks!,
-    ...(persistedFlags?.StartupStreaks ?? {}),
+  [FeatureFlagName.StartupStreaks]: SimpleFeatureFlag.fromRecord({
+    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.StartupStreaks],
+    ...(persistedFlags?.[FeatureFlagName.StartupStreaks] ?? {}),
   }),
-  PersonalGoals: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS.PersonalGoals!,
-    ...(persistedFlags?.PersonalGoals ?? {}),
+  [FeatureFlagName.PersonalGoals]: SimpleFeatureFlag.fromRecord({
+    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.PersonalGoals],
+    ...(persistedFlags?.[FeatureFlagName.PersonalGoals] ?? {}),
+  }),
+  [FeatureFlagName.SwapBackgroundOnUpload]: SimpleFeatureFlag.fromRecord({
+    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.SwapBackgroundOnUpload],
+    ...(persistedFlags?.[FeatureFlagName.SwapBackgroundOnUpload] ?? {}),
   }),
 });
 
@@ -124,10 +147,7 @@ interface FeatureState {
   flags: FeatureFlags;
 
   /** Enables/disables a feature flag. */
-  setFlag: (
-    name: (typeof DEFAULT_FEATURE_FLAG_RECORDS)[keyof typeof DEFAULT_FEATURE_FLAG_RECORDS]['name'],
-    value: boolean,
-  ) => void;
+  setFlag: (name: FeatureFlagName, value: boolean) => void;
 
   /** Resets all feature flags to defaults. */
   resetFlags: () => void;
@@ -162,7 +182,7 @@ const useFeatureStore = create<FeatureState>()(
           ...persisted,
           flags: hydrateFeatureFlags(
             persisted.flags as Partial<
-              Record<string, Partial<FeatureFlagRecord>>
+              Record<FeatureFlagName, Partial<FeatureFlagRecord>>
             >,
           ),
         };

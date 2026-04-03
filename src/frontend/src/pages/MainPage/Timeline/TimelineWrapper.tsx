@@ -4,6 +4,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { StreakTimeline } from './StreakTimeline';
 import { SportsTimeline } from './Timeline';
 import { Feature } from '../../../components/Feature';
+import { FeatureFlagName } from '../../../zustand/FeatureStore';
 
 const TOTAL_DURATION_MS = 5000;
 const MemoStreakTimeline = memo(StreakTimeline);
@@ -25,7 +26,10 @@ export const TimelineWrapper: React.FC = () => {
 
   return (
     <Box>
-      <Feature name='StartupStreaks' fallback={<SportsTimeline />}>
+      <Feature
+        name={FeatureFlagName.StartupStreaks}
+        fallback={<SportsTimeline />}
+      >
         {!progressCompleted ? (
           <Box>
             <SimpleTimeBasedProgressBar durationMs={TOTAL_DURATION_MS} />
