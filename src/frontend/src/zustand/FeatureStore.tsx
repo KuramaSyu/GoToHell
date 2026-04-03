@@ -9,7 +9,7 @@ export type FeatureFlagName = 'StartupStreaks' | 'PersonalGoals';
  * This type is used for persistence and for converting from/to class instances.
  */
 interface FeatureFlagRecord {
-  name: FeatureFlagName;
+  name: string;
   description: string;
   enabled: boolean;
 }
@@ -18,7 +18,7 @@ interface FeatureFlagRecord {
  * Runtime feature flag object.
  */
 interface IFeatureFlag {
-  name: FeatureFlagName;
+  name: string;
   description: string;
   enabled: boolean;
 
@@ -38,11 +38,11 @@ interface IFeatureFlag {
  * Basic feature flag implementation with helper conversion methods.
  */
 class SimpleFeatureFlag implements IFeatureFlag {
-  name: FeatureFlagName;
+  name: string;
   description: string;
   enabled: boolean;
 
-  constructor(name: FeatureFlagName, description: string, enabled: boolean) {
+  constructor(name: string, description: string, enabled: boolean) {
     this.name = name;
     this.description = description;
     this.enabled = enabled;
@@ -77,14 +77,14 @@ type FeatureFlags = Record<FeatureFlagName, IFeatureFlag>;
 /**
  * Defaults as plain records. These are the source of truth for reset/hydration.
  */
-const DEFAULT_FEATURE_FLAG_RECORDS: Record<FeatureFlagName, IFeatureFlag> = {
+const DEFAULT_FEATURE_FLAG_RECORDS: Record<string, IFeatureFlag> = {
   StartupStreaks: SimpleFeatureFlag.fromRecord({
-    name: 'StartupStreaks',
+    name: 'Startup Streaks',
     description: 'Show the sidecard with streaks when opening the page',
     enabled: true,
   }),
   PersonalGoals: SimpleFeatureFlag.fromRecord({
-    name: 'PersonalGoals',
+    name: 'Personal Goals',
     description: 'Show the Personal Goals icon in the App Bar',
     enabled: false,
   }),
@@ -95,10 +95,10 @@ const DEFAULT_FEATURE_FLAG_RECORDS: Record<FeatureFlagName, IFeatureFlag> = {
  */
 const getDefaultFeatureFlags = (): FeatureFlags => ({
   StartupStreaks: SimpleFeatureFlag.fromRecord(
-    DEFAULT_FEATURE_FLAG_RECORDS.StartupStreaks,
+    DEFAULT_FEATURE_FLAG_RECORDS.StartupStreaks!,
   ),
   PersonalGoals: SimpleFeatureFlag.fromRecord(
-    DEFAULT_FEATURE_FLAG_RECORDS.PersonalGoals,
+    DEFAULT_FEATURE_FLAG_RECORDS.PersonalGoals!,
   ),
 });
 
@@ -107,17 +107,15 @@ const getDefaultFeatureFlags = (): FeatureFlags => ({
  * for missing fields.
  */
 const hydrateFeatureFlags = (
-  persistedFlags?: Partial<Record<FeatureFlagName, Partial<FeatureFlagRecord>>>,
+  persistedFlags?: Partial<Record<string, Partial<FeatureFlagRecord>>>,
 ): FeatureFlags => ({
   StartupStreaks: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS.StartupStreaks,
+    ...DEFAULT_FEATURE_FLAG_RECORDS.StartupStreaks!,
     ...(persistedFlags?.StartupStreaks ?? {}),
-    name: 'StartupStreaks',
   }),
   PersonalGoals: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS.PersonalGoals,
+    ...DEFAULT_FEATURE_FLAG_RECORDS.PersonalGoals!,
     ...(persistedFlags?.PersonalGoals ?? {}),
-    name: 'PersonalGoals',
   }),
 });
 
@@ -126,7 +124,10 @@ interface FeatureState {
   flags: FeatureFlags;
 
   /** Enables/disables a feature flag. */
-  setFlag: (name: FeatureFlagName, value: boolean) => void;
+  setFlag: (
+    name: (typeof DEFAULT_FEATURE_FLAG_RECORDS)[keyof typeof DEFAULT_FEATURE_FLAG_RECORDS]['name'],
+    value: boolean,
+  ) => void;
 
   /** Resets all feature flags to defaults. */
   resetFlags: () => void;
@@ -161,7 +162,7 @@ const useFeatureStore = create<FeatureState>()(
           ...persisted,
           flags: hydrateFeatureFlags(
             persisted.flags as Partial<
-              Record<FeatureFlagName, Partial<FeatureFlagRecord>>
+              Record<string, Partial<FeatureFlagRecord>>
             >,
           ),
         };
