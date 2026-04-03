@@ -113,6 +113,15 @@ export const buildDecoratorStack = (
 };
 
 // Select the sport kind with a button
+/**
+ * Sport selector for the main page.
+ *
+ * Transition note:
+ * - List entrance animation uses `react-spring` (`useTransition`).
+ * - Color changes on buttons/icons intentionally use MUI's `duration.short`
+ *   so they stay consistent with other regular buttons, even when global
+ *   theme transition durations are temporarily adjusted for background swaps.
+ */
 export const SportSelector = () => {
   const { theme } = useThemeStore();
   const currentSportName = useSportStore((state) => state.currentSport.sport);
@@ -222,6 +231,22 @@ export const SportSelector = () => {
     trail: 150, // Stagger animation
   });
 
+  // Base transition for normal color updates (selected/unselected state).
+  const shortColorTransition = theme.transitions.create(
+    ['background-color', 'color', 'border-color'],
+    {
+      duration: theme.transitions.duration.short,
+    },
+  );
+
+  // Hover transition keeps the same timing but also includes transform.
+  const shortHoverColorTransition = theme.transitions.create(
+    ['background-color', 'color', 'border-color', 'transform'],
+    {
+      duration: theme.transitions.duration.short,
+    },
+  );
+
   if (isLoading) {
     // the displayed sports depend on preferences, so we wait until they are loaded
     return <Box />;
@@ -309,7 +334,7 @@ export const SportSelector = () => {
                   gap: 3,
                   color: theme.palette.text.primary,
                   backgroundColor: 'transparent',
-                  transition: theme.colorTransition.root.transition,
+                  transition: shortColorTransition,
                   // Manually apply borderRadius
                   borderTopLeftRadius: isFirst ? theme.shape.borderRadius : 0,
                   borderTopRightRadius: isFirst ? theme.shape.borderRadius : 0,
@@ -323,13 +348,13 @@ export const SportSelector = () => {
                     color: theme.palette.primary.contrastText,
                     '&:hover': {
                       backgroundColor: theme.palette.primary.main,
-                      transition: theme.colorTransition.root.transition,
+                      transition: shortHoverColorTransition,
                     },
                   },
                   // Optional: add hover state for non-selected buttons
                   '&:hover': {
                     backgroundColor: theme.palette.primary.main,
-                    transition: theme.colorTransition.root['&:hover'],
+                    transition: shortHoverColorTransition,
                   },
                 }}
               >
@@ -343,7 +368,7 @@ export const SportSelector = () => {
                           : theme.palette.text.primary,
                         height: 42,
                         width: 42,
-                        transition: theme.colorTransition.root.transition,
+                        transition: shortColorTransition,
                       }}
                       inheritViewBox
                     />
