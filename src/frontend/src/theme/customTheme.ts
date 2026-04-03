@@ -57,8 +57,23 @@ export interface CustomTheme extends Theme {
    * @returns the blended color in hex format
    */
   blendAgainstContrast(color: ColorInput, amount: number): string;
-}
 
+  /**
+   * Updates `transitions.duration.complex` in-place and refreshes derived
+   * transition style snippets that depend on that duration.
+   */
+  setComplexDuration(durationMs: number): void;
+
+  /**
+   * Multiplies all transition duration values in-place.
+   */
+  setDurationMultiplier(multiplier: number): void;
+
+  /**
+   * Replaces transition duration values in-place.
+   */
+  setTransitionDurations(durations: Theme['transitions']['duration']): void;
+}
 /**
  * Config to extend theme.
  * Multiple backgrounds. actual theme gets one of them.
@@ -366,6 +381,74 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     const blended = blendColors(mainRgb, contrastRgb, amount);
 
     return rgbToHex(blended);
+  }
+
+  setComplexDuration(durationMs: number): void {
+    // Keep duration valid and integral (MUI expects milliseconds).
+    const normalized = Math.max(1, Math.round(durationMs));
+
+    // Delegate to the generic setter so dependent transition snippets are refreshed.
+    this.setTransitionDurations({
+      ...this.transitions.duration,
+      complex: normalized,
+    });
+  }
+
+  setDurationMultiplier(multiplier: number): void {
+    // Defensive guard: invalid multipliers fall back to normal speed.
+    const safeMultiplier =
+      Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1;
+
+    // Keep each duration >= 1ms to avoid zero/negative transition times.
+    const scale = (value: number) =>
+      Math.max(1, Math.round(value * safeMultiplier));
+
+    const current = this.transitions.duration;
+
+    // Explicitly scale all known MUI duration tokens for readability.
+    this.setTransitionDurations({
+      ...current,
+      shortest: scale(current.shortest),
+      shorter: scale(current.shorter),
+      short: scale(current.short),
+      standard: scale(current.standard),
+      complex: scale(current.complex),
+      enteringScreen: scale(current.enteringScreen),
+      leavingScreen: scale(current.leavingScreen),
+    });
+  }
+
+  setTransitionDurations(durations: Theme['transitions']['duration']): void {
+    // Merge allows partial updates while preserving untouched duration tokens.
+    this.transitions.duration = {
+      ...this.transitions.duration,
+      ...durations,
+    };
+
+    // Some style snippets are precomputed and must be rebuilt after duration changes.
+    this.refreshColorTransition();
+  }
+
+  private refreshColorTransition(): void {
+    // Rebuild reusable transition definitions that depend on `transitions.duration`.
+    this.colorTransition = {
+      root: {
+        transition: this.transitions.create(
+          ['background-color', 'color', 'border-color'],
+          {
+            duration: this.transitions.duration.complex,
+          },
+        ),
+        '&:hover': {
+          transition: this.transitions.create(
+            ['background-color', 'color', 'border-color', 'transform'],
+            {
+              duration: this.transitions.duration.short,
+            },
+          ),
+        },
+      },
+    };
   }
 
   /**

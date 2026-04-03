@@ -1,15 +1,12 @@
 import { create } from 'zustand';
 import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
-import {
-  CustomTheme,
-  CustomThemeConfig,
-  CustomThemeImpl,
-} from '../theme/customTheme';
+import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
 import customThemeData from '../theme/themes.json';
 import usePreferenceStore from './PreferenceStore';
 import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
 import { defaultTheme } from './defaultTheme';
+import useAppBackgroundStore from './AppBackgroundStore';
 
 export const docsTheme = createTheme({
   palette: {
@@ -56,11 +53,6 @@ interface ThemeState {
   setTheme: (themeName: string) => Promise<void>;
 
   /**
-   * Sets only the background image URL on the current theme.
-   */
-  setBackground: (backgroundImage: string) => void;
-
-  /**
    * initializeTheme picks a random theme from custom themes and sets it.
    * It respects the user's preferences if any are set.
    */
@@ -75,36 +67,43 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setTheme: async (themeName: string) => {
     console.log(`set theme to ${themeName}`);
     //set({ themeName: themeName });
+    const speedMultiplier = useAppBackgroundStore
+      .getState()
+      .consumeNextChangeSpeedMultiplier();
     const generatedTheme = await themeManager.generateTheme(themeName);
     if (generatedTheme) {
+      const previousDurations = { ...generatedTheme.transitions.duration };
+
+      generatedTheme.setDurationMultiplier(speedMultiplier);
+
       set({
         theme: generatedTheme,
         themeName: generatedTheme.custom.themeName,
         themeLongName: generatedTheme.custom.longName,
       });
+
+      // If we temporarily slowed down the theme transition for a background swap,
+      // restore the original duration values afterwards without calling `set(...)`
+      // to avoid an additional rerender.
+      if (speedMultiplier !== 1) {
+        const activeComplexDuration =
+          generatedTheme.transitions.duration.complex;
+        const resetAfterMs = Math.max(
+          1,
+          Math.round((2 * activeComplexDuration) / 3) + 32,
+        );
+
+        setTimeout(() => {
+          const activeTheme = get().theme;
+          // Only restore if this is still the currently active theme object.
+          if (activeTheme === generatedTheme) {
+            activeTheme.setTransitionDurations(previousDurations);
+          }
+        }, resetAfterMs);
+      }
     } else {
       console.error(`Unable to generate theme for "${themeName}".`);
     }
-  },
-  setBackground: (backgroundImage: string) => {
-    const currentTheme = get().theme;
-    if (
-      !backgroundImage ||
-      currentTheme.custom.backgroundImage === backgroundImage
-    ) {
-      return;
-    }
-
-    set({
-      theme: new CustomThemeImpl(
-        currentTheme,
-        {
-          ...currentTheme.custom,
-          backgroundImage,
-        },
-        false,
-      ),
-    });
   },
   initializeTheme: async () => {
     // get preferences from the store

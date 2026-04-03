@@ -18,6 +18,7 @@ import { boolean } from 'zod';
 import useFeatureStore, { FeatureFlagName } from '../../zustand/FeatureStore';
 import { Feature } from '../../components/Feature';
 import { useThemeStore } from '../../zustand/useThemeStore';
+import useAppBackgroundStore from '../../zustand/AppBackgroundStore';
 
 abstract class UploadStrategyABC {
   uploadBuilder: UploadBuilder;
@@ -366,6 +367,7 @@ export class UploadBuilder {
     }
 
     console.log('Checking if background change on upload is enabled...');
+    useAppBackgroundStore.getState().markNextBackgroundChangeSlow();
     // setTheme alreay changes to a new random background
     const _ = await useThemeStore
       .getState()

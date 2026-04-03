@@ -2,6 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { useThemeStore } from '../zustand/useThemeStore';
 
+/**
+ * Fullscreen app background layer.
+ *
+ * Behavior:
+ * - Reads the active background image from the current theme.
+ * - Cross-fades between the previous and next background when the theme image changes.
+ * - Uses `theme.transitions.duration.complex` for timing.
+ *   The duration can be pre-adjusted in `useThemeStore.setTheme(...)`
+ *   to make the next theme/background transition globally slower or faster.
+ *
+ * Rendering notes:
+ * - This component is purely visual and returns `null` if no background image exists.
+ * - The wrapper `Box` is fixed and sits behind all app content (`zIndex: 0`).
+ */
 const AppBackground: React.FC = () => {
   const { theme } = useThemeStore();
   const backgroundImage = theme?.custom?.backgroundImage;
@@ -14,16 +28,18 @@ const AppBackground: React.FC = () => {
   useEffect(() => {
     if (backgroundImage && backgroundImage !== currentImage) {
       // Trigger fade out/in effect
+      // Only start a transition if the theme points to a different image.
+      const switchDelayMs = theme.transitions.duration.complex / 3;
       setIsTransitioning(true);
 
       const timer = setTimeout(() => {
         setCurrentImage(backgroundImage);
         setIsTransitioning(false);
-      }, theme.transitions.duration.complex / 3); // Match this with your CSS transition time
+      }, switchDelayMs); // Match this with your CSS transition time
 
       return () => clearTimeout(timer);
     }
-  }, [backgroundImage, currentImage]);
+  }, [backgroundImage, currentImage, theme.transitions.duration.complex]);
 
   if (!backgroundImage) return null;
 
