@@ -405,16 +405,18 @@ export class CustomThemeImpl extends Object implements CustomTheme {
 
     const current = this.transitions.duration;
 
-    // Explicitly scale all known MUI duration tokens for readability.
+    // Scale non-complex, leaving or entering tokens only.
+    // `complex` is intentionally left unchanged to avoid slowing background/theme
+    // transitions that are tied to this value.
     this.setTransitionDurations({
       ...current,
       shortest: scale(current.shortest),
       shorter: scale(current.shorter),
       short: scale(current.short),
       standard: scale(current.standard),
-      complex: scale(current.complex),
-      enteringScreen: scale(current.enteringScreen),
-      leavingScreen: scale(current.leavingScreen),
+      complex: current.complex,
+      enteringScreen: current.enteringScreen,
+      leavingScreen: current.leavingScreen,
     });
   }
 
