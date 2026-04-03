@@ -1,7 +1,11 @@
 import { create } from 'zustand';
 import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
-import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
+import {
+  CustomTheme,
+  CustomThemeConfig,
+  CustomThemeImpl,
+} from '../theme/customTheme';
 import customThemeData from '../theme/themes.json';
 import usePreferenceStore from './PreferenceStore';
 import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
@@ -67,14 +71,28 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setTheme: async (themeName: string) => {
     console.log(`set theme to ${themeName}`);
     //set({ themeName: themeName });
+    const setThemeStartMs = performance.now();
     const speedMultiplier = useAppBackgroundStore
       .getState()
       .consumeNextChangeSpeedMultiplier();
+    console.debug('[Theme] Consumed speed multiplier:', speedMultiplier);
+
+    console.debug('[Theme] Calling ThemeManager.generateTheme(...)');
     const generatedTheme = await themeManager.generateTheme(themeName);
+    console.debug(
+      '[Theme] ThemeManager.generateTheme(...) resolved in ms:',
+      Math.round(performance.now() - setThemeStartMs),
+    );
+
     if (generatedTheme) {
       const previousDurations = { ...generatedTheme.transitions.duration };
+      console.debug('[Theme] Original durations:', previousDurations);
 
       generatedTheme.setDurationMultiplier(speedMultiplier);
+      console.debug(
+        '[Theme] Scaled durations:',
+        generatedTheme.transitions.duration,
+      );
 
       set({
         theme: generatedTheme,
@@ -92,18 +110,44 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
           1,
           Math.round((2 * activeComplexDuration) / 3) + 32,
         );
+        console.debug(
+          '[Theme] Scheduling duration reset in ms:',
+          resetAfterMs,
+          'for theme:',
+          generatedTheme.custom.themeName,
+        );
 
         setTimeout(() => {
           const activeTheme = get().theme;
           // Only restore if this is still the currently active theme object.
           if (activeTheme === generatedTheme) {
             activeTheme.setTransitionDurations(previousDurations);
+
+            // Important: publish one store update so components recompute any
+            // prebuilt transition strings derived during render.
+            const restoredTheme = new CustomThemeImpl(activeTheme);
+            set({
+              theme: restoredTheme,
+              themeName: restoredTheme.custom.themeName,
+              themeLongName: restoredTheme.custom.longName,
+            });
+
+            console.debug('[Theme] Duration reset applied:', previousDurations);
+          } else {
+            console.debug(
+              '[Theme] Duration reset skipped (active theme changed before reset).',
+            );
           }
         }, resetAfterMs);
       }
     } else {
       console.error(`Unable to generate theme for "${themeName}".`);
     }
+
+    console.debug(
+      '[Theme] setTheme total duration ms:',
+      Math.round(performance.now() - setThemeStartMs),
+    );
   },
   initializeTheme: async () => {
     // get preferences from the store
