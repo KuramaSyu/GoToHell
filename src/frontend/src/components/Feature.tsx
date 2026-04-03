@@ -14,5 +14,5 @@ export const Feature: React.FC<FeatureProps> = ({
   fallback = null,
 }) => {
   const flag = useFeatureStore((state) => state.flags[name]);
-  return <>{flag.enabled ? children : fallback}</>;
+  return <>{flag.isEnabled() ? children : fallback}</>;
 };
