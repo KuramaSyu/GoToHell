@@ -31,6 +31,7 @@ export const UploadOverdueDeaths = () => {
 
       await uploadBuilder.upload();
       uploadBuilder.updateStores();
+      await uploadBuilder.maybeChangeBackgroundToNewRandom();
     } catch (e) {
       setMessage(new SnackbarUpdateImpl(String(e), 'error'));
     }

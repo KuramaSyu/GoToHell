@@ -63,6 +63,7 @@ export const UploadScore = () => {
       setSnackbarState('uploaded');
 
       uploadBuilder.uploadStrategy.updateStores();
+      await uploadBuilder.maybeChangeBackgroundToNewRandom();
     } catch (e) {
       // handle upload error - description is in error included
       setSnackbarState('failed');

@@ -230,7 +230,7 @@ export class UploadBuilder {
   /**
    * uses feature flag `SwapBackgroundOnUpload` to determine whether or not to change the background on upload
    */
-  changeBackgroundOnUpload: () => boolean;
+  shouldChangeBackgroundOnUpload: () => boolean;
 
   constructor() {
     this.user = useUserStore.getState().user;
@@ -241,7 +241,7 @@ export class UploadBuilder {
     this.snackbarUpdatesEnabled = false;
     this.triggerRefresh = false;
     this.uploadStrategy = new PostSportUploadStrategy(this);
-    this.changeBackgroundOnUpload = () => false;
+    this.shouldChangeBackgroundOnUpload = () => false;
   }
 
   /**
@@ -327,7 +327,7 @@ export class UploadBuilder {
    * @returns
    */
   setChangeBackgroundOnUploadCheck(check: (() => boolean) | null): this {
-    this.changeBackgroundOnUpload =
+    this.shouldChangeBackgroundOnUpload =
       check ??
       (() =>
         useFeatureStore
@@ -361,8 +361,8 @@ export class UploadBuilder {
    * firstly checks, if the background should be changed on upload,
    * and if so, then retrigger theme selection as long as the background is the same as before (fast workaround for now)
    */
-  private async maybeChangeBackgroundToNewRandom() {
-    if (!this.changeBackgroundOnUpload()) {
+  public async maybeChangeBackgroundToNewRandom() {
+    if (!this.shouldChangeBackgroundOnUpload()) {
       return;
     }
 
@@ -381,7 +381,6 @@ export class UploadBuilder {
   async upload(): Promise<null> {
     try {
       const _ = await this.uploadStrategy.upload();
-      await this.maybeChangeBackgroundToNewRandom();
     } catch (error) {
       this.setErrorMessage(String(error));
       throw this.error;
