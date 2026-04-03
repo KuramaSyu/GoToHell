@@ -1,7 +1,11 @@
 import { create } from 'zustand';
 import { createTheme } from '@mui/material/styles';
 import { ThemeManager } from '../theme/themeManager';
-import { CustomTheme, CustomThemeConfig } from '../theme/customTheme';
+import {
+  CustomTheme,
+  CustomThemeConfig,
+  CustomThemeImpl,
+} from '../theme/customTheme';
 import customThemeData from '../theme/themes.json';
 import usePreferenceStore from './PreferenceStore';
 import { loadPreferencesFromCookie } from '../utils/cookiePreferences';
@@ -52,6 +56,11 @@ interface ThemeState {
   setTheme: (themeName: string) => Promise<void>;
 
   /**
+   * Sets only the background image URL on the current theme.
+   */
+  setBackground: (backgroundImage: string) => void;
+
+  /**
    * initializeTheme picks a random theme from custom themes and sets it.
    * It respects the user's preferences if any are set.
    */
@@ -77,6 +86,26 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       console.error(`Unable to generate theme for "${themeName}".`);
     }
   },
+  setBackground: (backgroundImage: string) => {
+    const currentTheme = get().theme;
+    if (
+      !backgroundImage ||
+      currentTheme.custom.backgroundImage === backgroundImage
+    ) {
+      return;
+    }
+
+    set({
+      theme: new CustomThemeImpl(
+        currentTheme,
+        {
+          ...currentTheme.custom,
+          backgroundImage,
+        },
+        false,
+      ),
+    });
+  },
   initializeTheme: async () => {
     // get preferences from the store
     loadPreferencesFromCookie();
@@ -85,11 +114,11 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     // filter out valid games, or use all if no preferences are set
     var validThemes = customThemes;
     const preferredGames = preferences.ui.displayedGames?.filter(
-      (x) => x.isDisplayed
+      (x) => x.isDisplayed,
     );
     if (preferredGames !== null) {
       validThemes = customThemes.filter((theme) =>
-        preferredGames!.map((x) => x.name).includes(theme.name)
+        preferredGames!.map((x) => x.name).includes(theme.name),
       );
     }
     const randomTheme =

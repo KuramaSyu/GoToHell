@@ -14,6 +14,10 @@ import { OverdueDeathsApi } from './OverdueDeathsApi';
 import { PostSportsResponse } from './responses/Sport';
 import { PostOverdueDeathsReply } from './responses/OverdueDeaths';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
+import { boolean } from 'zod';
+import useFeatureStore, { FeatureFlagName } from '../../zustand/FeatureStore';
+import { Feature } from '../../components/Feature';
+import { useThemeStore } from '../../zustand/useThemeStore';
 
 abstract class UploadStrategyABC {
   uploadBuilder: UploadBuilder;
@@ -84,7 +88,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
 
     if (wrapped.sport === null || wrapped.sport.sport === null) {
       throw new UploadError(
-        `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`
+        `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`,
       );
     }
 
@@ -96,7 +100,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       const sport = new SportRow(
         wrapped.sport.sport!,
         wrapped.sport.game!,
-        wrapped.exerciseAmount!
+        wrapped.exerciseAmount!,
       );
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
 
@@ -112,7 +116,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
           (currentCount: number, count: number) => {
             return Math.max(currentCount - count, 0);
           },
-          false
+          false,
         );
       }
 
@@ -133,7 +137,7 @@ class PostSportUploadStrategy extends UploadStrategyABC {
         }
       } else {
         throw new UploadError(
-          'Response was null, perhaps you are offline? This should not happen.'
+          'Response was null, perhaps you are offline? This should not happen.',
         );
       }
     } catch (error) {
@@ -173,13 +177,13 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
 
     if (wrapped.sport === null || wrapped.sport.sport === null) {
       throw new UploadError(
-        `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`
+        `What? Should I upload ${wrapped.deathAmount} apples? Perhaps oranges?`,
       );
     }
 
     if (wrapped.deathAmount === null) {
       throw new UploadError(
-        "You can't delay your exercises, if you don't have any deaths"
+        "You can't delay your exercises, if you don't have any deaths",
       );
     }
 
@@ -187,7 +191,7 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
       const sport = new SportRow(
         wrapped.sport.sport!,
         wrapped.sport.game!,
-        wrapped.exerciseAmount!
+        wrapped.exerciseAmount!,
       );
       console.timeLog(`Upload OverdueDeaths: ${sport.toJson()}`);
 
@@ -199,7 +203,7 @@ class OverdueDeathsUploadStrategy extends UploadStrategyABC {
           // lambda for increment logic
           return currentCount + count;
         },
-        false // do not update stores here, hence it will be done later
+        false, // do not update stores here, hence it will be done later
       );
 
       return null;
@@ -222,6 +226,11 @@ export class UploadBuilder {
   triggerRefresh: boolean;
   uploadStrategy: UploadStrategyABC;
 
+  /**
+   * uses feature flag `SwapBackgroundOnUpload` to determine whether or not to change the background on upload
+   */
+  changeBackgroundOnUpload: () => boolean;
+
   constructor() {
     this.user = useUserStore.getState().user;
     this.deathAmount = null;
@@ -231,6 +240,7 @@ export class UploadBuilder {
     this.snackbarUpdatesEnabled = false;
     this.triggerRefresh = false;
     this.uploadStrategy = new PostSportUploadStrategy(this);
+    this.changeBackgroundOnUpload = () => false;
   }
 
   /**
@@ -241,7 +251,8 @@ export class UploadBuilder {
     return new UploadBuilder()
       .setDeathAmount(null)
       .setSport(null)
-      .setExerciseAmount(null);
+      .setExerciseAmount(null)
+      .setChangeBackgroundOnUploadCheck(null);
   }
 
   /**
@@ -261,7 +272,7 @@ export class UploadBuilder {
    * @returns the current UploadBuilder instance
    */
   setUploadStrategy(
-    uploadStrategy: 'postSport' | 'overdueDeaths'
+    uploadStrategy: 'postSport' | 'overdueDeaths',
   ): UploadBuilder {
     switch (uploadStrategy) {
       case 'postSport':
@@ -303,9 +314,24 @@ export class UploadBuilder {
       this.exerciseAmount = calculator.calculate_amount(
         this.sport?.sport!,
         this.sport?.game!,
-        this.deathAmount!
+        this.deathAmount!,
       );
     }
+    return this;
+  }
+
+  /**
+   * setter to set a check method whether or not to change the background on upload. If null, then the feature flag check is used
+   * @param check
+   * @returns
+   */
+  setChangeBackgroundOnUploadCheck(check: (() => boolean) | null): this {
+    this.changeBackgroundOnUpload =
+      check ??
+      (() =>
+        useFeatureStore
+          .getState()
+          .flags[FeatureFlagName.SwapBackgroundOnUpload].isEnabled());
     return this;
   }
 
@@ -331,12 +357,29 @@ export class UploadBuilder {
   }
 
   /**
+   * firstly checks, if the background should be changed on upload,
+   * and if so, then retrigger theme selection as long as the background is the same as before (fast workaround for now)
+   */
+  private async maybeChangeBackgroundToNewRandom() {
+    if (!this.changeBackgroundOnUpload()) {
+      return;
+    }
+
+    console.log('Checking if background change on upload is enabled...');
+    // setTheme alreay changes to a new random background
+    const _ = await useThemeStore
+      .getState()
+      .setTheme(useThemeStore.getState().themeName);
+  }
+
+  /**
    * uploads the data to the server using the UploadStrategy and returns a promise.
    * @throws UploadError if the upload fails
    */
   async upload(): Promise<null> {
     try {
       const _ = await this.uploadStrategy.upload();
+      await this.maybeChangeBackgroundToNewRandom();
     } catch (error) {
       this.setErrorMessage(String(error));
       throw this.error;
