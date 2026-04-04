@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { CustomTheme, CustomThemeImpl } from '../theme/customTheme';
 
 // Define a Nord-themed default theme as a fallback.
-export const defaultTheme = new CustomThemeImpl(
+export const defaultTheme: CustomTheme = new CustomThemeImpl(
   createTheme({
     // https://www.nordtheme.com/
     shape: {
