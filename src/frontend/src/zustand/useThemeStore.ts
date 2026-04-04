@@ -75,10 +75,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     const speedMultiplier = useAppBackgroundStore
       .getState()
       .consumeNextChangeSpeedMultiplier();
-    console.debug('[Theme] Consumed speed multiplier:', speedMultiplier);
 
+    console.debug('[Theme] Consumed speed multiplier:', speedMultiplier);
     console.debug('[Theme] Calling ThemeManager.generateTheme(...)');
+
     const generatedTheme = await themeManager.generateTheme(themeName);
+
     console.debug(
       '[Theme] ThemeManager.generateTheme(...) resolved in ms:',
       Math.round(performance.now() - setThemeStartMs),

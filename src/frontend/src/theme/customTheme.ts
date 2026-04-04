@@ -405,16 +405,14 @@ export class CustomThemeImpl extends Object implements CustomTheme {
 
     const current = this.transitions.duration;
 
-    // Scale non-complex, leaving or entering tokens only.
-    // `complex` is intentionally left unchanged to avoid slowing background/theme
-    // transitions that are tied to this value.
+    // Scale non-leaving or entering tokens only
     this.setTransitionDurations({
       ...current,
       shortest: scale(current.shortest),
       shorter: scale(current.shorter),
       short: scale(current.short),
       standard: scale(current.standard),
-      complex: current.complex,
+      complex: scale(current.complex),
       enteringScreen: current.enteringScreen,
       leavingScreen: current.leavingScreen,
     });

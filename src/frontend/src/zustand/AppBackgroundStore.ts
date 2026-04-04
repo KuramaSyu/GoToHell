@@ -36,7 +36,7 @@ const useAppBackgroundStore = create<AppBackgroundState>((set, get) => ({
 
   markNextBackgroundChangeSlow: () =>
     set({
-      nextChangeSpeedMultiplier: 5,
+      nextChangeSpeedMultiplier: 8,
     }),
 
   consumeNextChangeSpeedMultiplier: () => {

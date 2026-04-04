@@ -24,12 +24,16 @@ const AppBackground: React.FC = () => {
     backgroundImage,
   );
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const complexDuration = Math.min(
+    theme.transitions.duration.complex,
+    2000, // Cap to avoid excessively long transitions if the theme sets a very high value.
+  );
 
   useEffect(() => {
     if (backgroundImage && backgroundImage !== currentImage) {
       // Trigger fade out/in effect
       // Only start a transition if the theme points to a different image.
-      const switchDelayMs = theme.transitions.duration.complex / 3;
+      const switchDelayMs = complexDuration / 3;
       setIsTransitioning(true);
 
       const timer = setTimeout(() => {
@@ -39,7 +43,7 @@ const AppBackground: React.FC = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [backgroundImage, currentImage, theme.transitions.duration.complex]);
+  }, [backgroundImage, currentImage, complexDuration]);
 
   if (!backgroundImage) return null;
 
@@ -67,7 +71,7 @@ const AppBackground: React.FC = () => {
           filter: 'blur(9px)',
           // transition: 'opacity 300ms ease-in-out', // The CSS Magic
           transition: theme.transitions.create('opacity', {
-            duration: 2 * (theme.transitions.duration.complex / 3),
+            duration: 2 * (complexDuration / 3),
             // easing: theme.transitions.easing.easeOut,
           }),
           opacity: isTransitioning ? 0 : 1, // Fades out then back in
