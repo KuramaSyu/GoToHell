@@ -38,7 +38,10 @@ import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar/TopBar';
 import FlagIcon from '@mui/icons-material/Flag';
-import { PersonalGoalSettings } from './PersonalGoalSettings';
+import {
+  PersonalGoalSettings,
+  ResetPersonalGoalSettings,
+} from './PersonalGoalSettings';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import {
   ResetSportAdjustmentsLogic,
@@ -187,6 +190,7 @@ export default function SettingsPage() {
         id: 'personal-goals',
         label: 'Personal Goals',
         icon: <FlagIcon />,
+        resetLogic: ResetPersonalGoalSettings,
         settingsContent: <PersonalGoalSettings />,
       },
       {

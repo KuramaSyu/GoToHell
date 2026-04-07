@@ -31,6 +31,22 @@ import {
 import useInfoStore, { SnackbarUpdateImpl } from '../../zustand/InfoStore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlagIcon from '@mui/icons-material/Flag';
+
+export function ResetPersonalGoalSettings() {
+  const personalGoalIds = usePersonalGoalsStore
+    .getState()
+    .personalGoalsList.map((goal) => goal.id);
+
+  const api = new PersonalGoalApi();
+  var futures: Promise<boolean>[] = [];
+  for (const id of personalGoalIds) {
+    futures.push(api.delete(id));
+  }
+  Promise.all(futures).catch((e) =>
+    console.error('Failed to reset Personal Goals: ' + JSON.stringify(e)),
+  );
+}
+
 export const PersonalGoalSettings: React.FC = () => {
   const { personalGoalsList } = usePersonalGoalsStore();
   const [amountStr, setAmountStr] = useState('1');
