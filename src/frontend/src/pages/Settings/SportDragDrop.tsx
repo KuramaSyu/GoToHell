@@ -17,7 +17,6 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Paper, Box, Typography, alpha } from '@mui/material';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import zIndex from '@mui/material/styles/zIndex';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { TwoListDnD } from './TwoListDnD';
 import usePreferenceStore from '../../zustand/PreferenceStore';

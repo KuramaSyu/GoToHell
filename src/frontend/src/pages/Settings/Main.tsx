@@ -2,7 +2,7 @@ import { Box, CssBaseline, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import AppBackground from '../../components/AppBackground';
-import { GameOverrideList, GameOverrideSettings } from './GameOverride';
+import { GameOverrideSettings } from '../SettingsV2/ExerciseOverrideSettings';
 import { MultiplierSettings } from './Multiplier';
 import { loadPreferencesFromCookie } from '../../utils/cookiePreferences';
 import { PlankOverride } from './PlankOverride';
@@ -102,7 +102,6 @@ export const Settings: React.FC = () => {
           </Typography>
           <Box sx={RoundedBlurBoxSX}>
             <GameOverrideSettings />
-            <GameOverrideList />
           </Box>
         </Box>
 

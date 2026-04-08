@@ -1,5 +1,4 @@
-import { Theme, alpha, lighten, darken } from '@mui/material/styles';
-import { Palette } from '@mui/material/styles/createPalette';
+import { Theme, Palette, alpha, lighten, darken } from '@mui/material/styles';
 import {
   blendColors,
   hexToRgb,

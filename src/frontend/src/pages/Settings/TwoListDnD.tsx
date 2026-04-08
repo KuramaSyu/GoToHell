@@ -19,7 +19,6 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Paper, Box, Typography, alpha, Grid } from '@mui/material';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
-import zIndex from '@mui/material/styles/zIndex';
 import { useThemeStore } from '../../zustand/useThemeStore';
 
 // Item component with forwardRef
@@ -185,10 +184,10 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
       <DragOverlay>
         {activeId ? <SortableItem id={activeId}></SortableItem> : null}
       </DragOverlay>
-      <Box display="flex" gap={4}>
+      <Box display='flex' gap={4}>
         {/* List A */}
         <Box sx={ListSX}>
-          <Typography variant="h6">{nameA}</Typography>
+          <Typography variant='h6'>{nameA}</Typography>
           <DroppableArea id={'listA'}>
             <SortableContext
               items={listA}
@@ -203,7 +202,7 @@ export const TwoListDnD: React.FC<TwoListDnDProps> = ({
 
         {/* List B */}
         <Box sx={ListSX}>
-          <Typography variant="h6">{nameB}</Typography>
+          <Typography variant='h6'>{nameB}</Typography>
           <DroppableArea id={'listB'}>
             <SortableContext
               items={listB}

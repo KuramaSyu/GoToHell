@@ -1,12 +1,8 @@
-import { Box, CssBaseline, Input, OutlinedInput, Slider } from '@mui/material';
-import React, { useEffect } from 'react';
+import { Box } from '@mui/material';
+import React from 'react';
 import usePreferenceStore from '../../zustand/PreferenceStore';
-import AppBackground from '../../components/AppBackground';
-import { GameOverrideList, GameOverrideSettings } from './GameOverride';
-import { Multiplier, UserPreferences } from '../../models/Preferences';
-import { GenerateMarks } from '../../utils/Marks';
-import { MultiplierSlieder, SettingsSlider } from './Sliders';
-import { useThemeStore } from '../../zustand/useThemeStore';
+import { UserPreferences } from '../../models/Preferences';
+import { MultiplierSlieder } from './Sliders';
 
 export const MultiplierSettings: React.FC = () => {
   const { preferences, setPreferences } = usePreferenceStore();
