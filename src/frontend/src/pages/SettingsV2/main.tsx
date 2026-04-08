@@ -30,10 +30,7 @@ import {
 } from '../../utils/api/ApiRequirementsBuilder';
 import { useLoadingStore } from '../../zustand/loadingStore';
 import { useEffect, useState } from 'react';
-import {
-  GameOverrideList,
-  GameOverrideSettings,
-} from '../Settings/GameOverride';
+
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { Pages } from '../../components/TopBar/TopBar';
@@ -53,6 +50,7 @@ import {
   AppearenceSettings,
   ResetAppearenceSettingsLogic,
 } from './AppearenceSettings';
+import { GameOverrideSettings } from './ExerciseOverrideSettings';
 /**
  *
  * SettingsPage
@@ -134,18 +132,6 @@ export const SettingsSection = React.forwardRef<
 });
 SettingsSection.displayName = 'SettingsSection';
 
-function ExcerciseOverrideSettings() {
-  return (
-    <Box>
-      <Typography variant='body1'>
-        Exercise-Amount overrides for games.
-      </Typography>
-      <GameOverrideSettings />
-      <GameOverrideList />
-    </Box>
-  );
-}
-
 function SportAdjustmenteSettings() {
   const { theme } = useThemeStore();
   return (
@@ -177,7 +163,7 @@ export default function SettingsPage() {
         id: 'exercise-overrides',
         label: 'Exercise Overrides',
         icon: <SettingsIcon />,
-        settingsContent: <ExcerciseOverrideSettings />,
+        settingsContent: <GameOverrideSettings />,
       },
       {
         id: 'appearence',
