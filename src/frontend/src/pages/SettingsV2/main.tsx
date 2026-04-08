@@ -50,7 +50,10 @@ import {
   AppearenceSettings,
   ResetAppearenceSettingsLogic,
 } from './AppearenceSettings';
-import { GameOverrideSettings } from './ExerciseOverrideSettings';
+import {
+  GameOverrideSettings,
+  resetGameOverrideSettingsLogic,
+} from './ExerciseOverrideSettings';
 /**
  *
  * SettingsPage
@@ -163,6 +166,7 @@ export default function SettingsPage() {
         id: 'exercise-overrides',
         label: 'Exercise Overrides',
         icon: <SettingsIcon />,
+        resetLogic: resetGameOverrideSettingsLogic,
         settingsContent: <GameOverrideSettings />,
       },
       {

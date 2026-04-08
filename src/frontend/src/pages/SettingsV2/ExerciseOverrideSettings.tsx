@@ -45,6 +45,15 @@ const SX_TABLE_HEADER_ENTRY = {
 };
 
 /**
+ * function which uses usePreferenceStore to reset game overrides
+ */
+export function resetGameOverrideSettingsLogic() {
+  const preferences = usePreferenceStore.getState().preferences;
+  preferences.game_overrides = [];
+  usePreferenceStore.getState().setPreferences(preferences);
+}
+
+/**
  * Displays a table where the user can add simple exercise overrides, like "1 push-up per death in Dark Souls". T
  * his is for users who want simple, strict rules
  */
