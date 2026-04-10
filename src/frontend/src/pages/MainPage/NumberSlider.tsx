@@ -5,6 +5,7 @@ import {
   Button,
   OutlinedInput,
   Tooltip,
+  Stack,
 } from '@mui/material';
 import { create } from 'zustand';
 import { Add, Remove } from '@mui/icons-material';
@@ -151,63 +152,44 @@ const MobileNumberInput: React.FC<MobileNumberInputProps> = ({
   const { theme } = useThemeStore();
 
   return (
-    <Box sx={{ height: '100%' }}>
-      <Box sx={{ position: 'relative', height: '100%', ml: 3 }}>
-        <OutlinedInput
-          value={localAmount}
-          placeholder='Amount'
-          onChange={onInputChange}
-          error={isNaN(Number(localAmount))}
-          inputProps={{
-            inputMode: 'numeric',
-            style: { textAlign: 'center' }, // center the number
-          }}
-          sx={{
-            height: '100%',
-            borderRadius: 8,
-            display: 'flex',
-            color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
-            backgroundColor: theme.palette.muted.dark,
-            fontSize: '4vh',
-            fontWeight: 600,
-            borderWidth: 0,
-            textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: theme.palette.primary.main,
-            },
-          }}
+    <Stack direction={'row'} gap={0.5}>
+      <Stack direction={'column'} gap={0.5}>
+        <RemoveButton
+          onChange={onSliderChange}
+          amount={amount}
+          stepValue={stepValue}
         />
-
-        <Box
-          sx={{
-            position: 'absolute',
-            width: 6 / 21,
-            left: 'calc(-1 * (6/21 * 100%) / pi)',
-            top: 'calc(-1 * (6/21 * 100%) / (pi/2))',
-          }}
-        >
-          <RemoveButton
-            onChange={onSliderChange}
-            amount={amount}
-            stepValue={stepValue}
-          />
-        </Box>
-        <Box
-          sx={{
-            position: 'absolute',
-            width: 9 / 20,
-            left: 'calc(-1 * (9/20 * 100%) / pi)',
-            bottom: 'calc(-1 * (9/20 * 100%) / (pi/2))',
-          }}
-        >
-          <AddButton
-            onChange={onSliderChange}
-            amount={amount}
-            stepValue={stepValue}
-          />
-        </Box>
-      </Box>
-    </Box>
+        <AddButton
+          onChange={onSliderChange}
+          amount={amount}
+          stepValue={stepValue}
+        />
+      </Stack>
+      <OutlinedInput
+        value={localAmount}
+        placeholder='Amount'
+        onChange={onInputChange}
+        error={isNaN(Number(localAmount))}
+        inputProps={{
+          inputMode: 'numeric',
+          style: { textAlign: 'center' }, // center the number
+        }}
+        sx={{
+          height: '100%',
+          borderRadius: 1,
+          display: 'flex',
+          color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
+          backgroundColor: theme.palette.muted.dark,
+          fontSize: '4vh',
+          fontWeight: 600,
+          borderWidth: 0,
+          textShadow: `0px 0px 8px ${theme.palette.text.secondary}`,
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.primary.main,
+          },
+        }}
+      />
+    </Stack>
   );
 };
 
@@ -401,12 +383,8 @@ const AddButton: React.FC<AddRemoveButtonProps> = ({
       variant='contained'
       onClick={() => onChange(amount + stepValue)}
       sx={{
-        borderRadius: '50%',
-        width: '80%', // Make the button fill the container
-        height: '80%', // Make the button fill the container
-        minWidth: 0, // Ensure the button does not expand
-        minHeight: 0, // Ensure the button does not expand
-        aspectRatio: '1 / 1',
+        height: '50%',
+        aspectRatio: '2 / 1',
         display: 'flex',
         backgroundColor: isMobile ? theme.palette.primary.main : undefined,
         color: isMobile
@@ -432,12 +410,8 @@ const RemoveButton: React.FC<AddRemoveButtonProps> = ({
       variant='contained'
       onClick={() => onChange(amount - stepValue)}
       sx={{
-        borderRadius: '50%',
-        width: '80%', // Make the button fill the container
-        height: '80%', // Make the button fill the container
-        minWidth: 0, // Ensure the button does not expand
-        minHeight: 0, // Ensure the button does not expand
-        aspectRatio: '1 / 1',
+        height: '50%',
+        aspectRatio: '2 / 1',
         display: 'flex',
         backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
         color: isMobile
