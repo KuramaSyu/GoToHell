@@ -39,7 +39,7 @@ export const MultiplierSettings: React.FC = () => {
     <Box>
       <MultiplierSlieder
         min={0}
-        max={4}
+        max={Math.max(2, sliderValue ?? 1)}
         saveValue={saveMultiplier}
         setSliderValue={setSliderValue}
         sliderValue={sliderValue}
