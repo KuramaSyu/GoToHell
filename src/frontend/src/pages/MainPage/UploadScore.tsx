@@ -93,12 +93,7 @@ export const UploadScore = () => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center',
-            justifyItems: 'center',
-            alignItems: 'stretch',
-
-            height: 'fill',
-            aspectRatio: '1 / 1',
+            height: '100%',
             flexGrow: 1,
             color:
               DURATION !== 0
@@ -106,13 +101,9 @@ export const UploadScore = () => {
                 : darken(theme.palette.primary.main, 0.3),
           }}
         >
-          <AnimatedRoundBtn
-            onClick={OnUploadClick}
-            duration={DURATION}
-            edgeFade={0}
-          >
+          <AnimatedButton onClick={OnUploadClick} duration={DURATION}>
             <SendIcon sx={{ fontSize: '2rem' }}></SendIcon>
-          </AnimatedRoundBtn>
+          </AnimatedButton>
         </Box>
         <UploadSnackbar snackbarState={snackbarState} />
       </>
