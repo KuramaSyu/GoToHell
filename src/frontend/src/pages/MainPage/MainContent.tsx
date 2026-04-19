@@ -117,7 +117,7 @@ const MainContentMobile: React.FC = () => {
             alignItems: 'center',
             gap: 1,
             maxHeight: isMobile ? undefined : 1 / 5,
-            height: isMobile ? 1 / 7 : undefined,
+            height: isMobile ? 1 / 8 : undefined,
             mx: 3,
           }}
         >
@@ -125,7 +125,7 @@ const MainContentMobile: React.FC = () => {
             sx={{
               display: 'flex',
               height: '100%',
-              alignItems: 'center',
+              alignItems: 'stretch', // force number input to be full height
               width: isMobile ? 3 / 4 : 3 / 4,
               zIndex: 0,
             }}
@@ -140,7 +140,7 @@ const MainContentMobile: React.FC = () => {
             sx={{
               width: isMobile ? 6 / 20 : 1 / 4,
               display: 'flex',
-              alignItems: 'center',
+              height: '100%',
               zIndex: 1,
             }}
           >
