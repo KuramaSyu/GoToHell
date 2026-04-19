@@ -152,8 +152,12 @@ const MobileNumberInput: React.FC<MobileNumberInputProps> = ({
   const { theme } = useThemeStore();
 
   return (
-    <Stack direction={'row'} gap={0.5}>
-      <Stack direction={'column'} gap={0.5}>
+    <Stack direction={'row'} gap={1} sx={{ height: '100%', width: '100%' }}>
+      <Stack
+        direction={'column'}
+        gap={1}
+        sx={{ height: '100%', width: 72, flexShrink: 0 }}
+      >
         <RemoveButton
           onChange={onSliderChange}
           amount={amount}
@@ -175,7 +179,8 @@ const MobileNumberInput: React.FC<MobileNumberInputProps> = ({
           style: { textAlign: 'center' }, // center the number
         }}
         sx={{
-          height: '100%',
+          flex: 1,
+          minWidth: 0,
           borderRadius: 1,
           display: 'flex',
           color: blendWithContrast(theme.palette.muted.dark, theme, 2 / 3),
@@ -235,6 +240,7 @@ const DesktopNumberSlider: React.FC<DesktopNumberSliderProps> = ({
       }}
       sx={{
         width: 'clamp(40px, 35%, 200px)',
+        height: '100%',
         display: 'flex',
         color: blendWithContrast(theme.palette.primary.main, theme, 2 / 3),
         backgroundColor: theme.palette.primary.main,
@@ -284,9 +290,9 @@ const DesktopNumberSlider: React.FC<DesktopNumberSliderProps> = ({
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center',
             justifyContent: 'space-between',
             width: '100%',
+            minHeight: '56px',
           }}
         >
           {withInput ? customInput : title}
@@ -383,9 +389,21 @@ const AddButton: React.FC<AddRemoveButtonProps> = ({
       variant='contained'
       onClick={() => onChange(amount + stepValue)}
       sx={{
-        height: '50%',
-        aspectRatio: '2 / 1',
-        display: 'flex',
+        ...(isMobile
+          ? {
+              flex: 1,
+              minHeight: 0,
+              width: '100%',
+              minWidth: 0,
+              px: 0,
+            }
+          : {
+              minWidth: 80,
+              px: 2,
+              height: '100%',
+              minHeight: 0,
+              alignSelf: 'stretch',
+            }),
         backgroundColor: isMobile ? theme.palette.primary.main : undefined,
         color: isMobile
           ? blendWithContrast(theme.palette.primary.main, theme, 2 / 3)
@@ -410,9 +428,21 @@ const RemoveButton: React.FC<AddRemoveButtonProps> = ({
       variant='contained'
       onClick={() => onChange(amount - stepValue)}
       sx={{
-        height: '50%',
-        aspectRatio: '2 / 1',
-        display: 'flex',
+        ...(isMobile
+          ? {
+              flex: 1,
+              minHeight: 0,
+              width: '100%',
+              minWidth: 0,
+              px: 0,
+            }
+          : {
+              minWidth: 80,
+              px: 2,
+              height: '100%',
+              minHeight: 0,
+              alignSelf: 'stretch',
+            }),
         backgroundColor: isMobile ? theme.palette.secondary.main : undefined,
         color: isMobile
           ? blendWithContrast(theme.palette.secondary.main, theme, 2 / 3)
