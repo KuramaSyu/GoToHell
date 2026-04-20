@@ -54,6 +54,7 @@ import {
   GameOverrideSettings,
   resetGameOverrideSettingsLogic,
 } from './ExerciseOverrideSettings';
+import { PlankOverride } from '../Settings/PlankOverride';
 /**
  *
  * SettingsPage
@@ -145,6 +146,8 @@ function SportAdjustmenteSettings() {
         the rating for Planks but increase it for Push-Ups
       </Typography>
       <SportAdjustments />
+      <Typography variant='body1'>Settings to adjust plank duration</Typography>
+      <PlankOverride />
     </Stack>
   );
 }
