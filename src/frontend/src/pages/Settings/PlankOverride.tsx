@@ -67,8 +67,7 @@ export const PlankOverride: React.FC = () => {
             value={pickerValue}
             onChange={handleTimeChange}
             ampm={false}
-            openTo='minutes'
-            views={['hours', 'minutes', 'seconds']}
+            views={['minutes', 'seconds']}
             minutesStep={1}
             slotProps={{
               textField: {
@@ -83,8 +82,8 @@ export const PlankOverride: React.FC = () => {
             onChange={handleTimeChange}
             ampm={false}
             openTo='minutes'
-            views={['hours', 'minutes', 'seconds']}
-            minutesStep={1}
+            views={['minutes', 'seconds']}
+            timeSteps={{ hours: 1, minutes: 1, seconds: 1 }}
             slotProps={{
               textField: {
                 fullWidth: true,
