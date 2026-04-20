@@ -318,6 +318,7 @@ export default function SettingsPage() {
       >
         {categories.map((c) => (
           <SettingsSection
+            key={c.id}
             id={c.id}
             label={c.label}
             ref={(el) => {

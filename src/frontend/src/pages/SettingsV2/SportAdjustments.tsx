@@ -63,6 +63,7 @@ export const SportAdjustments: React.FC = () => {
         if (!entry) return null;
         return (
           <SingleSportAdjustment
+            key={entry.name}
             onClick={onRatingSave}
             sport={entry}
             currentValue={
@@ -113,10 +114,10 @@ export const SingleSportAdjustment: React.FC<SingleSportAdjustmentProps> = ({
 
   return (
     <>
-      <Grid size={3} key={`${sport.name}1`}>
+      <Grid size={3}>
         <Typography>{sport.displayName()}</Typography>
       </Grid>
-      <Grid size={9} key={`${sport.name}2`}>
+      <Grid size={9}>
         <Stack direction='row' alignItems='center' spacing={1}>
           <Rating
             value={value}
