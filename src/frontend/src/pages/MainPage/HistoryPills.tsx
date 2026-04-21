@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Box, Chip, Stack, SvgIcon } from '@mui/material';
+import { alpha, Box, Chip, Stack, SvgIcon } from '@mui/material';
 import { getThemeNames, useThemeStore } from '../../zustand/useThemeStore';
 
 import { DynamicGameGrid } from './DynamicGrid';
@@ -19,6 +19,7 @@ import { useSportStore } from '../../useSportStore';
 import useCalculatorStore from '../../zustand/CalculatorStore';
 import { useUserStore } from '../../userStore';
 import { useSportResponseStore } from '../../zustand/sportResponseStore';
+import { color } from 'framer-motion';
 
 const MAX_PILLS = 4;
 
@@ -104,8 +105,13 @@ export const HistoryPills: React.FC = () => {
           label={`${sportRow.amount} @ ${sportRow.game}`}
           onClick={() => handleChipClick(sportRow)}
           color={
-            SportRowMatchesCurrentSettings(sportRow) ? 'secondary' : 'default'
+            SportRowMatchesCurrentSettings(sportRow) ? 'primary' : 'default'
           }
+          sx={{
+            '&:hover': {
+              background: theme.blendAgainstContrast('primary', 0.3),
+            },
+          }}
           icon={
             <SvgIcon
               component={sportIconMap[String(sportRow.kind)]!}
