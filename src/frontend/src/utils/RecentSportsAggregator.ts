@@ -182,15 +182,14 @@ export class RecentSportsAggregator {
         j++;
       }
       if (groupCount > 1) {
+        // build entries array from current..j-1
+        const entries: UserSport[] = [];
+        for (let k = i; k < j; k++) {
+          const s = sorted[k];
+          if (s) entries.push(s);
+        }
         grouped.push({
-          kind: current.kind,
-          amount: groupAmount,
-          timedate: new Date(endTime).toISOString(),
-          user_id: current.user_id,
-          game: current.game,
-          count: groupCount,
-          start_timedate: new Date(startTime).toISOString(),
-          end_timedate: new Date(endTime).toISOString(),
+          entries,
         });
         i = j;
       } else {

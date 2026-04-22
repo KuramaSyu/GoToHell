@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { RecentSportsAggregator } from './RecentSportsAggregator';
+import { UserSportGroupModel } from '../pages/MainPage/Timeline/Timeline';
 
 interface UserSport {
   id: number;
@@ -64,11 +65,11 @@ describe('RecentSportsAggregator', () => {
       .withNow(now)
       .aggregate([s1, s2]);
     expect(result.length).toBe(1);
-    const group = result[0] as UserSportGroup;
-    expect(group.count).toBe(2);
-    expect(group.amount).toBe(2);
-    expect(group.start_timedate).toBe(s1.timedate);
-    expect(group.end_timedate).toBe(s2.timedate);
+    const groupModel = new UserSportGroupModel((result[0] as any).entries);
+    expect(groupModel.count()).toBe(2);
+    expect(groupModel.amount()).toBe(2);
+    expect(groupModel.startTime()).toBe(s1.timedate);
+    expect(groupModel.endTime()).toBe(s2.timedate);
   });
 
   it('does not group if different user unless allowed', () => {
@@ -93,6 +94,10 @@ describe('RecentSportsAggregator', () => {
       .withNow(now)
       .aggregate([s1, s2]);
     expect(allowed.length).toBe(1);
+    // verify via model
+    expect(new UserSportGroupModel((allowed[0] as any).entries).count()).toBe(
+      2,
+    );
   });
 
   it('does not group if different kind unless allowed', () => {
@@ -117,6 +122,9 @@ describe('RecentSportsAggregator', () => {
       .withNow(now)
       .aggregate([s1, s2]);
     expect(allowed.length).toBe(1);
+    expect(new UserSportGroupModel((allowed[0] as any).entries).count()).toBe(
+      2,
+    );
   });
 
   it('does not group if different game unless allowed', () => {
@@ -141,6 +149,9 @@ describe('RecentSportsAggregator', () => {
       .withNow(now)
       .aggregate([s1, s2]);
     expect(allowed.length).toBe(1);
+    expect(new UserSportGroupModel((allowed[0] as any).entries).count()).toBe(
+      2,
+    );
   });
 
   it('does not group if time window > maxWindow', () => {
@@ -180,7 +191,13 @@ describe('RecentSportsAggregator', () => {
       .withNow(now)
       .aggregate([old1, old2, new1]);
     expect(result.some((e) => (e as UserSport).id === 4)).toBe(true);
-    expect(result.some((e) => (e as UserSportGroup).count === 2)).toBe(true);
+    expect(
+      result.some(
+        (e) =>
+          (e as any).entries &&
+          new UserSportGroupModel((e as any).entries).count() === 2,
+      ),
+    ).toBe(true);
   });
 
   it('respects custom minTime and maxWindow', () => {
@@ -206,6 +223,7 @@ describe('RecentSportsAggregator', () => {
       .withNow(now)
       .aggregate([s1, s2]);
     expect(custom.length).toBe(1);
+    expect(new UserSportGroupModel((custom[0] as any).entries).count()).toBe(2);
   });
 
   it('groups with all allow* options enabled (users, kinds, games)', () => {
@@ -241,7 +259,7 @@ describe('RecentSportsAggregator', () => {
       .withMaxWindowMs(3 * 60 * 60 * 1000)
       .aggregate([s1, s2, s3]);
     expect(result.length).toBe(1);
-    expect((result[0] as UserSportGroup).count).toBe(3);
+    expect(new UserSportGroupModel((result[0] as any).entries).count()).toBe(3);
   });
 
   it('groups only by user if allowUsers, not kind/game', () => {
@@ -309,7 +327,7 @@ describe('RecentSportsAggregator', () => {
       .withMaxWindowMs(3 * 60 * 60 * 1000)
       .aggregate([s1, s2, s3]);
     expect(result.length).toBe(1);
-    expect((result[0] as UserSportGroup).count).toBe(3);
+    expect(new UserSportGroupModel((result[0] as any).entries).count()).toBe(3);
   });
 
   it('groups only by game if allowGames, not user/kind', () => {
@@ -344,7 +362,7 @@ describe('RecentSportsAggregator', () => {
       .withMaxWindowMs(3 * 60 * 60 * 1000)
       .aggregate([s1, s2, s3]);
     expect(result.length).toBe(1);
-    expect((result[0] as UserSportGroup).count).toBe(3);
+    expect(new UserSportGroupModel((result[0] as any).entries).count()).toBe(3);
   });
 
   it('groups by user and kind if both allowed, not game', () => {
@@ -380,7 +398,7 @@ describe('RecentSportsAggregator', () => {
       .withMaxWindowMs(3 * 60 * 60 * 1000)
       .aggregate([s1, s2, s3]);
     expect(result.length).toBe(1);
-    expect((result[0] as UserSportGroup).count).toBe(3);
+    expect(new UserSportGroupModel((result[0] as any).entries).count()).toBe(3);
   });
 
   it('groups by user and game if both allowed, not kind', () => {
@@ -416,7 +434,7 @@ describe('RecentSportsAggregator', () => {
       .withMaxWindowMs(3 * 60 * 60 * 1000)
       .aggregate([s1, s2, s3]);
     expect(result.length).toBe(1);
-    expect((result[0] as UserSportGroup).count).toBe(3);
+    expect((result[0] as any).entries.length).toBe(3);
   });
 
   it('groups by kind and game if both allowed, not user', () => {
@@ -452,6 +470,6 @@ describe('RecentSportsAggregator', () => {
       .withMaxWindowMs(3 * 60 * 60 * 1000)
       .aggregate([s1, s2, s3]);
     expect(result.length).toBe(1);
-    expect((result[0] as UserSportGroup).count).toBe(3);
+    expect((result[0] as any).entries.length).toBe(3);
   });
 });

@@ -49,14 +49,45 @@ export interface UserSport {
  * with too many entries in a small time frame
  */
 export interface UserSportGroup {
-  kind: string;
-  amount: number;
-  timedate: string;
-  user_id: string;
-  game: string;
-  count: number;
-  start_timedate: string;
-  end_timedate: string;
+  entries: UserSport[];
+}
+
+/**
+ * Helper wrapper around a grouped set of `UserSport` entries.
+ * Provides convenient accessors for common derived values.
+ */
+export class UserSportGroupModel {
+  constructor(public entries: UserSport[]) {}
+
+  startTime(): string {
+    if (this.entries.length === 0) return '';
+    return this.entries[0]?.timedate ?? '';
+  }
+
+  endTime(): string {
+    if (this.entries.length === 0) return '';
+    return this.entries[this.entries.length - 1]?.timedate ?? '';
+  }
+
+  kinds(): string[] {
+    return Array.from(new Set(this.entries.map((e) => e.kind)));
+  }
+
+  games(): string[] {
+    return Array.from(new Set(this.entries.map((e) => e.game)));
+  }
+
+  users(): string[] {
+    return Array.from(new Set(this.entries.map((e) => e.user_id)));
+  }
+
+  count(): number {
+    return this.entries.length;
+  }
+
+  amount(): number {
+    return this.entries.reduce((s, e) => s + e.amount, 0);
+  }
 }
 
 interface SportsApiResponse {
