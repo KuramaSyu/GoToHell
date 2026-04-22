@@ -43,6 +43,17 @@ export interface UserSport {
   game: string;
 }
 
+export interface UserSportGroup {
+  kind: string;
+  amount: number;
+  timedate: string;
+  user_id: string;
+  game: string;
+  count: number;
+  start_timedate: string;
+  end_timedate: string;
+}
+
 interface SportsApiResponse {
   data: UserSport[];
 }
