@@ -8,6 +8,11 @@ import { NUMBER_FONT } from '../../../statics';
 import { UserSport, UserSportGroup } from './models/SportModels';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import { hexToRgbString } from '../../../utils/colors/hexToRgb';
+import {
+  DefaultDescriptionProvider,
+  getSportDescription,
+  getSportNameAndDescription,
+} from '../../../utils/DescriptionProvider';
 
 interface SportCardProps {
   data: UserSport;
@@ -53,7 +58,7 @@ export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
           textTransform: 'uppercase',
         }}
       >
-        {data.kind.replace('_', ' ')}
+        {getSportNameAndDescription(data.kind, data.amount)}
       </Typography>
 
       <Typography variant='subtitle2' fontWeight={350} color='inherit'>
@@ -157,11 +162,7 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
     data.entries[data.entries.length - 1]?.timedate ?? firstTimedate;
   const start = firstTimedate;
   const end = lastTimedate;
-  const kinds = Array.from(new Set(data.entries.map((e) => e.kind)));
-  const games = Array.from(new Set(data.entries.map((e) => e.game)));
-  const usersCount = Array.from(
-    new Set(data.entries.map((e) => e.user_id)),
-  ).length;
+  const nameProvider = new DefaultDescriptionProvider();
   const entriesCount = data.entries.length;
 
   const formatShort = (iso: string) => {
@@ -200,7 +201,13 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
           textTransform: 'uppercase',
         }}
       >
-        {Array.from(new Set(data.entries.map((e) => e.kind))).join(', ')}
+        {Array.from(
+          new Set(
+            data.entries.map(
+              (e) => nameProvider.get_name(e.kind) ?? e.kind.replace('_', ' '),
+            ),
+          ),
+        ).join(', ')}
       </Typography>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
