@@ -7,6 +7,7 @@ import {
   memo,
   useRef,
 } from 'react';
+import { RecentSportsAggregator } from '../../../utils/RecentSportsAggregator';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -43,6 +44,10 @@ export interface UserSport {
   game: string;
 }
 
+/**
+ * Represents a group of sports of a user, to avoid "spamming" the timeline
+ * with too many entries in a small time frame
+ */
 export interface UserSportGroup {
   kind: string;
   amount: number;
@@ -79,6 +84,14 @@ export const SportsTimeline = () => {
   const currentOffset = useRef(0);
   const isLoadingMoreItems = useRef(false);
 
+  const recentGroupedSports: Array<UserSport | UserSportGroup> = useMemo(() => {
+    if (!recentSports || !recentSports.data) return [];
+    return RecentSportsAggregator.builder()
+      .allowDifferentGames(true)
+      .allowDifferentKinds(true)
+      .aggregate(recentSports.data);
+  }, [recentSports]);
+
   useEffect(() => {
     if (!selectedSport || !recentSports) return;
     setSelectedSport(
@@ -112,7 +125,7 @@ export const SportsTimeline = () => {
       });
   }, []);
 
-  // watch until end of timeline is reached
+  // watch until end of timeline is reached and in this case trigger onScrollToEnd()
   useEffect(() => {
     const sentinel = timelineSentinelRef.current;
     if (!sentinel) return;
@@ -137,6 +150,7 @@ export const SportsTimeline = () => {
     };
   }, [onScrollToEnd]);
 
+  /** fetches sports from backend */
   const fetchSports = useCallback(async () => {
     if (!user || !usersLoaded) return;
     try {
