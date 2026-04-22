@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { RecentSportsAggregator } from './RecentSportsAggregator';
-import { UserSportGroupModel } from '../pages/MainPage/Timeline/Timeline';
+import { UserSportGroupModel } from '../pages/MainPage/Timeline/models/SportModels';
 
 interface UserSport {
   id: number;

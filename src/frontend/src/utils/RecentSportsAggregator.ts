@@ -1,7 +1,10 @@
 // RecentSportsAggregator.ts
 // Aggregates UserSport entries into groups with configurable options.
 
-import { UserSport, UserSportGroup } from '../pages/MainPage/Timeline/Timeline';
+import {
+  UserSport,
+  UserSportGroup,
+} from '../pages/MainPage/Timeline/models/SportModels';
 
 export interface RecentSportsAggregatorOptions {
   minTimeMs?: number; // Minimum age (ms) for grouping (default: 2h)
