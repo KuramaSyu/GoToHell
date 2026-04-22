@@ -231,7 +231,7 @@ export class AllRecentSportsRequirement extends ApiRequirementABC {
   async doFetch(): Promise<any> {
     console.log(`DEBUG: Fetching all recent sports`);
     await FriendsRequirement.getInstance().fetchIfNeeded();
-    return await new UserApi().fetchAllRecentSports();
+    return await new UserApi().fetchAllRecentSports(0, 50);
   }
 }
 

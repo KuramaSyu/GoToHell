@@ -7,6 +7,7 @@ import {
   memo,
   useRef,
 } from 'react';
+import { RecentSportsAggregator } from '../../../utils/RecentSportsAggregator';
 import { alpha, Box, Dialog, lighten } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
@@ -21,7 +22,17 @@ import { useUserStore, useUsersStore } from '../../../userStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import { useRecentSportsStore } from '../../../zustand/RecentSportsState';
 import { useTotalScoreStore } from '../../../zustand/TotalScoreStore';
-import { SportTimelineEntry, SportCardNumber } from './SportCard';
+import {
+  SportTimelineEntry,
+  SportCardNumber,
+  SportGroupTimelineEntry,
+  SportGroupCardNumber,
+} from './SportCard';
+import {
+  UserSport,
+  UserSportGroup,
+  UserSportGroupModel,
+} from './models/SportModels';
 import { animated, config, useTransition } from 'react-spring';
 import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 import {
@@ -34,14 +45,7 @@ import { SportUserDialogWrapper } from './SportUserDialogWrapper';
 import { blendAgainstContrast } from '../../../utils/blendWithContrast';
 import { UserApi } from '../../../utils/api/Api';
 
-export interface UserSport {
-  id: number;
-  kind: string;
-  amount: number;
-  timedate: string;
-  user_id: string;
-  game: string;
-}
+// moved models to ./models/SportModels
 
 interface SportsApiResponse {
   data: UserSport[];
@@ -52,6 +56,8 @@ const AnimatedBox = animated(Box);
 // perf: memoize timeline items
 const MemoizedSportCardNumber = memo(SportCardNumber);
 const MemoizedSportTimelineEntry = memo(SportTimelineEntry);
+const MemoizedSportGroupCardNumber = memo(SportGroupCardNumber);
+const MemoizedSportGroupTimelineEntry = memo(SportGroupTimelineEntry);
 const MemoizedUserDialogWrapper = memo(SportUserDialogWrapper);
 
 export const SportsTimeline = () => {
@@ -62,17 +68,31 @@ export const SportsTimeline = () => {
   const { refreshTrigger: ScoreRefreshTrigger } = useTotalScoreStore();
   const { refreshTrigger: RecentSportsRefreshTrigger, recentSports } =
     useRecentSportsStore();
-  const [selectedSport, setSelectedSport] = useState<UserSport | null>(null);
+  const [selectedSport, setSelectedSport] = useState<
+    UserSport | UserSportGroup | null
+  >(null);
   const [isMounted, setIsMounted] = useState(false);
   const timelineSentinelRef = useRef<HTMLDivElement>(null);
   const currentOffset = useRef(0);
   const isLoadingMoreItems = useRef(false);
 
+  const recentGroupedSports: Array<UserSport | UserSportGroup> = useMemo(() => {
+    if (!recentSports || !recentSports.data) return [];
+    return RecentSportsAggregator.builder()
+      .allowDifferentGames(true)
+      .allowDifferentKinds(false)
+      .aggregate(recentSports.data);
+  }, [recentSports]);
+
   useEffect(() => {
     if (!selectedSport || !recentSports) return;
-    setSelectedSport(
-      recentSports.data.find((sport) => sport.id === selectedSport.id) || null,
-    );
+    // Only try to refresh when a single sport is selected (not a group)
+    if ('id' in selectedSport) {
+      setSelectedSport(
+        recentSports.data.find((sport) => sport.id === selectedSport.id) ||
+          null,
+      );
+    }
   }, [recentSports]);
 
   // load more sports when end is reached
@@ -101,7 +121,7 @@ export const SportsTimeline = () => {
       });
   }, []);
 
-  // watch until end of timeline is reached
+  // watch until end of timeline is reached and in this case trigger onScrollToEnd()
   useEffect(() => {
     const sentinel = timelineSentinelRef.current;
     if (!sentinel) return;
@@ -126,6 +146,7 @@ export const SportsTimeline = () => {
     };
   }, [onScrollToEnd]);
 
+  /** fetches sports from backend */
   const fetchSports = useCallback(async () => {
     if (!user || !usersLoaded) return;
     try {
@@ -167,41 +188,56 @@ export const SportsTimeline = () => {
     // Update when Score increases, not when items change, since there is a artificial delay
   }, [fetchSports, ScoreRefreshTrigger, RecentSportsRefreshTrigger, users]);
 
-  // animation for timeline items
-  const itemsToAnimate = recentSports?.data.toReversed() || [];
+  // animation for timeline items (supports grouped items)
+  const itemsToAnimate = recentGroupedSports
+    ? [...recentGroupedSports].reverse()
+    : [];
 
   // perf: memoize transition config
   const transitionConfig = useMemo(
     () => ({
-      key: (sport) => sport.id,
+      key: (sport: any) =>
+        'id' in sport
+          ? sport.id
+          : `group-${sport.entries?.length}-${sport.entries?.[0]?.timedate ?? ''}`,
       from: { opacity: 0, y: 20, scale: 0.3 },
       enter: { opacity: 1, y: 0, scale: 1 },
       leave: { opacity: 0, y: 20, scale: 0.3 },
       config: config.default,
       trail: 80,
 
-      onRest: (_result, _ctrl, item) => {
-        // after rendering the 15nth element, set
-        // mount to true, that animation
+      onRest: (_result, _ctrl, item: any) => {
+        const makeKey = (s: any) =>
+          'id' in s
+            ? s.id
+            : `group-${s.entries?.length}-${s.entries?.[0]?.timedate ?? ''}`;
         const index = Math.min(15, itemsToAnimate.length - 1);
-        if (item.id === itemsToAnimate[index]?.id) {
+        if (makeKey(item) === makeKey(itemsToAnimate[index])) {
           setIsMounted(true);
         }
       },
     }),
     [itemsToAnimate.length],
   );
-  const transition = useTransition(itemsToAnimate, transitionConfig);
+  const transition = useTransition(itemsToAnimate, transitionConfig as any);
 
   // perf: memoize hover styles to prevent recreations
   const getHoverStyles = useCallback(
-    (sport: UserSport) => ({
-      transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
-      bgcolor:
-        !selectedSport || selectedSport.id === sport.id
+    (sport: any) => {
+      const first = sport.entries ? sport.entries[0] : sport;
+      let isSelected = false;
+      if (!selectedSport) isSelected = true;
+      else if ('id' in selectedSport)
+        isSelected = selectedSport.id === first?.id;
+      else if (selectedSport.entries)
+        isSelected = selectedSport.entries.some((e: any) => e.id === first?.id);
+      return {
+        transition: 'opacity 0.2s ease-out, background-color 0.2s ease-out',
+        bgcolor: isSelected
           ? alpha(theme.blendAgainstContrast('secondaryLight', 0.25), 0.25)
           : undefined,
-    }),
+      };
+    },
     [selectedSport, theme],
   );
 
@@ -210,15 +246,29 @@ export const SportsTimeline = () => {
   if (!recentSports || !recentSports.data) return <Box />;
 
   // iterate each sport entry to build up the timeline items
-  const timelineItems: ReactElement[] = transition((style, sport) => {
+  const timelineItems: ReactElement[] = transition((style, sport: any) => {
     if (sport === undefined) return null;
-    const sportUser = users[sport.user_id];
-    const isSelected = selectedSport?.id === sport.id;
+    const isGroup = sport.entries !== undefined;
+    const firstEntry = isGroup ? sport.entries[0] : sport;
+    const sportUser = users[firstEntry.user_id];
+    let isSelected = false;
+    if (selectedSport) {
+      if ('id' in selectedSport)
+        isSelected = selectedSport.id === firstEntry?.id;
+      else if (selectedSport.entries)
+        isSelected = selectedSport.entries.some(
+          (e: any) => e.id === firstEntry?.id,
+        );
+    }
     const isFaded = selectedSport !== null && !isSelected;
+    const itemKey =
+      'id' in sport
+        ? sport.id
+        : `group-${sport.entries?.length}-${sport.entries?.[0]?.timedate ?? ''}`;
 
     return (
       <AnimatedBox
-        key={sport.id}
+        key={itemKey}
         style={style}
         onClick={() => setSelectedSport(sport)}
         sx={{
@@ -243,7 +293,11 @@ export const SportsTimeline = () => {
           }}
         >
           <TimelineOppositeContent sx={{ overflow: 'hidden' }}>
-            <MemoizedSportCardNumber data={sport} />
+            {isGroup ? (
+              <MemoizedSportGroupCardNumber data={sport} />
+            ) : (
+              <MemoizedSportCardNumber data={sport} />
+            )}
           </TimelineOppositeContent>
           <TimelineSeparator
             sx={{ transition: theme.colorTransition.root.transition }}
@@ -258,7 +312,6 @@ export const SportsTimeline = () => {
                 position: 'relative',
                 margin: 'auto',
                 transition: theme.colorTransition.root.transition,
-                //color: theme.palette.secondary.main,
               }}
             >
               <img
@@ -277,7 +330,11 @@ export const SportsTimeline = () => {
             <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
           </TimelineSeparator>
           <TimelineContent>
-            <MemoizedSportTimelineEntry data={sport} />
+            {isGroup ? (
+              <MemoizedSportGroupTimelineEntry data={sport} />
+            ) : (
+              <MemoizedSportTimelineEntry data={sport} />
+            )}
           </TimelineContent>
         </TimelineItem>
       </AnimatedBox>
@@ -317,8 +374,8 @@ export const SportsTimeline = () => {
       </Timeline>
       {selectedSport !== null && (
         <MemoizedUserDialogWrapper
-          selectedSport={selectedSport}
-          setSelectedSport={setSelectedSport}
+          selectedSport={selectedSport as any}
+          setSelectedSport={setSelectedSport as any}
         />
       )}
     </Box>
