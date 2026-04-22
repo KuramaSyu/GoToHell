@@ -19,7 +19,11 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
-import { getSportDescription } from '../../utils/DescriptionProvider';
+import {
+  getSportDescription,
+  getSportName,
+  getSportNameAndDescription,
+} from '../../utils/DescriptionProvider';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
@@ -53,7 +57,7 @@ export const TotalScoreHeadline = () => {
   const bigNumber = GetScore(currentSport!.sport!, amounts);
   return (
     <Typography variant='h2' fontFamily={'inherit'}>
-      {getSportDescription(currentSport.sport!, bigNumber)}
+      {getSportName(currentSport.sport!)}
     </Typography>
   );
 };
