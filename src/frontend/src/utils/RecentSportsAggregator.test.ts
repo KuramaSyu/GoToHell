@@ -473,3 +473,99 @@ describe('RecentSportsAggregator', () => {
     expect((result[0] as any).entries.length).toBe(3);
   });
 });
+
+describe('RecentSportsAggregator interleaving tolerant groups', () => {
+  function makeSport(
+    id: number,
+    user_id: string,
+    minutesAgo: number,
+    kind = 'running',
+  ) {
+    const timedate = new Date(
+      Date.now() - minutesAgo * 60 * 1000,
+    ).toISOString();
+    return {
+      id,
+      kind,
+      amount: 1,
+      timedate,
+      user_id,
+      game: 'g',
+    } as any;
+  }
+
+  it('ignores a single different-user breaker when within interleaving thresholds', () => {
+    const now = Date.now();
+    const sports = [
+      makeSport(1, 'u1', 30),
+      makeSport(2, 'u1', 25),
+      makeSport(3, 'u2', 20),
+      makeSport(4, 'u1', 15),
+      makeSport(5, 'u1', 10),
+      makeSport(6, 'u1', 5),
+    ];
+
+    const res = RecentSportsAggregator.builder()
+      .withNow(now)
+      .withMinTimeMs(0)
+      .withMaxInterleavingCount(5)
+      .withMaxInterleavingGapMs(60 * 60 * 1000)
+      .aggregate(sports);
+
+    const groups = res.filter((r) => (r as any).entries) as any[];
+    const singles = res.filter((r) => !(r as any).entries) as any[];
+
+    expect(groups.length).toBe(1);
+    expect(groups[0].entries.length).toBe(5);
+    expect(singles.length).toBe(1);
+    expect(singles[0].user_id).toBe('u2');
+  });
+
+  it('does not ignore breakers when intervening count exceeds threshold', () => {
+    const now = Date.now();
+    const sports = [
+      makeSport(1, 'u1', 80),
+      makeSport(2, 'u2', 75),
+      makeSport(3, 'u2', 70),
+      makeSport(4, 'u2', 65),
+      makeSport(5, 'u2', 60),
+      makeSport(6, 'u2', 55),
+      makeSport(7, 'u2', 50),
+      makeSport(8, 'u1', 45),
+    ];
+
+    const res = RecentSportsAggregator.builder()
+      .withNow(now)
+      .withMinTimeMs(0)
+      .aggregate(sports);
+
+    const groups = res.filter((r) => (r as any).entries) as any[];
+    // Ensure u1 entries are not combined into a single group
+    const u1InGroups = groups.reduce(
+      (acc, g) => acc + g.entries.filter((e: any) => e.user_id === 'u1').length,
+      0,
+    );
+    expect(u1InGroups).toBeLessThan(2);
+  });
+
+  it('does not ignore breakers when time gap between same-user entries exceeds threshold', () => {
+    const now = Date.now();
+    const sports = [
+      makeSport(1, 'u1', 30),
+      makeSport(2, 'u2', 20),
+      makeSport(3, 'u1', 10),
+    ];
+
+    const res = RecentSportsAggregator.builder()
+      .withNow(now)
+      .withMinTimeMs(0)
+      .withMaxInterleavingGapMs(5 * 60 * 1000)
+      .aggregate(sports);
+
+    const groups = res.filter((r) => (r as any).entries) as any[];
+    const u1Groups = groups.filter((g) =>
+      g.entries.every((e: any) => e.user_id === 'u1'),
+    );
+    expect(u1Groups.length).toBe(0);
+  });
+});

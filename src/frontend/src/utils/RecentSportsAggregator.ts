@@ -12,6 +12,8 @@ export interface RecentSportsAggregatorOptions {
   allowDifferentKinds?: boolean; // Allow grouping different kinds (default: false)
   allowDifferentGames?: boolean; // Allow grouping different games (default: false)
   allowDifferentUsers?: boolean; // Allow grouping different users (default: false)
+  maxInterleavingCount?: number; // Max number of intervening entries allowed (default: 5)
+  maxInterleavingGapMs?: number; // Max time gap between matched same-user entries (default: 1h)
 }
 
 /**
@@ -34,6 +36,8 @@ export class RecentSportsAggregator {
   private _allowDifferentGames = false;
   private _allowDifferentUsers = false;
   private now: number = Date.now();
+  private maxInterleavingCount = 5;
+  private maxInterleavingGapMs = 60 * 60 * 1000; // 1 hour
 
   /**
    * Returns a new builder instance for RecentSportsAggregator.
@@ -107,6 +111,25 @@ export class RecentSportsAggregator {
   }
 
   /**
+   * Sets the maximum number of intervening (non-matching) entries allowed
+   * between two matching entries of the same group. Default: 5.
+   */
+  withMaxInterleavingCount(n: number) {
+    this.maxInterleavingCount = n;
+    return this;
+  }
+
+  /**
+   * Sets the maximum allowed time gap (ms) between two matching entries
+   * of the same user to still be considered part of the same group.
+   * Default: 1 hour.
+   */
+  withMaxInterleavingGapMs(ms: number) {
+    this.maxInterleavingGapMs = ms;
+    return this;
+  }
+
+  /**
    * Sets the reference time (in ms since epoch) for grouping calculations.
    * Useful for testing or deterministic results.
    * @param now Reference time in ms
@@ -139,67 +162,92 @@ export class RecentSportsAggregator {
 
     const sameGameOrAllowed = (candidate: UserSport, current: UserSport) =>
       this._allowDifferentGames || candidate.game === current.game;
-
-    const canGroupWith = (
-      candidate: UserSport | undefined,
-      current: UserSport,
-      startTime: number,
-    ) => {
-      if (!candidate) return false;
-      const candidateTime = new Date(candidate.timedate).getTime();
-      return (
-        isOlderThanMin(candidate) &&
-        sameUserOrAllowed(candidate, current) &&
-        sameKindOrAllowed(candidate, current) &&
-        sameGameOrAllowed(candidate, current) &&
-        isWithinMaxWindow(candidateTime, startTime)
-      );
-    };
     const sorted = [...sports].sort(
       (a, b) => new Date(a.timedate).getTime() - new Date(b.timedate).getTime(),
     );
+
     const grouped: Array<UserSport | UserSportGroup> = [];
+    const consumed = new Array(sorted.length).fill(false);
+
     let i = 0;
     while (i < sorted.length) {
+      if (consumed[i]) {
+        i++;
+        continue;
+      }
       const current = sorted[i];
       if (!current) {
+        consumed[i] = true;
         i++;
         continue;
       }
+      // If entry is too recent to be grouped, leave as-is
       if (!isOlderThanMin(current)) {
         grouped.push(current);
+        consumed[i] = true;
         i++;
         continue;
       }
-      // Try to group with a sliding window up to maxWindowMs
-      let j = i + 1;
-      let groupAmount = current.amount;
-      let groupCount = 1;
-      let startTime = new Date(current.timedate).getTime();
-      let endTime = startTime;
-      while (j < sorted.length && canGroupWith(sorted[j], current, startTime)) {
-        const cand = sorted[j]!;
-        groupAmount += cand.amount;
-        endTime = new Date(cand.timedate).getTime();
-        groupCount++;
-        j++;
-      }
-      if (groupCount > 1) {
-        // build entries array from current..j-1
-        const entries: UserSport[] = [];
-        for (let k = i; k < j; k++) {
-          const s = sorted[k];
-          if (s) entries.push(s);
+
+      const startTime = new Date(current.timedate).getTime();
+      let lastMatchedTime = startTime;
+      const groupIndices: number[] = [i];
+      consumed[i] = true;
+
+      // scan forward, allowing up to maxInterleavingCount intervening entries
+      // and ensuring matched same-user entries are within maxInterleavingGapMs
+      let intervening = 0;
+      for (let k = i + 1; k < sorted.length; k++) {
+        const cand = sorted[k];
+        if (!cand) {
+          intervening++;
+          if (intervening > this.maxInterleavingCount) break;
+          continue;
         }
-        grouped.push({
-          entries,
-        });
-        i = j;
-      } else {
-        grouped.push(current);
-        i++;
+        const candTime = new Date(cand.timedate).getTime();
+        if (!isWithinMaxWindow(candTime, startTime)) break;
+
+        if (!isOlderThanMin(cand)) {
+          // too new to include, but counts as intervening
+          intervening++;
+          if (intervening > this.maxInterleavingCount) break;
+          continue;
+        }
+
+        const kindOk = sameKindOrAllowed(cand, current);
+        const gameOk = sameGameOrAllowed(cand, current);
+
+        if (cand.user_id === current.user_id && kindOk && gameOk) {
+          const gap = candTime - lastMatchedTime;
+          if (
+            gap <= this.maxInterleavingGapMs &&
+            intervening <= this.maxInterleavingCount
+          ) {
+            groupIndices.push(k);
+            consumed[k] = true;
+            lastMatchedTime = candTime;
+            intervening = 0;
+            continue;
+          }
+          break;
+        }
+
+        // Different user or different kind/game: counts as intervening
+        intervening++;
+        if (intervening > this.maxInterleavingCount) break;
       }
+
+      if (groupIndices.length > 1) {
+        const entries: UserSport[] = groupIndices.map((idx) => sorted[idx]!);
+        grouped.push({ entries });
+      } else {
+        // single entry (no grouping)
+        grouped.push(current);
+      }
+
+      i++;
     }
+
     return grouped;
   }
 }
