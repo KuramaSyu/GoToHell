@@ -27,6 +27,7 @@ import { NUMBER_FONT } from '../../statics';
 import { CalculatorUpdater } from './CalculatorUpdater';
 import { MultiplierUpdater } from './MultiplierUpdater';
 import { RecentSports } from './Timeline/TabView';
+import { getSportDescription } from '../../utils/DescriptionProvider';
 
 const MainContent: React.FC = () => {
   const { isMobile } = useBreakpoint();
@@ -191,6 +192,7 @@ const MainContentDesktop: React.FC = () => {
           height: '20%',
         }}
       >
+        {/* header titles */}
         <Stack
           direction='row'
           sx={{
