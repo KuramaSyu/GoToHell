@@ -12,7 +12,7 @@ import {
   Input,
   Slide,
 } from '@mui/material';
-import { UserSport } from './Timeline';
+import { UserSport } from './models/SportModels';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { useUsersStore, useUserStore } from '../../../userStore';
 import { useThemeStore } from '../../../zustand/useThemeStore';
@@ -47,10 +47,10 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const { theme } = useThemeStore();
   const { setMessage } = useInfoStore();
   const [prevSportId, setPrevSportId] = useState<number | null>(
-    selectedSport?.id ?? null
+    selectedSport?.id ?? null,
   );
   const [amountValue, setAmountValue] = useState<number | null>(
-    selectedSport?.amount ?? null
+    selectedSport?.amount ?? null,
   );
   // Check if the sport is too old to be edited (>2d)
   const isTooOld = (time: string): boolean => {
@@ -77,7 +77,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
       useTotalScoreStore.getState().triggerRefresh();
     } catch (error) {
       setMessage(
-        new SnackbarUpdateImpl('Failed to delete sport record', 'error')
+        new SnackbarUpdateImpl('Failed to delete sport record', 'error'),
       );
       console.error(error);
     }
@@ -90,7 +90,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
         null, // kind is not being changed
         null, // game is not being changed
         amountValue,
-        true
+        true,
       );
       selectedSport!.amount = amountValue!;
     } catch (error) {
@@ -133,7 +133,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
 
                 {users[selectedSport!.user_id]?.username}
               </Box>
-              {!isMobile && <Divider orientation="vertical" flexItem></Divider>}
+              {!isMobile && <Divider orientation='vertical' flexItem></Divider>}
               <Box
                 sx={{
                   display: 'flex',
@@ -146,7 +146,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
               >
                 {SearchEntryIconProvider.getIcon(
                   new SportEntry(selectedSport.kind),
-                  { height: 42, width: 42 }
+                  { height: 42, width: 42 },
                 )}
                 {selectedSport.kind.toUpperCase()}
               </Box>
@@ -198,7 +198,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                       color: blendWithContrast(
                         theme.palette.primary.main,
                         theme,
-                        2 / 3
+                        2 / 3,
                       ),
                     }}
                     startIcon={<SyncIcon></SyncIcon>}
@@ -211,11 +211,11 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                   </Button>
                 )}
                 <Button
-                  color="error"
+                  color='error'
                   startIcon={<DeleteForeverIcon></DeleteForeverIcon>}
                   onClick={() => {
                     deleteRecord(selectedSport.id).then(() =>
-                      setSelectedSport(null)
+                      setSelectedSport(null),
                     );
                   }}
                 >
@@ -228,7 +228,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                 color: blendWithContrast(
                   theme.palette.primary.main,
                   theme,
-                  2 / 3
+                  2 / 3,
                 ),
               }}
               onClick={() => setSelectedSport(null)}
