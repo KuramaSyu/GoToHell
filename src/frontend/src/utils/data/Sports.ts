@@ -33,7 +33,7 @@ export const sportIconMap: Record<string, SvgIconComponent> = {
 // map for which is shown next to the score
 export const GameSelectionMap: Map<string, string> = new Map();
 GameSelectionMap.set('pushup', 'Push-Ups');
-GameSelectionMap.set('plank', 'Seconds Plank');
+GameSelectionMap.set('plank', 'Plank');
 GameSelectionMap.set('pilates', 'Exercises');
 GameSelectionMap.set('situps', 'Sit-Ups');
 GameSelectionMap.set('squats', 'Squats');
@@ -42,6 +42,6 @@ GameSelectionMap.set('dip', 'Dips');
 GameSelectionMap.set('leg_raises', 'Leg Raises');
 GameSelectionMap.set('lunges', 'Lunges');
 GameSelectionMap.set('glute_bridges', 'Glute Bridges');
-GameSelectionMap.set('jogging', 'Meters Jogging');
-GameSelectionMap.set('workout', 'Seconds Workout');
-GameSelectionMap.set('cycling', 'Meters Cycling');
+GameSelectionMap.set('jogging', 'Jogging');
+GameSelectionMap.set('workout', 'Workout');
+GameSelectionMap.set('cycling', 'Cycling');
