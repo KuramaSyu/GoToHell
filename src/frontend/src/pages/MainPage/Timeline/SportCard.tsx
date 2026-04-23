@@ -8,26 +8,19 @@ import { NUMBER_FONT } from '../../../statics';
 import { UserSport, UserSportGroup } from './models/SportModels';
 import { useThemeStore } from '../../../zustand/useThemeStore';
 import { hexToRgbString } from '../../../utils/colors/hexToRgb';
+import {
+  DefaultDescriptionProvider,
+  getSportDescription,
+  getSportName,
+  getSportNameAndDescription,
+} from '../../../utils/DescriptionProvider';
+import { defaultAmountFormatter } from '../../../utils/AmountFormatter';
 
 interface SportCardProps {
   data: UserSport;
 }
 
-class AmountCalculator {
-  static calculateAmount(data: UserSport): string {
-    if (data.amount >= 1000) {
-      const value = data.amount / 1000;
-      // If the number is a whole number, don't show decimal part.
-      if (value % 1 === 0) {
-        return `${value}K`;
-      }
-      // Otherwise, round it to one decimal place.
-      return `${value.toFixed(1)}K`;
-    }
-    // Assuming data.amount is the amount of the sport
-    return data.amount.toString();
-  }
-}
+// Use shared AmountFormatter for formatting amounts (counts, distances)
 
 export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
@@ -53,7 +46,7 @@ export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
           textTransform: 'uppercase',
         }}
       >
-        {data.kind.replace('_', ' ')}
+        {getSportName(data.kind)}
       </Typography>
 
       <Typography variant='subtitle2' fontWeight={350} color='inherit'>
@@ -94,7 +87,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         }}
         variant='h6'
       >
-        {AmountCalculator.calculateAmount(data)}
+        {defaultAmountFormatter.formatCompact(data.amount, undefined)}
       </Typography>
     </Box>
   );
@@ -107,43 +100,14 @@ interface SportGroupCardProps {
 export const SportGroupCardNumber: React.FC<SportGroupCardProps> = ({
   data,
 }) => {
-  const { theme } = useThemeStore();
-  const color = '0,0,0';
   const total = data.entries.reduce((s, e) => s + e.amount, 0);
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexShrink: 0,
-        alignSelf: 'flex-start',
-        borderRadius: '50%',
-        width: 65,
-        height: 65,
-        background: `radial-gradient(circle, rgba(${color},0.5) 0%, rgba(${color},0.05) 85%, rgba(${color},0) 100%)`,
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        mr: 2,
+    <SportCardNumber
+      data={{
+        ...data.entries[0]!,
+        amount: total,
       }}
-    >
-      <Typography
-        sx={{
-          fontFamily: NUMBER_FONT,
-          fontSize: '1.1rem',
-          color: theme.palette.text.secondary,
-        }}
-        variant='h6'
-      >
-        {AmountCalculator.calculateAmount({
-          id: -1,
-          kind: '',
-          amount: total,
-          timedate: data.entries[0]?.timedate ?? '',
-          user_id: '',
-          game: '',
-        })}
-      </Typography>
-    </Box>
+    />
   );
 };
 
@@ -157,11 +121,7 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
     data.entries[data.entries.length - 1]?.timedate ?? firstTimedate;
   const start = firstTimedate;
   const end = lastTimedate;
-  const kinds = Array.from(new Set(data.entries.map((e) => e.kind)));
-  const games = Array.from(new Set(data.entries.map((e) => e.game)));
-  const usersCount = Array.from(
-    new Set(data.entries.map((e) => e.user_id)),
-  ).length;
+  const nameProvider = new DefaultDescriptionProvider();
   const entriesCount = data.entries.length;
 
   const formatShort = (iso: string) => {
@@ -200,7 +160,13 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
           textTransform: 'uppercase',
         }}
       >
-        {Array.from(new Set(data.entries.map((e) => e.kind))).join(', ')}
+        {Array.from(
+          new Set(
+            data.entries.map(
+              (e) => nameProvider.get_name(e.kind) ?? e.kind.replace('_', ' '),
+            ),
+          ),
+        ).join(', ')}
       </Typography>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
