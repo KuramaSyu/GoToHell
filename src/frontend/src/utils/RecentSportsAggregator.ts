@@ -58,7 +58,7 @@ export class RecentSportsAggregator {
   }
 
   /**
-   * Sets the maximum time window (in ms) for grouping UserSport entries.
+   * Sets the maximum time window (in ms) for grouping UserSport entries (latest entry - earliest entry <= maxWindowMs)
    * Default: 12 hours.
    * @param ms Maximum window in milliseconds
    * @returns this (for chaining)
