@@ -20,6 +20,7 @@ export interface RecentSportsAggregatorOptions {
  * Aggregates UserSport entries into groups with configurable options.
  *
  * Usage example:
+ * ```ts
  *   const aggregator = RecentSportsAggregator.builder()
  *     .withMinTimeMs(2 * 60 * 60 * 1000)
  *     .withMaxWindowMs(12 * 60 * 60 * 1000)
@@ -28,6 +29,7 @@ export interface RecentSportsAggregatorOptions {
  *     .allowDifferentUsers(false)
  *     .withNow(Date.now());
  *   const result = aggregator.aggregate(sportsArray);
+ * ```
  */
 export class RecentSportsAggregator {
   private minTimeMs: number = 2 * 60 * 60 * 1000;
