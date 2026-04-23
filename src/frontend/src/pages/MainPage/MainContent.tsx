@@ -27,7 +27,14 @@ import { NUMBER_FONT } from '../../statics';
 import { CalculatorUpdater } from './CalculatorUpdater';
 import { MultiplierUpdater } from './MultiplierUpdater';
 import { RecentSports } from './Timeline/TabView';
-import { getSportDescription } from '../../utils/DescriptionProvider';
+import {
+  getSportDescription,
+  getSportName,
+} from '../../utils/DescriptionProvider';
+import { useSportStore } from '../../useSportStore';
+import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
+import { useDeathAmountStore } from './NumberSlider';
+import useCalculatorStore from '../../zustand/CalculatorStore';
 
 const MainContent: React.FC = () => {
   const { isMobile } = useBreakpoint();
@@ -42,6 +49,36 @@ const MainContent: React.FC = () => {
 };
 
 export default MainContent;
+
+const HeaderWithUnit: React.FC<{
+  title: string;
+  unit?: string;
+  name?: string;
+  unitSide?: 'left' | 'right';
+}> = React.memo(
+  ({ title, unit, name, unitSide }) => (
+    <Stack direction='row' alignItems='center' justifyContent='center' gap={2}>
+      {unit && unitSide === 'left' ? (
+        <Typography variant='caption' fontFamily='inherit' sx={{ mt: 0.5 }}>
+          {`(${unit})`}
+        </Typography>
+      ) : null}
+      <Typography variant='h4' fontFamily='inherit'>
+        {title}
+      </Typography>
+      {unit && (!unitSide || unitSide === 'right') ? (
+        <Typography variant='body1' fontFamily='inherit' sx={{ mt: 0.5 }}>
+          {`(${unit})`}
+        </Typography>
+      ) : null}
+    </Stack>
+  ),
+  (prev, next) =>
+    prev.title === next.title &&
+    prev.unit === next.unit &&
+    prev.name === next.name &&
+    prev.unitSide === next.unitSide,
+);
 
 const MainContentMobile: React.FC = () => {
   const { theme } = useThemeStore();
@@ -166,6 +203,46 @@ const MainContentMobile: React.FC = () => {
 const MainContentDesktop: React.FC = () => {
   const { theme } = useThemeStore();
   const { isTablet } = useBreakpoint();
+  const { currentSport } = useSportStore();
+  const { amounts } = useTotalScoreStore();
+  const { amount } = useDeathAmountStore();
+  const calculator = useCalculatorStore().calculator;
+
+  const bigNumber = currentSport
+    ? (amounts.find((score) => score.kind === currentSport.sport)?.amount ?? 0)
+    : 0;
+  const totalUnit = getSportDescription(
+    currentSport?.sport ?? undefined,
+    bigNumber,
+  );
+
+  const todoComputed =
+    currentSport && currentSport.sport && currentSport.game
+      ? calculator.calculate_amount(
+          currentSport.sport,
+          currentSport.game,
+          amount,
+        )
+      : 0;
+  const todoUnit = getSportDescription(
+    currentSport?.sport ?? undefined,
+    todoComputed,
+  );
+
+  const sportName =
+    currentSport && currentSport.sport
+      ? getSportName(currentSport.sport)
+      : undefined;
+  const showTotalUnit = !!(
+    totalUnit &&
+    sportName &&
+    totalUnit.toLowerCase() !== sportName.toLowerCase()
+  );
+  const showTodoUnit = !!(
+    todoUnit &&
+    sportName &&
+    todoUnit.toLowerCase() !== sportName.toLowerCase()
+  );
 
   return (
     <Box
@@ -205,15 +282,22 @@ const MainContentDesktop: React.FC = () => {
             px: 4,
           }}
         >
-          <Typography variant='h4' fontFamily='inherit'>
-            in total
-          </Typography>
+          <HeaderWithUnit
+            title='in total'
+            unit={showTotalUnit ? totalUnit : undefined}
+            name={sportName}
+            unitSide='right'
+          />
           <Divider orientation='vertical' flexItem />
+
           <TotalScoreHeadline />
           <Divider orientation='vertical' flexItem />
-          <Typography variant='h4' fontFamily='inherit'>
-            to do now
-          </Typography>
+          <HeaderWithUnit
+            title='to do now'
+            unit={showTodoUnit ? todoUnit : undefined}
+            name={sportName}
+            unitSide='left'
+          />
         </Stack>
         <Stack
           direction='row'
