@@ -216,13 +216,14 @@ export class RecentSportsAggregator {
 
         const kindOk = sameKindOrAllowed(cand, current);
         const gameOk = sameGameOrAllowed(cand, current);
+        const userOk = sameUserOrAllowed(cand, current);
 
-        if (cand.user_id === current.user_id && kindOk && gameOk) {
+        // If this candidate matches the group's allowed rules, include it
+        if (userOk && kindOk && gameOk) {
           const gap = candTime - lastMatchedTime;
-          if (
-            gap <= this.maxInterleavingGapMs &&
-            intervening <= this.maxInterleavingCount
-          ) {
+          const gapOk =
+            intervening === 0 ? true : gap <= this.maxInterleavingGapMs;
+          if (gapOk && intervening <= this.maxInterleavingCount) {
             groupIndices.push(k);
             consumed[k] = true;
             lastMatchedTime = candTime;
@@ -232,7 +233,7 @@ export class RecentSportsAggregator {
           break;
         }
 
-        // Different user or different kind/game: counts as intervening
+        // Otherwise treat as an intervening entry
         intervening++;
         if (intervening > this.maxInterleavingCount) break;
       }
