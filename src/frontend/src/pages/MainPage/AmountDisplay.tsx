@@ -22,6 +22,7 @@ import { useThemeStore } from '../../zustand/useThemeStore';
 import { darken } from '@mui/material/styles';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { Timedelta, Unit, unitToString } from '../../utils/Timedelta';
+import { defaultAmountFormatter } from '../../utils/AmountFormatter';
 import { GameSelectionMap } from '../../utils/data/Sports';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { PopNumber } from './PopNumber';
@@ -56,6 +57,12 @@ export interface SportServiceProps {
   isMobile: boolean;
 }
 
+/**
+ * Displays a plain numeric amount using the animated `PopNumber`.
+ *
+ * - `computedValue`: numeric value to display (no unit formatting)
+ * - `isMobile`: toggles font sizing for responsive layouts
+ */
 const NumberDisplay: React.FC<SportServiceProps> = ({
   computedValue,
   isMobile,
@@ -81,6 +88,14 @@ const NumberDisplay: React.FC<SportServiceProps> = ({
   );
 };
 
+/**
+ * Displays a time duration using `PopNumber` split into hours:minutes:seconds
+ * depending on the largest non-zero unit in the provided `computedValue`.
+ *
+ * - `computedValue` is interpreted as total seconds.
+ * - Renders hours and minutes only when they are non-zero (keeps leading
+ *   zero padding for consistent width when necessary).
+ */
 const TimeDisplay: React.FC<SportServiceProps> = ({
   computedValue,
   isMobile,
@@ -160,13 +175,90 @@ const TimeDisplay: React.FC<SportServiceProps> = ({
   );
 };
 
+const DistanceDisplay: React.FC<SportServiceProps & { sport?: string }> = ({
+  computedValue,
+  isMobile,
+  sport,
+}) => {
+  const { theme } = useThemeStore();
+  const { isDesktop } = useBreakpoint();
+  const style = {
+    color: theme.palette.text.primary,
+    textShadow: isDesktop
+      ? `4px 4px ${theme.palette.primary.dark}`
+      : `3px 3px ${theme.palette.primary.dark}`,
+  };
+  // Use shared formatter to get numeric value and unit
+  const { num, unit } = defaultAmountFormatter.formatNumberAndUnit(
+    computedValue,
+    sport,
+  );
+  // When unit is 'K' we treat it as a compact count and show K suffix
+  if (unit === 'K') {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <PopNumber
+          value={num}
+          font={NUMBER_FONT}
+          fontsize={getAnimatedNumberSize(isMobile, 'number')}
+          stiffness={1000}
+          damping={300}
+          mass={1}
+          style={style}
+        />
+        <Typography
+          fontFamily={NUMBER_FONT}
+          fontSize={getAnimatedNumberSize(isMobile, 'number')}
+          style={style}
+          sx={{ ml: 0.5 }}
+        >
+          km
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <PopNumber
+        value={num}
+        font={NUMBER_FONT}
+        fontsize={getAnimatedNumberSize(isMobile, 'number')}
+        stiffness={1000}
+        damping={300}
+        mass={1}
+        style={style}
+      />
+      {unit ? (
+        <Typography
+          fontFamily={NUMBER_FONT}
+          fontSize={getAnimatedNumberSize(isMobile, 'number')}
+          style={style}
+          sx={{ ml: 0.5 }}
+        >
+          {unit}
+        </Typography>
+      ) : null}
+    </Box>
+  );
+};
+
 export function getDisplayComponent(
   sport: string | undefined,
-): React.FC<SportServiceProps> {
+): React.ComponentType<any> {
+  /**
+   * Returns the appropriate display component for a sport kind.
+   * - time-based sports return `TimeDisplay` (plank, workout)
+   * - distance-based sports return `DistanceDisplay` (jogging, cycling)
+   * - other sports return `NumberDisplay` (counts/reps)
+   */
   switch (sport) {
     case 'plank':
     case 'workout':
       return TimeDisplay;
+    case 'jogging':
+    case 'cycling':
+      return DistanceDisplay;
     default:
       return NumberDisplay;
   }
@@ -204,7 +296,11 @@ export const AmountDisplay = () => {
       placement='left'
     >
       <Box>
-        <DisplayComponent computedValue={computedValue} isMobile={isMobile} />
+        <DisplayComponent
+          computedValue={computedValue}
+          isMobile={isMobile}
+          sport={currentSport.sport}
+        />
       </Box>
     </Tooltip>
   );
