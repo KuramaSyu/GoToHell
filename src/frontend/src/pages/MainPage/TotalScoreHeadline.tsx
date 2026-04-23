@@ -19,11 +19,7 @@ import {
   ApiRequirement,
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
-import {
-  getSportDescription,
-  getSportName,
-  getSportNameAndDescription,
-} from '../../utils/DescriptionProvider';
+import { getSportName } from '../../utils/DescriptionProvider';
 
 // returns the score of the kind
 // game does not matter, since it's summed up
