@@ -11,28 +11,16 @@ import { hexToRgbString } from '../../../utils/colors/hexToRgb';
 import {
   DefaultDescriptionProvider,
   getSportDescription,
+  getSportName,
   getSportNameAndDescription,
 } from '../../../utils/DescriptionProvider';
+import { defaultAmountFormatter } from '../../../utils/AmountFormatter';
 
 interface SportCardProps {
   data: UserSport;
 }
 
-class AmountCalculator {
-  static calculateAmount(data: UserSport): string {
-    if (data.amount >= 1000) {
-      const value = data.amount / 1000;
-      // If the number is a whole number, don't show decimal part.
-      if (value % 1 === 0) {
-        return `${value}K`;
-      }
-      // Otherwise, round it to one decimal place.
-      return `${value.toFixed(1)}K`;
-    }
-    // Assuming data.amount is the amount of the sport
-    return data.amount.toString();
-  }
-}
+// Use shared AmountFormatter for formatting amounts (counts, distances)
 
 export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
   const { users } = useUsersStore();
@@ -58,7 +46,7 @@ export const SportTimelineEntry: React.FC<SportCardProps> = ({ data }) => {
           textTransform: 'uppercase',
         }}
       >
-        {getSportNameAndDescription(data.kind, data.amount)}
+        {getSportName(data.kind)}
       </Typography>
 
       <Typography variant='subtitle2' fontWeight={350} color='inherit'>
@@ -99,7 +87,7 @@ export const SportCardNumber: React.FC<SportCardProps> = ({ data }) => {
         }}
         variant='h6'
       >
-        {AmountCalculator.calculateAmount(data)}
+        {defaultAmountFormatter.formatCompact(data.amount, undefined)}
       </Typography>
     </Box>
   );
