@@ -34,9 +34,12 @@ describe('RecentSportsAggregator', () => {
   };
 
   it('returns empty for empty input', () => {
-    expect(RecentSportsAggregator.builder().withNow(now).aggregate([])).toEqual(
-      [],
-    );
+    expect(
+      RecentSportsAggregator.builder()
+        .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
+        .withNow(now)
+        .aggregate([]),
+    ).toEqual([]);
   });
 
   it('does not group entries newer than minTime', () => {
@@ -46,7 +49,10 @@ describe('RecentSportsAggregator', () => {
       id: 2,
     };
     expect(
-      RecentSportsAggregator.builder().withNow(now).aggregate([sport]),
+      RecentSportsAggregator.builder()
+        .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
+        .withNow(now)
+        .aggregate([sport]),
     ).toEqual([sport]);
   });
 
@@ -62,6 +68,7 @@ describe('RecentSportsAggregator', () => {
       timedate: '2026-04-22T08:00:00.000Z',
     };
     const result = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .withNow(now)
       .aggregate([s1, s2]);
     expect(result.length).toBe(1);
@@ -86,10 +93,12 @@ describe('RecentSportsAggregator', () => {
       timedate: '2026-04-22T08:00:00.000Z',
     };
     const result = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .withNow(now)
       .aggregate([s1, s2]);
     expect(result.length).toBe(2);
     const allowed = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .allowDifferentUsers(true)
       .withNow(now)
       .aggregate([s1, s2]);
@@ -114,10 +123,12 @@ describe('RecentSportsAggregator', () => {
       timedate: '2026-04-22T08:00:00.000Z',
     };
     const result = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .withNow(now)
       .aggregate([s1, s2]);
     expect(result.length).toBe(2);
     const allowed = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .allowDifferentKinds(true)
       .withNow(now)
       .aggregate([s1, s2]);
@@ -141,10 +152,12 @@ describe('RecentSportsAggregator', () => {
       timedate: '2026-04-22T08:00:00.000Z',
     };
     const result = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .withNow(now)
       .aggregate([s1, s2]);
     expect(result.length).toBe(2);
     const allowed = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .allowDifferentGames(true)
       .withNow(now)
       .aggregate([s1, s2]);
@@ -188,6 +201,7 @@ describe('RecentSportsAggregator', () => {
       timedate: '2026-04-22T11:00:01.000Z',
     };
     const result = RecentSportsAggregator.builder()
+      .withMaxInterleavingGapMs(12 * 60 * 60 * 1000)
       .withNow(now)
       .aggregate([old1, old2, new1]);
     expect(result.some((e) => (e as UserSport).id === 4)).toBe(true);
