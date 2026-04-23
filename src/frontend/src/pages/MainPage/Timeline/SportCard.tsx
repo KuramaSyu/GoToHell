@@ -112,43 +112,14 @@ interface SportGroupCardProps {
 export const SportGroupCardNumber: React.FC<SportGroupCardProps> = ({
   data,
 }) => {
-  const { theme } = useThemeStore();
-  const color = '0,0,0';
   const total = data.entries.reduce((s, e) => s + e.amount, 0);
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexShrink: 0,
-        alignSelf: 'flex-start',
-        borderRadius: '50%',
-        width: 65,
-        height: 65,
-        background: `radial-gradient(circle, rgba(${color},0.5) 0%, rgba(${color},0.05) 85%, rgba(${color},0) 100%)`,
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        mr: 2,
+    <SportCardNumber
+      data={{
+        ...data.entries[0]!,
+        amount: total,
       }}
-    >
-      <Typography
-        sx={{
-          fontFamily: NUMBER_FONT,
-          fontSize: '1.1rem',
-          color: theme.palette.text.secondary,
-        }}
-        variant='h6'
-      >
-        {AmountCalculator.calculateAmount({
-          id: -1,
-          kind: '',
-          amount: total,
-          timedate: data.entries[0]?.timedate ?? '',
-          user_id: '',
-          game: '',
-        })}
-      </Typography>
-    </Box>
+    />
   );
 };
 
