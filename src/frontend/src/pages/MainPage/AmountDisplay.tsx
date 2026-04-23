@@ -205,6 +205,7 @@ const DistanceDisplay: React.FC<SportServiceProps & { sport?: string }> = ({
           damping={300}
           mass={1}
           style={style}
+          precision={num % 1 !== 0 ? 1 : 0}
         />
         <Typography
           fontFamily={NUMBER_FONT}
@@ -228,6 +229,7 @@ const DistanceDisplay: React.FC<SportServiceProps & { sport?: string }> = ({
         damping={300}
         mass={1}
         style={style}
+        precision={unit === 'km' ? (num % 1 !== 0 ? 1 : 0) : 0}
       />
       {unit ? (
         <Typography

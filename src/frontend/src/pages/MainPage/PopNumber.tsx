@@ -34,6 +34,7 @@ export const PopNumber = ({
   style,
   fontweight,
   typographyVariant,
+  precision,
 }: {
   value: number;
   font?: string;
@@ -45,6 +46,7 @@ export const PopNumber = ({
   fontweight?: number;
   zeroPadding?: number;
   style?: React.CSSProperties;
+  precision?: number;
 }) => {
   // Start with an initial spring value (can be 0 or value)
   const springValue = useSpring(0, {
@@ -54,6 +56,8 @@ export const PopNumber = ({
   });
 
   const [displayed, setDisplayed] = useState(value);
+  // precision controls how many decimal places to show (default 0)
+  const p = precision ?? 0;
 
   // Update the spring's target when "value" changes.
   useEffect(() => {
@@ -62,7 +66,9 @@ export const PopNumber = ({
 
   // Subscribe to changes using useMotionValueEvent.
   useMotionValueEvent(springValue, 'change', (v) => {
-    setDisplayed(Math.round(v));
+    // keep previous integer behavior when p === 0
+    if (p === 0) setDisplayed(Math.round(v));
+    else setDisplayed(Number(v.toFixed(p)));
   });
 
   var str = displayed.toString();
