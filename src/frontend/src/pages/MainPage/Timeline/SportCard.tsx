@@ -124,10 +124,27 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
   const nameProvider = new DefaultDescriptionProvider();
   const entriesCount = data.entries.length;
 
+  /**
+   * Checks if the given datetime string corresponds to yesterday's date.
+   * @param d datetime
+   * @returns true if day is yesterday
+   */
+  const isYesterday = (d: Date) => {
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    return (
+      d.getDate() === yesterday.getDate() &&
+      d.getMonth() === yesterday.getMonth() &&
+      d.getFullYear() === yesterday.getFullYear()
+    );
+  };
+
   const formatShort = (iso: string) => {
     const d = new Date(iso);
     if (isToday(d)) return format(d, 'HH:mm');
-    return format(d, 'yyyy-MM-dd HH:mm');
+    if (isYesterday(d)) return `yesterday ${format(d, 'HH:mm')}`;
+    return format(d, 'EEEEEE, do MMM HH:mm');
   };
 
   const formatDurationShort = (fromIso: string, toIso: string) => {
@@ -170,6 +187,11 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
       </Typography>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Typography variant='subtitle2' fontWeight={350} color='inherit'>
+          {formatDistanceToNow(new Date(lastTimedate), {
+            addSuffix: true,
+          })}
+        </Typography>
         <Typography variant='subtitle2' fontWeight={350} color='inherit'>
           {isToday(new Date(lastTimedate))
             ? format(new Date(lastTimedate), 'HH:mm')
