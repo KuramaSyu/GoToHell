@@ -124,10 +124,38 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
   const nameProvider = new DefaultDescriptionProvider();
   const entriesCount = data.entries.length;
 
-  const formatShort = (iso: string) => {
+  /**
+   * Checks if the given datetime string corresponds to yesterday's date.
+   * @param d datetime
+   * @returns true if day is yesterday
+   */
+  const isYesterday = (d: Date) => {
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    return (
+      d.getDate() === yesterday.getDate() &&
+      d.getMonth() === yesterday.getMonth() &&
+      d.getFullYear() === yesterday.getFullYear()
+    );
+  };
+
+  /**
+   * Checks if two dates are on the same calendar day.
+   * @param d1 first date
+   * @param d2 second date
+   * @returns true if both dates are on the same day
+   */
+  const isSameDay = (d1: Date, d2: Date) =>
+    d1.getDate() === d2.getDate() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getFullYear() === d2.getFullYear();
+
+  const formatShort = (iso: string, omitDate: boolean) => {
     const d = new Date(iso);
-    if (isToday(d)) return format(d, 'HH:mm');
-    return format(d, 'yyyy-MM-dd HH:mm');
+    if (isToday(d) || omitDate) return format(d, 'HH:mm');
+    if (isYesterday(d)) return `yesterday ${format(d, 'HH:mm')}`;
+    return format(d, 'EEEEEE, do MMM HH:mm');
   };
 
   const formatDurationShort = (fromIso: string, toIso: string) => {
@@ -171,14 +199,16 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
         <Typography variant='subtitle2' fontWeight={350} color='inherit'>
-          {isToday(new Date(lastTimedate))
-            ? format(new Date(lastTimedate), 'HH:mm')
-            : formatDistanceToNow(new Date(lastTimedate), { addSuffix: true })}
+          {formatDistanceToNow(new Date(lastTimedate), {
+            addSuffix: true,
+          })}
         </Typography>
         {entriesCount > 1 && (
           <>
             <Box>
-              <Tooltip title={`${formatShort(start)} — ${formatShort(end)}`}>
+              <Tooltip
+                title={`${formatShort(start, false)} — ${formatShort(end, isSameDay(new Date(start), new Date(end)))}`}
+              >
                 <Chip
                   icon={<TimelapseIcon fontSize='small' />}
                   label={formatDurationShort(start, end)}
