@@ -203,11 +203,6 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
             addSuffix: true,
           })}
         </Typography>
-        <Typography variant='subtitle2' fontWeight={350} color='inherit'>
-          {isToday(new Date(lastTimedate))
-            ? format(new Date(lastTimedate), 'HH:mm')
-            : formatDistanceToNow(new Date(lastTimedate), { addSuffix: true })}
-        </Typography>
         {entriesCount > 1 && (
           <>
             <Box>
