@@ -140,6 +140,17 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
     );
   };
 
+  /**
+   * Checks if two dates are on the same calendar day.
+   * @param d1 first date
+   * @param d2 second date
+   * @returns true if both dates are on the same day
+   */
+  const isSameDay = (d1: Date, d2: Date) =>
+    d1.getDate() === d2.getDate() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getFullYear() === d2.getFullYear();
+
   const formatShort = (iso: string) => {
     const d = new Date(iso);
     if (isToday(d)) return format(d, 'HH:mm');
