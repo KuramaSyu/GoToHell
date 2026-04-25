@@ -151,9 +151,9 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
     d1.getMonth() === d2.getMonth() &&
     d1.getFullYear() === d2.getFullYear();
 
-  const formatShort = (iso: string) => {
+  const formatShort = (iso: string, omitDate: boolean) => {
     const d = new Date(iso);
-    if (isToday(d)) return format(d, 'HH:mm');
+    if (isToday(d) || omitDate) return format(d, 'HH:mm');
     if (isYesterday(d)) return `yesterday ${format(d, 'HH:mm')}`;
     return format(d, 'EEEEEE, do MMM HH:mm');
   };
@@ -206,7 +206,9 @@ export const SportGroupTimelineEntry: React.FC<SportGroupCardProps> = ({
         {entriesCount > 1 && (
           <>
             <Box>
-              <Tooltip title={`${formatShort(start)} — ${formatShort(end)}`}>
+              <Tooltip
+                title={`${formatShort(start, false)} — ${formatShort(end, isSameDay(new Date(start), new Date(end)))}`}
+              >
                 <Chip
                   icon={<TimelapseIcon fontSize='small' />}
                   label={formatDurationShort(start, end)}
