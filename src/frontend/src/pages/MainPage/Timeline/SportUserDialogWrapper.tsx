@@ -71,6 +71,10 @@ export const SportUserDialogWrapper: React.FC<SportUserDialogWrapperProps> = ({
 
   useEffect(() => {
     if (!selectedSport) return;
+
+    // if user selected User Preview, then keep it
+    if (tab === 2) return;
+
     // if a group was selected, switch to Group tab and remember it
     if ((selectedSport as any).entries) {
       setActiveGroup(selectedSport as UserSportGroup);
@@ -86,7 +90,7 @@ export const SportUserDialogWrapper: React.FC<SportUserDialogWrapperProps> = ({
 
     // otherwise switch to the Sport tab
     setTab(0);
-  }, [selectedSport]);
+  }, [selectedSport, tab]);
 
   return (
     <Dialog
@@ -105,9 +109,9 @@ export const SportUserDialogWrapper: React.FC<SportUserDialogWrapperProps> = ({
       }}
     >
       <Tabs value={tab} onChange={handleChange}>
-        <Tab label='Sport' />
-        <Tab label='Group' />
-        <Tab label='User' />
+        {!activeGroup && <Tab label='Sport' value={0} />}
+        {activeGroup && <Tab label='Group' value={1} />}
+        <Tab label='User' value={2} />
       </Tabs>
       {tab === 0 ? (
         // only render Sport dialog when a single sport is selected
