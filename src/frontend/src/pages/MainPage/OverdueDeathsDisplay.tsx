@@ -92,7 +92,7 @@ export const OverdueDeathsDisplay: React.FC = () => {
             <span>
               {lockDecrement
                 ? 'Uploading will NOT decrement the Overdue-Deaths-Count'
-                : 'Uploading will decrement the Overdue-Deaths-Count. Click to toggle.'}
+                : 'Uploading will decrement the Overdue-Deaths-Count'}
             </span>
           </Stack>
         }
