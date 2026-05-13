@@ -1,4 +1,3 @@
-import { count } from 'console';
 import { DiscordUserImpl } from '../../components/DiscordLogin';
 import { useDeathAmountStore } from '../../pages/MainPage/NumberSlider';
 import { DefaultSportsDefinition } from '../../models/Preferences';
@@ -93,10 +92,6 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       );
     }
 
-    const overdueDeaths =
-      useOverdueDeathsStore
-        .getState()
-        .overdueDeathsList.find((x) => x.game === wrapped.sport?.game) || null;
     try {
       const sport = new SportRow(
         wrapped.sport.sport!,
@@ -109,8 +104,16 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       var uploadPromise = new UserApi().postSports([sport], false);
 
       // upload updated overdue deaths
+      // if it is not locked
+      const overdueDeaths =
+        useOverdueDeathsStore
+          .getState()
+          .overdueDeathsList.find((x) => x.game === wrapped.sport?.game) ||
+        null;
+      const isLocked = useOverdueDeathsStore.getState().lockDecrement;
+
       var overdueDeathsPromise = new Promise((resolve) => resolve(null));
-      if (overdueDeaths !== null) {
+      if (overdueDeaths !== null && !isLocked) {
         overdueDeathsPromise = new OverdueDeathsApi().put(
           sport.game,
           wrapped.deathAmount!,
