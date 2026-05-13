@@ -1,6 +1,15 @@
-import { alpha, Box, darken, Fade, Stack, Typography } from '@mui/material';
+import {
+  alpha,
+  Box,
+  darken,
+  Fade,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import Lock from '@mui/icons-material/Lock';
 import LockOpen from '@mui/icons-material/LockOpen';
+import TouchApp from '@mui/icons-material/TouchApp';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import { PopNumber } from './PopNumber';
 import { NUMBER_FONT } from '../../statics';
@@ -76,86 +85,99 @@ export const OverdueDeathsDisplay: React.FC = () => {
 
   return (
     <Stack direction={'row'} spacing={2} height={'100%'} alignItems={'center'}>
-      <Box
-        sx={{
-          ...theme.colorTransition.root,
-          px: 2,
-          py: 1,
-
-          // normal colorful background when unlocked, greyed out when locked
-          backgroundColor: !lockDecrement
-            ? theme.blendAgainstContrast('secondary', 0.4)
-            : theme.changeSaturation(
-                theme.blendAgainstContrast('secondary', 0.4),
-                -0.9,
-              ),
-          borderRadius: '40px',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+      <Tooltip
+        title={
+          <Stack direction={'row'} spacing={1} alignItems={'center'}>
+            <TouchApp sx={{ fontSize: '18px' }} />
+            <span>
+              {lockDecrement
+                ? 'Uploading will NOT decrement the Overdue-Deaths-Count'
+                : 'Uploading will decrement the Overdue-Deaths-Count. Click to toggle.'}
+            </span>
+          </Stack>
+        }
       >
-        <Fade in={showLockIcon} timeout={theme.transitions.duration.complex}>
+        <Box
+          sx={{
+            ...theme.colorTransition.root,
+            px: 2,
+            py: 1,
+
+            // normal colorful background when unlocked, greyed out when locked
+            backgroundColor: !lockDecrement
+              ? theme.blendAgainstContrast('secondary', 0.4)
+              : theme.changeSaturation(
+                  theme.blendAgainstContrast('secondary', 0.4),
+                  -0.9,
+                ),
+            borderRadius: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <Fade in={showLockIcon} timeout={theme.transitions.duration.complex}>
+            <Box
+              sx={{
+                ...theme.colorTransition.root,
+
+                // middle positioned at the top of the display
+                position: 'absolute',
+                top: '-10px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+
+                // center icon in middle
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+
+                // size and rounding
+                width: '28px',
+                height: '28px',
+                borderRadius: '999px',
+
+                // color
+                backgroundColor: theme.blendAgainstContrast('secondary', 0.25),
+                color: theme.blendWithContrast('secondary', 0.5),
+                pointerEvents: 'none',
+              }}
+            >
+              {lockDecrement ? (
+                <Lock sx={{ fontSize: '18px' }} />
+              ) : (
+                <LockOpen sx={{ fontSize: '18px' }} />
+              )}
+            </Box>
+          </Fade>
           <Box
+            onClick={onToggleDecrementLock}
             sx={{
-              ...theme.colorTransition.root,
-
-              // middle positioned at the top of the display
-              position: 'absolute',
-              top: '-10px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-
-              // center icon in middle
               display: 'flex',
+              overflow: 'hidden',
+              height: '110px', // crafted to match the multiplier and pop number font + size combo, since it has a weird margin at the bottom
               alignItems: 'center',
-              justifyContent: 'center',
-
-              // size and rounding
-              width: '28px',
-              height: '28px',
-              borderRadius: '999px',
-
-              // color
-              backgroundColor: theme.blendAgainstContrast('secondary', 0.25),
-              color: theme.blendWithContrast('secondary', 0.5),
-              pointerEvents: 'none',
             }}
           >
-            {lockDecrement ? (
-              <Lock sx={{ fontSize: '18px' }} />
-            ) : (
-              <LockOpen sx={{ fontSize: '18px' }} />
-            )}
+            <PopNumber
+              value={
+                overdueDeathsList.find((x) => x.game === theme.custom.themeName)
+                  ?.count ?? 0
+              }
+              font={NUMBER_FONT}
+              stiffness={1000}
+              damping={300}
+              mass={1}
+              fontsize={theme.typography.h1.fontSize}
+              style={{
+                color: theme.blendWithContrast('secondary', 0.4),
+              }}
+            ></PopNumber>
           </Box>
-        </Fade>
-        <Box
-          onClick={onToggleDecrementLock}
-          sx={{
-            display: 'flex',
-            overflow: 'hidden',
-            height: '110px', // crafted to match the multiplier and pop number font + size combo, since it has a weird margin at the bottom
-            alignItems: 'center',
-          }}
-        >
-          <PopNumber
-            value={
-              overdueDeathsList.find((x) => x.game === theme.custom.themeName)
-                ?.count ?? 0
-            }
-            font={NUMBER_FONT}
-            stiffness={1000}
-            damping={300}
-            mass={1}
-            fontsize={theme.typography.h1.fontSize}
-            style={{
-              color: theme.blendWithContrast('secondary', 0.4),
-            }}
-          ></PopNumber>
         </Box>
-      </Box>
+      </Tooltip>
       <Stack direction={'column'}>
         <Typography
           sx={{
