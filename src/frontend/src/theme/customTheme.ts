@@ -58,6 +58,15 @@ export interface CustomTheme extends Theme {
   blendAgainstContrast(color: ColorInput, amount: number): string;
 
   /**
+   * Change Saturation of a color by converting it to HSL
+   *
+   * @param color the color to change saturation of
+   * @param ChangeAmount (-1 to 1) the relative amount to change saturation depending on the current saturation. 0 = no change, -1 = desaturate to gray, 1 = fully saturate.
+   * @returns the color with changed saturation in hex format
+   */
+  changeSaturation(color: ColorInput, ChangeAmount: number): string;
+
+  /**
    * Updates `transitions.duration.complex` in-place and refreshes derived
    * transition style snippets that depend on that duration.
    */
@@ -382,6 +391,22 @@ export class CustomThemeImpl extends Object implements CustomTheme {
     return rgbToHex(blended);
   }
 
+  changeSaturation(color: ColorInput, changeAmount: number): string {
+    const resolved = this.resolveColor(color);
+    const rgb = hexToRgb(resolved);
+    const hsl = this.rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+    const clampedAmount = Math.max(-1, Math.min(1, changeAmount));
+    const nextSaturation =
+      clampedAmount >= 0
+        ? hsl.s + (1 - hsl.s) * clampedAmount
+        : hsl.s + hsl.s * clampedAmount;
+
+    const adjusted = this.hslToRgb(hsl.h, this.clamp01(nextSaturation), hsl.l);
+
+    return rgbToHex(adjusted);
+  }
+
   setComplexDuration(durationMs: number): void {
     // Keep duration valid and integral (MUI expects milliseconds).
     const normalized = Math.max(1, Math.round(durationMs));
@@ -447,6 +472,84 @@ export class CustomThemeImpl extends Object implements CustomTheme {
           ),
         },
       },
+    };
+  }
+
+  private clamp01(value: number): number {
+    return Math.max(0, Math.min(1, value));
+  }
+
+  private rgbToHsl(
+    r: number,
+    g: number,
+    b: number,
+  ): { h: number; s: number; l: number } {
+    const rn = r / 255;
+    const gn = g / 255;
+    const bn = b / 255;
+
+    const max = Math.max(rn, gn, bn);
+    const min = Math.min(rn, gn, bn);
+    const delta = max - min;
+    const l = (max + min) / 2;
+
+    if (delta === 0) {
+      return { h: 0, s: 0, l };
+    }
+
+    const s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+    let h = 0;
+
+    switch (max) {
+      case rn:
+        h = (gn - bn) / delta + (gn < bn ? 6 : 0);
+        break;
+      case gn:
+        h = (bn - rn) / delta + 2;
+        break;
+      case bn:
+        h = (rn - gn) / delta + 4;
+        break;
+      default:
+        h = 0;
+    }
+
+    h /= 6;
+
+    return { h, s, l };
+  }
+
+  private hslToRgb(
+    h: number,
+    s: number,
+    l: number,
+  ): { r: number; g: number; b: number } {
+    if (s === 0) {
+      const gray = Math.round(l * 255);
+      return { r: gray, g: gray, b: gray };
+    }
+
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+
+    const hue2rgb = (t: number) => {
+      let tt = t;
+      if (tt < 0) tt += 1;
+      if (tt > 1) tt -= 1;
+      if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+      if (tt < 1 / 2) return q;
+      if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+      return p;
+    };
+
+    const r = hue2rgb(h + 1 / 3);
+    const g = hue2rgb(h);
+    const b = hue2rgb(h - 1 / 3);
+
+    return {
+      r: Math.round(r * 255),
+      g: Math.round(g * 255),
+      b: Math.round(b * 255),
     };
   }
 
