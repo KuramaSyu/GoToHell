@@ -34,6 +34,28 @@ import { useRecentSportsStore } from '../../zustand/RecentSportsState';
 import { useMinSquareSize } from './minSquareSize';
 import { defaultTheme } from '../../zustand/defaultTheme';
 
+// Helper: wrap a promise with a timeout
+function promiseWithTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  errorMessage?: string,
+): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(errorMessage || 'Timeout')),
+      ms,
+    );
+  });
+  return Promise.race([
+    promise.then((res) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      return res;
+    }),
+    timeoutPromise,
+  ]);
+}
+
 interface LogoSvgComponentProps {
   style?: React.CSSProperties;
   monochrome?: boolean; // add monochrome flag
@@ -157,12 +179,16 @@ export const LoadingPage: React.FC = () => {
   // Initialize theme
   useEffect(() => {
     const startTime = Date.now();
+    const THEME_INIT_TIMEOUT_MS = 5000; // timeout for theme initialization
 
     // setTimeout to make sure, that svg loads first
     setTimeout(() => {
-      useThemeStore
-        .getState()
-        .initializeTheme()
+      const initPromise = useThemeStore.getState().initializeTheme();
+      promiseWithTimeout(
+        initPromise,
+        THEME_INIT_TIMEOUT_MS,
+        'Theme init timed out',
+      )
         .then(() => {
           setLoadingMap((prev) => {
             const comp = prev.get('Theme');
@@ -175,7 +201,8 @@ export const LoadingPage: React.FC = () => {
             return new Map(prev);
           });
         })
-        .catch(() => {
+        .catch((err) => {
+          console.warn('Theme initialization failed:', err?.message ?? err);
           setLoadingMap((prev) => {
             const comp = prev.get('Theme');
             if (comp) {
