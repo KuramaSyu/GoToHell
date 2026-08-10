@@ -145,5 +145,10 @@
       "backgrounds": [
         ""
       ]
+    },
+    {
+      "name": "osu",
+      "longName": "osu!",
+      "backgrounds": []
     }
 ]
