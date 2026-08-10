@@ -145,5 +145,10 @@
       "backgrounds": [
         "https://example.com/not_valid.jpg"
       ]
+    },
+    {
+      "name": "osu",
+      "longName": "osu!",
+      "backgrounds": []
     }
 ]
