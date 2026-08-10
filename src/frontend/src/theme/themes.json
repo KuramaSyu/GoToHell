@@ -140,10 +140,10 @@
       ]
     },
     {
-      "name": "meaccha chameleon",
-      "longName": "Meaccha Chameleon",
+      "name": "meccha chameleon",
+      "longName": "Meccha Chameleon",
       "backgrounds": [
-        ""
+        "https://example.com/not_valid.jpg"
       ]
     },
     {
