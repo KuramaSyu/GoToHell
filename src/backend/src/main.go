@@ -60,6 +60,7 @@ func main() {
 		StreakService: streakService,
 	}
 	personalGoalRepo := db.NewPersonalGoalsRepository(database)
+	equipmentRepo := db.NewEquipmentRepository(database)
 	userDetailsFacade := db.NewUserDetailsFacade(&sportRepo, userRepo, personalGoalRepo, friendshipRepo)
 
 	// Initialize controllers
@@ -70,6 +71,7 @@ func main() {
 	streakController := controllers.NewStreakController(&sportRepo, Now)
 	personalGoalsController := controllers.NewPersonalGoalsController(personalGoalRepo)
 	userDetailsController := controllers.NewPersonalDetailsController(userDetailsFacade)
+	equipmentController := controllers.NewEquipmentController(equipmentRepo)
 
 	// Setup routes
 	routes.SetupRouter(
@@ -81,6 +83,7 @@ func main() {
 		streakController,
 		personalGoalsController,
 		userDetailsController,
+		equipmentController,
 	)
 	// Start the server
 	if err := r.Run(":8080"); err != nil {

@@ -18,6 +18,7 @@ func SetupRouter(
 	streakController *controllers.StreakController,
 	personalGoalsController *controllers.PersonalGoalsController,
 	userDetailsController *controllers.PersonalDetailsController,
+	equipmentController *controllers.EquipmentController,
 ) {
 
 	// API routes
@@ -66,6 +67,15 @@ func SetupRouter(
 		personalGoals.PATCH("", personalGoalsController.Patch)
 		personalGoals.PUT("", personalGoalsController.Put)
 		personalGoals.DELETE("", personalGoalsController.Delete)
+
+		// route for equipment (e.g. running shoes)
+		equipment := user.Group("/equipment")
+		equipment.GET("", equipmentController.Get)
+		equipment.POST("", equipmentController.Post)
+		equipment.PATCH("", equipmentController.Patch)
+		equipment.DELETE("/:equipment_id", equipmentController.Delete)
+		equipment.POST("/:equipment_id/sports", equipmentController.LinkSports)
+		equipment.DELETE("/:equipment_id/sports/:sport_id", equipmentController.UnlinkSport)
 
 		// route for retrieving details
 		user.GET("/details", userDetailsController.Get)

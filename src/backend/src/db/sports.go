@@ -92,8 +92,19 @@ func (r *OrmSportRepository) PatchSport(sport Sport) error {
 // DeleteSport removes a Sport entry by ID using ORM. Record needs to match both `userID` AND `id`
 // to be deleted
 func (r *OrmSportRepository) DeleteSport(id Snowflake, userID Snowflake) error {
-	result := r.DB.Where(&Sport{UserID: userID, ID: id}).Delete(&Sport{})
-	return result.Error
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		result := tx.Where(&Sport{UserID: userID, ID: id}).Delete(&Sport{})
+		if result.Error != nil {
+			return result.Error
+		}
+		// Remove the links so a deleted sport never contributes to equipment usage again.
+		if tx.Migrator().HasTable(&SportXEquipment{}) {
+			if err := tx.Where("sport_id = ?", id).Delete(&SportXEquipment{}).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 // GetLongestDayStreak returns the longest streak in days the user ever had
