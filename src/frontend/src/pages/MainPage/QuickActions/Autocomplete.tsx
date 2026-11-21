@@ -19,12 +19,16 @@ import {
   InfoSearchEntry,
   NumericEntry,
   SearchEntry,
+  ShoeEntry,
   SportEntry,
 } from './SearchEntry';
 import { handleInputChanged } from './Main';
 import { isNumeric } from '../../../utils/UserNumber';
 import { useDeathAmountStore } from '../NumberSlider';
 import { AnimatedBox, SearchModalProps } from './Search';
+import { useEquipmentStore } from '../../../zustand/EquipmentStore';
+import useFeatureStore, { FeatureFlagName } from '../../../zustand/FeatureStore';
+import { getEquipmentConfig } from '../../../utils/data/Equipment';
 
 /**
  * Sub Component of QuickActions which shows Autocomplete options
@@ -35,6 +39,12 @@ export const QuickActionAutocomplete: React.FC<SearchModalProps> = ({
 }) => {
   const { sportResponse } = useSportResponseStore();
   const { theme } = useThemeStore();
+  const { currentSport } = useSportStore();
+  const { equipment } = useEquipmentStore();
+  const equipmentEnabled = useFeatureStore(
+    (state) => state.flags[FeatureFlagName.Equipment].isEnabled(),
+  );
+  const equipmentConfig = getEquipmentConfig(currentSport.sport);
   const sports = Object.keys(sportResponse?.sports ?? {});
 
   // helper variables
@@ -68,16 +78,32 @@ export const QuickActionAutocomplete: React.FC<SearchModalProps> = ({
     // filter sports and wrap into SearchEntry
     const sportSearch = sports.map((e) => new SportEntry(e));
 
+    // filter equipment (e.g. shoes) and wrap into SearchEntry
+    const shoeSearch =
+      equipmentEnabled && equipmentConfig && currentSport.sport
+        ? equipment.map(
+            (item) => new ShoeEntry(item, currentSport.sport as string),
+          )
+        : [];
+
     // filter games and wrap into SearchEntry
     const gameSearch = getThemeNames().map((e) => new GameEntry(e));
-    const searchData = [...sportSearch, ...gameSearch];
+    const searchData = [...sportSearch, ...shoeSearch, ...gameSearch];
     const gameFuse = new Fuse(searchData, {
       threshold: 0.5,
       keys: ['getNames'],
       getFn: (e: SearchEntry) => e.getNames().join(' '),
     });
     return gameFuse.search(typed).map((result) => result.item);
-  }, [typed]);
+  }, [
+    typed,
+    sports,
+    equipment,
+    equipmentEnabled,
+    equipmentConfig,
+    currentSport.sport,
+    isCustom,
+  ]);
 
   // triggerd when clicked or enter pressed
   const onEnter = () => {

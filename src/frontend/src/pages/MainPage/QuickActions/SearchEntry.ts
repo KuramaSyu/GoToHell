@@ -2,6 +2,8 @@ import { useSportStore } from '../../../useSportStore';
 import { useSportResponseStore } from '../../../zustand/sportResponseStore';
 import { customThemes, useThemeStore } from '../../../zustand/useThemeStore';
 import { useDeathAmountStore } from '../NumberSlider';
+import { EquipmentWithUsage } from '../../../utils/api/responses/Equipment';
+import { useEquipmentStore } from '../../../zustand/EquipmentStore';
 
 /**
  * Represents an Abstract Element, which can be selected
@@ -121,6 +123,40 @@ export class SportEntry extends DefaultSearchEntry {
       .split(' ')
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ');
+  }
+}
+
+/**
+ * Represents a piece of equipment (e.g. running shoes) which can be selected
+ * as the equipment for the current sport.
+ */
+export class ShoeEntry extends DefaultSearchEntry {
+  name: string;
+  equipmentID: string;
+  sport: string;
+
+  constructor(
+    equipment: EquipmentWithUsage,
+    sport: string,
+    isDisplayed: boolean = true,
+  ) {
+    super();
+    this.name = equipment.name;
+    this.equipmentID = equipment.id;
+    this.sport = sport;
+    this.isDisplayed = isDisplayed;
+  }
+
+  select(): void {
+    useEquipmentStore.getState().selectEquipment(this.sport, this.equipmentID);
+  }
+
+  displayName(): string {
+    return `Shoe: ${this.name}`;
+  }
+
+  getNames(): string[] {
+    return [this.name, this.displayName(), 'shoe', 'shoes'];
   }
 }
 
