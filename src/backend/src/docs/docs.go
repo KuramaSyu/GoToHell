@@ -532,6 +532,336 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/{user_id}/equipment": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Equipment"
+                ],
+                "summary": "Get all equipment of the requested user with calculated usage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetEquipmentReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Equipment"
+                ],
+                "summary": "Create a piece of equipment (e.g. running shoes)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Equipment payload",
+                        "name": "equipment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.PostEquipmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostEquipmentReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Equipment"
+                ],
+                "summary": "Update a piece of equipment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Equipment fields to update",
+                        "name": "equipment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.PatchEquipmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PostEquipmentReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/{user_id}/equipment/{equipment_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Equipment"
+                ],
+                "summary": "Delete a piece of equipment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Equipment ID",
+                        "name": "equipment_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/{user_id}/equipment/{equipment_id}/sports": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Equipment"
+                ],
+                "summary": "Link sport entries to a piece of equipment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Equipment ID",
+                        "name": "equipment_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Sport entries to link",
+                        "name": "links",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.LinkEquipmentSportsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/{user_id}/equipment/{equipment_id}/sports/{sport_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Equipment"
+                ],
+                "summary": "Unlink a sport entry from a piece of equipment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Equipment ID",
+                        "name": "equipment_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sport ID",
+                        "name": "sport_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorReply"
+                        }
+                    }
+                }
+            }
+        },
         "/api/{user_id}/goals": {
             "put": {
                 "consumes": [
@@ -837,6 +1167,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetEquipmentReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.EquipmentWithUsage"
+                    }
+                }
+            }
+        },
         "controllers.GetFriendshipReply": {
             "type": "object",
             "properties": {
@@ -985,6 +1326,14 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.PostEquipmentReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.Equipment"
+                }
+            }
+        },
         "controllers.PostOverdueDeathsReply": {
             "type": "object",
             "properties": {
@@ -1061,6 +1410,63 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Equipment": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "expected_usage": {
+                    "description": "ExpectedUsage is the distance the equipment is expected to last, in\nmeters. It is nullable because not every kind of equipment has a\npredictable lifespan.",
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "start_usage_meters": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.EquipmentWithUsage": {
+            "type": "object",
+            "properties": {
+                "current_usage_meters": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "expected_usage": {
+                    "description": "ExpectedUsage is the distance the equipment is expected to last, in\nmeters. It is nullable because not every kind of equipment has a\npredictable lifespan.",
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "linked_sports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Sport"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "start_usage_meters": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.FriendshipStatus": {
             "type": "string",
             "enum": [
@@ -1129,6 +1535,20 @@ const docTemplate = `{
                 }
             }
         },
+        "models.LinkEquipmentSportsRequest": {
+            "type": "object",
+            "required": [
+                "sport_ids"
+            ],
+            "properties": {
+                "sport_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "models.OverdueDeaths": {
             "type": "object",
             "properties": {
@@ -1143,6 +1563,33 @@ const docTemplate = `{
                 "user_id": {
                     "type": "integer",
                     "example": 348922315062044675
+                }
+            }
+        },
+        "models.PatchEquipmentRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "My daily trainers"
+                },
+                "expected_usage": {
+                    "type": "integer",
+                    "example": 800000
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Running Shoes"
+                },
+                "start_usage_meters": {
+                    "type": "integer",
+                    "example": 12000
                 }
             }
         },
@@ -1171,6 +1618,30 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.PostEquipmentRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "My daily trainers"
+                },
+                "expected_usage": {
+                    "type": "integer",
+                    "example": 800000
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Running Shoes"
+                },
+                "start_usage_meters": {
+                    "type": "integer",
+                    "example": 12000
                 }
             }
         },

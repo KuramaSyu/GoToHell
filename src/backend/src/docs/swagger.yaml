@@ -44,6 +44,13 @@ definitions:
           $ref: '#/definitions/models.User'
         type: array
     type: object
+  controllers.GetEquipmentReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.EquipmentWithUsage'
+        type: array
+    type: object
   controllers.GetFriendshipReply:
     properties:
       data:
@@ -142,6 +149,11 @@ definitions:
       user_id:
         type: integer
     type: object
+  controllers.PostEquipmentReply:
+    properties:
+      data:
+        $ref: '#/definitions/models.Equipment'
+    type: object
   controllers.PostOverdueDeathsReply:
     properties:
       data:
@@ -192,6 +204,50 @@ definitions:
         example: 123456789012345678
         type: integer
     type: object
+  models.Equipment:
+    properties:
+      description:
+        type: string
+      expected_usage:
+        description: |-
+          ExpectedUsage is the distance the equipment is expected to last, in
+          meters. It is nullable because not every kind of equipment has a
+          predictable lifespan.
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      start_usage_meters:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.EquipmentWithUsage:
+    properties:
+      current_usage_meters:
+        type: integer
+      description:
+        type: string
+      expected_usage:
+        description: |-
+          ExpectedUsage is the distance the equipment is expected to last, in
+          meters. It is nullable because not every kind of equipment has a
+          predictable lifespan.
+        type: integer
+      id:
+        type: integer
+      linked_sports:
+        items:
+          $ref: '#/definitions/models.Sport'
+        type: array
+      name:
+        type: string
+      start_usage_meters:
+        type: integer
+      user_id:
+        type: integer
+    type: object
   models.FriendshipStatus:
     enum:
     - pending
@@ -238,6 +294,15 @@ definitions:
       username:
         type: string
     type: object
+  models.LinkEquipmentSportsRequest:
+    properties:
+      sport_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - sport_ids
+    type: object
   models.OverdueDeaths:
     properties:
       count:
@@ -249,6 +314,25 @@ definitions:
       user_id:
         example: 348922315062044675
         type: integer
+    type: object
+  models.PatchEquipmentRequest:
+    properties:
+      description:
+        example: My daily trainers
+        type: string
+      expected_usage:
+        example: 800000
+        type: integer
+      id:
+        type: integer
+      name:
+        example: Running Shoes
+        type: string
+      start_usage_meters:
+        example: 12000
+        type: integer
+    required:
+    - id
     type: object
   models.PersonalGoal:
     properties:
@@ -266,6 +350,23 @@ definitions:
         description: just a constraint to use UserID as foreign key
       user_id:
         type: integer
+    type: object
+  models.PostEquipmentRequest:
+    properties:
+      description:
+        example: My daily trainers
+        type: string
+      expected_usage:
+        example: 800000
+        type: integer
+      name:
+        example: Running Shoes
+        type: string
+      start_usage_meters:
+        example: 12000
+        type: integer
+    required:
+    - name
     type: object
   models.PostSportRequest:
     properties:
@@ -808,6 +909,216 @@ paths:
       summary: retrieves the number of days a user has been active back to back
       tags:
       - Streak
+  /api/user/{user_id}/equipment:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetEquipmentReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Get all equipment of the requested user with calculated usage
+      tags:
+      - Equipment
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Equipment fields to update
+        in: body
+        name: equipment
+        required: true
+        schema:
+          $ref: '#/definitions/models.PatchEquipmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.PostEquipmentReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Update a piece of equipment
+      tags:
+      - Equipment
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Equipment payload
+        in: body
+        name: equipment
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostEquipmentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.PostEquipmentReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Create a piece of equipment (e.g. running shoes)
+      tags:
+      - Equipment
+  /api/user/{user_id}/equipment/{equipment_id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Equipment ID
+        in: path
+        name: equipment_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Delete a piece of equipment
+      tags:
+      - Equipment
+  /api/user/{user_id}/equipment/{equipment_id}/sports:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Equipment ID
+        in: path
+        name: equipment_id
+        required: true
+        type: string
+      - description: Sport entries to link
+        in: body
+        name: links
+        required: true
+        schema:
+          $ref: '#/definitions/models.LinkEquipmentSportsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Link sport entries to a piece of equipment
+      tags:
+      - Equipment
+  /api/user/{user_id}/equipment/{equipment_id}/sports/{sport_id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Equipment ID
+        in: path
+        name: equipment_id
+        required: true
+        type: string
+      - description: Sport ID
+        in: path
+        name: sport_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controllers.ErrorReply'
+      security:
+      - CookieAuth: []
+      summary: Unlink a sport entry from a piece of equipment
+      tags:
+      - Equipment
   /friends:
     post:
       consumes:
