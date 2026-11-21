@@ -42,6 +42,7 @@ import {
   ApiRequirementsBuilder,
 } from '../../utils/api/ApiRequirementsBuilder';
 import { PersonalGoalSynopsis } from './PersonalGoalSynopsis';
+import { EquipmentSynopsis } from '../Equipment/EquipmentSynopsis';
 import { BoxHoverPropsTopBar } from '../../theme/statics';
 import { UserProfileDesktopDrawer } from '../UserProfile/DrawerWrapper';
 import { Feature } from '../Feature';
@@ -339,6 +340,9 @@ const DesktopTopBar = memo<TopBarProps>(
                 </Box>
                 <Feature name={FeatureFlagName.PersonalGoals}>
                   <PersonalGoalSynopsis typographyVariant='h3'></PersonalGoalSynopsis>
+                </Feature>
+                <Feature name={FeatureFlagName.Equipment}>
+                  <EquipmentSynopsis typographyVariant='h3' />
                 </Feature>
               </Stack>
 

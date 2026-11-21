@@ -1,6 +1,7 @@
 import { FriendshipReply } from '../../pages/friends/FriendOverview';
 import { useUsersStore, useUserStore } from '../../userStore';
 import { useOverdueDeathsStore } from '../../zustand/OverdueDeathsStore';
+import { useEquipmentStore } from '../../zustand/EquipmentStore';
 import { usePersonalGoalsStore } from '../../zustand/PersonalGoalsStore';
 import usePreferenceStore from '../../zustand/PreferenceStore';
 import { useRecentSportsStore } from '../../zustand/RecentSportsState';
@@ -8,6 +9,7 @@ import { useStreakStore } from '../../zustand/StreakStore';
 import { useTotalScoreStore } from '../../zustand/TotalScoreStore';
 import { loadPreferencesFromCookie } from '../cookiePreferences';
 import { UserApi } from './Api';
+import { EquipmentApi } from './EquipmentApi';
 import { OverdueDeathsApi } from './OverdueDeathsApi';
 import { PersonalGoalApi } from './PersonalGoalsApi';
 import { StreakApi } from './StreakApi';
@@ -295,6 +297,35 @@ export class UserPersonalGoalsRequirement extends ApiRequirementABC {
 }
 
 /**
+ * fetches the equipment of the logged in user including calculated usage.
+ *
+ * @Note
+ * sets the useEquipmentStore Zustand
+ */
+export class UserEquipmentRequirement extends ApiRequirementABC {
+  // Equipment can be invalidated after upload/delete. The base class only
+  // remembers whether it ever fetched, so use the store as source of truth.
+  needsFetch(): boolean {
+    return useEquipmentStore.getState().loaded === false;
+  }
+
+  fetchPredicate(): Boolean {
+    console.log(`DEBUG: Checking for equipment`);
+    return useEquipmentStore.getState().loaded === false;
+  }
+
+  async doFetch(): Promise<any> {
+    console.log(`DEBUG: Fetching equipment`);
+    await UserRequirement.getInstance().fetchIfNeeded();
+    const user_id = useUserStore.getState().user?.id;
+    if (!user_id) {
+      throw new Error('User not logged in');
+    }
+    return await new EquipmentApi().get(user_id);
+  }
+}
+
+/**
  * reads the preferences out of the cookie
  *
  * @Note
@@ -327,6 +358,7 @@ export enum ApiRequirement {
   Preferences,
   OverdueDeaths,
   UserPersonalGoals,
+  UserEquipment,
 }
 
 export namespace ApiRequirement {
@@ -352,6 +384,8 @@ export namespace ApiRequirement {
         return AllStreaksRequirement.getInstance();
       case ApiRequirement.UserPersonalGoals:
         return UserPersonalGoalsRequirement.getInstance();
+      case ApiRequirement.UserEquipment:
+        return UserEquipmentRequirement.getInstance();
       default:
         throw new Error(`Unknown ApiRequirement: ${req}`);
     }

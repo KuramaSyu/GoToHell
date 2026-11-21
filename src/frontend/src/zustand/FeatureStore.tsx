@@ -77,6 +77,8 @@ export enum FeatureFlagName {
   StartupStreaks = 'StartupStreaks',
   PersonalGoals = 'PersonalGoals',
   SwapBackgroundOnUpload = 'SwapBackgroundOnUpload',
+  Equipment = 'Equipment',
+  EquipmentUploadConfirmation = 'EquipmentUploadConfirmation',
 }
 
 type FeatureFlags = Record<FeatureFlagName, IFeatureFlag>;
@@ -102,6 +104,18 @@ const DEFAULT_FEATURE_FLAG_RECORDS: Record<FeatureFlagName, FeatureFlagRecord> =
         'When playing for a longer period of time, the same background gets quite annoying. Hence this feature, to automatically swap the background, when clicking Upload',
       enabled: true,
     },
+    [FeatureFlagName.Equipment]: {
+      name: 'Equipment Tracking',
+      description:
+        'Track equipment such as running shoes, their usage and which gear is used for an upload',
+      enabled: false,
+    },
+    [FeatureFlagName.EquipmentUploadConfirmation]: {
+      name: 'Equipment Upload Confirmation',
+      description:
+        'Ask before uploading if the upload is not linked to any equipment (e.g. no shoes selected)',
+      enabled: true,
+    },
   };
 
 export const FeatureFlagNames = Object.values(FeatureFlagName);
@@ -118,6 +132,12 @@ const getDefaultFeatureFlags = (): FeatureFlags => ({
   ),
   [FeatureFlagName.SwapBackgroundOnUpload]: SimpleFeatureFlag.fromRecord(
     DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.SwapBackgroundOnUpload],
+  ),
+  [FeatureFlagName.Equipment]: SimpleFeatureFlag.fromRecord(
+    DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.Equipment],
+  ),
+  [FeatureFlagName.EquipmentUploadConfirmation]: SimpleFeatureFlag.fromRecord(
+    DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.EquipmentUploadConfirmation],
   ),
 });
 
@@ -139,6 +159,14 @@ const hydrateFeatureFlags = (
   [FeatureFlagName.SwapBackgroundOnUpload]: SimpleFeatureFlag.fromRecord({
     ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.SwapBackgroundOnUpload],
     ...(persistedFlags?.[FeatureFlagName.SwapBackgroundOnUpload] ?? {}),
+  }),
+  [FeatureFlagName.Equipment]: SimpleFeatureFlag.fromRecord({
+    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.Equipment],
+    ...(persistedFlags?.[FeatureFlagName.Equipment] ?? {}),
+  }),
+  [FeatureFlagName.EquipmentUploadConfirmation]: SimpleFeatureFlag.fromRecord({
+    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.EquipmentUploadConfirmation],
+    ...(persistedFlags?.[FeatureFlagName.EquipmentUploadConfirmation] ?? {}),
   }),
 });
 
