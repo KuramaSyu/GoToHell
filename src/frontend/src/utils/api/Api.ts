@@ -43,6 +43,7 @@ export interface UserApiInterface {
   postSports(
     sports: SportRow[],
     updateStores: boolean,
+    equipmentID?: string | null,
   ): Promise<PostSportsResponse | null>;
   patchSport(
     id: number,
@@ -326,6 +327,7 @@ export class UserApi implements UserApiInterface {
   async postSports(
     sports: SportRow[],
     updateStores: boolean = false,
+    equipmentID?: string | null,
   ): Promise<PostSportsResponse | null> {
     const API_ENDPOINT = '/api/sports';
     // get user
@@ -336,10 +338,17 @@ export class UserApi implements UserApiInterface {
     const url = new URL(`${BACKEND_BASE}${API_ENDPOINT}`);
 
     try {
+      const payload = sports.map((sport) => ({
+        kind: sport.kind,
+        game: sport.game,
+        amount: Math.round(sport.amount),
+        ...(equipmentID ? { equipment_id: equipmentID } : {}),
+      }));
       const response = await fetch(url, {
         credentials: 'include',
         method: 'POST',
-        body: JSON.stringify(sports),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();

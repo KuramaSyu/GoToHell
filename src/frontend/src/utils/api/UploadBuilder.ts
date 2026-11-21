@@ -18,6 +18,10 @@ import useFeatureStore, { FeatureFlagName } from '../../zustand/FeatureStore';
 import { Feature } from '../../components/Feature';
 import { useThemeStore } from '../../zustand/useThemeStore';
 import useAppBackgroundStore from '../../zustand/AppBackgroundStore';
+import {
+  getSelectedEquipment,
+  useEquipmentStore,
+} from '../../zustand/EquipmentStore';
 
 abstract class UploadStrategyABC {
   uploadBuilder: UploadBuilder;
@@ -75,6 +79,9 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       ]);
     }
     useDeathAmountStore.getState().setAmount(0);
+    // The uploaded sport may have contributed to equipment usage. Clearing the
+    // store is the equivalent of invalidating the equipment query.
+    useEquipmentStore.getState().invalidate();
   }
 
   async upload(): Promise<null> {
@@ -101,7 +108,11 @@ class PostSportUploadStrategy extends UploadStrategyABC {
       console.timeLog(`Upload Sport: ${sport.toJson()}`);
 
       // upload sport row
-      var uploadPromise = new UserApi().postSports([sport], false);
+      var uploadPromise = new UserApi().postSports(
+        [sport],
+        false,
+        wrapped.equipmentID,
+      );
 
       // upload updated overdue deaths
       // if it is not locked
@@ -228,6 +239,7 @@ export class UploadBuilder {
   sport: DefaultSportsDefinition | null;
   private snackbarUpdatesEnabled: boolean;
   triggerRefresh: boolean;
+  equipmentID: string | null;
   uploadStrategy: UploadStrategyABC;
 
   /**
@@ -243,6 +255,7 @@ export class UploadBuilder {
     this.exerciseAmount = null;
     this.snackbarUpdatesEnabled = false;
     this.triggerRefresh = false;
+    this.equipmentID = null;
     this.uploadStrategy = new PostSportUploadStrategy(this);
     this.shouldChangeBackgroundOnUpload = () => false;
   }
@@ -256,6 +269,7 @@ export class UploadBuilder {
       .setDeathAmount(null)
       .setSport(null)
       .setExerciseAmount(null)
+      .setEquipmentID(null)
       .setChangeBackgroundOnUploadCheck(null);
   }
 
@@ -341,6 +355,32 @@ export class UploadBuilder {
 
   setEnableSnackbarUpdates(enabled: boolean): this {
     this.snackbarUpdatesEnabled = enabled;
+    return this;
+  }
+
+  /**
+   * sets the equipment used for the upload. If null, the currently selected or
+   * preferred equipment of the current sport is resolved from the store.
+   */
+  setEquipmentID(equipmentID: string | null): this {
+    const equipmentEnabled = useFeatureStore
+      .getState()
+      .flags[FeatureFlagName.Equipment].isEnabled();
+    if (!equipmentEnabled) {
+      this.equipmentID = null;
+      return this;
+    }
+    if (equipmentID !== null) {
+      this.equipmentID = equipmentID;
+      return this;
+    }
+    const sport =
+      this.sport?.sport ?? useSportStore.getState().currentSport.sport;
+    const selected = getSelectedEquipment(
+      useEquipmentStore.getState(),
+      sport,
+    );
+    this.equipmentID = selected?.id ?? null;
     return this;
   }
 

@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import {
   Box,
+  Button,
   Typography,
   Snackbar,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   darken,
   lighten,
   Fade,
@@ -25,6 +31,12 @@ import { UploadBuilder } from '../../utils/api/UploadBuilder';
 import { CustomTheme } from '../../theme/customTheme';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import useFeatureStore, { FeatureFlagName } from '../../zustand/FeatureStore';
+import {
+  getSelectedEquipment,
+  useEquipmentStore,
+} from '../../zustand/EquipmentStore';
+import { getEquipmentConfig } from '../../utils/data/Equipment';
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
 export const UploadScore = () => {
@@ -36,6 +48,18 @@ export const UploadScore = () => {
   const { uploadTrigger } = useUploadStore();
   const { isMobile } = useBreakpoint();
   const { theme } = useThemeStore();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const equipmentEnabled = useFeatureStore(
+    (state) => state.flags[FeatureFlagName.Equipment].isEnabled(),
+  );
+  const uploadConfirmationEnabled = useFeatureStore(
+    (state) =>
+      state.flags[FeatureFlagName.EquipmentUploadConfirmation].isEnabled(),
+  );
+  const selectedEquipment = useEquipmentStore((state) =>
+    getSelectedEquipment(state, currentSport?.sport),
+  );
+  const equipmentConfig = getEquipmentConfig(currentSport?.sport);
 
   // for triggers coming from outside (eg shortcut modal)
   useEffect(() => {
@@ -43,10 +67,12 @@ export const UploadScore = () => {
     OnUploadClick().finally();
   }, [uploadTrigger]);
 
-  const OnUploadClick = async () => {
+  const performUpload = async () => {
     try {
       const startTime = new Date().getTime();
-      const uploadBuilder = UploadBuilder.default().setStoreUpdate(false);
+      const uploadBuilder = UploadBuilder.default()
+        .setStoreUpdate(false)
+        .setEquipmentID(selectedEquipment?.id ?? null);
 
       setSnackbarState('uploading');
 
@@ -74,6 +100,19 @@ export const UploadScore = () => {
 
     setTimeout(() => setSnackbarState(null), 2000);
   };
+
+  const OnUploadClick = async () => {
+    if (
+      equipmentEnabled &&
+      uploadConfirmationEnabled &&
+      equipmentConfig &&
+      selectedEquipment === null
+    ) {
+      setConfirmOpen(true);
+      return;
+    }
+    await performUpload();
+  };
   if (
     !(
       currentSport &&
@@ -86,6 +125,34 @@ export const UploadScore = () => {
   }
 
   const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
+
+  const confirmationDialog = (
+    <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+      <DialogTitle>
+        Upload without {equipmentConfig?.singular ?? 'equipment'}?
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          This upload will not be added to any{' '}
+          {equipmentConfig?.label.toLowerCase() ?? 'equipment'}. Select a{' '}
+          {equipmentConfig?.singular ?? 'piece of equipment'} first if you want
+          the usage to count.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
+        <Button
+          variant='contained'
+          onClick={() => {
+            setConfirmOpen(false);
+            performUpload();
+          }}
+        >
+          Upload anyway
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   if (isMobile) {
     return (
@@ -106,6 +173,7 @@ export const UploadScore = () => {
           </AnimatedButton>
         </Box>
         <UploadSnackbar snackbarState={snackbarState} />
+        {confirmationDialog}
       </>
     );
   }
@@ -137,6 +205,7 @@ export const UploadScore = () => {
         </Box>
       </Fade>
       <UploadSnackbar snackbarState={snackbarState} />
+      {confirmationDialog}
     </>
   );
 };

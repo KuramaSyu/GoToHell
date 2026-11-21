@@ -32,6 +32,8 @@ import React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import useInfoStore, { SnackbarUpdateImpl } from '../../../zustand/InfoStore';
 import { SearchEntryIconProvider } from '../QuickActions/SearchEntryIconProvider';
+import { useEquipmentStore } from '../../../zustand/EquipmentStore';
+import { SportEquipmentSelector } from '../../../components/Equipment/SportEquipmentSelector';
 
 export interface SportDialogProps {
   selectedSport: UserSport | null;
@@ -52,6 +54,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   const [amountValue, setAmountValue] = useState<number | null>(
     selectedSport?.amount ?? null,
   );
+  const [equipmentChanged, setEquipmentChanged] = useState(false);
   // Check if the sport is too old to be edited (>2d)
   const isTooOld = (time: string): boolean => {
     const date = new Date(time);
@@ -63,6 +66,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
   useEffect(() => {
     if (selectedSport && selectedSport.id !== prevSportId) {
       setAmountValue(selectedSport.amount);
+      setEquipmentChanged(false);
       setPrevSportId(selectedSport.id);
     }
   }, [selectedSport]);
@@ -75,6 +79,7 @@ export const SportDialog: React.FC<SportDialogProps> = ({
       }
       // Trigger total score refresh.
       useTotalScoreStore.getState().triggerRefresh();
+      useEquipmentStore.getState().invalidate();
     } catch (error) {
       setMessage(
         new SnackbarUpdateImpl('Failed to delete sport record', 'error'),
@@ -93,6 +98,9 @@ export const SportDialog: React.FC<SportDialogProps> = ({
         true,
       );
       selectedSport!.amount = amountValue!;
+      // The amount (distance in km for jogging) contributes to equipment
+      // usage, so clear the cached shoe data and let it refetch.
+      useEquipmentStore.getState().invalidate();
     } catch (error) {
       console.error('Failed to update record:', error);
     }
@@ -188,6 +196,13 @@ export const SportDialog: React.FC<SportDialogProps> = ({
               <GamepadIcon></GamepadIcon>
               {new GameEntry(selectedSport.game).displayName()}
             </Box>
+            {selectedSport.user_id === user.id && (
+              <SportEquipmentSelector
+                sportID={selectedSport.id}
+                sportKind={selectedSport.kind}
+                onChanged={() => setEquipmentChanged(true)}
+              />
+            )}
           </DialogContent>
           <DialogActions>
             {selectedSport.user_id === user!.id && (
@@ -204,8 +219,11 @@ export const SportDialog: React.FC<SportDialogProps> = ({
                     startIcon={<SyncIcon></SyncIcon>}
                     onClick={() => {
                       updateRecord(selectedSport);
+                      setEquipmentChanged(false);
                     }}
-                    disabled={amountValue === selectedSport.amount}
+                    disabled={
+                      amountValue === selectedSport.amount && !equipmentChanged
+                    }
                   >
                     Apply Changes
                   </Button>
