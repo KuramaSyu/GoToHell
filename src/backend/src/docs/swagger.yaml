@@ -1,201 +1,5 @@
 definitions:
-  controllers.DeleteOverdueDeathsRequest:
-    properties:
-      game:
-        example: overwatch
-        type: string
-    required:
-    - game
-    type: object
-  controllers.DeletePersonalGoalsRequest:
-    properties:
-      id:
-        type: integer
-    required:
-    - id
-    type: object
-  controllers.DeleteSportsReply:
-    properties:
-      message:
-        type: string
-    type: object
-  controllers.ErrorReply:
-    properties:
-      error:
-        type: string
-    type: object
-  controllers.FriendRequest:
-    properties:
-      friend_id:
-        type: integer
-      status:
-        $ref: '#/definitions/models.FriendshipStatus'
-    required:
-    - friend_id
-    type: object
-  controllers.FriendshipReply:
-    properties:
-      friendships:
-        items:
-          $ref: '#/definitions/models.Friendships'
-        type: array
-      users:
-        items:
-          $ref: '#/definitions/models.User'
-        type: array
-    type: object
-  controllers.GetEquipmentReply:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/models.EquipmentWithUsage'
-        type: array
-    type: object
-  controllers.GetFriendshipReply:
-    properties:
-      data:
-        $ref: '#/definitions/controllers.FriendshipReply'
-    type: object
-  controllers.GetOverdueDeathsReply:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/models.OverdueDeaths'
-        type: array
-    type: object
-  controllers.GetPersonalGoalsReply:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/controllers.PersonalGoalData'
-        type: array
-    type: object
-  controllers.GetSportReply:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/models.Sport'
-        type: array
-    type: object
-  controllers.GetSportTotalReply:
-    properties:
-      results:
-        items:
-          $ref: '#/definitions/models.SportAmount'
-        type: array
-    type: object
-  controllers.GetStreakReply:
-    properties:
-      data:
-        description: Data contains the streak information for the user
-        items:
-          $ref: '#/definitions/models.DayStreak'
-        type: array
-    type: object
-  controllers.MessageResponse:
-    properties:
-      message:
-        description: the response message
-        type: string
-    type: object
-  controllers.PatchPutPersonalGoalsRequest:
-    properties:
-      amount:
-        type: integer
-      frequency:
-        $ref: '#/definitions/models.TimeFrequency'
-      id:
-        description: post does not require ID, patch/put does
-        type: integer
-      sport:
-        type: string
-    required:
-    - amount
-    - frequency
-    - sport
-    type: object
-  controllers.PatchSportReply:
-    properties:
-      message:
-        type: string
-    type: object
-  controllers.PatchSportRequest:
-    properties:
-      amount:
-        example: 21
-        type: integer
-      game:
-        example: league
-        type: string
-      id:
-        example: 42
-        type: integer
-      kind:
-        example: push-ups
-        type: string
-    required:
-    - id
-    type: object
-  controllers.PersonalGoalData:
-    properties:
-      amount:
-        type: integer
-      frequency:
-        $ref: '#/definitions/models.TimeFrequency'
-      id:
-        type: integer
-      sport:
-        type: string
-      user_id:
-        type: integer
-    type: object
-  controllers.PostEquipmentReply:
-    properties:
-      data:
-        $ref: '#/definitions/models.Equipment'
-    type: object
-  controllers.PostOverdueDeathsReply:
-    properties:
-      data:
-        allOf:
-        - $ref: '#/definitions/models.OverdueDeaths'
-        description: Data structure containing a user's overdue deaths
-    type: object
-  controllers.PostOverdueDeathsRequest:
-    properties:
-      count:
-        example: 42
-        minimum: 0
-        type: integer
-      game:
-        example: overwatch
-        type: string
-    required:
-    - game
-    type: object
-  controllers.PostPersonalGoalsRequest:
-    properties:
-      amount:
-        type: integer
-      frequency:
-        $ref: '#/definitions/models.TimeFrequency'
-      sport:
-        type: string
-    required:
-    - amount
-    - frequency
-    - sport
-    type: object
-  controllers.PostSportReply:
-    properties:
-      message:
-        type: string
-      results:
-        items:
-          $ref: '#/definitions/models.SportAmount'
-        type: array
-    type: object
-  models.DayStreak:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak:
     properties:
       days:
         example: 54
@@ -204,7 +8,7 @@ definitions:
         example: 123456789012345678
         type: integer
     type: object
-  models.Equipment:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.Equipment:
     properties:
       description:
         type: string
@@ -218,12 +22,18 @@ definitions:
         type: integer
       name:
         type: string
+      preferred_for_sport:
+        description: |-
+          PreferredForSport marks this equipment as the default for a sport kind
+          (e.g. "jogging"). Only one piece of equipment should be preferred per
+          sport kind and user.
+        type: string
       start_usage_meters:
         type: integer
       user_id:
         type: integer
     type: object
-  models.EquipmentWithUsage:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.EquipmentWithUsage:
     properties:
       current_usage_meters:
         type: integer
@@ -239,16 +49,22 @@ definitions:
         type: integer
       linked_sports:
         items:
-          $ref: '#/definitions/models.Sport'
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport'
         type: array
       name:
+        type: string
+      preferred_for_sport:
+        description: |-
+          PreferredForSport marks this equipment as the default for a sport kind
+          (e.g. "jogging"). Only one piece of equipment should be preferred per
+          sport kind and user.
         type: string
       start_usage_meters:
         type: integer
       user_id:
         type: integer
     type: object
-  models.FriendshipStatus:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.FriendshipStatus:
     enum:
     - pending
     - accepted
@@ -258,7 +74,7 @@ definitions:
     - Pending
     - Accepted
     - Blocked
-  models.Friendships:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.Friendships:
     properties:
       created_at:
         type: string
@@ -269,32 +85,32 @@ definitions:
       requester_id:
         type: integer
       status:
-        $ref: '#/definitions/models.FriendshipStatus'
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.FriendshipStatus'
     type: object
-  models.GetUserDetailsReply:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.GetUserDetailsReply:
     properties:
       avatar:
         type: string
       current_streak:
-        $ref: '#/definitions/models.DayStreak'
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak'
       discriminator:
         type: string
       goals:
         items:
-          $ref: '#/definitions/models.PersonalGoal'
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PersonalGoal'
         type: array
       id:
         type: integer
       last_activities:
         items:
-          $ref: '#/definitions/models.Sport'
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport'
         type: array
       longest_streak:
-        $ref: '#/definitions/models.DayStreak'
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak'
       username:
         type: string
     type: object
-  models.LinkEquipmentSportsRequest:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.LinkEquipmentSportsRequest:
     properties:
       sport_ids:
         items:
@@ -303,7 +119,7 @@ definitions:
     required:
     - sport_ids
     type: object
-  models.OverdueDeaths:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.OverdueDeaths:
     properties:
       count:
         example: 69
@@ -315,8 +131,10 @@ definitions:
         example: 348922315062044675
         type: integer
     type: object
-  models.PatchEquipmentRequest:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.PatchEquipmentRequest:
     properties:
+      clear_expected_usage:
+        type: boolean
       description:
         example: My daily trainers
         type: string
@@ -327,6 +145,9 @@ definitions:
         type: integer
       name:
         example: Running Shoes
+        type: string
+      preferred_for_sport:
+        example: jogging
         type: string
       start_usage_meters:
         example: 12000
@@ -334,24 +155,24 @@ definitions:
     required:
     - id
     type: object
-  models.PersonalGoal:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.PersonalGoal:
     properties:
       amount:
         type: integer
       frequency:
-        $ref: '#/definitions/models.TimeFrequency'
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency'
       id:
         type: integer
       sport:
         type: string
       user:
         allOf:
-        - $ref: '#/definitions/models.User'
+        - $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.User'
         description: just a constraint to use UserID as foreign key
       user_id:
         type: integer
     type: object
-  models.PostEquipmentRequest:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.PostEquipmentRequest:
     properties:
       description:
         example: My daily trainers
@@ -362,16 +183,25 @@ definitions:
       name:
         example: Running Shoes
         type: string
+      preferred_for_sport:
+        example: jogging
+        type: string
       start_usage_meters:
         example: 12000
         type: integer
     required:
     - name
     type: object
-  models.PostSportRequest:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.PostSportRequest:
     properties:
       amount:
         description: The amount of Exercises done
+        example: 42
+        type: integer
+      equipment_id:
+        description: |-
+          EquipmentID optionally links the uploaded sport entry to a piece of
+          equipment (e.g. the running shoes used for this jogging entry).
         example: 42
         type: integer
       game:
@@ -399,7 +229,7 @@ definitions:
     - game
     - kind
     type: object
-  models.Sport:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport:
     properties:
       amount:
         type: integer
@@ -414,7 +244,7 @@ definitions:
       user_id:
         type: integer
     type: object
-  models.SportAmount:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.SportAmount:
     properties:
       amount:
         example: 1238
@@ -423,7 +253,7 @@ definitions:
         example: push-up
         type: string
     type: object
-  models.TimeFrequency:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency:
     enum:
     - daily
     - weekly
@@ -433,7 +263,7 @@ definitions:
     - Daily
     - Weekly
     - Monthly
-  models.User:
+  github_com_KuramaSyu_GoToHell_src_backend_src_models.User:
     properties:
       avatar:
         type: string
@@ -445,6 +275,202 @@ definitions:
         type: integer
       username:
         type: string
+    type: object
+  src_controllers.DeleteOverdueDeathsRequest:
+    properties:
+      game:
+        example: overwatch
+        type: string
+    required:
+    - game
+    type: object
+  src_controllers.DeletePersonalGoalsRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  src_controllers.DeleteSportsReply:
+    properties:
+      message:
+        type: string
+    type: object
+  src_controllers.ErrorReply:
+    properties:
+      error:
+        type: string
+    type: object
+  src_controllers.FriendRequest:
+    properties:
+      friend_id:
+        type: integer
+      status:
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.FriendshipStatus'
+    required:
+    - friend_id
+    type: object
+  src_controllers.FriendshipReply:
+    properties:
+      friendships:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Friendships'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.User'
+        type: array
+    type: object
+  src_controllers.GetEquipmentReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.EquipmentWithUsage'
+        type: array
+    type: object
+  src_controllers.GetFriendshipReply:
+    properties:
+      data:
+        $ref: '#/definitions/src_controllers.FriendshipReply'
+    type: object
+  src_controllers.GetOverdueDeathsReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.OverdueDeaths'
+        type: array
+    type: object
+  src_controllers.GetPersonalGoalsReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/src_controllers.PersonalGoalData'
+        type: array
+    type: object
+  src_controllers.GetSportReply:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport'
+        type: array
+    type: object
+  src_controllers.GetSportTotalReply:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.SportAmount'
+        type: array
+    type: object
+  src_controllers.GetStreakReply:
+    properties:
+      data:
+        description: Data contains the streak information for the user
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak'
+        type: array
+    type: object
+  src_controllers.MessageResponse:
+    properties:
+      message:
+        description: the response message
+        type: string
+    type: object
+  src_controllers.PatchPutPersonalGoalsRequest:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency'
+      id:
+        description: post does not require ID, patch/put does
+        type: integer
+      sport:
+        type: string
+    required:
+    - amount
+    - frequency
+    - sport
+    type: object
+  src_controllers.PatchSportReply:
+    properties:
+      message:
+        type: string
+    type: object
+  src_controllers.PatchSportRequest:
+    properties:
+      amount:
+        example: 21
+        type: integer
+      game:
+        example: league
+        type: string
+      id:
+        example: 42
+        type: integer
+      kind:
+        example: push-ups
+        type: string
+    required:
+    - id
+    type: object
+  src_controllers.PersonalGoalData:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency'
+      id:
+        type: integer
+      sport:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  src_controllers.PostEquipmentReply:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Equipment'
+    type: object
+  src_controllers.PostOverdueDeathsReply:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.OverdueDeaths'
+        description: Data structure containing a user's overdue deaths
+    type: object
+  src_controllers.PostOverdueDeathsRequest:
+    properties:
+      count:
+        example: 42
+        minimum: 0
+        type: integer
+      game:
+        example: overwatch
+        type: string
+    required:
+    - game
+    type: object
+  src_controllers.PostPersonalGoalsRequest:
+    properties:
+      amount:
+        type: integer
+      frequency:
+        $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency'
+      sport:
+        type: string
+    required:
+    - amount
+    - frequency
+    - sport
+    type: object
+  src_controllers.PostSportReply:
+    properties:
+      message:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.SportAmount'
+        type: array
     type: object
 info:
   contact: {}
@@ -461,11 +487,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.GetUserDetailsReply'
+            $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.GetUserDetailsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       summary: A user with sport, streak and goal data
   /{user_id}/goals:
     get:
@@ -477,11 +503,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+            $ref: '#/definitions/src_controllers.GetPersonalGoalsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       summary: Get all PersonalGoal records for the requested user
       tags:
       - PersonalGoals
@@ -495,18 +521,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.DeletePersonalGoalsRequest'
+          $ref: '#/definitions/src_controllers.DeletePersonalGoalsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+            $ref: '#/definitions/src_controllers.GetPersonalGoalsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       summary: Deletes a personal goal
       tags:
       - PersonalGoals
@@ -520,18 +546,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.PatchPutPersonalGoalsRequest'
+          $ref: '#/definitions/src_controllers.PatchPutPersonalGoalsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+            $ref: '#/definitions/src_controllers.GetPersonalGoalsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       summary: Updates a personal goal
       tags:
       - PersonalGoals
@@ -545,18 +571,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.PostPersonalGoalsRequest'
+          $ref: '#/definitions/src_controllers.PostPersonalGoalsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+            $ref: '#/definitions/src_controllers.GetPersonalGoalsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       summary: Creates a personal goal
       tags:
       - PersonalGoals
@@ -570,18 +596,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.PatchPutPersonalGoalsRequest'
+          $ref: '#/definitions/src_controllers.PatchPutPersonalGoalsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetPersonalGoalsReply'
+            $ref: '#/definitions/src_controllers.GetPersonalGoalsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       summary: Updates a personal goal
       tags:
       - PersonalGoals
@@ -593,15 +619,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetFriendshipReply'
+            $ref: '#/definitions/src_controllers.GetFriendshipReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: returns all friendships for the logged-in user along with friend details.
@@ -617,22 +643,22 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.DeleteOverdueDeathsRequest'
+          $ref: '#/definitions/src_controllers.DeleteOverdueDeathsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.DeleteOverdueDeathsRequest'
+            $ref: '#/definitions/src_controllers.DeleteOverdueDeathsRequest'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Deletes a user's overdue deaths record for a specific game
@@ -647,11 +673,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetOverdueDeathsReply'
+            $ref: '#/definitions/src_controllers.GetOverdueDeathsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CoockieAuth: []
       summary: Get all OverdueDeaths records for the logged in user
@@ -666,18 +692,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.PostOverdueDeathsRequest'
+          $ref: '#/definitions/src_controllers.PostOverdueDeathsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.PostOverdueDeathsReply'
+            $ref: '#/definitions/src_controllers.PostOverdueDeathsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Updates (only) the death <count> for the given <game> of the logged
@@ -693,18 +719,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.PostOverdueDeathsRequest'
+          $ref: '#/definitions/src_controllers.PostOverdueDeathsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.PostOverdueDeathsReply'
+            $ref: '#/definitions/src_controllers.PostOverdueDeathsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Creates (only) the death <count> for the given <game> of the logged
@@ -720,18 +746,18 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controllers.PostOverdueDeathsRequest'
+          $ref: '#/definitions/src_controllers.PostOverdueDeathsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.PostOverdueDeathsReply'
+            $ref: '#/definitions/src_controllers.PostOverdueDeathsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Creates or updates the death <count> for the given <game> of the logged
@@ -752,15 +778,15 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.DeleteSportsReply'
+            $ref: '#/definitions/src_controllers.DeleteSportsReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Delete a sport entry
@@ -783,15 +809,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetSportReply'
+            $ref: '#/definitions/src_controllers.GetSportReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Get sports for all users provided in the query parameter
@@ -806,20 +832,20 @@ paths:
         name: sport
         required: true
         schema:
-          $ref: '#/definitions/controllers.PatchSportRequest'
+          $ref: '#/definitions/src_controllers.PatchSportRequest'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.PatchSportReply'
+            $ref: '#/definitions/src_controllers.PatchSportReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Update a sport entry by ID
@@ -835,21 +861,21 @@ paths:
         required: true
         schema:
           items:
-            $ref: '#/definitions/models.PostSportRequest'
+            $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PostSportRequest'
           type: array
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.PostSportReply'
+            $ref: '#/definitions/src_controllers.PostSportReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Create a sport entry
@@ -863,15 +889,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetSportTotalReply'
+            $ref: '#/definitions/src_controllers.GetSportTotalReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Get the total amounts of every sport kind
@@ -891,19 +917,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetStreakReply'
+            $ref: '#/definitions/src_controllers.GetStreakReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: retrieves the number of days a user has been active back to back
@@ -923,15 +949,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.GetEquipmentReply'
+            $ref: '#/definitions/src_controllers.GetEquipmentReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Get all equipment of the requested user with calculated usage
@@ -951,22 +977,22 @@ paths:
         name: equipment
         required: true
         schema:
-          $ref: '#/definitions/models.PatchEquipmentRequest'
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PatchEquipmentRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.PostEquipmentReply'
+            $ref: '#/definitions/src_controllers.PostEquipmentReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Update a piece of equipment
@@ -986,22 +1012,22 @@ paths:
         name: equipment
         required: true
         schema:
-          $ref: '#/definitions/models.PostEquipmentRequest'
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PostEquipmentRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.PostEquipmentReply'
+            $ref: '#/definitions/src_controllers.PostEquipmentReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Create a piece of equipment (e.g. running shoes)
@@ -1026,15 +1052,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Delete a piece of equipment
@@ -1060,22 +1086,22 @@ paths:
         name: links
         required: true
         schema:
-          $ref: '#/definitions/models.LinkEquipmentSportsRequest'
+          $ref: '#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.LinkEquipmentSportsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Link sport entries to a piece of equipment
@@ -1105,15 +1131,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/controllers.ErrorReply'
+            $ref: '#/definitions/src_controllers.ErrorReply'
       security:
       - CookieAuth: []
       summary: Unlink a sport entry from a piece of equipment
@@ -1129,14 +1155,14 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/controllers.FriendRequest'
+          $ref: '#/definitions/src_controllers.FriendRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.MessageResponse'
+            $ref: '#/definitions/src_controllers.MessageResponse'
       summary: Creates a request for a friend request
 securityDefinitions:
   CookieAuth:

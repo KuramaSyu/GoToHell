@@ -33,19 +33,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetFriendshipReply"
+                            "$ref": "#/definitions/src_controllers.GetFriendshipReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -72,13 +72,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetOverdueDeathsReply"
+                            "$ref": "#/definitions/src_controllers.GetOverdueDeathsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -106,7 +106,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostOverdueDeathsRequest"
+                            "$ref": "#/definitions/src_controllers.PostOverdueDeathsRequest"
                         }
                     }
                 ],
@@ -114,13 +114,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostOverdueDeathsReply"
+                            "$ref": "#/definitions/src_controllers.PostOverdueDeathsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -148,7 +148,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostOverdueDeathsRequest"
+                            "$ref": "#/definitions/src_controllers.PostOverdueDeathsRequest"
                         }
                     }
                 ],
@@ -156,13 +156,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostOverdueDeathsReply"
+                            "$ref": "#/definitions/src_controllers.PostOverdueDeathsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -190,7 +190,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.DeleteOverdueDeathsRequest"
+                            "$ref": "#/definitions/src_controllers.DeleteOverdueDeathsRequest"
                         }
                     }
                 ],
@@ -198,19 +198,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.DeleteOverdueDeathsRequest"
+                            "$ref": "#/definitions/src_controllers.DeleteOverdueDeathsRequest"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -238,7 +238,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostOverdueDeathsRequest"
+                            "$ref": "#/definitions/src_controllers.PostOverdueDeathsRequest"
                         }
                     }
                 ],
@@ -246,13 +246,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostOverdueDeathsReply"
+                            "$ref": "#/definitions/src_controllers.PostOverdueDeathsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -291,19 +291,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetSportReply"
+                            "$ref": "#/definitions/src_controllers.GetSportReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -330,7 +330,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.PostSportRequest"
+                                "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PostSportRequest"
                             }
                         }
                     }
@@ -339,19 +339,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostSportReply"
+                            "$ref": "#/definitions/src_controllers.PostSportReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -382,19 +382,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.DeleteSportsReply"
+                            "$ref": "#/definitions/src_controllers.DeleteSportsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -419,7 +419,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PatchSportRequest"
+                            "$ref": "#/definitions/src_controllers.PatchSportRequest"
                         }
                     }
                 ],
@@ -427,19 +427,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PatchSportReply"
+                            "$ref": "#/definitions/src_controllers.PatchSportReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -463,19 +463,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetSportTotalReply"
+                            "$ref": "#/definitions/src_controllers.GetSportTotalReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -508,25 +508,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetStreakReply"
+                            "$ref": "#/definitions/src_controllers.GetStreakReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -559,19 +559,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetEquipmentReply"
+                            "$ref": "#/definitions/src_controllers.GetEquipmentReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -606,7 +606,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.PostEquipmentRequest"
+                            "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PostEquipmentRequest"
                         }
                     }
                 ],
@@ -614,19 +614,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostEquipmentReply"
+                            "$ref": "#/definitions/src_controllers.PostEquipmentReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -661,7 +661,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.PatchEquipmentRequest"
+                            "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PatchEquipmentRequest"
                         }
                     }
                 ],
@@ -669,19 +669,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostEquipmentReply"
+                            "$ref": "#/definitions/src_controllers.PostEquipmentReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -721,19 +721,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -777,7 +777,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.LinkEquipmentSportsRequest"
+                            "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.LinkEquipmentSportsRequest"
                         }
                     }
                 ],
@@ -785,19 +785,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -844,19 +844,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -881,7 +881,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PatchPutPersonalGoalsRequest"
+                            "$ref": "#/definitions/src_controllers.PatchPutPersonalGoalsRequest"
                         }
                     }
                 ],
@@ -889,13 +889,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                            "$ref": "#/definitions/src_controllers.GetPersonalGoalsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -918,7 +918,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PostPersonalGoalsRequest"
+                            "$ref": "#/definitions/src_controllers.PostPersonalGoalsRequest"
                         }
                     }
                 ],
@@ -926,13 +926,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                            "$ref": "#/definitions/src_controllers.GetPersonalGoalsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -955,7 +955,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.DeletePersonalGoalsRequest"
+                            "$ref": "#/definitions/src_controllers.DeletePersonalGoalsRequest"
                         }
                     }
                 ],
@@ -963,13 +963,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                            "$ref": "#/definitions/src_controllers.GetPersonalGoalsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -992,7 +992,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.PatchPutPersonalGoalsRequest"
+                            "$ref": "#/definitions/src_controllers.PatchPutPersonalGoalsRequest"
                         }
                     }
                 ],
@@ -1000,13 +1000,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                            "$ref": "#/definitions/src_controllers.GetPersonalGoalsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -1028,7 +1028,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.FriendRequest"
+                            "$ref": "#/definitions/src_controllers.FriendRequest"
                         }
                     }
                 ],
@@ -1036,7 +1036,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponse"
+                            "$ref": "#/definitions/src_controllers.MessageResponse"
                         }
                     }
                 }
@@ -1055,13 +1055,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.GetUserDetailsReply"
+                            "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.GetUserDetailsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -1083,13 +1083,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetPersonalGoalsReply"
+                            "$ref": "#/definitions/src_controllers.GetPersonalGoalsReply"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/controllers.ErrorReply"
+                            "$ref": "#/definitions/src_controllers.ErrorReply"
                         }
                     }
                 }
@@ -1097,307 +1097,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.DeleteOverdueDeathsRequest": {
-            "type": "object",
-            "required": [
-                "game"
-            ],
-            "properties": {
-                "game": {
-                    "type": "string",
-                    "example": "overwatch"
-                }
-            }
-        },
-        "controllers.DeletePersonalGoalsRequest": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "controllers.DeleteSportsReply": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.ErrorReply": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.FriendRequest": {
-            "type": "object",
-            "required": [
-                "friend_id"
-            ],
-            "properties": {
-                "friend_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "$ref": "#/definitions/models.FriendshipStatus"
-                }
-            }
-        },
-        "controllers.FriendshipReply": {
-            "type": "object",
-            "properties": {
-                "friendships": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Friendships"
-                    }
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.User"
-                    }
-                }
-            }
-        },
-        "controllers.GetEquipmentReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.EquipmentWithUsage"
-                    }
-                }
-            }
-        },
-        "controllers.GetFriendshipReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/controllers.FriendshipReply"
-                }
-            }
-        },
-        "controllers.GetOverdueDeathsReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.OverdueDeaths"
-                    }
-                }
-            }
-        },
-        "controllers.GetPersonalGoalsReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/controllers.PersonalGoalData"
-                    }
-                }
-            }
-        },
-        "controllers.GetSportReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Sport"
-                    }
-                }
-            }
-        },
-        "controllers.GetSportTotalReply": {
-            "type": "object",
-            "properties": {
-                "results": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.SportAmount"
-                    }
-                }
-            }
-        },
-        "controllers.GetStreakReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "description": "Data contains the streak information for the user",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.DayStreak"
-                    }
-                }
-            }
-        },
-        "controllers.MessageResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "description": "the response message",
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.PatchPutPersonalGoalsRequest": {
-            "type": "object",
-            "required": [
-                "amount",
-                "frequency",
-                "sport"
-            ],
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "frequency": {
-                    "$ref": "#/definitions/models.TimeFrequency"
-                },
-                "id": {
-                    "description": "post does not require ID, patch/put does",
-                    "type": "integer"
-                },
-                "sport": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.PatchSportReply": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.PatchSportRequest": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "amount": {
-                    "type": "integer",
-                    "example": 21
-                },
-                "game": {
-                    "type": "string",
-                    "example": "league"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 42
-                },
-                "kind": {
-                    "type": "string",
-                    "example": "push-ups"
-                }
-            }
-        },
-        "controllers.PersonalGoalData": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "frequency": {
-                    "$ref": "#/definitions/models.TimeFrequency"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "sport": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "controllers.PostEquipmentReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/models.Equipment"
-                }
-            }
-        },
-        "controllers.PostOverdueDeathsReply": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "description": "Data structure containing a user's overdue deaths",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/models.OverdueDeaths"
-                        }
-                    ]
-                }
-            }
-        },
-        "controllers.PostOverdueDeathsRequest": {
-            "type": "object",
-            "required": [
-                "game"
-            ],
-            "properties": {
-                "count": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "example": 42
-                },
-                "game": {
-                    "type": "string",
-                    "example": "overwatch"
-                }
-            }
-        },
-        "controllers.PostPersonalGoalsRequest": {
-            "type": "object",
-            "required": [
-                "amount",
-                "frequency",
-                "sport"
-            ],
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "frequency": {
-                    "$ref": "#/definitions/models.TimeFrequency"
-                },
-                "sport": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.PostSportReply": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "results": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.SportAmount"
-                    }
-                }
-            }
-        },
-        "models.DayStreak": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak": {
             "type": "object",
             "properties": {
                 "days": {
@@ -1410,7 +1110,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Equipment": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.Equipment": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1426,6 +1126,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "preferred_for_sport": {
+                    "description": "PreferredForSport marks this equipment as the default for a sport kind\n(e.g. \"jogging\"). Only one piece of equipment should be preferred per\nsport kind and user.",
+                    "type": "string"
+                },
                 "start_usage_meters": {
                     "type": "integer"
                 },
@@ -1434,7 +1138,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.EquipmentWithUsage": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.EquipmentWithUsage": {
             "type": "object",
             "properties": {
                 "current_usage_meters": {
@@ -1453,10 +1157,14 @@ const docTemplate = `{
                 "linked_sports": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Sport"
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport"
                     }
                 },
                 "name": {
+                    "type": "string"
+                },
+                "preferred_for_sport": {
+                    "description": "PreferredForSport marks this equipment as the default for a sport kind\n(e.g. \"jogging\"). Only one piece of equipment should be preferred per\nsport kind and user.",
                     "type": "string"
                 },
                 "start_usage_meters": {
@@ -1467,7 +1175,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.FriendshipStatus": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.FriendshipStatus": {
             "type": "string",
             "enum": [
                 "pending",
@@ -1480,7 +1188,7 @@ const docTemplate = `{
                 "Blocked"
             ]
         },
-        "models.Friendships": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.Friendships": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -1496,18 +1204,18 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/models.FriendshipStatus"
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.FriendshipStatus"
                 }
             }
         },
-        "models.GetUserDetailsReply": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.GetUserDetailsReply": {
             "type": "object",
             "properties": {
                 "avatar": {
                     "type": "string"
                 },
                 "current_streak": {
-                    "$ref": "#/definitions/models.DayStreak"
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak"
                 },
                 "discriminator": {
                     "type": "string"
@@ -1515,7 +1223,7 @@ const docTemplate = `{
                 "goals": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.PersonalGoal"
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.PersonalGoal"
                     }
                 },
                 "id": {
@@ -1524,18 +1232,18 @@ const docTemplate = `{
                 "last_activities": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Sport"
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport"
                     }
                 },
                 "longest_streak": {
-                    "$ref": "#/definitions/models.DayStreak"
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak"
                 },
                 "username": {
                     "type": "string"
                 }
             }
         },
-        "models.LinkEquipmentSportsRequest": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.LinkEquipmentSportsRequest": {
             "type": "object",
             "required": [
                 "sport_ids"
@@ -1549,7 +1257,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.OverdueDeaths": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.OverdueDeaths": {
             "type": "object",
             "properties": {
                 "count": {
@@ -1566,12 +1274,15 @@ const docTemplate = `{
                 }
             }
         },
-        "models.PatchEquipmentRequest": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.PatchEquipmentRequest": {
             "type": "object",
             "required": [
                 "id"
             ],
             "properties": {
+                "clear_expected_usage": {
+                    "type": "boolean"
+                },
                 "description": {
                     "type": "string",
                     "example": "My daily trainers"
@@ -1587,20 +1298,24 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Running Shoes"
                 },
+                "preferred_for_sport": {
+                    "type": "string",
+                    "example": "jogging"
+                },
                 "start_usage_meters": {
                     "type": "integer",
                     "example": 12000
                 }
             }
         },
-        "models.PersonalGoal": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.PersonalGoal": {
             "type": "object",
             "properties": {
                 "amount": {
                     "type": "integer"
                 },
                 "frequency": {
-                    "$ref": "#/definitions/models.TimeFrequency"
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency"
                 },
                 "id": {
                     "type": "integer"
@@ -1612,7 +1327,7 @@ const docTemplate = `{
                     "description": "just a constraint to use UserID as foreign key",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.User"
                         }
                     ]
                 },
@@ -1621,7 +1336,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.PostEquipmentRequest": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.PostEquipmentRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -1639,13 +1354,17 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Running Shoes"
                 },
+                "preferred_for_sport": {
+                    "type": "string",
+                    "example": "jogging"
+                },
                 "start_usage_meters": {
                     "type": "integer",
                     "example": 12000
                 }
             }
         },
-        "models.PostSportRequest": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.PostSportRequest": {
             "type": "object",
             "required": [
                 "amount",
@@ -1655,6 +1374,11 @@ const docTemplate = `{
             "properties": {
                 "amount": {
                     "description": "The amount of Exercises done",
+                    "type": "integer",
+                    "example": 42
+                },
+                "equipment_id": {
+                    "description": "EquipmentID optionally links the uploaded sport entry to a piece of\nequipment (e.g. the running shoes used for this jogging entry).",
                     "type": "integer",
                     "example": 42
                 },
@@ -1684,7 +1408,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Sport": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -1707,7 +1431,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.SportAmount": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.SportAmount": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -1720,7 +1444,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.TimeFrequency": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency": {
             "type": "string",
             "enum": [
                 "daily",
@@ -1733,7 +1457,7 @@ const docTemplate = `{
                 "Monthly"
             ]
         },
-        "models.User": {
+        "github_com_KuramaSyu_GoToHell_src_backend_src_models.User": {
             "type": "object",
             "properties": {
                 "avatar": {
@@ -1750,6 +1474,306 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "src_controllers.DeleteOverdueDeathsRequest": {
+            "type": "object",
+            "required": [
+                "game"
+            ],
+            "properties": {
+                "game": {
+                    "type": "string",
+                    "example": "overwatch"
+                }
+            }
+        },
+        "src_controllers.DeletePersonalGoalsRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "src_controllers.DeleteSportsReply": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "src_controllers.ErrorReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "src_controllers.FriendRequest": {
+            "type": "object",
+            "required": [
+                "friend_id"
+            ],
+            "properties": {
+                "friend_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.FriendshipStatus"
+                }
+            }
+        },
+        "src_controllers.FriendshipReply": {
+            "type": "object",
+            "properties": {
+                "friendships": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Friendships"
+                    }
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.User"
+                    }
+                }
+            }
+        },
+        "src_controllers.GetEquipmentReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.EquipmentWithUsage"
+                    }
+                }
+            }
+        },
+        "src_controllers.GetFriendshipReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/src_controllers.FriendshipReply"
+                }
+            }
+        },
+        "src_controllers.GetOverdueDeathsReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.OverdueDeaths"
+                    }
+                }
+            }
+        },
+        "src_controllers.GetPersonalGoalsReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/src_controllers.PersonalGoalData"
+                    }
+                }
+            }
+        },
+        "src_controllers.GetSportReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Sport"
+                    }
+                }
+            }
+        },
+        "src_controllers.GetSportTotalReply": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.SportAmount"
+                    }
+                }
+            }
+        },
+        "src_controllers.GetStreakReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "Data contains the streak information for the user",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.DayStreak"
+                    }
+                }
+            }
+        },
+        "src_controllers.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "description": "the response message",
+                    "type": "string"
+                }
+            }
+        },
+        "src_controllers.PatchPutPersonalGoalsRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "frequency",
+                "sport"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency"
+                },
+                "id": {
+                    "description": "post does not require ID, patch/put does",
+                    "type": "integer"
+                },
+                "sport": {
+                    "type": "string"
+                }
+            }
+        },
+        "src_controllers.PatchSportReply": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "src_controllers.PatchSportRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 21
+                },
+                "game": {
+                    "type": "string",
+                    "example": "league"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 42
+                },
+                "kind": {
+                    "type": "string",
+                    "example": "push-ups"
+                }
+            }
+        },
+        "src_controllers.PersonalGoalData": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sport": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "src_controllers.PostEquipmentReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.Equipment"
+                }
+            }
+        },
+        "src_controllers.PostOverdueDeathsReply": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "Data structure containing a user's overdue deaths",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.OverdueDeaths"
+                        }
+                    ]
+                }
+            }
+        },
+        "src_controllers.PostOverdueDeathsRequest": {
+            "type": "object",
+            "required": [
+                "game"
+            ],
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 42
+                },
+                "game": {
+                    "type": "string",
+                    "example": "overwatch"
+                }
+            }
+        },
+        "src_controllers.PostPersonalGoalsRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "frequency",
+                "sport"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.TimeFrequency"
+                },
+                "sport": {
+                    "type": "string"
+                }
+            }
+        },
+        "src_controllers.PostSportReply": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_KuramaSyu_GoToHell_src_backend_src_models.SportAmount"
+                    }
                 }
             }
         }
