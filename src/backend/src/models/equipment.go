@@ -16,6 +16,10 @@ type Equipment struct {
 	// meters. It is nullable because not every kind of equipment has a
 	// predictable lifespan.
 	ExpectedUsage *int `json:"expected_usage"`
+	// PreferredForSport marks this equipment as the default for a sport kind
+	// (e.g. "jogging"). Only one piece of equipment should be preferred per
+	// sport kind and user.
+	PreferredForSport *string `gorm:"index" json:"preferred_for_sport"`
 }
 
 // SportXEquipment links a sport entry <SportID> from the sports table to a
@@ -48,10 +52,11 @@ type EquipmentWithUsage struct {
 //
 // swagger:model PostEquipmentRequest
 type PostEquipmentRequest struct {
-	Name             string `json:"name" binding:"required" example:"Running Shoes"`
-	Description      string `json:"description" example:"My daily trainers"`
-	StartUsageMeters int    `json:"start_usage_meters" example:"12000"`
-	ExpectedUsage    *int   `json:"expected_usage" example:"800000"`
+	Name              string  `json:"name" binding:"required" example:"Running Shoes"`
+	Description       string  `json:"description" example:"My daily trainers"`
+	StartUsageMeters  int     `json:"start_usage_meters" example:"12000"`
+	ExpectedUsage     *int    `json:"expected_usage" example:"800000"`
+	PreferredForSport *string `json:"preferred_for_sport" example:"jogging"`
 }
 
 // EquipmentUpdate contains the fields to change for a piece of equipment.
@@ -63,6 +68,9 @@ type EquipmentUpdate struct {
 	Description      *string
 	StartUsageMeters *int
 	ExpectedUsage    *int
+	// ClearExpectedUsage removes a previously configured expected usage.
+	ClearExpectedUsage bool
+	PreferredForSport  *string
 }
 
 // PatchEquipmentRequest is the payload used to update a piece of equipment.
@@ -70,11 +78,13 @@ type EquipmentUpdate struct {
 //
 // swagger:model PatchEquipmentRequest
 type PatchEquipmentRequest struct {
-	ID               Snowflake `json:"id" binding:"required"`
-	Name             *string   `json:"name,omitempty" example:"Running Shoes"`
-	Description      *string   `json:"description,omitempty" example:"My daily trainers"`
-	StartUsageMeters *int      `json:"start_usage_meters,omitempty" example:"12000"`
-	ExpectedUsage    *int      `json:"expected_usage,omitempty" example:"800000"`
+	ID                 Snowflake `json:"id" binding:"required"`
+	Name               *string   `json:"name,omitempty" example:"Running Shoes"`
+	Description        *string   `json:"description,omitempty" example:"My daily trainers"`
+	StartUsageMeters   *int      `json:"start_usage_meters,omitempty" example:"12000"`
+	ExpectedUsage      *int      `json:"expected_usage,omitempty" example:"800000"`
+	ClearExpectedUsage bool      `json:"clear_expected_usage,omitempty"`
+	PreferredForSport  *string   `json:"preferred_for_sport,omitempty" example:"jogging"`
 }
 
 // LinkEquipmentSportsRequest links one or more sport entries to equipment.

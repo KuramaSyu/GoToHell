@@ -24,13 +24,55 @@ type GormEquipmentRepository struct {
 
 // InitRepo auto-migrates the equipment table and the equipment/sport link table.
 func (r *GormEquipmentRepository) InitRepo() error {
-	return r.DB.AutoMigrate(&models.Equipment{}, &models.SportXEquipment{})
+	if err := r.DB.AutoMigrate(&models.Equipment{}, &models.SportXEquipment{}); err != nil {
+		return err
+	}
+	return r.deduplicateSportLinks()
 }
 
-// Create inserts a new piece of equipment for a user.
+// deduplicateSportLinks makes sure a sport entry can only contribute to one
+// piece of equipment. Older versions could leave multiple links for the same
+// sport entry behind. The newest link is kept; the preferred equipment flag is
+// intentionally not considered here because it is only a frontend default.
+func (r *GormEquipmentRepository) deduplicateSportLinks() error {
+	var links []models.SportXEquipment
+	if err := r.DB.Order("equipment_id desc").Find(&links).Error; err != nil {
+		return err
+	}
+
+	seen := make(map[models.Snowflake]struct{}, len(links))
+	for _, link := range links {
+		if _, exists := seen[link.SportID]; exists {
+			if err := r.DB.Where(
+				"equipment_id = ? AND sport_id = ?",
+				link.EquipmentID,
+				link.SportID,
+			).Delete(&models.SportXEquipment{}).Error; err != nil {
+				return err
+			}
+			continue
+		}
+		seen[link.SportID] = struct{}{}
+	}
+	return nil
+}
+
+// Create inserts a new piece of equipment for a user. If the equipment is
+// marked as preferred for a sport, all other equipment of that user loses the
+// preference for the same sport.
 func (r *GormEquipmentRepository) Create(equipment *models.Equipment) (*models.Equipment, error) {
 	equipment.ID = 0 // let GORM create a new record
-	if err := r.DB.Create(equipment).Error; err != nil {
+	err := r.DB.Transaction(func(tx *gorm.DB) error {
+		if equipment.PreferredForSport != nil && *equipment.PreferredForSport != "" {
+			if err := tx.Model(&models.Equipment{}).
+				Where("user_id = ? AND preferred_for_sport = ?", equipment.UserID, *equipment.PreferredForSport).
+				Update("preferred_for_sport", nil).Error; err != nil {
+				return err
+			}
+		}
+		return tx.Create(equipment).Error
+	})
+	if err != nil {
 		return nil, err
 	}
 	return equipment, nil
@@ -49,24 +91,43 @@ func (r *GormEquipmentRepository) Update(equipment *models.EquipmentUpdate) erro
 	if equipment.StartUsageMeters != nil {
 		updates["start_usage_meters"] = *equipment.StartUsageMeters
 	}
-	if equipment.ExpectedUsage != nil {
+	if equipment.ClearExpectedUsage {
+		updates["expected_usage"] = nil
+	} else if equipment.ExpectedUsage != nil {
 		updates["expected_usage"] = *equipment.ExpectedUsage
+	}
+	if equipment.PreferredForSport != nil {
+		if *equipment.PreferredForSport == "" {
+			updates["preferred_for_sport"] = nil
+		} else {
+			updates["preferred_for_sport"] = *equipment.PreferredForSport
+		}
 	}
 
 	if len(updates) == 0 {
 		return nil
 	}
 
-	result := r.DB.Model(&models.Equipment{}).
-		Where("id = ? AND user_id = ?", equipment.ID, equipment.UserID).
-		Updates(updates)
-	if result.Error != nil {
-		return result.Error
-	}
-	if result.RowsAffected == 0 {
-		return fmt.Errorf("no equipment found for ID %d and UserID %d", equipment.ID, equipment.UserID)
-	}
-	return nil
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		if equipment.PreferredForSport != nil && *equipment.PreferredForSport != "" {
+			if err := tx.Model(&models.Equipment{}).
+				Where("user_id = ? AND preferred_for_sport = ? AND id <> ?", equipment.UserID, *equipment.PreferredForSport, equipment.ID).
+				Update("preferred_for_sport", nil).Error; err != nil {
+				return err
+			}
+		}
+
+		result := tx.Model(&models.Equipment{}).
+			Where("id = ? AND user_id = ?", equipment.ID, equipment.UserID).
+			Updates(updates)
+		if result.Error != nil {
+			return result.Error
+		}
+		if result.RowsAffected == 0 {
+			return fmt.Errorf("no equipment found for ID %d and UserID %d", equipment.ID, equipment.UserID)
+		}
+		return nil
+	})
 }
 
 // DeleteByID deletes equipment owned by userID together with all of its links.
@@ -169,40 +230,50 @@ func (r *GormEquipmentRepository) FetchByUserID(userID models.Snowflake) ([]mode
 }
 
 // LinkSports links the given sport entries to equipment owned by userID.
-// All sports have to belong to the same user. Linking an already linked sport
-// is a no-op.
+// All sports have to belong to the same user. An existing link of a sport to
+// another piece of equipment is replaced, so selecting a different shoe
+// overwrites the previous selection.
 func (r *GormEquipmentRepository) LinkSports(
 	equipmentID models.Snowflake,
 	userID models.Snowflake,
 	sportIDs []models.Snowflake,
 ) error {
-	var equipment models.Equipment
-	if err := r.DB.Where("id = ? AND user_id = ?", equipmentID, userID).First(&equipment).Error; err != nil {
-		return fmt.Errorf("equipment %d not found for user %d: %w", equipmentID, userID, err)
-	}
 	if len(sportIDs) == 0 {
 		return fmt.Errorf("no sport IDs provided")
 	}
 
-	var sports []models.Sport
-	if err := r.DB.Where("user_id = ? AND id IN ?", userID, sportIDs).Find(&sports).Error; err != nil {
-		return err
-	}
-	found := make(map[models.Snowflake]struct{}, len(sports))
-	for _, sport := range sports {
-		found[sport.ID] = struct{}{}
-	}
-	for _, sportID := range sportIDs {
-		if _, ok := found[sportID]; !ok {
-			return fmt.Errorf("sport %d not found for user %d", sportID, userID)
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		var equipment models.Equipment
+		if err := tx.Where("id = ? AND user_id = ?", equipmentID, userID).First(&equipment).Error; err != nil {
+			return fmt.Errorf("equipment %d not found for user %d: %w", equipmentID, userID, err)
 		}
-	}
 
-	links := make([]models.SportXEquipment, 0, len(sportIDs))
-	for _, sportID := range sportIDs {
-		links = append(links, models.SportXEquipment{EquipmentID: equipmentID, SportID: sportID})
-	}
-	return r.DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&links).Error
+		var sports []models.Sport
+		if err := tx.Where("user_id = ? AND id IN ?", userID, sportIDs).Find(&sports).Error; err != nil {
+			return err
+		}
+		found := make(map[models.Snowflake]struct{}, len(sports))
+		for _, sport := range sports {
+			found[sport.ID] = struct{}{}
+		}
+		for _, sportID := range sportIDs {
+			if _, ok := found[sportID]; !ok {
+				return fmt.Errorf("sport %d not found for user %d", sportID, userID)
+			}
+		}
+
+		// A sport entry can only use one piece of equipment at a time.
+		// Replace existing links before creating the new one.
+		if err := tx.Where("sport_id IN ?", sportIDs).Delete(&models.SportXEquipment{}).Error; err != nil {
+			return err
+		}
+
+		links := make([]models.SportXEquipment, 0, len(sportIDs))
+		for _, sportID := range sportIDs {
+			links = append(links, models.SportXEquipment{EquipmentID: equipmentID, SportID: sportID})
+		}
+		return tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&links).Error
+	})
 }
 
 // UnlinkSport removes the link between equipment and a sport entry.

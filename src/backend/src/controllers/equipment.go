@@ -102,11 +102,12 @@ func (self *EquipmentController) Post(c *gin.Context) {
 	}
 
 	equipment, err := self.repo.Create(&models.Equipment{
-		UserID:           user.ID,
-		Name:             req.Name,
-		Description:      req.Description,
-		StartUsageMeters: req.StartUsageMeters,
-		ExpectedUsage:    req.ExpectedUsage,
+		UserID:            user.ID,
+		Name:              req.Name,
+		Description:       req.Description,
+		StartUsageMeters:  req.StartUsageMeters,
+		ExpectedUsage:     req.ExpectedUsage,
+		PreferredForSport: req.PreferredForSport,
 	})
 	if err != nil {
 		SetGinError(c, http.StatusInternalServerError, err)
@@ -140,12 +141,14 @@ func (self *EquipmentController) Patch(c *gin.Context) {
 	}
 
 	if err := self.repo.Update(&models.EquipmentUpdate{
-		ID:               req.ID,
-		UserID:           user.ID,
-		Name:             req.Name,
-		Description:      req.Description,
-		StartUsageMeters: req.StartUsageMeters,
-		ExpectedUsage:    req.ExpectedUsage,
+		ID:                 req.ID,
+		UserID:             user.ID,
+		Name:               req.Name,
+		Description:        req.Description,
+		StartUsageMeters:   req.StartUsageMeters,
+		ExpectedUsage:      req.ExpectedUsage,
+		ClearExpectedUsage: req.ClearExpectedUsage,
+		PreferredForSport:  req.PreferredForSport,
 	}); err != nil {
 		SetGinError(c, http.StatusNotFound, err)
 		return

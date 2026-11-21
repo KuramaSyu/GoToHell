@@ -137,3 +137,123 @@ func TestLinkSportsRejectsOtherUsersSports(t *testing.T) {
 		t.Fatalf("expected linking another user's sport to fail")
 	}
 }
+
+func TestPreferredEquipmentIsUniquePerSport(t *testing.T) {
+	repo, _ := newTestEquipmentRepo(t)
+	userID := Snowflake(7)
+	sportA := "jogging"
+	sportB := "jogging"
+
+	first, err := repo.Create(&Equipment{
+		UserID:            userID,
+		Name:              "First Shoes",
+		PreferredForSport: &sportA,
+	})
+	if err != nil {
+		t.Fatalf("failed to create first equipment: %v", err)
+	}
+
+	second, err := repo.Create(&Equipment{
+		UserID:            userID,
+		Name:              "Second Shoes",
+		PreferredForSport: &sportB,
+	})
+	if err != nil {
+		t.Fatalf("failed to create second equipment: %v", err)
+	}
+
+	result, err := repo.FetchByUserID(userID)
+	if err != nil {
+		t.Fatalf("failed to fetch equipment: %v", err)
+	}
+	for _, item := range result {
+		if item.ID == first.ID && item.PreferredForSport != nil {
+			t.Fatalf("expected first equipment preference to be cleared")
+		}
+		if item.ID == second.ID && (item.PreferredForSport == nil || *item.PreferredForSport != sportB) {
+			t.Fatalf("expected second equipment to be preferred for %s", sportB)
+		}
+	}
+}
+
+func TestLinkingSportOverwritesPreviousEquipment(t *testing.T) {
+	repo, database := newTestEquipmentRepo(t)
+	userID := Snowflake(11)
+
+	first, err := repo.Create(&Equipment{UserID: userID, Name: "First"})
+	if err != nil {
+		t.Fatalf("failed to create first equipment: %v", err)
+	}
+	second, err := repo.Create(&Equipment{UserID: userID, Name: "Second"})
+	if err != nil {
+		t.Fatalf("failed to create second equipment: %v", err)
+	}
+
+	sport := Sport{Kind: "jogging", Amount: 5000, UserID: userID, Timedate: time.Now().UTC()}
+	if err := database.Create(&sport).Error; err != nil {
+		t.Fatalf("failed to create sport: %v", err)
+	}
+
+	if err := repo.LinkSports(first.ID, userID, []Snowflake{sport.ID}); err != nil {
+		t.Fatalf("failed to link first equipment: %v", err)
+	}
+	if err := repo.LinkSports(second.ID, userID, []Snowflake{sport.ID}); err != nil {
+		t.Fatalf("failed to link second equipment: %v", err)
+	}
+
+	result, err := repo.FetchByUserID(userID)
+	if err != nil {
+		t.Fatalf("failed to fetch equipment: %v", err)
+	}
+	for _, item := range result {
+		if item.ID == first.ID && item.CurrentUsageMeters != 0 {
+			t.Fatalf("expected first equipment usage to be reset, got %d", item.CurrentUsageMeters)
+		}
+		if item.ID == second.ID && item.CurrentUsageMeters != 5000 {
+			t.Fatalf("expected second equipment usage 5000, got %d", item.CurrentUsageMeters)
+		}
+	}
+}
+
+func TestInitRepoRemovesDuplicateSportLinks(t *testing.T) {
+	repo, database := newTestEquipmentRepo(t)
+	userID := Snowflake(12)
+
+	first, err := repo.Create(&Equipment{UserID: userID, Name: "First"})
+	if err != nil {
+		t.Fatalf("failed to create first equipment: %v", err)
+	}
+	second, err := repo.Create(&Equipment{UserID: userID, Name: "Second"})
+	if err != nil {
+		t.Fatalf("failed to create second equipment: %v", err)
+	}
+
+	sport := Sport{Kind: "jogging", Amount: 7000, UserID: userID, Timedate: time.Now().UTC()}
+	if err := database.Create(&sport).Error; err != nil {
+		t.Fatalf("failed to create sport: %v", err)
+	}
+
+	if err := database.Create(&SportXEquipment{EquipmentID: first.ID, SportID: sport.ID}).Error; err != nil {
+		t.Fatalf("failed to create first link: %v", err)
+	}
+	if err := database.Create(&SportXEquipment{EquipmentID: second.ID, SportID: sport.ID}).Error; err != nil {
+		t.Fatalf("failed to create second link: %v", err)
+	}
+
+	if err := repo.InitRepo(); err != nil {
+		t.Fatalf("failed to rerun init: %v", err)
+	}
+
+	result, err := repo.FetchByUserID(userID)
+	if err != nil {
+		t.Fatalf("failed to fetch equipment: %v", err)
+	}
+	for _, item := range result {
+		if item.ID == first.ID && item.CurrentUsageMeters != 0 {
+			t.Fatalf("expected first equipment usage 0, got %d", item.CurrentUsageMeters)
+		}
+		if item.ID == second.ID && item.CurrentUsageMeters != 7000 {
+			t.Fatalf("expected second equipment usage 7000, got %d", item.CurrentUsageMeters)
+		}
+	}
+}
