@@ -64,7 +64,7 @@ func main() {
 	userDetailsFacade := db.NewUserDetailsFacade(&sportRepo, userRepo, personalGoalRepo, friendshipRepo)
 
 	// Initialize controllers
-	sportsController := controllers.NewSportsController(sportRepository, Now)
+	sportsController := controllers.NewSportsController(sportRepository, equipmentRepo, Now)
 	authController := controllers.NewAuthController(appConfig.DiscordOAuthConfig, userRepo)
 	friendsController := controllers.NewFriendsController(userRepo, friendshipRepo)
 	overdueDeathController := controllers.NewOverdueDeathsController(overdueDeathRepo)

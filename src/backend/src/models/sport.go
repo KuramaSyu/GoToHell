@@ -36,4 +36,8 @@ type PostSportRequest struct {
 
 	// UserID of the user, who did the sport - currently set by the API
 	UserID Snowflake `json:"user_id,omitempty" example:"362262726221349761"`
+
+	// EquipmentID optionally links the uploaded sport entry to a piece of
+	// equipment (e.g. the running shoes used for this jogging entry).
+	EquipmentID Snowflake `json:"equipment_id,omitempty" example:"42"`
 }

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/KuramaSyu/GoToHell/src/backend/src/api/repositories"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/config"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/db"
 	"github.com/KuramaSyu/GoToHell/src/backend/src/models"
@@ -65,13 +66,18 @@ type ErrorReply struct {
 }
 
 type SportsController struct {
-	repo db.SportRepository
+	repo          db.SportRepository
+	equipmentRepo repositories.EquipmentRepository
 }
 
 // NewSportsController creates a new auth controller
 // and initializes the gorm repository.
-func NewSportsController(SportsRepo db.SportRepository, Now func() time.Time) *SportsController {
-	return &SportsController{repo: SportsRepo}
+func NewSportsController(
+	SportsRepo db.SportRepository,
+	equipmentRepo repositories.EquipmentRepository,
+	Now func() time.Time,
+) *SportsController {
+	return &SportsController{repo: SportsRepo, equipmentRepo: equipmentRepo}
 }
 
 // Default returns a list of Sports structs based on the default CSV.
@@ -285,9 +291,19 @@ func (sc *SportsController) PostSport(c *gin.Context) {
 			Timedate: time.Now().UTC(), // set to the current UTC time
 		}
 
-		if err := sc.repo.InsertSport(sport); err != nil {
+		if err := sc.repo.InsertSport(&sport); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
+		}
+
+		// Link the freshly created sport entry to the selected equipment.
+		// The equipment belongs to the user and the link is what makes the
+		// uploaded distance count towards the equipment usage.
+		if input.EquipmentID != 0 {
+			if err := sc.equipmentRepo.LinkSports(input.EquipmentID, user.ID, []models.Snowflake{sport.ID}); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
 		}
 	}
 

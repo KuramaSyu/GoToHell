@@ -13,7 +13,7 @@ import (
 
 // Updated SportRepository interface to include full CRUD operations using the Sport struct.
 type SportRepository interface {
-	InsertSport(sport Sport) error
+	InsertSport(sport *Sport) error
 	GetSports(userIDs []Snowflake, limit int, offset int) ([]Sport, error)
 	UpdateSport(sport Sport) error
 	PatchSport(sport Sport) error
@@ -44,9 +44,10 @@ func InitORMRepository(Now func() time.Time) (*OrmSportRepository, *gorm.DB) {
 	return &OrmSportRepository{DB: db, StreakService: NewStreakService(Now)}, db
 }
 
-// InsertSport adds a new Sport entry using ORM.
-func (r *OrmSportRepository) InsertSport(sport Sport) error {
-	result := r.DB.Create(&sport)
+// InsertSport adds a new Sport entry using ORM. The assigned ID is written
+// back into the passed sport.
+func (r *OrmSportRepository) InsertSport(sport *Sport) error {
+	result := r.DB.Create(sport)
 	return result.Error
 }
 
