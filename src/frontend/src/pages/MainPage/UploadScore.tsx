@@ -37,6 +37,11 @@ import {
   useEquipmentStore,
 } from '../../zustand/EquipmentStore';
 import { getEquipmentConfig } from '../../utils/data/Equipment';
+import {
+  ApiRequirement,
+  ApiRequirementsBuilder,
+} from '../../utils/api/ApiRequirementsBuilder';
+import { EquipmentChip } from '../../components/Equipment/EquipmentChip';
 type SnackbarState = 'uploading' | 'uploaded' | 'failed' | null;
 
 export const UploadScore = () => {
@@ -59,7 +64,18 @@ export const UploadScore = () => {
   const selectedEquipment = useEquipmentStore((state) =>
     getSelectedEquipment(state, currentSport?.sport),
   );
+  const equipment = useEquipmentStore((state) => state.equipment);
+  const equipmentLoaded = useEquipmentStore((state) => state.loaded);
+  const selectEquipment = useEquipmentStore((state) => state.selectEquipment);
   const equipmentConfig = getEquipmentConfig(currentSport?.sport);
+
+  // Make sure the equipment list is available for the confirmation dialog.
+  useEffect(() => {
+    if (!equipmentEnabled || !equipmentConfig) return;
+    new ApiRequirementsBuilder()
+      .add(ApiRequirement.UserEquipment)
+      .fetchIfNeeded();
+  }, [equipmentEnabled, equipmentConfig, equipmentLoaded]);
 
   // for triggers coming from outside (eg shortcut modal)
   useEffect(() => {
@@ -106,6 +122,7 @@ export const UploadScore = () => {
       equipmentEnabled &&
       uploadConfirmationEnabled &&
       equipmentConfig &&
+      equipment.length > 0 &&
       selectedEquipment === null
     ) {
       setConfirmOpen(true);
@@ -126,18 +143,42 @@ export const UploadScore = () => {
 
   const DURATION = amount !== 0 ? Math.max(40 - amount ** 1.5, 8) : 0;
 
+  const equipmentSingular = equipmentConfig?.singular ?? 'equipment';
+
   const confirmationDialog = (
     <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
       <DialogTitle>
-        Upload without {equipmentConfig?.singular ?? 'equipment'}?
+        {selectedEquipment
+          ? `Upload with ${selectedEquipment.name}?`
+          : `Upload without ${equipmentSingular}?`}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          This upload will not be added to any{' '}
-          {equipmentConfig?.label.toLowerCase() ?? 'equipment'}. Select a{' '}
-          {equipmentConfig?.singular ?? 'piece of equipment'} first if you want
-          the usage to count.
+          {selectedEquipment
+            ? `This upload will be added to ${selectedEquipment.name}.`
+            : `This upload will not be added to any ${equipmentConfig?.label.toLowerCase() ?? 'equipment'}. Select a ${equipmentSingular} below if you want the usage to count.`}
         </DialogContentText>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+          <EquipmentChip
+            label={`No ${equipmentSingular}`}
+            selected={selectedEquipment === null}
+            onClick={() => {
+              if (currentSport?.sport)
+                selectEquipment(currentSport.sport, null);
+            }}
+          />
+          {equipment.map((item) => (
+            <EquipmentChip
+              key={item.id}
+              label={item.name}
+              selected={selectedEquipment?.id === item.id}
+              onClick={() => {
+                if (currentSport?.sport)
+                  selectEquipment(currentSport.sport, item.id);
+              }}
+            />
+          ))}
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
@@ -148,7 +189,9 @@ export const UploadScore = () => {
             performUpload();
           }}
         >
-          Upload anyway
+          {selectedEquipment
+            ? `Upload with ${selectedEquipment.name}`
+            : `Upload without ${equipmentSingular}`}
         </Button>
       </DialogActions>
     </Dialog>

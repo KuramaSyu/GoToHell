@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
+import { EquipmentChip } from './EquipmentChip';
 import { useSportStore } from '../../useSportStore';
 import { useEquipmentStore } from '../../zustand/EquipmentStore';
 import useFeatureStore, { FeatureFlagName } from '../../zustand/FeatureStore';
@@ -106,50 +107,27 @@ export const EquipmentSelector: React.FC<EquipmentSelectorProps> = ({
             width: '100%',
           }}
         >
-          <Chip
-            clickable
+          <EquipmentChip
             label={`No ${config.singular}`}
-            color={selectedID === null ? 'secondary' : 'default'}
-            variant={selectedID === null ? 'filled' : 'outlined'}
+            selected={selectedID === null}
+            roomy={!compact}
             onClick={() => {
               if (!sport) return;
               selectEquipment(sport, null);
             }}
-            sx={{
-              height: 'auto',
-              py: compact ? 0.25 : 0.75,
-              px: compact ? 0.5 : 1,
-              '& .MuiChip-label': {
-                px: compact ? 1 : 1.5,
-                py: 0,
-              },
-            }}
           />
-          {equipment.map((item) => {
-            const selected = selectedID === item.id;
-            return (
-              <Chip
-                key={item.id}
-                clickable
-                label={item.name}
-                color={selected ? 'secondary' : 'default'}
-                variant={selected ? 'filled' : 'outlined'}
-                onClick={() => {
-                  if (!sport) return;
-                  selectEquipment(sport, item.id);
-                }}
-                sx={{
-                  height: 'auto',
-                  py: compact ? 0.25 : 0.75,
-                  px: compact ? 0.5 : 1,
-                  '& .MuiChip-label': {
-                    px: compact ? 1 : 1.5,
-                    py: 0,
-                  },
-                }}
-              />
-            );
-          })}
+          {equipment.map((item) => (
+            <EquipmentChip
+              key={item.id}
+              label={item.name}
+              selected={selectedID === item.id}
+              roomy={!compact}
+              onClick={() => {
+                if (!sport) return;
+                selectEquipment(sport, item.id);
+              }}
+            />
+          ))}
         </Box>
         {!compact && equipment.length === 0 && (
           <Typography variant='caption' color='text.secondary'>

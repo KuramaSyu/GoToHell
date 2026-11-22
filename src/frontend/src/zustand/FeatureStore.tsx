@@ -10,6 +10,11 @@ interface FeatureFlagRecord {
   name: string;
   description: string;
   enabled: boolean;
+  /**
+   * Whether the user changed this flag explicitly. Used for flags whose
+   * default depends on another flag (e.g. equipment upload confirmation).
+   */
+  modified?: boolean;
 }
 
 /**
@@ -19,6 +24,7 @@ interface IFeatureFlag {
   name: string;
   description: string;
   enabled: boolean;
+  modified: boolean;
 
   /**
    * Checks if the feature flag is enabled. This can be overwritten if
@@ -39,11 +45,18 @@ class SimpleFeatureFlag implements IFeatureFlag {
   name: string;
   description: string;
   enabled: boolean;
+  modified: boolean;
 
-  constructor(name: string, description: string, enabled: boolean) {
+  constructor(
+    name: string,
+    description: string,
+    enabled: boolean,
+    modified = false,
+  ) {
     this.name = name;
     this.description = description;
     this.enabled = enabled;
+    this.modified = modified;
   }
 
   isEnabled() {
@@ -55,6 +68,7 @@ class SimpleFeatureFlag implements IFeatureFlag {
       name: this.name,
       description: this.description,
       enabled: this.enabled,
+      modified: this.modified,
     };
   }
 
@@ -66,6 +80,7 @@ class SimpleFeatureFlag implements IFeatureFlag {
       record.name,
       record.description,
       record.enabled,
+      record.modified ?? false,
     );
   }
 }
@@ -114,7 +129,9 @@ const DEFAULT_FEATURE_FLAG_RECORDS: Record<FeatureFlagName, FeatureFlagRecord> =
       name: 'Equipment Upload Confirmation',
       description:
         'Ask before uploading if the upload is not linked to any equipment (e.g. no shoes selected)',
-      enabled: true,
+      // Only enabled by default when equipment tracking itself is enabled.
+      enabled: false,
+      modified: false,
     },
   };
 
@@ -147,28 +164,47 @@ const getDefaultFeatureFlags = (): FeatureFlags => ({
  */
 const hydrateFeatureFlags = (
   persistedFlags?: Partial<Record<FeatureFlagName, Partial<FeatureFlagRecord>>>,
-): FeatureFlags => ({
-  [FeatureFlagName.StartupStreaks]: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.StartupStreaks],
-    ...(persistedFlags?.[FeatureFlagName.StartupStreaks] ?? {}),
-  }),
-  [FeatureFlagName.PersonalGoals]: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.PersonalGoals],
-    ...(persistedFlags?.[FeatureFlagName.PersonalGoals] ?? {}),
-  }),
-  [FeatureFlagName.SwapBackgroundOnUpload]: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.SwapBackgroundOnUpload],
-    ...(persistedFlags?.[FeatureFlagName.SwapBackgroundOnUpload] ?? {}),
-  }),
-  [FeatureFlagName.Equipment]: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.Equipment],
-    ...(persistedFlags?.[FeatureFlagName.Equipment] ?? {}),
-  }),
-  [FeatureFlagName.EquipmentUploadConfirmation]: SimpleFeatureFlag.fromRecord({
-    ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.EquipmentUploadConfirmation],
+): FeatureFlags => {
+  const equipmentEnabled = !!(
+    persistedFlags?.[FeatureFlagName.Equipment]?.enabled ??
+    DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.Equipment].enabled
+  );
+  const confirmationRecord: FeatureFlagRecord = {
+    ...DEFAULT_FEATURE_FLAG_RECORDS[
+      FeatureFlagName.EquipmentUploadConfirmation
+    ],
     ...(persistedFlags?.[FeatureFlagName.EquipmentUploadConfirmation] ?? {}),
-  }),
-});
+  };
+
+  // The confirmation only makes sense (and is only enabled by default) when
+  // equipment tracking is enabled.
+  const confirmationEnabled = confirmationRecord.modified
+    ? confirmationRecord.enabled
+    : equipmentEnabled;
+
+  return {
+    [FeatureFlagName.StartupStreaks]: SimpleFeatureFlag.fromRecord({
+      ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.StartupStreaks],
+      ...(persistedFlags?.[FeatureFlagName.StartupStreaks] ?? {}),
+    }),
+    [FeatureFlagName.PersonalGoals]: SimpleFeatureFlag.fromRecord({
+      ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.PersonalGoals],
+      ...(persistedFlags?.[FeatureFlagName.PersonalGoals] ?? {}),
+    }),
+    [FeatureFlagName.SwapBackgroundOnUpload]: SimpleFeatureFlag.fromRecord({
+      ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.SwapBackgroundOnUpload],
+      ...(persistedFlags?.[FeatureFlagName.SwapBackgroundOnUpload] ?? {}),
+    }),
+    [FeatureFlagName.Equipment]: SimpleFeatureFlag.fromRecord({
+      ...DEFAULT_FEATURE_FLAG_RECORDS[FeatureFlagName.Equipment],
+      ...(persistedFlags?.[FeatureFlagName.Equipment] ?? {}),
+    }),
+    [FeatureFlagName.EquipmentUploadConfirmation]: SimpleFeatureFlag.fromRecord({
+      ...confirmationRecord,
+      enabled: confirmationEnabled,
+    }),
+  };
+};
 
 interface FeatureState {
   /** Current feature flag states keyed by flag name. */
@@ -186,15 +222,33 @@ const useFeatureStore = create<FeatureState>()(
     (set) => ({
       flags: getDefaultFeatureFlags(),
       setFlag: (name, value) =>
-        set((state) => ({
-          flags: {
+        set((state) => {
+          const flags: FeatureFlags = {
             ...state.flags,
             [name]: SimpleFeatureFlag.fromRecord({
               ...state.flags[name].toRecord(),
               enabled: value,
+              modified: true,
             }),
-          },
-        })),
+          };
+
+          // Keep the upload confirmation in sync with equipment tracking as
+          // long as the user did not explicitly configure it.
+          if (name === FeatureFlagName.Equipment) {
+            const confirmation = state.flags[
+              FeatureFlagName.EquipmentUploadConfirmation
+            ];
+            if (!confirmation.modified) {
+              flags[FeatureFlagName.EquipmentUploadConfirmation] =
+                SimpleFeatureFlag.fromRecord({
+                  ...confirmation.toRecord(),
+                  enabled: value,
+                });
+            }
+          }
+
+          return { flags };
+        }),
       resetFlags: () =>
         set({
           flags: getDefaultFeatureFlags(),
